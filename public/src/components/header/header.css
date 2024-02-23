@@ -1,0 +1,21 @@
+header {
+    width: 100%;
+    padding: 20px;
+    background: blue;
+    display: flex;
+    justify-content: space-between;
+}
+
+header .logo-container h3{
+    color: #fff;
+}
+
+header .menu-container {
+    display: flex;
+    gap: 20px;
+}
+
+header .menu-container .menu-item a {
+    color: #fff;
+    text-decoration: none;
+}
