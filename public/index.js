@@ -11,15 +11,21 @@ const wrapper = document.createElement("div")
 wrapper.id = "wrapper"
 root.appendChild(wrapper)
 
+export const userInfo = {
+    login: '',
+    username: '',
+    isAuthorized: false,
+};
+
 let page = 'main';
 
 function renderHeader() {
-    const header = new Header(wrapper, config);
+    const header = new Header(root, config, userInfo.isAuthorized);
     header.render();
 }
 
 const renderMainPage = () => {
-    const main = new MainPage(wrapper, config);
+    const main = new MainPage(wrapper, config, userInfo);
     main.render();
 };
 
@@ -34,8 +40,13 @@ const renderRegisterPage = () => {
 }
 
 const changePage = (href) => {
-    console.log("changePage: " + href)
     switch (href) {
+        case '':
+            if (page !== 'main') {
+                renderMainPage();
+                page = 'main';
+            }
+            break;
         case 'main':
             if (page !== 'main') {
                 renderMainPage();

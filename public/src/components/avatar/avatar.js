@@ -1,6 +1,5 @@
-export class NoteEditor{
+export class Avatar {
     #parent;
-
     #config;
 
     constructor(parent, config) {
@@ -9,9 +8,11 @@ export class NoteEditor{
     }
 
     render() {
+        console.log("render avatar")
+
         const tmp = document.createElement('div');
-        const template = Handlebars.templates["note-editor.hbs"];
-        tmp.innerHTML = template(this.#config.mainPage);
+        const template = Handlebars.templates["avatar.hbs"];
+        tmp.innerHTML = template(this.#config.avatar);
         this.#parent.appendChild(tmp.firstElementChild);
     }
 }

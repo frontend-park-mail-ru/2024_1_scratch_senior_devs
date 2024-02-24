@@ -1,4 +1,4 @@
-export class NoteEditor{
+export class Note {
     #parent;
 
     #config;
@@ -10,8 +10,8 @@ export class NoteEditor{
 
     render() {
         const tmp = document.createElement('div');
-        const template = Handlebars.templates["note-editor.hbs"];
-        tmp.innerHTML = template(this.#config.mainPage);
+        const template = Handlebars.templates["note.hbs"];
+        tmp.innerHTML = template(this.#config.note);
         this.#parent.appendChild(tmp.firstElementChild);
     }
 }

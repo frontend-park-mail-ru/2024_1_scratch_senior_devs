@@ -1,3 +1,5 @@
+import {Note} from "../note/note.js";
+
 export class NotesContainer {
     #parent;
 
@@ -9,6 +11,17 @@ export class NotesContainer {
     }
 
     render() {
-        this.#parent.insertAdjacentHTML('beforebegin', window.Handlebars.templates['notes.hbs'](this.#config.notes));
+        const tmp = document.createElement('div');
+        const template = Handlebars.templates["notes.hbs"];
+        tmp.innerHTML = template(this.#config.notes);
+        this.#parent.appendChild(tmp.firstElementChild);
+
+
+        const self = document.getElementById('notes-container');
+
+        for (let i = 0; i < 3; i++) {
+            const note = new Note(self, this.#config)
+            note.render()
+        }
     }
 }

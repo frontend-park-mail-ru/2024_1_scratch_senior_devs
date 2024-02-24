@@ -11,16 +11,24 @@ const header = {
     name: "YouNote",
     menu: [
         {
+            href: "",
+            text: "Главная",
+            needAuth: false
+        },
+        {
             href: "main",
-            text: "Мои заметки"
+            text: "Мои заметки",
+            needAuth: true
         },
         {
             href: "login",
-            text: "Регистрация"
+            text: "Вход",
+            needAuth: false
         },
         {
             href: "register",
-            text: "Регистрация"
+            text: "Регистрация",
+            needAuth: false
         }
     ]
 }
@@ -41,6 +49,14 @@ const noteEditor = {
 
 }
 
+const note = {
+
+}
+
+const avatar = {
+
+}
+
 export const config = {
     isAuthorized: false,
     mainPage: mainPage,
@@ -48,5 +64,7 @@ export const config = {
     registerPage: registerPage,
     header: header,
     notes: notes,
-    noteEditor: noteEditor
+    noteEditor: noteEditor,
+    note: note,
+    avatar: avatar
 };

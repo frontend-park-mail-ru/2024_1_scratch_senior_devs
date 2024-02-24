@@ -1,0 +1,1 @@
+!function(){var a=Handlebars.template;(Handlebars.templates=Handlebars.templates||{})["avatar.hbs"]=a({compiler:[8,">= 4.3.0"],main:function(a,e,t,n,r){return'<div class="avatar">\r\n\r\n</div>'},useData:!0})}();

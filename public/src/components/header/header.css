@@ -1,13 +1,24 @@
 header {
     width: 100%;
-    padding: 20px;
-    background: blue;
+    padding: 10px 25px;
+    background: #fff;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
-header .logo-container h3{
-    color: #fff;
+header .logo-container a{
+    color: #000;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+header .right-container {
+    display: flex;
+    align-items: center;
+    gap: 25px;
 }
 
 header .menu-container {
@@ -16,6 +27,5 @@ header .menu-container {
 }
 
 header .menu-container .menu-item a {
-    color: #fff;
     text-decoration: none;
 }
