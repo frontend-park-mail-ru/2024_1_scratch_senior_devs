@@ -8,6 +8,7 @@
 @import './src/components/home/home.css';
 @import './src/components/input/input.css';
 @import "./src/components/submit-button/submitButton.css";
+@import "src/pages/login/login.css";
 
 *, *::before, *::after {
     box-sizing: border-box;
@@ -38,5 +39,10 @@ p, h1, h2, h3, h4, h5, h6 {
 }
 
 #root {
-    display: grid;
+    /*display: grid;*/
+    height: 100%;
+}
+
+#wrapper{
+    height: 100%;
 }

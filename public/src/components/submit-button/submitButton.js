@@ -37,6 +37,10 @@ export class SubmitButton{
         self.removeEventListener('click', this.#listeners.submit);
     }
 
+    remove(){
+        this.#removeEventListeners();
+    }
+
     render(){
         this.#parent.insertAdjacentHTML(
             'beforeend',
