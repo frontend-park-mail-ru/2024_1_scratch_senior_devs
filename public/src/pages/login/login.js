@@ -18,7 +18,6 @@ export default class LoginPage {
     constructor(parent, config) {
         this.#parent = parent;
         this.#config = config;
-        AppUserStore.registerEvents();
     }
 
     #subscribeToEvents(){
@@ -53,6 +52,9 @@ export default class LoginPage {
                     payload: "scsfsv"})
             }
         })
+        this.#submitBtn.remove();
+        this.#passwordInput.remove();
+        this.#loginInput.remove();
     }
 
     #validatePassword(){
@@ -60,6 +62,10 @@ export default class LoginPage {
     }
     #validateLogin(){
         console.log("login validated")
+    }
+
+    remove(){
+        this.#unsubscribeToEvents();
     }
 
     render() {

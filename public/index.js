@@ -3,6 +3,7 @@ import MainPage from './src/pages/main-page/main-page.js';
 import {Header} from "./src/components/header/header.js";
 import LoginPage from "./src/pages/login/login.js";
 import RegisterPage from "./src/pages/register/register.js";
+import {AppUserStore} from "./src/stores/userStore.js";
 
 const root = document.getElementById('root');
 console.log('root');
@@ -17,7 +18,11 @@ export const userInfo = {
     isAuthorized: false,
 };
 
+AppUserStore.registerEvents();
+
 const currentUrl = window.location.href.split("/").slice(-1)[0];
+
+const currentPage = {};
 
 let page = '';
 
@@ -28,16 +33,28 @@ function renderHeader() {
 
 const renderMainPage = () => {
     const main = new MainPage(wrapper, config, userInfo);
+    if (currentPage.page !== undefined){
+        currentPage.page.remove();
+    }
+    currentPage.page = main;
     main.render();
 };
 
 const renderLoginPage = () => {
     const login = new LoginPage(wrapper, config);
+    if (currentPage.page !== undefined){
+        currentPage.page.remove();
+    }
+    currentPage.page = login;
     login.render();
 };
 
 const renderRegisterPage = () => {
     const register = new RegisterPage(wrapper, config);
+    if (currentPage.page !== undefined){
+        currentPage.page.remove();
+    }
+    currentPage.page = register;
     register.render()
 }
 

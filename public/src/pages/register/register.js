@@ -10,6 +10,10 @@ export default class RegisterPage {
         this.#config = config;
     }
 
+    remove(){
+
+    }
+
     render() {
         this.#parent.innerHTML = '';
 

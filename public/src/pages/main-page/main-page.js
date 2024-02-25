@@ -14,6 +14,10 @@ export default class MainPage {
     this.#user = user;
   }
 
+  remove(){
+
+  }
+
   render() {
     this.#parent.innerHTML = '';
 
