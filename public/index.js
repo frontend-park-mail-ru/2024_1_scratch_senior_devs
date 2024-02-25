@@ -1,6 +1,6 @@
 import {config} from '/config.js';
 import MainPage from './src/pages/main-page/main-page.js';
-import {Header} from "./src/components/header/heaader.js";
+import {Header} from "./src/components/header/header.js";
 import LoginPage from "./src/pages/login/login.js";
 import RegisterPage from "./src/pages/register/register.js";
 
@@ -14,7 +14,7 @@ root.appendChild(wrapper)
 export const userInfo = {
     login: '',
     username: '',
-    isAuthorized: false,
+    isAuthorized: true,
 };
 
 let page = 'main';
@@ -45,24 +45,28 @@ const changePage = (href) => {
             if (page !== 'main') {
                 renderMainPage();
                 page = 'main';
+                history.pushState(null, null, '/')
             }
             break;
         case 'main':
             if (page !== 'main') {
                 renderMainPage();
                 page = 'main';
+                history.pushState(null, null, '/' + page)
             }
             break;
         case 'login':
             if (page !== 'login') {
                 renderLoginPage();
                 page = 'login';
+                history.pushState(null, null, '/' + page)
             }
             break;
         case 'register':
             if (page !== 'register') {
                 renderRegisterPage();
                 page = 'register';
+                history.pushState(null, null, '/' + page)
             }
             break;
         default:

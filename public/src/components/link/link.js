@@ -1,3 +1,5 @@
+import "../../../build/link.js"
+
 export class Link {
     #parent;
     #config;

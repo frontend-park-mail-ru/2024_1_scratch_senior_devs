@@ -1,4 +1,5 @@
 import {Note} from "../note/note.js";
+import "../../../build/notes.js"
 
 export class NotesContainer {
     #parent;

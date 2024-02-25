@@ -1,1 +1,0 @@
-!function(){var a=Handlebars.template;(Handlebars.templates=Handlebars.templates||{})["login.hbs"]=a({compiler:[8,">= 4.3.0"],main:function(a,e,n,t,i){return'<div id="login-page">\r\n\t<h1>Страница входа</h1>\r\n</div>'},useData:!0})}();

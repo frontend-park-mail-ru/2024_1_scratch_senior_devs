@@ -1,5 +1,6 @@
 import {Avatar} from "../avatar/avatar.js";
 import {Link} from "../link/link.js";
+import '../../../build/header.js';
 
 export class Header {
     #parent;

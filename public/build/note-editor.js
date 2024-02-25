@@ -1,1 +1,0 @@
-!function(){var e=Handlebars.template;(Handlebars.templates=Handlebars.templates||{})["note-editor.hbs"]=e({compiler:[8,">= 4.3.0"],main:function(e,t,a,n,r){return'<div id="note-editor">\r\n\r\n</div>'},useData:!0})}();

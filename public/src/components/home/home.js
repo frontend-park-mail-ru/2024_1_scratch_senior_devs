@@ -1,3 +1,5 @@
+import "../../../build/home.js"
+
 export class Home {
     #parent;
     #config;

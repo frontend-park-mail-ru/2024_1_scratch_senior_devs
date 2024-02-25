@@ -1,3 +1,5 @@
+import "../../../build/note-editor.js"
+
 export class NoteEditor{
     #parent;
 

@@ -1,3 +1,5 @@
+import "../../../build/register.js"
+
 export default class RegisterPage {
     #parent;
     #config;

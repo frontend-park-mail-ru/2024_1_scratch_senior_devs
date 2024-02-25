@@ -1,3 +1,5 @@
+import "../../../build/avatar.js"
+
 export class Avatar {
     #parent;
     #config;

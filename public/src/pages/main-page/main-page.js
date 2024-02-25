@@ -1,6 +1,7 @@
 import {NotesContainer} from "../../components/notes/notes.js";
 import {NoteEditor} from "../../components/note-editor/note-editor.js";
 import {Home} from "../../components/home/home.js";
+import "../../../build/main-page.js"
 
 export default class MainPage {
   #parent;

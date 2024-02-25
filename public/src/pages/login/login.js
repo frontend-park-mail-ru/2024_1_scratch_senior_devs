@@ -1,3 +1,5 @@
+import "../../../build/login.js"
+
 export default class LoginPage {
     #parent;
     #config;
