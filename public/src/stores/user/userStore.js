@@ -1,5 +1,6 @@
-import {AppDispatcher} from "../modules/dispathcer.js";
-import {AppEventMaker} from "../modules/eventMaker.js";
+import {AppDispatcher} from "../../modules/dispathcer.js";
+import {AppEventMaker} from "../../modules/eventMaker.js";
+import {UserStoreEvents} from "./events.js";
 
 class UserStore {
     #state = {
@@ -8,7 +9,7 @@ class UserStore {
     }
 
     constructor() {
-
+        this.registerEvents();
     }
 
     registerEvents(){
@@ -23,7 +24,7 @@ class UserStore {
     login(){
         console.log("logged");
         this.#state.isAuth = true;
-        AppEventMaker.notify();
+        AppEventMaker.notify(UserStoreEvents.SUCCSSESFUL_LOGIN);
     }
 }
 

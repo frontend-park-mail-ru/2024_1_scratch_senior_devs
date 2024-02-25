@@ -3,7 +3,7 @@ import MainPage from './src/pages/main-page/main-page.js';
 import {Header} from "./src/components/header/header.js";
 import LoginPage from "./src/pages/login/login.js";
 import RegisterPage from "./src/pages/register/register.js";
-import {AppUserStore} from "./src/stores/userStore.js";
+import {AppUserStore} from "./src/stores/user/userStore.js";
 
 const root = document.getElementById('root');
 console.log('root');

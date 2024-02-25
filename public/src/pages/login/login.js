@@ -5,7 +5,7 @@ import {inputEvents} from "../../components/input/events.js";
 import {SubmitButtonEvents} from "../../components/submit-button/events.js";
 import {AppEventMaker} from "../../modules/eventMaker.js";
 import {AppDispatcher} from "../../modules/dispathcer.js";
-import {AppUserStore, UserActions} from "../../stores/userStore.js";
+import {AppUserStore, UserActions} from "../../stores/user/userStore.js";
 
 export default class LoginPage {
     #parent;
@@ -52,9 +52,7 @@ export default class LoginPage {
                     payload: "scsfsv"})
             }
         })
-        this.#submitBtn.remove();
-        this.#passwordInput.remove();
-        this.#loginInput.remove();
+
     }
 
     #validatePassword(){
@@ -66,6 +64,9 @@ export default class LoginPage {
 
     remove(){
         this.#unsubscribeToEvents();
+        this.#submitBtn.remove();
+        this.#passwordInput.remove();
+        this.#loginInput.remove();
     }
 
     render() {

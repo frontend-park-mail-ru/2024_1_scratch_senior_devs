@@ -1,6 +1,8 @@
 import {Avatar} from "../avatar/avatar.js";
 import {Link} from "../link/link.js";
 import '../../../build/header.js';
+import {AppEventMaker} from "../../modules/eventMaker.js";
+import {UserStoreEvents} from "../../stores/user/events.js";
 
 export class Header {
     #parent;
@@ -11,6 +13,14 @@ export class Header {
         this.#parent = parent;
         this.#config = config;
         this.#isAuth = isAuth;
+    }
+
+    #addEventListeners(){
+        AppEventMaker.subscribe(UserStoreEvents.SUCCSSESFUL_LOGIN, () => {
+            console.log("avatar added")
+            const avatar = new Avatar(document.querySelector(".right-container"), this.#config.avatar);
+            avatar.render();
+        })
     }
 
     render() {
@@ -37,5 +47,6 @@ export class Header {
             const avatar = new Avatar(rightContainer, this.#config.avatar);
             avatar.render();
         }
+        this.#addEventListeners();
     }
 }
