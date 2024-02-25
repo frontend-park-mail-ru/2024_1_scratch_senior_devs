@@ -1,25 +1,25 @@
-import "../../../build/link.js"
+import "../../../build/image.js"
 
-export class Link {
+export class Image {
     #parent;
     #config;
 
-    id;
-
     constructor(parent, config) {
-        this.id = crypto.randomUUID();
         this.#parent = parent;
         this.#config = config;
-        this.#config.id = this.id;
     }
 
-    get self(){
-        return document.getElementById(`${this.id}`);
+    get self() {
+        return document.getElementById(this.#config.id)
+    }
+
+    updateImage(path) {
+        this.self.src = path
     }
 
     render() {
         const tmp = document.createElement('div');
-        const template = Handlebars.templates["link.hbs"];
+        const template = Handlebars.templates["image.hbs"];
         tmp.innerHTML = template(this.#config);
         this.#parent.appendChild(tmp.firstElementChild);
     }

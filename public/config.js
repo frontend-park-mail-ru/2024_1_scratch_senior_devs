@@ -1,43 +1,58 @@
-const button = {
-    "text": "toast",
-    "id": "hehe123"
-}
-
 const mainPage = {
-    button: button
+    href: "/",
+    needAuth: true
 }
 
 const header = {
     name: "YouNote",
-    menu: [
-        {
-            href: "",
+    avatar: {
+        id: "user-avatar"
+    },
+    menu: {
+        home: {
+            href: "/",
             text: "Главная",
             needAuth: false
         },
-        {
-            href: "main",
+        main: {
+            href: "/main",
             text: "Мои заметки",
             needAuth: true
         },
-        {
-            href: "login",
+        auth: {
+            href: "/login",
             text: "Вход",
             needAuth: false
         },
-        {
-            href: "register",
+        register: {
+            href: "/register",
             text: "Регистрация",
             needAuth: false
         }
-    ]
+    }
 }
 
 const loginPage = {
-
+    href: "login",
+    inputs: {
+        login: {
+            type: 'text',
+            placeholder: 'Введите логин'
+        },
+        password: {
+            type: "password",
+            placeholder: "Придумайте пароль"
+        }
+    },
+    buttons: {
+        submitBtn: {
+            btnLabel: "Войти"
+        }
+    }
 }
 
 const registerPage = {
+    href: "register",
     inputs: {
         login: {
            type: "text",

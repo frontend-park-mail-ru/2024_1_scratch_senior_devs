@@ -1,13 +1,14 @@
 @import './src/pages/main-page/main-page.css';
-@import './src/pages/register/register.css';
 @import './src/components/header/header.css';
 @import './src/components/notes/notes.css';
 @import './src/components/note/note.css';
 @import './src/components/note-editor/note-editor.css';
-@import './src/components/avatar/avatar.css';
+@import 'src/components/image/image.css';
 @import './src/components/link/link.css';
 @import './src/components/home/home.css';
 @import './src/components/input/input.css';
+@import "./src/components/submit-button/submitButton.css";
+@import "src/pages/login/login.css";
 
 *, *::before, *::after {
     box-sizing: border-box;
@@ -38,5 +39,11 @@ p, h1, h2, h3, h4, h5, h6 {
 }
 
 #root {
-    display: grid;
+    display: flex;
+    flex-direction: column;
+}
+
+#wrapper{
+    display: flex;
+    flex: 1 0 auto;
 }

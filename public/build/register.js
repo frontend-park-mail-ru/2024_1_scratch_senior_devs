@@ -1,0 +1,1 @@
+!function(){var e=Handlebars.template;(Handlebars.templates=Handlebars.templates||{})["register.hbs"]=e({compiler:[8,">= 4.3.0"],main:function(e,a,t,n,r){return'<div id="register-page">\n\t<h1>Страница регистрации</h1>\n</div>'},useData:!0})}();
