@@ -1,4 +1,5 @@
 @import './src/pages/main-page/main-page.css';
+@import './src/pages/register/register.css';
 @import './src/components/header/header.css';
 @import './src/components/notes/notes.css';
 @import './src/components/note/note.css';
@@ -6,6 +7,7 @@
 @import './src/components/avatar/avatar.css';
 @import './src/components/link/link.css';
 @import './src/components/home/home.css';
+@import './src/components/input/input.css';
 
 *, *::before, *::after {
     box-sizing: border-box;

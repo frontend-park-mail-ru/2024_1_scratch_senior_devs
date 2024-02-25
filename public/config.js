@@ -38,7 +38,20 @@ const loginPage = {
 }
 
 const registerPage = {
-
+    inputs: {
+        login: {
+           type: "text",
+           placeholder: "Придумайте логин"
+        },
+        password: {
+            type: "password",
+            placeholder: "Придумайте пароль"
+        },
+        repeatPassword: {
+            type: "password",
+            placeholder: "Повторите пароль"
+        }
+    }
 }
 
 const notes = {

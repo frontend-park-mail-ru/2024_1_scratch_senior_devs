@@ -14,10 +14,12 @@ root.appendChild(wrapper)
 export const userInfo = {
     login: '',
     username: '',
-    isAuthorized: true,
+    isAuthorized: false,
 };
 
-let page = 'main';
+const currentUrl = window.location.href.split("/").slice(-1)[0];
+
+let page = '';
 
 function renderHeader() {
     const header = new Header(root, config, userInfo.isAuthorized);
@@ -84,7 +86,6 @@ const listenClick = (e) => {
 
 window.addEventListener('click', listenClick);
 
-
 renderHeader();
-renderMainPage();
+changePage(currentUrl);
 

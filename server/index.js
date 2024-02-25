@@ -63,11 +63,21 @@ const staticFile = (res, filePath, ext) => {
 const server = http.createServer((req, res) => {
     const {url} = req
 
-    console.log(url)
-
     switch (url) {
         case "/":
+            console.log("home page")
+            staticFile(res, "/index.html", ".html")
+            break;
+        case "/main":
             console.log("main page")
+            staticFile(res, "/index.html", ".html")
+            break;
+        case "/login":
+            console.log("login page")
+            staticFile(res, "/index.html", ".html")
+            break;
+        case "/register":
+            console.log("register page")
             staticFile(res, "/index.html", ".html")
             break;
         default:

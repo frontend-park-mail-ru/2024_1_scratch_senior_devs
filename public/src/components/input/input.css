@@ -1,0 +1,23 @@
+.input-container {
+    width: 240px;
+    position: relative;
+}
+
+.input-container input {
+    width: 100%;
+    background: #F2F2F2;
+    color: #000;
+    border: none;
+    outline: none;
+    padding: 8px 16px;
+    border-radius: 15px;
+}
+
+.input-container .show-password-btn {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    top: 8px;
+    right: 16px;
+    cursor: pointer;
+}
