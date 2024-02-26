@@ -19,10 +19,20 @@ export default class LoginPage {
 
     #subscribed; // Костыль
 
+    #callback;
+
     constructor(parent, config) {
         this.#parent = parent;
         this.#config = config;
         this.#subscribed = false; // Костыль
+        this.#callback = (id) => {
+            console.log("asdfasdf")
+            if(id === this.#submitBtn.id){
+                AppDispatcher.dispatch({
+                    type: UserActions.LOGIN
+                })
+            }
+        }
     }
 
     get href () {
@@ -31,6 +41,20 @@ export default class LoginPage {
 
     get form () {
         return document.getElementById(this.#config.form.id)
+    }
+
+    validateData = (id) => {
+        if(id === this.#submitBtn.id){
+            const validateLogin = this.#validateLogin()
+            const validatePassword = this.#validatePassword()
+            if (validateLogin && validatePassword) {
+
+                AppDispatcher.dispatch({
+                    type: UserActions.LOGIN,
+                    payload: this.#loginInput.value
+                })
+            }
+        }
     }
 
     #subscribeToEvents(){
@@ -44,25 +68,13 @@ export default class LoginPage {
             }
         });
 
-        AppEventMaker.subscribe(SubmitButtonEvents.BUTTON_SUBMIT, (id) => {
-            if(id === this.#submitBtn.id){
-                const validateLogin = this.#validateLogin()
-                const validatePassword = this.#validatePassword()
-                if (validateLogin && validatePassword) {
-
-                    AppDispatcher.dispatch({
-                        type: UserActions.LOGIN,
-                        payload: this.#loginInput.value
-                    })
-                }
-            }
-        })
+        AppEventMaker.subscribe(SubmitButtonEvents.BUTTON_SUBMIT, this.validateData)
 
         this.#subscribed = true; // Костыль
     }
 
     #unsubscribeToEvents(){
-        console.log("unsubscribeToEvents")
+        console.log("unsubscribeToEvents login")
 
         // TODO
         // Не работает
@@ -77,13 +89,7 @@ export default class LoginPage {
         });
         */
 
-        AppEventMaker.unsubscribe(SubmitButtonEvents.BUTTON_SUBMIT, (id) => {
-            if(id === this.#submitBtn.id){
-                AppDispatcher.dispatch({
-                    type: UserActions.LOGIN
-                })
-            }
-        })
+        AppEventMaker.unsubscribe(SubmitButtonEvents.BUTTON_SUBMIT, this.validateData)
     }
 
     #validatePassword(){
@@ -104,6 +110,7 @@ export default class LoginPage {
         console.log("login validation started")
 
         console.log(this.#loginInput)
+        console.log(this.#loginInput.self.dataset)
         delete this.#loginInput.self.dataset.error
 
         const value = this.#loginInput.value
@@ -148,8 +155,6 @@ export default class LoginPage {
         this.#submitBtn.render();
 
         // Костыль
-        if (!this.#subscribed) {
-            this.#subscribeToEvents();
-        }
+        this.#subscribeToEvents();
     }
 }
