@@ -1,6 +1,7 @@
-import MainPage from "../pages/main-page/main-page.js";
+import Main from "../pages/main/main.js";
 import LoginPage from "../pages/login/login.js";
 import RegisterPage from "../pages/register/register.js";
+import ProfilePage from "../pages/profile/profile.js";
 
 class Router {
     #currentUrl;
@@ -16,7 +17,7 @@ class Router {
     }
 
     init(root, config){
-        const mainPage = new MainPage(root, config.mainPage)
+        const mainPage = new Main(root, config.mainPage)
         this.#pages.push(mainPage)
 
         const loginPage = new LoginPage(root, config.loginPage)
@@ -25,6 +26,8 @@ class Router {
         const registerPage = new RegisterPage(root, config.registerPage)
         this.#pages.push(registerPage)
 
+        const profilePage = new ProfilePage(root, config.profilePage)
+        this.#pages.push(profilePage)
 
         this.changePage(this.#currentUrl)
     }

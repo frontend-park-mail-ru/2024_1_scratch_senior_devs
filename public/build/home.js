@@ -1,1 +1,0 @@
-!function(){var a=Handlebars.template;(Handlebars.templates=Handlebars.templates||{})["home.hbs"]=a({compiler:[8,">= 4.3.0"],main:function(a,e,n,t,s){return'<div class="home">\n\t<h1>Страница с приветствием пользователя</h1>\n</div>'},useData:!0})}();

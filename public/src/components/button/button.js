@@ -1,8 +1,8 @@
-import '../../../build/submitButton.js'
+import '../../../build/button.js'
 import {AppEventMaker} from "../../modules/eventMaker.js";
 import {SubmitButtonEvents} from "./events.js";
 
-export class SubmitButton{
+export class Button {
     #parent;
     #props = {
         btnLabel: ''
@@ -46,7 +46,7 @@ export class SubmitButton{
 
         this.#parent.insertAdjacentHTML(
             'beforeend',
-            Handlebars.templates['submitButton.hbs'](this.#props)
+            Handlebars.templates['button.hbs'](this.#props)
         )
 
         this.#addEventListeners();

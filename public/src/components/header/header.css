@@ -1,7 +1,7 @@
 header {
     width: 100%;
-    padding: 10px 25px;
-    height: 80px;
+    height: 60px;
+    padding: 0 25px;
     background: #fff;
     display: flex;
     justify-content: space-between;
@@ -35,4 +35,5 @@ header .right-container .avatar {
     width: 50px;
     height: 50px;
     border-radius: 50%;
+    cursor: pointer;
 }

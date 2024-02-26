@@ -5,6 +5,9 @@ const mainPage = {
 
 const header = {
     name: "YouNote",
+    avatarLink: {
+        href: "/profile"
+    },
     avatar: {
         id: "user-avatar"
     },
@@ -15,7 +18,7 @@ const header = {
             needAuth: false
         },
         main: {
-            href: "/main",
+            href: "/",
             text: "Мои заметки",
             needAuth: true
         },
@@ -32,41 +35,80 @@ const header = {
     }
 }
 
+const footer = {
+    id: "footer"
+}
+
+const wrapper = {
+    id: "wrapper"
+}
+
+const profilePage = {
+    href: "profile",
+    id: "profile-page",
+    logoutBtn: {
+        btnLabel: "Выйти"
+    }
+}
+
 const loginPage = {
     href: "login",
-    inputs: {
-        login: {
-            type: 'text',
-            placeholder: 'Введите логин'
+    form: {
+        id: "login-form",
+        inputs: {
+            login: {
+                type: 'text',
+                placeholder: 'Введите логин'
+            },
+            password: {
+                type: "password",
+                placeholder: "Придумайте пароль"
+            }
         },
-        password: {
-            type: "password",
-            placeholder: "Придумайте пароль"
-        }
-    },
-    buttons: {
-        submitBtn: {
-            btnLabel: "Войти"
+        links: {
+            registerPage: {
+                href: "/register",
+                text: "Ещё не зарегистрированы?",
+            }
+        },
+        buttons: {
+            submitBtn: {
+                btnLabel: "Войти"
+            }
         }
     }
 }
 
 const registerPage = {
     href: "register",
-    inputs: {
-        login: {
-           type: "text",
-           placeholder: "Придумайте логин"
+    form: {
+        id: "register-form",
+        inputs: {
+            login: {
+                type: "text",
+                placeholder: "Введите логин"
+            },
+            password: {
+                type: "password",
+                placeholder: "Введите пароль"
+            },
+            repeatPassword: {
+                type: "password",
+                placeholder: "Повторите пароль"
+            }
         },
-        password: {
-            type: "password",
-            placeholder: "Придумайте пароль"
+        links: {
+            loginPage: {
+                href: "/login",
+                text: "Уже есть аккаунт?",
+            }
         },
-        repeatPassword: {
-            type: "password",
-            placeholder: "Повторите пароль"
+        buttons: {
+            submitBtn: {
+                btnLabel: "Зарегистрироваться"
+            }
         }
-    }
+    },
 }
 
 const notes = {
@@ -90,9 +132,12 @@ export const config = {
     mainPage: mainPage,
     loginPage: loginPage,
     registerPage: registerPage,
+    profilePage: profilePage,
     header: header,
     notes: notes,
     noteEditor: noteEditor,
     note: note,
-    avatar: avatar
+    avatar: avatar,
+    wrapper: wrapper,
+    footer: footer
 };

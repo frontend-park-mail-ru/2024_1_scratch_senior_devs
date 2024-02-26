@@ -1,0 +1,8 @@
+.profile-page {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-page button {
+    width: 200px;
+}

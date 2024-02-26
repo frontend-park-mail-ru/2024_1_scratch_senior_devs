@@ -9,6 +9,7 @@ export class Input {
         showPassword: '',
         change: ''
     }
+
     #image;
     #input;
 
@@ -33,6 +34,10 @@ export class Input {
 
     get value() {
         return this.#input.value;
+    }
+
+    throwError(message) {
+        this.self.dataset.error = message
     }
 
     #change(){
@@ -75,6 +80,7 @@ export class Input {
                 'beforeend',
                 template(this.#config)
             );
+
             this.#image = document.querySelector(`#input-${this.#config.id} > img`);
             this.#input = document.querySelector(`#input-${this.#config.id} > input`);
             this.#addEventListeners();

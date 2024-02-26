@@ -31,7 +31,11 @@ export class Header {
     #addEventListeners(){
         AppEventMaker.subscribe(UserStoreEvents.SUCCSSESFUL_LOGIN, () => {
             console.log("log hueg")
-            this.#avatar = new Image(document.querySelector(".right-container"), this.#config.avatar);
+
+            const avatarLink = new Link(document.querySelector(".right-container"), this.#config.avatarLink)
+            avatarLink.render()
+
+            this.#avatar = new Image(avatarLink.self, this.#config.avatar);
             this.#avatar.render();
             this.#avatar.updateImage(AppUserStore.avatar)
 
@@ -52,7 +56,10 @@ export class Header {
     render() {
         console.log("header render")
 
-        this.#parent.insertAdjacentHTML('afterbegin', window.Handlebars.templates['header.hbs'](this.#config));
+        this.#parent.insertAdjacentHTML(
+            'afterbegin',
+            window.Handlebars.templates['header.hbs'](this.#config)
+        );
 
         const rightContainer = document.querySelector(".right-container")
 

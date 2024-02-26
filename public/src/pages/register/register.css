@@ -1,6 +1,22 @@
-#register-page {
+.register-form-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.register-form {
+    padding: 20px;
+    border-radius: 20px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
     align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    gap: 20px;
+}
+
+.register-window > div {
+    margin: 10px;
 }

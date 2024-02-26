@@ -1,11 +1,12 @@
 import "../../../build/login.js"
 import {Input} from "../../components/input/input.js";
-import {SubmitButton} from "../../components/submit-button/submitButton.js";
+import {Button} from "../../components/button/button.js";
 import {inputEvents} from "../../components/input/events.js";
-import {SubmitButtonEvents} from "../../components/submit-button/events.js";
+import {SubmitButtonEvents} from "../../components/button/events.js";
 import {AppEventMaker} from "../../modules/eventMaker.js";
 import {AppDispatcher} from "../../modules/dispathcer.js";
-import {AppUserStore, UserActions} from "../../stores/user/userStore.js";
+import {UserActions} from "../../stores/user/userStore.js";
+import {Link} from "../../components/link/link.js";
 
 export default class LoginPage {
     #parent;
@@ -13,6 +14,7 @@ export default class LoginPage {
 
     #loginInput;
     #passwordInput;
+    #link;
     #submitBtn;
 
     #subscribed; // Костыль
@@ -27,7 +29,13 @@ export default class LoginPage {
         return this.#config.href;
     }
 
+    get form () {
+        return document.getElementById(this.#config.form.id)
+    }
+
     #subscribeToEvents(){
+        console.log("subscribeToEvents")
+
         AppEventMaker.subscribe(inputEvents.INPUT_CHANGE, (id) => {
             if(id === this.#passwordInput.id){
                 this.#validatePassword()
@@ -38,10 +46,15 @@ export default class LoginPage {
 
         AppEventMaker.subscribe(SubmitButtonEvents.BUTTON_SUBMIT, (id) => {
             if(id === this.#submitBtn.id){
-                AppDispatcher.dispatch({
-                    type: UserActions.LOGIN,
-                    payload: this.#loginInput.value
-                })
+                const validateLogin = this.#validateLogin()
+                const validatePassword = this.#validatePassword()
+                if (validateLogin && validatePassword) {
+
+                    AppDispatcher.dispatch({
+                        type: UserActions.LOGIN,
+                        payload: this.#loginInput.value
+                    })
+                }
             }
         })
 
@@ -54,6 +67,7 @@ export default class LoginPage {
         // TODO
         // Не работает
 
+        /*
         AppEventMaker.unsubscribe(inputEvents.INPUT_CHANGE, (id) => {
             if(id === this.#passwordInput.id){
                 this.#validatePassword()
@@ -61,25 +75,48 @@ export default class LoginPage {
                 this.#validateLogin();
             }
         });
+        */
 
         AppEventMaker.unsubscribe(SubmitButtonEvents.BUTTON_SUBMIT, (id) => {
-            console.log("fasfdfasd")
             if(id === this.#submitBtn.id){
-                console.log("fffff")
                 AppDispatcher.dispatch({
                     type: UserActions.LOGIN
                 })
             }
         })
-
     }
 
     #validatePassword(){
-        console.log("password validated")
+        console.log("password validation started")
+
+        const value = this.#passwordInput.value
+
+        if (value === "")
+        {
+            this.#passwordInput.throwError("Пароль не может быть пустым!")
+            return false
+        }
+
+        return true
     }
 
     #validateLogin(){
-        console.log("login validated")
+        console.log("login validation started")
+
+        console.log(this.#loginInput)
+        delete this.#loginInput.self.dataset.error
+
+        const value = this.#loginInput.value
+
+        if (value === "")
+        {
+            this.#loginInput.throwError("Логин не может быть пустым!")
+            return false
+        }
+
+
+
+        return true
     }
 
     remove(){
@@ -93,20 +130,26 @@ export default class LoginPage {
     render() {
         console.log("loginPage render")
 
-        this.#parent.insertAdjacentHTML('beforeend', window.Handlebars.templates['login.hbs'](this.#config.loginPage));
-        this.#loginInput = new Input(document.querySelector('.username-input-place'), this.#config.inputs.login);
+        this.#parent.insertAdjacentHTML(
+            'beforeend',
+            window.Handlebars.templates['login.hbs'](this.#config.form)
+        );
+
+        this.#loginInput = new Input(this.form, this.#config.form.inputs.login);
         this.#loginInput.render();
 
-        this.#passwordInput = new Input(document.querySelector('.password-input-place'), this.#config.inputs.password);
+        this.#passwordInput = new Input(this.form, this.#config.form.inputs.password);
         this.#passwordInput.render();
 
-        this.#submitBtn = new SubmitButton(document.querySelector('.submit-btn-place'), this.#config.buttons.submitBtn);
+        this.#link = new Link(this.form, this.#config.form.links.registerPage);
+        this.#link.render();
+
+        this.#submitBtn = new Button(this.form, this.#config.form.buttons.submitBtn);
         this.#submitBtn.render();
 
         // Костыль
         if (!this.#subscribed) {
             this.#subscribeToEvents();
         }
-
     }
 }
