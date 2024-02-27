@@ -21,7 +21,7 @@ export const ValidatePassword = (value) => {
         return ValidationResult(false, "Пароль должен быть короче 20 символов!")
     }
 
-
+    return ValidationResult(true)
 }
 
 export const ValidateLogin = (value) => {

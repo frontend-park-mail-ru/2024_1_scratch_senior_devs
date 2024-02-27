@@ -57,8 +57,8 @@ export default class LoginPage {
 
     #inputEventHandler = (id) => {
         if(id === this.#passwordInput.id){
-            this.#validatePassword()
-        } else{
+            this.#validatePassword();
+        } else if (id === this.#loginInput.id){
             this.#validateLogin();
         }
     }
@@ -104,7 +104,7 @@ export default class LoginPage {
         const validationResult = ValidateLogin(value);
 
         if (!validationResult.result){
-            this.#passwordInput.throwError(validationResult.message);
+            this.#loginInput.throwError(validationResult.message);
         }
 
         return validationResult.result

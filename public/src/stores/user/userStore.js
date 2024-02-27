@@ -42,4 +42,5 @@ export const AppUserStore = new UserStore();
 
 export const UserActions = {
     LOGIN: "LOGIN",
+    REGISTER: "REGISTER"
 }
