@@ -2,6 +2,7 @@ import "../../../build/register.js"
 import {Input} from "../../components/input/input.js";
 import {Link} from "../../components/link/link.js";
 import {Button} from "../../components/button/button.js";
+import {ValidateLogin, ValidatePassword} from "../../shared/validation.js";
 
 export default class RegisterPage {
     #parent;
@@ -24,6 +25,48 @@ export default class RegisterPage {
 
     get form () {
         return document.getElementById(this.#config.form.id)
+    }
+
+    #validateLogin(){
+        delete this.#loginInput.self.dataset.error;
+
+        const value = this.#loginInput.value;
+
+        const validationResult = ValidateLogin(value);
+
+        if (!validationResult.result){
+            this.#loginInput.throwError(validationResult.message);
+        }
+
+        return validationResult.result;
+    }
+
+    #validatePassword(){
+        delete this.#passwordInput.self.dataset.error;
+
+        const value = this.#passwordInput.value;
+
+        const validationResult = ValidatePassword(value);
+
+        if (!validationResult.result){
+            this.#passwordInput.throwError(validationResult.message);
+        }
+
+        return validationResult.result;
+    }
+
+    #validateRepeatPassword(){
+        delete this.#repeatPasswordInput.self.dataset.error;
+
+        const value = this.#repeatPasswordInput.value;
+
+        const validationResult = ValidatePassword(value);
+
+        if (!validationResult.result){
+            this.#repeatPasswordInput.throwError(validationResult.message);
+        }
+
+        return validationResult.result;
     }
 
     remove(){

@@ -7,6 +7,7 @@ import {AppEventMaker} from "../../modules/eventMaker.js";
 import {AppDispatcher} from "../../modules/dispathcer.js";
 import {UserActions} from "../../stores/user/userStore.js";
 import {Link} from "../../components/link/link.js";
+import {ValidateLogin, ValidatePassword} from "../../shared/validation.js";
 
 export default class LoginPage {
     #parent;
@@ -17,14 +18,11 @@ export default class LoginPage {
     #link;
     #submitBtn;
 
-    #subscribed; // Костыль
-
     #callback;
 
     constructor(parent, config) {
         this.#parent = parent;
         this.#config = config;
-        this.#subscribed = false; // Костыль
         this.#callback = (id) => {
             console.log("asdfasdf")
             if(id === this.#submitBtn.id){
@@ -57,73 +55,59 @@ export default class LoginPage {
         }
     }
 
+    #inputEventHandler = (id) => {
+        if(id === this.#passwordInput.id){
+            this.#validatePassword()
+        } else{
+            this.#validateLogin();
+        }
+    }
+
     #subscribeToEvents(){
         console.log("subscribeToEvents")
 
-        AppEventMaker.subscribe(inputEvents.INPUT_CHANGE, (id) => {
-            if(id === this.#passwordInput.id){
-                this.#validatePassword()
-            } else{
-                this.#validateLogin();
-            }
-        });
+        AppEventMaker.subscribe(inputEvents.INPUT_CHANGE, this.#inputEventHandler);
 
         AppEventMaker.subscribe(SubmitButtonEvents.BUTTON_SUBMIT, this.validateData)
-
-        this.#subscribed = true; // Костыль
     }
 
     #unsubscribeToEvents(){
         console.log("unsubscribeToEvents login")
 
-        // TODO
-        // Не работает
-
-        /*
-        AppEventMaker.unsubscribe(inputEvents.INPUT_CHANGE, (id) => {
-            if(id === this.#passwordInput.id){
-                this.#validatePassword()
-            } else{
-                this.#validateLogin();
-            }
-        });
-        */
-
+        AppEventMaker.unsubscribe(inputEvents.INPUT_CHANGE, this.#inputEventHandler);
         AppEventMaker.unsubscribe(SubmitButtonEvents.BUTTON_SUBMIT, this.validateData)
     }
 
     #validatePassword(){
         console.log("password validation started")
 
-        const value = this.#passwordInput.value
+        delete this.#passwordInput.self.dataset.error;
 
-        if (value === "")
-        {
-            this.#passwordInput.throwError("Пароль не может быть пустым!")
-            return false
+        const value = this.#passwordInput.value;
+
+        const validationResult = ValidatePassword(value);
+
+        if (!validationResult.result){
+            this.#passwordInput.throwError(validationResult.message);
         }
 
-        return true
+        return validationResult.result
     }
 
     #validateLogin(){
         console.log("login validation started")
 
-        console.log(this.#loginInput)
-        console.log(this.#loginInput.self.dataset)
         delete this.#loginInput.self.dataset.error
 
         const value = this.#loginInput.value
 
-        if (value === "")
-        {
-            this.#loginInput.throwError("Логин не может быть пустым!")
-            return false
+        const validationResult = ValidateLogin(value);
+
+        if (!validationResult.result){
+            this.#passwordInput.throwError(validationResult.message);
         }
 
-
-
-        return true
+        return validationResult.result
     }
 
     remove(){
@@ -154,7 +138,6 @@ export default class LoginPage {
         this.#submitBtn = new Button(this.form, this.#config.form.buttons.submitBtn);
         this.#submitBtn.render();
 
-        // Костыль
         this.#subscribeToEvents();
     }
 }

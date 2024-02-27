@@ -41,5 +41,5 @@ class UserStore {
 export const AppUserStore = new UserStore();
 
 export const UserActions = {
-    LOGIN: "LOGIN"
+    LOGIN: "LOGIN",
 }
