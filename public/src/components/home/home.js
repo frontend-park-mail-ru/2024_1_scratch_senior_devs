@@ -1,4 +1,5 @@
 import "../../../build/home.js"
+import {LinkButton} from "../link-button/link-button.js";
 
 export class Home {
     #parent;
@@ -9,10 +10,18 @@ export class Home {
         this.#config = config;
     }
 
+    get self () {
+        return document.getElementById('home');
+    }
+
     render() {
-        const tmp = document.createElement('div');
-        const template = Handlebars.templates["home.hbs"];
-        tmp.innerHTML = template(this.#config);
-        this.#parent.appendChild(tmp.firstElementChild);
+        this.#parent.insertAdjacentHTML(
+            'afterbegin',
+            window.Handlebars.templates['home.hbs'](this.#config)
+        );
+
+        const link = new LinkButton(document.querySelector(".first"), this.#config.linkToLogin)
+        link.render()
+
     }
 }

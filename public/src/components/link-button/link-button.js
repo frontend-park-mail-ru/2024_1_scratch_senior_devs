@@ -1,7 +1,7 @@
-import "../../../build/link.js"
 import {router} from "../../modules/router.js";
+import "../../../build/link-button.js"
 
-export class Link {
+export class LinkButton {
     #parent;
 
     #props = {};
@@ -31,12 +31,11 @@ export class Link {
         this.self.addEventListener("click", this.handleClick)
     }
 
-
     render() {
 
         this.#parent.insertAdjacentHTML(
             'beforeend',
-            window.Handlebars.templates['link.hbs'](this.#props)
+            window.Handlebars.templates['link-button.hbs'](this.#props)
         );
 
         this.#addListeners()

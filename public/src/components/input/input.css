@@ -13,6 +13,7 @@
     transition: 0.3s;
 }
 
+
 .input-container input:focus {
     border: 1px solid #56A6F0;
 }
@@ -38,4 +39,18 @@
     top: 14px;
     right: 16px;
     cursor: pointer;
+}
+
+.input-container .form-label {
+    position: absolute;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    left: 0.75rem;
+    top: 0.75rem;
+    padding: 0 0.35rem;
+    color: hsl(220, 3%, 50%);
+    background: #fff;
+    transition: all 0.35s ease;
 }

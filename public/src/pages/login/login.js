@@ -2,11 +2,12 @@ import "../../../build/login.js"
 import {Input} from "../../components/input/input.js";
 import {Button} from "../../components/button/button.js";
 import {inputEvents} from "../../components/input/events.js";
-import {SubmitButtonEvents} from "../../components/button/events.js";
 import {AppEventMaker} from "../../modules/eventMaker.js";
 import {AppDispatcher} from "../../modules/dispathcer.js";
 import {UserActions} from "../../stores/user/userStore.js";
 import {Link} from "../../components/link/link.js";
+import {ValidateLogin, ValidatePassword} from "../../shared/validation.js";
+import {router} from "../../modules/router.js";
 
 export default class LoginPage {
     #parent;
@@ -17,22 +18,9 @@ export default class LoginPage {
     #link;
     #submitBtn;
 
-    #subscribed; // Костыль
-
-    #callback;
-
     constructor(parent, config) {
         this.#parent = parent;
         this.#config = config;
-        this.#subscribed = false; // Костыль
-        this.#callback = (id) => {
-            console.log("asdfasdf")
-            if(id === this.#submitBtn.id){
-                AppDispatcher.dispatch({
-                    type: UserActions.LOGIN
-                })
-            }
-        }
     }
 
     get href () {
@@ -43,87 +31,70 @@ export default class LoginPage {
         return document.getElementById(this.#config.form.id)
     }
 
-    validateData = (id) => {
-        if(id === this.#submitBtn.id){
-            const validateLogin = this.#validateLogin()
-            const validatePassword = this.#validatePassword()
-            if (validateLogin && validatePassword) {
+    validateData = () => {
+        const validateLogin = this.#validateLogin()
+        const validatePassword = this.#validatePassword()
+        if (validateLogin && validatePassword) {
 
-                AppDispatcher.dispatch({
-                    type: UserActions.LOGIN,
-                    payload: this.#loginInput.value
-                })
-            }
+            AppDispatcher.dispatch({
+                type: UserActions.LOGIN,
+                payload: this.#loginInput.value
+            })
+
+            router.redirect("/")
+        }
+    }
+
+    #inputEventHandler = (id) => {
+        if(id === this.#passwordInput.id){
+            this.#validatePassword();
+        } else if (id === this.#loginInput.id){
+            this.#validateLogin();
         }
     }
 
     #subscribeToEvents(){
         console.log("subscribeToEvents")
 
-        AppEventMaker.subscribe(inputEvents.INPUT_CHANGE, (id) => {
-            if(id === this.#passwordInput.id){
-                this.#validatePassword()
-            } else{
-                this.#validateLogin();
-            }
-        });
-
-        AppEventMaker.subscribe(SubmitButtonEvents.BUTTON_SUBMIT, this.validateData)
-
-        this.#subscribed = true; // Костыль
+        AppEventMaker.subscribe(inputEvents.INPUT_CHANGE, this.#inputEventHandler);
     }
 
     #unsubscribeToEvents(){
         console.log("unsubscribeToEvents login")
 
-        // TODO
-        // Не работает
-
-        /*
-        AppEventMaker.unsubscribe(inputEvents.INPUT_CHANGE, (id) => {
-            if(id === this.#passwordInput.id){
-                this.#validatePassword()
-            } else{
-                this.#validateLogin();
-            }
-        });
-        */
-
-        AppEventMaker.unsubscribe(SubmitButtonEvents.BUTTON_SUBMIT, this.validateData)
+        AppEventMaker.unsubscribe(inputEvents.INPUT_CHANGE, this.#inputEventHandler);
     }
 
     #validatePassword(){
         console.log("password validation started")
 
-        const value = this.#passwordInput.value
+        delete this.#passwordInput.self.dataset.error;
 
-        if (value === "")
-        {
-            this.#passwordInput.throwError("Пароль не может быть пустым!")
-            return false
+        const value = this.#passwordInput.value;
+
+        const validationResult = ValidatePassword(value);
+
+        if (!validationResult.result){
+            this.#passwordInput.throwError(validationResult.message);
         }
 
-        return true
+        return validationResult.result
     }
 
     #validateLogin(){
         console.log("login validation started")
 
-        console.log(this.#loginInput)
-        console.log(this.#loginInput.self.dataset)
         delete this.#loginInput.self.dataset.error
 
         const value = this.#loginInput.value
 
-        if (value === "")
-        {
-            this.#loginInput.throwError("Логин не может быть пустым!")
-            return false
+        const validationResult = ValidateLogin(value);
+
+        if (!validationResult.result){
+            this.#loginInput.throwError(validationResult.message);
         }
 
-
-
-        return true
+        return validationResult.result
     }
 
     remove(){
@@ -151,10 +122,9 @@ export default class LoginPage {
         this.#link = new Link(this.form, this.#config.form.links.registerPage);
         this.#link.render();
 
-        this.#submitBtn = new Button(this.form, this.#config.form.buttons.submitBtn);
+        this.#submitBtn = new Button(this.form, this.#config.form.buttons.submitBtn, this.validateData);
         this.#submitBtn.render();
 
-        // Костыль
         this.#subscribeToEvents();
     }
 }

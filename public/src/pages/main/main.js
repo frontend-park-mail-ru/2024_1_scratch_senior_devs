@@ -28,16 +28,16 @@ export default class Main {
   render() {
     console.log("Main page render")
 
-    const tmp = document.createElement('div');
-    const template = Handlebars.templates["main.hbs"];
-    tmp.innerHTML = template(this.#config);
-    this.#parent.appendChild(tmp.firstElementChild);
+    this.#parent.insertAdjacentHTML(
+        'afterbegin',
+        window.Handlebars.templates['main.hbs'](this.#config)
+    );
 
     if (AppUserStore.IsAuthenticated()) {
       const notesContainer = new NotesContainer(this.self, this.#config)
       notesContainer.render()
     } else {
-      const home = new Home(this.self, this.#config)
+      const home = new Home(this.self, this.#config.home)
       home.render()
     }
   }

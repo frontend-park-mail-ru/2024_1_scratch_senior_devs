@@ -2,6 +2,8 @@ import Main from "../pages/main/main.js";
 import LoginPage from "../pages/login/login.js";
 import RegisterPage from "../pages/register/register.js";
 import ProfilePage from "../pages/profile/profile.js";
+import {AppUserStore} from "../stores/user/userStore.js";
+import NotFoundPage from "../pages/notFound/not-found.js";
 
 class Router {
     #currentUrl;
@@ -9,52 +11,59 @@ class Router {
     #pages;
 
     constructor() {
-        this.#currentUrl = window.location.href.split("/").slice(-1)[0];
+        this.#currentUrl = this.parseUrl();
         this.#currentPage = undefined;
-        this.#pages = [];
-
-        this.registerEvents();
+        this.#pages = new Map();
     }
 
     init(root, config){
         const mainPage = new Main(root, config.mainPage)
-        this.#pages.push(mainPage)
+        this.registerPage(mainPage)
 
         const loginPage = new LoginPage(root, config.loginPage)
-        this.#pages.push(loginPage)
+        this.registerPage(loginPage)
 
         const registerPage = new RegisterPage(root, config.registerPage)
-        this.#pages.push(registerPage)
+        this.registerPage(registerPage)
 
         const profilePage = new ProfilePage(root, config.profilePage)
-        this.#pages.push(profilePage)
+        this.registerPage(profilePage)
 
-        this.changePage(this.#currentUrl)
+        const notFoundPage = new NotFoundPage(root, config.notFoundPage)
+        this.registerPage(notFoundPage)
+
+        this.redirect(this.#currentUrl)
     }
 
-    changePage(href) {
+    registerPage(page) {
+        this.#pages[page.href] = page
+    }
+
+    redirect(href) {
         if (href === "") href = "/"
 
-        this.#pages.forEach(page => {
-            if (this.#currentPage !== page && page.href === href) {
-                this.#currentPage?.remove()
-                page.render()
-                this.#currentPage = page
-                history.pushState(null, null, page.href)
+        const page = this.#pages[href]
+
+        if (page === undefined) {
+            this.redirect("/404")
+            return;
+        }
+
+        if (this.#currentPage !== page && page.href === href) {
+            if (page.needAuth && !AppUserStore.IsAuthenticated()) {
+                this.redirect("/")
+                return
             }
-        })
+
+            this.#currentPage?.remove()
+            page.render()
+            this.#currentPage = page
+            history.pushState(null, null, page.href)
+        }
     }
 
-    registerEvents() {
-        window.addEventListener('click', (e) => this.listenClick(e));
-    }
-
-    listenClick (e) {
-        e.preventDefault();
-        const anchor = e.target.closest('a');
-        if (!anchor) return;
-        const href = anchor.getAttribute('href').replace('/', '');
-        this.changePage(href);
+    parseUrl() {
+        return  "/" + window.location.href.split("/").slice(-1)[0];
     }
 }
 

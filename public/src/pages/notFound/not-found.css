@@ -1,13 +1,13 @@
-.profile-page {
+.not-found {
     display: flex;
     flex-direction: column;
-    width: 100%;
-    height: 100%;
     justify-content: center;
     align-items: center;
+    width: 100%;
+    height: 100%;
     gap: 25px;
 }
 
-.profile-page button {
-    width: 200px;
+.not-found button {
+    font-size: 20px;
 }

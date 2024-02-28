@@ -2,6 +2,7 @@
 @import "src/pages/login/login.css";
 @import "src/pages/register/register.css";
 @import "src/pages/profile/profile.css";
+@import "src/pages/notFound/not-found.css";
 @import './src/components/header/header.css';
 @import './src/components/notes/notes.css';
 @import './src/components/note/note.css';
@@ -13,6 +14,7 @@
 @import "src/components/button/button.css";
 @import "src/components/wrapper/wrapper.css";
 @import "src/components/footer/footer.css";
+@import "src/components/link-button/link-button.css";
 
 *, *::before, *::after {
     box-sizing: border-box;
@@ -55,4 +57,5 @@ p, h1, h2, h3, h4, h5, h6 {
 
 #wrapper{
     flex: 1 0 auto;
+    padding: 50px 0;
 }

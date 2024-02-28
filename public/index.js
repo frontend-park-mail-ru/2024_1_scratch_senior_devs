@@ -10,26 +10,14 @@ const root = document.getElementById('root');
 AppUserStore.registerEvents();
 
 
-function renderHeader() {
-    const header = new Header(root, config.header);
-    header.render();
-}
+const wrapper = new Wrapper(root, config.wrapper);
+wrapper.render();
 
-function renderFooter() {
-    const footer = new Footer(root, config.footer);
-    footer.render()
-}
+router.init(wrapper.self, config);
 
-function renderWrapper() {
-    const wrapper = new Wrapper(root, config.wrapper);
-    wrapper.render();
+const header = new Header(root, config.header);
+header.render();
 
-    router.init(wrapper.self, config);
-}
-
-
-renderWrapper();
-renderHeader();
-renderFooter();
-
+const footer = new Footer(root, config.footer);
+footer.render()
 
