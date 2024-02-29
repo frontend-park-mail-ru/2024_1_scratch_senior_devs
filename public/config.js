@@ -60,6 +60,7 @@ const profilePage = {
 }
 
 const loginPage = {
+    id: "login-page",
     href: "/login",
     form: {
         id: "login-form",
@@ -91,6 +92,7 @@ const loginPage = {
 
 const registerPage = {
     href: "/register",
+    id: "register-page",
     form: {
         id: "register-form",
         inputs: {

@@ -31,6 +31,10 @@ export default class LoginPage {
         return document.getElementById(this.#config.form.id)
     }
 
+    get self () {
+        return document.getElementById(this.#config.id)
+    }
+
     validateData = () => {
         const validateLogin = this.#validateLogin()
         const validatePassword = this.#validatePassword()
@@ -102,7 +106,7 @@ export default class LoginPage {
         this.#submitBtn.remove();
         this.#passwordInput.remove();
         this.#loginInput.remove();
-        this.#parent.innerHTML = '';
+        this.self.remove()
     }
 
     render() {
@@ -110,7 +114,7 @@ export default class LoginPage {
 
         this.#parent.insertAdjacentHTML(
             'beforeend',
-            window.Handlebars.templates['login.hbs'](this.#config.form)
+            window.Handlebars.templates['login.hbs'](this.#config)
         );
 
         this.#loginInput = new Input(this.form, this.#config.form.inputs.login);

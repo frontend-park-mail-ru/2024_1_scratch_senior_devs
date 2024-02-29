@@ -26,7 +26,7 @@ export default class ProfilePage {
     }
 
     remove(){
-        this.#parent.innerHTML = '';
+        this.self.remove()
     }
 
     handleLogout() {

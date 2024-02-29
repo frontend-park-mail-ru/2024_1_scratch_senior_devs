@@ -20,7 +20,7 @@ export default class NotFoundPage {
     }
 
     remove() {
-        this.#parent.innerHTML = '';
+        this.self.remove()
     }
 
     handleButtonClick = () => {

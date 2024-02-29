@@ -32,6 +32,10 @@ export default class RegisterPage {
         return document.getElementById(this.#config.form.id)
     }
 
+    get self () {
+        return document.getElementById(this.#config.id)
+    }
+
     validateData = () => {
         const validateLogin = this.#validateLogin()
         const validatePassword = this.#validatePassword()
@@ -113,8 +117,8 @@ export default class RegisterPage {
     }
 
     remove(){
-        this.#parent.innerHTML = '';
         this.#unsubscribeToEvents();
+        this.self.remove()
     }
 
     render() {

@@ -22,7 +22,7 @@ export default class Main {
 
   remove(){
     console.log("Main remove")
-    this.#parent.innerHTML = '';
+    this.self.remove()
   }
 
   render() {
