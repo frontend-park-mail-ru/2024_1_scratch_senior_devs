@@ -5,9 +5,7 @@ const mainPage = {
     home: {
         id: "home",
         linkToLogin: {
-            href: "/login",
-            text: "Попробовать",
-            type: "submit"
+            text: "Попробовать"
         }
     }
 }

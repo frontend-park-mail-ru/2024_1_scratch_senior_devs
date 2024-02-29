@@ -5,6 +5,9 @@ import {Button} from "../../components/button/button.js";
 import {ValidateLogin, ValidatePassword} from "../../shared/validation.js";
 import {AppEventMaker} from "../../modules/eventMaker.js";
 import {inputEvents} from "../../components/input/events.js";
+import {AppDispatcher} from "../../modules/dispathcer.js";
+import {UserActions} from "../../stores/user/userStore.js";
+import {router} from "../../modules/router.js";
 
 export default class RegisterPage {
     #parent;
@@ -27,6 +30,20 @@ export default class RegisterPage {
 
     get form () {
         return document.getElementById(this.#config.form.id)
+    }
+
+    validateData = () => {
+        const validateLogin = this.#validateLogin()
+        const validatePassword = this.#validatePassword()
+        if (validateLogin && validatePassword) {
+
+            AppDispatcher.dispatch({
+                type: UserActions.LOGIN,
+                payload: this.#loginInput.value
+            })
+
+            router.redirect("/")
+        }
     }
 
     #validateLogin(){
@@ -52,6 +69,12 @@ export default class RegisterPage {
 
         if (!validationResult.result){
             this.#passwordInput.throwError(validationResult.message);
+            this.#repeatPasswordInput.throwError(validationResult.message);
+        }
+
+        if (this.#passwordInput.value !== this.#repeatPasswordInput.value) {
+            this.#passwordInput.throwError("Пароли не совпадают");
+            this.#repeatPasswordInput.throwError("Пароли не совпадают");
         }
 
         return validationResult.result;
@@ -115,7 +138,7 @@ export default class RegisterPage {
         this.#link = new Link(this.form, this.#config.form.links.loginPage);
         this.#link.render();
 
-        this.#submitBtn = new Button(this.form, this.#config.form.buttons.submitBtn);
+        this.#submitBtn = new Button(this.form, this.#config.form.buttons.submitBtn, this.validateData);
         this.#submitBtn.render();
 
         this.#subscribeToEvents();

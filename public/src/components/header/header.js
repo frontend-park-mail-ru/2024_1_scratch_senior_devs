@@ -4,7 +4,8 @@ import '../../../build/header.js';
 import {AppEventMaker} from "../../modules/eventMaker.js";
 import {UserStoreEvents} from "../../stores/user/events.js";
 import {AppUserStore} from "../../stores/user/userStore.js";
-import {LinkButton} from "../link-button/link-button.js";
+import {router} from "../../modules/router.js";
+import {Button} from "../button/button.js";
 
 export class Header {
     #parent;
@@ -37,8 +38,6 @@ export class Header {
 
 
         AppEventMaker.subscribe(UserStoreEvents.SUCCSSESFUL_LOGIN, () => {
-            console.log("log hueg")
-
             if (this.#avatarLink === undefined) {
                 this.#avatarLink = new Link(document.querySelector(".right-container"), this.#config.avatarLink)
                 this.#avatarLink.render()
@@ -57,12 +56,14 @@ export class Header {
         })
 
         AppEventMaker.subscribe(UserStoreEvents.LOGOUT, () => {
-            console.log(this.#avatar.self)
-
             this.#avatarLink.self.hidden = true;
 
             this.#authPageLink.self.classList.remove("hidden");
         });
+    }
+
+    handleButtonClick = () => {
+        router.redirect("/login")
     }
 
     render() {
@@ -84,7 +85,7 @@ export class Header {
         rightContainer.appendChild(this.#menu)
 
         if (this.#authPageLink === undefined) {
-            this.#authPageLink = new LinkButton(this.#menu, this.#config.menu.auth)
+            this.#authPageLink = new Button(this.#menu, this.#config.menu.auth, this.handleButtonClick)
             this.#authPageLink.render()
         }
 

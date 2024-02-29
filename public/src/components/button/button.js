@@ -21,11 +21,12 @@ export class Button {
     }
 
     #addEventListeners(){
-        this.self.addEventListener('click', (e) => {
-            console.log(e)
-            e.preventDefault()
-            this.#onSubmit()
-        });
+        if (this.#onSubmit !== undefined) {
+            this.self.addEventListener('click', (e) => {
+                e.preventDefault()
+                this.#onSubmit()
+            });
+        }
     }
 
     #removeEventListeners(){
@@ -33,7 +34,9 @@ export class Button {
     }
 
     remove(){
-        this.#removeEventListeners();
+        if (this.#onSubmit !== undefined) {
+            this.#removeEventListeners();
+        }
     }
 
     render(){

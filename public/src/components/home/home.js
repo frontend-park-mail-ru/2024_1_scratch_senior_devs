@@ -1,5 +1,6 @@
 import "../../../build/home.js"
-import {LinkButton} from "../link-button/link-button.js";
+import {router} from "../../modules/router.js";
+import {Button} from "../button/button.js";
 
 export class Home {
     #parent;
@@ -14,13 +15,17 @@ export class Home {
         return document.getElementById('home');
     }
 
+    handleButtonClick = () => {
+        router.redirect("/login")
+    }
+
     render() {
         this.#parent.insertAdjacentHTML(
             'afterbegin',
             window.Handlebars.templates['home.hbs'](this.#config)
         );
 
-        const link = new LinkButton(document.querySelector(".first"), this.#config.linkToLogin)
+        const link = new Button(document.querySelector(".first"), this.#config.linkToLogin, this.handleButtonClick)
         link.render()
 
     }

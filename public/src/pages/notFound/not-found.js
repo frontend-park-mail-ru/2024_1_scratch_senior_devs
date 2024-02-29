@@ -1,5 +1,6 @@
 import "../../../build/not-found.js"
-import {LinkButton} from "../../components/link-button/link-button.js";
+import {router} from "../../modules/router.js";
+import {Button} from "../../components/button/button.js";
 
 export default class NotFoundPage {
     #parent;
@@ -19,9 +20,12 @@ export default class NotFoundPage {
     }
 
     remove() {
-
+        this.#parent.innerHTML = '';
     }
 
+    handleButtonClick = () => {
+        router.redirect("/")
+    }
 
     render() {
         console.log("404 page render")
@@ -31,7 +35,7 @@ export default class NotFoundPage {
             window.Handlebars.templates['not-found.hbs'](this.#config)
         );
 
-        const link = new LinkButton(this.self, this.#config.link)
+        const link = new Button(this.self, this.#config.link, this.handleButtonClick)
         link.render()
     }
 }

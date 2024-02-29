@@ -14,7 +14,6 @@
 @import "src/components/button/button.css";
 @import "src/components/wrapper/wrapper.css";
 @import "src/components/footer/footer.css";
-@import "src/components/link-button/link-button.css";
 
 *, *::before, *::after {
     box-sizing: border-box;
