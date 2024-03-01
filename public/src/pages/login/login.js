@@ -13,6 +13,8 @@ export default class LoginPage {
     #parent;
     #config;
 
+    needAuth;
+
     #loginInput;
     #passwordInput;
     #link;
@@ -21,6 +23,8 @@ export default class LoginPage {
     constructor(parent, config) {
         this.#parent = parent;
         this.#config = config;
+
+        this.needAuth = false;
     }
 
     get href () {

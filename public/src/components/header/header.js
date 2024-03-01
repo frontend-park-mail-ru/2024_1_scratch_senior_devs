@@ -6,6 +6,7 @@ import {UserStoreEvents} from "../../stores/user/events.js";
 import {AppUserStore} from "../../stores/user/userStore.js";
 import {router} from "../../modules/router.js";
 import {Button} from "../button/button.js";
+import {SettingsPanel} from "../settings-panel/settings-panel.js";
 
 export class Header {
     #parent;
@@ -15,8 +16,7 @@ export class Header {
 
     #authPageLink;
 
-    #avatar;
-    #avatarLink;
+    #settingsPanel;
 
     constructor(parent, config) {
         this.#parent = parent;
@@ -38,27 +38,23 @@ export class Header {
 
 
         AppEventMaker.subscribe(UserStoreEvents.SUCCSSESFUL_LOGIN, () => {
-            if (this.#avatarLink === undefined) {
-                this.#avatarLink = new Link(document.querySelector(".right-container"), this.#config.avatarLink)
-                this.#avatarLink.render()
-            } else {
-                this.#avatarLink.self.hidden = false;
+            if (this.#settingsPanel === undefined) {
+                this.#settingsPanel = new SettingsPanel(document.querySelector(".right-container"), this.#config.settings)
             }
-
-            if (this.#avatar === undefined) {
-                this.#avatar = new Image(this.#avatarLink.self, this.#config.avatar);
-                this.#avatar.render();
-            }
-            this.#avatar.updateImage(AppUserStore.avatar)
-
+            this.#settingsPanel.render()
 
             this.#authPageLink.self.classList.add("hidden");
         })
 
         AppEventMaker.subscribe(UserStoreEvents.LOGOUT, () => {
-            this.#avatarLink.self.hidden = true;
+            this.#settingsPanel.remove()
 
-            this.#authPageLink.self.classList.remove("hidden");
+            if (this.#authPageLink === undefined) {
+                this.#authPageLink = new Button(this.#menu, this.#config.menu.auth, this.handleButtonClick)
+                this.#authPageLink.render()
+            } else {
+                this.#authPageLink.self.classList.remove("hidden");
+            }
         });
     }
 
@@ -84,14 +80,14 @@ export class Header {
 
         rightContainer.appendChild(this.#menu)
 
-        if (this.#authPageLink === undefined) {
+
+        if (AppUserStore.IsAuthenticated()) {
+            this.#settingsPanel = new SettingsPanel(document.querySelector(".right-container"), this.#config.settings)
+            this.#settingsPanel.render()
+        } else {
             this.#authPageLink = new Button(this.#menu, this.#config.menu.auth, this.handleButtonClick)
             this.#authPageLink.render()
         }
-
-
-        // TODO
-        // Сделать logout
 
         this.#addEventListeners();
 

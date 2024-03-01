@@ -4,6 +4,10 @@ const mainPage = {
     needAuth: true,
     home: {
         id: "home",
+        previewImage: {
+            id: "preview-image",
+            src: "src/assets/1.jpg"
+        },
         linkToLogin: {
             text: "Попробовать"
         }
@@ -16,11 +20,21 @@ const header = {
         href: "/",
         text: "YouNote"
     },
-    avatarLink: {
-        href: "/profile"
-    },
-    avatar: {
-        id: "user-avatar"
+    settings: {
+        id: "settings-wrapper",
+        panel: {
+            id: "popup-content",
+            avatar: {
+                id: "user-avatar"
+            },
+            username: {
+                class: "username"
+            },
+            logoutBtn: {
+                id: "logout-btn",
+                text: "Выйти"
+            }
+        }
     },
     menu: {
         home: {

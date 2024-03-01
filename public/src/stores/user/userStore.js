@@ -5,8 +5,8 @@ import {router} from "../../modules/router.js";
 
 class UserStore {
     #state = {
-        username: '',
-        avatarUrl: '/src/assets/settings.png',
+        username: 'YarikMix',
+        avatarUrl: '/src/assets/avatar.png',
         isAuth: false
     }
 

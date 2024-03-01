@@ -18,9 +18,13 @@ export class Image {
     }
 
     render() {
-        const tmp = document.createElement('div');
-        const template = Handlebars.templates["image.hbs"];
-        tmp.innerHTML = template(this.#config);
-        this.#parent.appendChild(tmp.firstElementChild);
+        this.#parent.insertAdjacentHTML(
+            'afterbegin',
+            window.Handlebars.templates['image.hbs'](this.#config)
+        );
+
+        if (this.#config.src) {
+            this.updateImage(this.#config.src)
+        }
     }
 }

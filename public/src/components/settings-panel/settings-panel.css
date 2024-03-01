@@ -1,0 +1,140 @@
+#settings-button {
+    font-size: 0;
+    width: 42px;
+    height: 42px;
+    box-sizing: border-box;
+    border-radius: 100%;
+    padding: 14px 10px;
+    position: relative;
+    cursor: pointer;
+    background: #56A6F0;
+    z-index: 10;
+}
+#settings-wrapper.show #settings-button .one {
+    transform: translate3d(4px, 1px, 0) rotate(45deg);
+    width: 18px;
+}
+#settings-wrapper.show #settings-button .three {
+    transform: translate3d(5px, -1px, 0) rotate(-45deg);
+    width: 18px;
+}
+#settings-wrapper.show #settings-button .two {
+    width: 0;
+    display: none;
+}
+#settings-wrapper.show #settings-button .slider:before {
+    width: 0;
+    height: 0;
+}
+.slider {
+    width: 22px;
+    border-radius: 4px;
+    height: 2px;
+    background: #fff;
+    position: absolute;
+    transform-origin: 2px 2px;
+    transition: all 500ms cubic-bezier(0, 1, 0, 1);
+}
+.slider:before {
+    width: 6px;
+    height: 6px;
+    margin-top: -2px;
+    margin-left: -3px;
+    border-radius: 999px;
+    background: #fff;
+    display: inline-block;
+    content: ' ';
+    position: absolute;
+    left: 70%;
+    transition: left 140ms cubic-bezier(0, 2, 1, 1);
+}
+#settings-button:hover .slider:before {
+    left: 30%;
+}
+.slider.two {
+    margin-top: 6px;
+}
+.slider.two:before {
+    left: 30%;
+    transition-delay: 55ms;
+}
+#settings-button:hover .slider.two:before {
+    left: 70%;
+}
+.slider.three {
+    margin-top: 12px;
+}
+.slider.three:before {
+    left: 70%;
+    transition-delay: 110ms;
+}
+#settings-button:hover .slider.three:before {
+    left: 30%;
+}
+
+#settings-wrapper {
+    position: relative;
+}
+
+#settings-wrapper .background {
+    width: 0;
+    height: 0;
+    position: absolute;
+    background: #56A6F0;
+    transition: all .5s ;
+    z-index: -1;
+    right: 0;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+#settings-panel {
+    width: 150px;
+    height: 200px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transition: all 500ms;
+    overflow: hidden;
+    border-radius: 25px;
+    display: flex;
+}
+
+#settings-panel #popup-content {
+    width: 0;
+    height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    transition: all .5s;
+    position: absolute;
+    right: 0;
+    overflow: hidden;
+}
+
+#settings-panel #popup-content img {
+    width: 80px;
+    height: 80px;
+}
+
+#settings-panel #popup-content span {
+    color: #fff;
+}
+
+#settings-panel #popup-content button {
+    background: #fff;
+    color: #56A6F0;
+}
+
+#settings-wrapper.show #settings-panel #popup-content {
+    width: 100%;
+    height: 100%;
+}
+
+#settings-wrapper.show .background {
+    width: 110%;
+    height: 110%;
+    border-radius: 0%;
+}

@@ -13,6 +13,8 @@ export default class RegisterPage {
     #parent;
     #config;
 
+    needAuth;
+
     #loginInput;
     #passwordInput;
     #repeatPasswordInput;
@@ -22,6 +24,8 @@ export default class RegisterPage {
     constructor(parent, config) {
         this.#parent = parent;
         this.#config = config;
+
+        this.needAuth = false;
     }
 
     get href () {

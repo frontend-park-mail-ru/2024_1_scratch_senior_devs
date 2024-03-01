@@ -1,7 +1,6 @@
 import Main from "../pages/main/main.js";
 import LoginPage from "../pages/login/login.js";
 import RegisterPage from "../pages/register/register.js";
-import ProfilePage from "../pages/profile/profile.js";
 import {AppUserStore} from "../stores/user/userStore.js";
 import NotFoundPage from "../pages/notFound/not-found.js";
 
@@ -25,10 +24,6 @@ class Router {
 
         const registerPage = new RegisterPage(root, config.registerPage)
         this.registerPage(registerPage)
-
-        const profilePage = new ProfilePage(root, config.profilePage)
-        this.registerPage(profilePage)
-
         const notFoundPage = new NotFoundPage(root, config.notFoundPage)
         this.registerPage(notFoundPage)
 
@@ -49,17 +44,21 @@ class Router {
             return;
         }
 
-        if (this.#currentPage !== page && page.href === href) {
-            if (page.needAuth && !AppUserStore.IsAuthenticated()) {
-                this.redirect("/")
-                return
-            }
-
-            this.#currentPage?.remove()
-            page.render()
-            this.#currentPage = page
-            history.pushState(null, null, page.href)
+        if (page.needAuth === true && !AppUserStore.IsAuthenticated()) {
+            this.redirect("/")
+            return
         }
+
+        if (page.needAuth === false && AppUserStore.IsAuthenticated()) {
+            this.redirect("/")
+            return
+        }
+
+        this.#currentPage?.remove()
+        page.render()
+        this.#currentPage = page
+        history.pushState(null, null, page.href)
+
     }
 
     parseUrl() {

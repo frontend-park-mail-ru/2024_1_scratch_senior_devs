@@ -1,6 +1,7 @@
 import "../../../build/home.js"
 import {router} from "../../modules/router.js";
 import {Button} from "../button/button.js";
+import {Image} from "../image/image.js";
 
 export class Home {
     #parent;
@@ -25,7 +26,11 @@ export class Home {
             window.Handlebars.templates['home.hbs'](this.#config)
         );
 
-        const link = new Button(document.querySelector(".first"), this.#config.linkToLogin, this.handleButtonClick)
+
+        const image = new Image(this.self.querySelector(".right-container"), this.#config.previewImage)
+        image.render()
+
+        const link = new Button(this.self.querySelector(".left-container"), this.#config.linkToLogin, this.handleButtonClick)
         link.render()
 
     }

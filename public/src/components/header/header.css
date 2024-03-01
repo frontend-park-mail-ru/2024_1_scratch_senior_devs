@@ -1,12 +1,13 @@
 header {
     width: 100%;
-    padding: 10px 25px;
+    padding: 10px 10%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: fixed;
     background: rgba(0,0,0,0);
     transition: 0.5s;
+    z-index: 1000;
 }
 
 header.black {
@@ -38,11 +39,4 @@ header .menu-container {
 
 header .menu-container .menu-item a {
     text-decoration: none;
-}
-
-header .right-container .avatar {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    cursor: pointer;
 }
