@@ -1,0 +1,1 @@
+!function(){var n=Handlebars.template;(Handlebars.templates=Handlebars.templates||{})["header.hbs"]=n({compiler:[8,">= 4.3.0"],main:function(n,e,a,t,r){return'<header id="header">\n\n\t<div class="logo-container">\n\n\t</div>\n\n\t<div class="right-container">\n\n\n\t</div>\n\n</header>'},useData:!0})}();

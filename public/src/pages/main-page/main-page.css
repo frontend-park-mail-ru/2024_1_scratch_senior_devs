@@ -1,7 +1,0 @@
-#main-page {
-    display: grid;
-    grid-template-columns: 300px 500px;
-    justify-content: center;
-    padding: 25px;
-    gap: 20px;
-}

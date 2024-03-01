@@ -1,11 +1,20 @@
 header {
     width: 100%;
     padding: 10px 25px;
-    background: #fff;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    position: fixed;
+    background: rgba(0,0,0,0);
+    transition: 0.5s;
+}
+
+header.black {
+    background: rgba(0,0,0,0.2);
+}
+
+header.black .logo-container a {
+    color: #fff;
 }
 
 header .logo-container a{
@@ -13,6 +22,7 @@ header .logo-container a{
     text-decoration: none;
     font-weight: bold;
     font-size: 18px;
+    transition: 0.5s;
 }
 
 header .right-container {
@@ -28,4 +38,11 @@ header .menu-container {
 
 header .menu-container .menu-item a {
     text-decoration: none;
+}
+
+header .right-container .avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
 }

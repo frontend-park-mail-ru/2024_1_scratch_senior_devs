@@ -1,0 +1,56 @@
+.input-container {
+    width: 240px;
+    position: relative;
+}
+
+.input-container input {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    outline: none;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+
+.input-container input:focus {
+    border: 1px solid #56A6F0;
+}
+
+.input-container[data-error] input {
+    border: 1px solid #c92432;
+    color: #c92432;
+    background: #fffafa;
+}
+
+.input-container[data-error]::after {
+    content: attr(data-error);
+    color: #c92432;
+    font-size: 0.85em;
+    display: block;
+    margin: 5px 0;
+}
+
+.input-container .show-password-btn {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    top: 14px;
+    right: 16px;
+    cursor: pointer;
+}
+
+.input-container .form-label {
+    position: absolute;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    left: 0.75rem;
+    top: 0.75rem;
+    padding: 0 0.35rem;
+    color: hsl(220, 3%, 50%);
+    background: #fff;
+    transition: all 0.35s ease;
+}

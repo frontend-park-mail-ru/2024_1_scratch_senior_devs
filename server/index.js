@@ -1,24 +1,7 @@
 const fs = require('fs');
 const http = require('http');
-const ws = require('ws')
 const path = require("path");
 const SERVER_PORT = 3000
-const wss = new ws.WebSocketServer({port: 3001});
-
-wss.on('connection', (ws) => {
-    console.log('WebSocket connected');
-
-    // Отправка уведомления о необходимости обновления
-    const notifyClients = () => {
-        ws.send('reload');
-    };
-
-    // Мониторинг изменений в файлах
-    fs.watch('./', { recursive: true }, (event, filename) => {
-        console.log(`File ${filename} changed`);
-        notifyClients();
-    });
-});
 
 const mimeTypes = {
     '.html': 'text/html',
@@ -63,21 +46,11 @@ const staticFile = (res, filePath, ext) => {
 const server = http.createServer((req, res) => {
     const {url} = req
 
-    console.log(url)
-
-    switch (url) {
-        case "/":
-            console.log("main page")
-            staticFile(res, "/index.html", ".html")
-            break;
-        default:
-            const extname = String(path.extname(url)).toLocaleLowerCase()
-            if (extname in mimeTypes) {
-                staticFile(res, url, extname)
-            } else {
-                res.statusCode = 404
-                res.end()
-            }
+    const extname = String(path.extname(url)).toLocaleLowerCase()
+    if (extname in mimeTypes) {
+        staticFile(res, url, extname)
+    } else {
+        staticFile(res, "/index.html", ".html")
     }
 
 })

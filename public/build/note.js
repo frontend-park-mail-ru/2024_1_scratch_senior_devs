@@ -1,0 +1,1 @@
+!function(){var n=Handlebars.template;(Handlebars.templates=Handlebars.templates||{})["note.hbs"]=n({compiler:[8,">= 4.3.0"],main:function(n,a,e,t,s){return'<div class="note-container">\n\t<h3>Заголовок</h3>\n\t<p>Первая строчка заметки</p>\n</div>'},useData:!0})}();

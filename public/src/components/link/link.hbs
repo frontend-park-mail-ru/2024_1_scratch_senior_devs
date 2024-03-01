@@ -1,1 +1,11 @@
-<a href="{{href}}">{{text}}</a>
+{{#if isBtn}}
+	<a href="{{href}}" id="{{id}}">
+		<button type="submit">
+			{{text}}
+		</button>
+	</a>
+{{else}}
+	<a href="{{href}}" id="{{id}}">
+		{{text}}
+	</a>
+{{/if}}

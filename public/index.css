@@ -1,11 +1,19 @@
-@import './src/pages/main-page/main-page.css';
+@import 'src/pages/main/main.css';
+@import "src/pages/login/login.css";
+@import "src/pages/register/register.css";
+@import "src/pages/profile/profile.css";
+@import "src/pages/notFound/not-found.css";
 @import './src/components/header/header.css';
 @import './src/components/notes/notes.css';
 @import './src/components/note/note.css';
 @import './src/components/note-editor/note-editor.css';
-@import './src/components/avatar/avatar.css';
+@import 'src/components/image/image.css';
 @import './src/components/link/link.css';
 @import './src/components/home/home.css';
+@import './src/components/input/input.css';
+@import "src/components/button/button.css";
+@import "src/components/wrapper/wrapper.css";
+@import "src/components/footer/footer.css";
 
 *, *::before, *::after {
     box-sizing: border-box;
@@ -22,6 +30,11 @@ body {
     background: #D9D9D9;
 }
 
+html,
+body {
+    height: 100%;
+}
+
 img, picture, video, canvas, svg {
     display: block;
     max-width: 100%;
@@ -36,5 +49,12 @@ p, h1, h2, h3, h4, h5, h6 {
 }
 
 #root {
-    display: grid;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+#wrapper{
+    flex: 1 0 auto;
+    padding: 50px 0;
 }
