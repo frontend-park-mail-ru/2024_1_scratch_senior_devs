@@ -24,6 +24,7 @@
     width: 100%;
     bottom: -80px;
     right: 0;
+    z-index: -1;
 }
 
 .home .first .left-container {
@@ -54,19 +55,77 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     color: #fff;
+    padding: 0 10%;
+    gap: 50px;
 }
 
-.home .third {
-    position: relative;
-    display: flex;
+.home .second h2 {
+    font-size: 32px;
+}
+
+.home .second .cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(275px, 0.15fr));
     justify-content: center;
-    align-items: center;
+    width: 100%;
+    gap: 25px;
 }
 
-.home .third svg {
-    position: absolute;
-    width: 100%;
-    top: 0;
-    right: 0;
+.home .second .cards-container .card {
+    background: #fff;
+    box-shadow: 0 4px 30px -10px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    opacity: 0;
+}
+
+.home .second .cards-container .card:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.home .second .cards-container .card:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+.home .second .cards-container .card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.home .second .cards-container .card:nth-child(4) {
+    animation-delay: 0.45s;
+}
+
+.home .second .cards-container .animate {
+    animation-duration: 1s;
+    animation-fill-mode: both;
+    animation-name: fadeInUp;
+}
+
+.home .second .cards-container .card img {
+    width: 52px;
+    height: 52px;
+}
+.home .second .cards-container .card h3 {
+    color: #000;
+}
+
+.home .second .cards-container .card span {
+    color: #696969;
+}
+
+
+@keyframes fadeInUp {
+    from {
+        transform: translate3d(0,40px,0)
+    }
+
+    to {
+        transform: translate3d(0,0,0);
+        opacity: 1
+    }
 }

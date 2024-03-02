@@ -19,5 +19,5 @@ const header = new Header(root, config.header);
 header.render();
 
 const footer = new Footer(root, config.footer);
-footer.render()
+// footer.render()
 

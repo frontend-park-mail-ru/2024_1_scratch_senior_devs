@@ -20,18 +20,34 @@ export class Home {
         router.redirect("/login")
     }
 
+    createObserver () {
+        let observer = new IntersectionObserver(
+            function (entries, observer) {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("animate");
+                        observer.unobserve(entry.target);
+                    }
+                });
+            });
+
+
+        let targetElements = document.querySelectorAll(".second .cards-container .card");
+
+        targetElements.forEach((targetElement) => {
+            observer.observe(targetElement);
+        });
+    };
+
     render() {
         this.#parent.insertAdjacentHTML(
             'afterbegin',
             window.Handlebars.templates['home.hbs'](this.#config)
         );
 
-
-        const image = new Image(this.self.querySelector(".right-container"), this.#config.previewImage)
-        image.render()
-
         const link = new Button(this.self.querySelector(".left-container"), this.#config.linkToLogin, this.handleButtonClick)
         link.render()
 
+        this.createObserver()
     }
 }

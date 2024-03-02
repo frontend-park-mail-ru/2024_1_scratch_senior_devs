@@ -4,10 +4,6 @@ const mainPage = {
     needAuth: true,
     home: {
         id: "home",
-        previewImage: {
-            id: "preview-image",
-            src: "src/assets/1.jpg"
-        },
         linkToLogin: {
             text: "Попробовать"
         }
