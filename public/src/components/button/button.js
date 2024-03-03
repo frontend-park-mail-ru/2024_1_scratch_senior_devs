@@ -9,7 +9,7 @@ export class Button {
     #onSubmit;
 
     constructor(parent, config, onSubmit) {
-        this.id = crypto.randomUUID();
+        this.id = Symbol().toString();
         this.#parent = parent;
         this.#props.id = this.id;
         this.#props.text = config.text;
