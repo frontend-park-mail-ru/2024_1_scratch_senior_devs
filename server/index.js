@@ -49,7 +49,7 @@ const server = http.createServer((req, res) => {
     // console.log(url)
 
     if (url.startsWith("/api/")) {
-        
+
     }
 
     const extname = String(path.extname(url)).toLocaleLowerCase()
@@ -61,6 +61,6 @@ const server = http.createServer((req, res) => {
 
 })
 
-server.listen(SERVER_PORT, "127.0.0.1");
+server.listen(SERVER_PORT, "37.139.41.247");
 console.log("Server listening 3000");
 console.log("http://127.0.0.1:3000");
