@@ -9,7 +9,7 @@ export class Link {
     id;
 
     constructor(parent, config) {
-        this.id = crypto.randomUUID();
+        this.id = Symbol().toString();
 
         this.#parent = parent;
 
