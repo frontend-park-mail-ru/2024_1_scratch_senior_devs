@@ -46,6 +46,12 @@ const staticFile = (res, filePath, ext) => {
 const server = http.createServer((req, res) => {
     const {url} = req
 
+    // console.log(url)
+
+    if (url.startsWith("/api/")) {
+        
+    }
+
     const extname = String(path.extname(url)).toLocaleLowerCase()
     if (extname in mimeTypes) {
         staticFile(res, url, extname)
@@ -55,6 +61,6 @@ const server = http.createServer((req, res) => {
 
 })
 
-server.listen(SERVER_PORT, "192.168.64.1");
+server.listen(SERVER_PORT, "127.0.0.1");
 console.log("Server listening 3000");
-console.log("http://192.168.64.1:3000");
+console.log("http://127.0.0.1:3000");

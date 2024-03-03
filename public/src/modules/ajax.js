@@ -1,4 +1,4 @@
-const baseUrl = "/api"
+const baseUrl = "http://127.0.0.1:8080/api"
 
 const methods = {
     POST: 'POST',
@@ -12,8 +12,8 @@ let JWT = null
 const baseRequest = async (method, url, data = null) => {
     const options = {
         method: method,
-        mode: 'same-origin',
-        credentials: 'same-origin',
+        mode: 'cors',
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -35,6 +35,9 @@ const baseRequest = async (method, url, data = null) => {
             body = await response.json()
         } catch (err) {
             console.log("no body")
+        }
+        for (const header of response.headers) {
+            console.log(header)
         }
         if (response.headers.get('Authorization') !== undefined) {
             JWT = response.headers.get('Authorization');
@@ -114,6 +117,10 @@ class NoteRequests {
         )
 
         if (status === 200) {
+            for (const elem of body) {
+                elem.data = JSON.parse( atob(elem.data))
+            }
+            console.log(body)
             return body
         } else {
             throw Error(body.message)
