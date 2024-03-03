@@ -10,7 +10,6 @@ class Dispatcher{
     }
 
     dispatch(action){
-        console.log(action)
         this.#callbacks.forEach((callback) => {
             callback(action);
         })

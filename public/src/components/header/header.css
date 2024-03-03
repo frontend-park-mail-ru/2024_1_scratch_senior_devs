@@ -1,6 +1,7 @@
 header {
     width: 100%;
-    padding: 10px 10%;
+    padding: 0 10%;
+    height: 60px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -15,6 +16,10 @@ header.black {
 }
 
 header.black .logo-container a {
+    color: #fff;
+}
+
+header .logo-container a.white {
     color: #fff;
 }
 

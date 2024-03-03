@@ -56,5 +56,6 @@ export const AppUserStore = new UserStore();
 export const UserActions = {
     LOGIN: "LOGIN",
     REGISTER: "REGISTER",
-    LOGOUT: "LOGOUT"
+    LOGOUT: "LOGOUT",
+    CHANGE_PAGE: "CHANGE_PAGE"
 }

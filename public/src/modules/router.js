@@ -1,8 +1,10 @@
 import Main from "../pages/main/main.js";
 import LoginPage from "../pages/login/login.js";
 import RegisterPage from "../pages/register/register.js";
-import {AppUserStore} from "../stores/user/userStore.js";
+import {AppUserStore, UserActions} from "../stores/user/userStore.js";
 import NotFoundPage from "../pages/notFound/not-found.js";
+import {AppDispatcher} from "./dispathcer.js";
+import {AppEventMaker} from "./eventMaker.js";
 
 class Router {
     #currentUrl;
@@ -59,6 +61,7 @@ class Router {
         this.#currentPage = page
         history.pushState(null, null, page.href)
 
+        AppEventMaker.notify(UserActions.CHANGE_PAGE, href)
     }
 
     parseUrl() {

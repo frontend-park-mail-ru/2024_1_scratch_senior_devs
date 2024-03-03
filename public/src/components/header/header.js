@@ -1,4 +1,3 @@
-import {Image} from "../image/image.js";
 import {Link} from "../link/link.js";
 import '../../../build/header.js';
 import {AppEventMaker} from "../../modules/eventMaker.js";
@@ -11,6 +10,8 @@ import {SettingsPanel} from "../settings-panel/settings-panel.js";
 export class Header {
     #parent;
     #config;
+
+    #logo;
 
     #menu;
 
@@ -46,7 +47,22 @@ export class Header {
             this.#authPageLink.self.classList.add("hidden");
         })
 
+        AppEventMaker.subscribe(UserStoreEvents.CHANGE_PAGE, (href) => {
+            console.log("CHANGE_PAGE")
+            console.log(href)
+            if (href === "/") {
+                this.#logo.self.classList.add("white")
+                if (!AppUserStore.IsAuthenticated()) {
+                    this.#authPageLink.self.classList.remove("hidden");
+                }
+            } else {
+                this.#authPageLink.self.classList.add("hidden");
+            }
+        })
+
         AppEventMaker.subscribe(UserStoreEvents.LOGOUT, () => {
+            console.log("LOGOUT")
+
             this.#settingsPanel.remove()
 
             if (this.#authPageLink === undefined) {
@@ -70,8 +86,9 @@ export class Header {
             window.Handlebars.templates['header.hbs'](this.#config)
         );
 
-        const logo = new Link(document.querySelector(".logo-container"), this.#config.logo)
-        logo.render()
+        this.#logo = new Link(document.querySelector(".logo-container"), this.#config.logo)
+        this.#logo.render()
+
 
         const rightContainer = document.querySelector(".right-container")
 

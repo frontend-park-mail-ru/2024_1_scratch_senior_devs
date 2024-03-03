@@ -7,47 +7,77 @@
 
 .home section {
     width: 100%;
-    height: 100vh;
 }
 
 .home .first {
-    display: flex;
-    padding: 0 10%;
-    gap: 75px;
-    justify-content: space-between;
-    align-items: center;
     position: relative;
+    display: grid;
+    grid-template-areas: "stack";
+    height: 100vh;
+}
+
+.home .first .parallax-bg {
+    background: 50% 50% / cover;
+    object-fit: cover;
+    z-index: -1;
+    min-height: 100%;
+    width: 100%;
+    grid-area: stack;
+    animation: parallax linear;
+    animation-timeline: scroll();
+}
+
+.home .first:before {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color:rgba(0, 0, 0, 0.3);
+}
+
+@keyframes parallax {
+    to {
+        transform: translateY(calc(300px));
+    }
 }
 
 .home .first svg {
     position: absolute;
     width: 100%;
-    bottom: -80px;
+    bottom: -140px;
     right: 0;
-    z-index: -1;
+    z-index: 1;
 }
 
 .home .first .left-container {
     display: flex;
     flex-direction: column;
-    width: 55%;
-    align-items: flex-start;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
     gap: 25px;
+    grid-area: stack;
+    z-index: 10;
+    animation-duration: 1s;
+    animation-fill-mode: both;
+    animation-name: fadeIn;
 }
 
 .home .first .left-container h1 {
     font-size: 32px;
-    color: #0f0f0f
+    color: #fff;
 }
 
 .home .first .left-container button {
     font-size: 30px;
     border-radius: 30px;
     padding: 12px 20px;
-}
-
-.home .first .right-container {
-    width: 30%;
+    max-width: 300px;
 }
 
 .home .second {
@@ -59,6 +89,7 @@
     color: #fff;
     padding: 0 10%;
     gap: 50px;
+    height: 100vh;
 }
 
 .home .second h2 {
@@ -126,6 +157,15 @@
 
     to {
         transform: translate3d(0,0,0);
+        opacity: 1
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
         opacity: 1
     }
 }
