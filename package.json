@@ -1,7 +1,7 @@
 {
   "scripts": {
     "start": "npm run build && node server/index.js",
-    "build": "build.sh"
+    "build": "./build.sh"
   },
   "dependencies": {
     "handlebars": "^4.7.8",
