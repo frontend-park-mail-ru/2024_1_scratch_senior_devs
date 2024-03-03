@@ -8,7 +8,6 @@ const root = document.getElementById('root');
 
 AppUserStore.registerEvents();
 
-
 const wrapper = new Wrapper(root, config.wrapper);
 wrapper.render();
 

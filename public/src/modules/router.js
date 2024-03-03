@@ -1,9 +1,9 @@
-import Main from "../pages/main/main.js";
+import Home from "../pages/home/home.js";
 import LoginPage from "../pages/login/login.js";
 import RegisterPage from "../pages/register/register.js";
-import {AppUserStore, UserActions} from "../stores/user/userStore.js";
 import NotFoundPage from "../pages/notFound/not-found.js";
-import {AppDispatcher} from "./dispathcer.js";
+import NotesPage from "../pages/notes/notes.js";
+import {AppUserStore, UserActions} from "../stores/user/userStore.js";
 import {AppEventMaker} from "./eventMaker.js";
 
 class Router {
@@ -18,14 +18,18 @@ class Router {
     }
 
     init(root, config){
-        const mainPage = new Main(root, config.mainPage)
-        this.registerPage(mainPage)
+        const homePage = new Home(root, config.homePage)
+        this.registerPage(homePage)
+
+        const notesPage = new NotesPage(root, config.notesPage)
+        this.registerPage(notesPage)
 
         const loginPage = new LoginPage(root, config.loginPage)
         this.registerPage(loginPage)
 
         const registerPage = new RegisterPage(root, config.registerPage)
         this.registerPage(registerPage)
+
         const notFoundPage = new NotFoundPage(root, config.notFoundPage)
         this.registerPage(notFoundPage)
 
@@ -37,14 +41,19 @@ class Router {
     }
 
     redirect(href) {
+        console.log("redirect " + href)
+
         if (href === "") href = "/"
 
         const page = this.#pages[href]
+
+        console.log(page)
 
         if (page === undefined) {
             this.redirect("/404")
             return;
         }
+        console.log(page.href)
 
         if (page.needAuth === true && !AppUserStore.IsAuthenticated()) {
             this.redirect("/")

@@ -49,7 +49,7 @@ export default class LoginPage {
                 payload: this.#loginInput.value
             })
 
-            router.redirect("/")
+            router.redirect("/notes")
         }
     }
 

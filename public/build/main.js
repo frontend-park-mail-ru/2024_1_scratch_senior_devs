@@ -1,1 +1,0 @@
-!function(){var a=Handlebars.template;(Handlebars.templates=Handlebars.templates||{})["main.hbs"]=a({compiler:[8,">= 4.3.0"],main:function(a,n,e,t,i){return'<div id="main">\n\n</div>'},useData:!0})}();

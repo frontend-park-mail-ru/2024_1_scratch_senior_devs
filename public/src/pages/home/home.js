@@ -1,9 +1,9 @@
 import "../../../build/home.js"
+import {AppUserStore} from "../../stores/user/userStore.js";
 import {router} from "../../modules/router.js";
-import {Button} from "../button/button.js";
-import {Image} from "../image/image.js";
+import {Button} from "../../components/button/button.js";
 
-export class Home {
+export default class Home {
     #parent;
     #config;
 
@@ -12,15 +12,26 @@ export class Home {
         this.#config = config;
     }
 
-    get self () {
-        return document.getElementById('home');
+    get href () {
+        return this.#config.href;
     }
+
+    get self () {
+        return document.getElementById(this.#config.id);
+    }
+
+    remove(){
+        console.log("Home remove")
+        this.self.remove()
+    }
+
 
     handleButtonClick = () => {
-        router.redirect("/login")
+        const href = AppUserStore.IsAuthenticated() ? "/notes" : "/login"
+        router.redirect(href)
     }
 
-    createObserver () {
+    createObserver() {
         let observer = new IntersectionObserver(
             function (entries, observer) {
                 entries.forEach((entry) => {
@@ -40,12 +51,14 @@ export class Home {
     };
 
     render() {
+        console.log("Home page render")
+
         this.#parent.insertAdjacentHTML(
             'afterbegin',
             window.Handlebars.templates['home.hbs'](this.#config)
         );
 
-        const link = new Button(this.self.querySelector(".left-container"), this.#config.linkToLogin, this.handleButtonClick)
+        const link = new Button(this.self.querySelector(".left-container"), this.#config.linkToLoginPage, this.handleButtonClick)
         link.render()
 
         this.createObserver()

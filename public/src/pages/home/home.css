@@ -1,8 +1,7 @@
 .home {
     width: 100%;
-    min-height: 200vh;
     display: flex;
-    flex-direction: column;
+    flex-direction: column
 }
 
 .home section {

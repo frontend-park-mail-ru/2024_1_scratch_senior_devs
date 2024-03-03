@@ -9,10 +9,11 @@ header {
     background: rgba(0,0,0,0);
     transition: 0.5s;
     z-index: 1000;
+    background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0));
 }
 
 header.black {
-    background: rgba(0,0,0,0.2);
+    background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0));
 }
 
 header.black .logo-container a {
@@ -27,7 +28,7 @@ header .logo-container a{
     color: #000;
     text-decoration: none;
     font-weight: bold;
-    font-size: 18px;
+    font-size: 22px;
     transition: 0.5s;
 }
 

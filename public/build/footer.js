@@ -1,1 +1,0 @@
-!function(){var e=Handlebars.template;(Handlebars.templates=Handlebars.templates||{})["footer.hbs"]=e({compiler:[8,">= 4.3.0"],main:function(e,a,t,n,r){return"<footer>\n\t<span>Scratch senior devs</span>\n</footer>"},useData:!0})}();

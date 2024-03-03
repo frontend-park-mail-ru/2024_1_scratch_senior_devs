@@ -97,7 +97,6 @@ export class Header {
 
         rightContainer.appendChild(this.#menu)
 
-
         if (AppUserStore.IsAuthenticated()) {
             this.#settingsPanel = new SettingsPanel(document.querySelector(".right-container"), this.#config.settings)
             this.#settingsPanel.render()

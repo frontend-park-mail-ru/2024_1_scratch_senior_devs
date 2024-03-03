@@ -1,13 +1,16 @@
-const mainPage = {
-    id: "main-page",
+const homePage = {
+    id: "home",
     href: "/",
-    needAuth: true,
-    home: {
-        id: "home",
-        linkToLogin: {
-            text: "Попробовать"
-        }
+    needAuth: false,
+    linkToLoginPage: {
+        text: "Попробовать"
     }
+}
+
+const notesPage = {
+    id: "notes-page",
+    href: "/notes",
+    needAuth: true
 }
 
 const header = {
@@ -159,8 +162,8 @@ const avatar = {
 }
 
 export const config = {
-    isAuthorized: false,
-    mainPage: mainPage,
+    homePage: homePage,
+    notesPage: notesPage,
     loginPage: loginPage,
     registerPage: registerPage,
     profilePage: profilePage,

@@ -1,14 +1,14 @@
-@import 'src/pages/main/main.css';
+@import 'src/pages/home/home.css';
 @import "src/pages/login/login.css";
 @import "src/pages/register/register.css";
 @import "src/pages/notFound/not-found.css";
+@import './src/pages/notes/notes.css';
+@import './src/pages/home/home.css';
 @import './src/components/header/header.css';
-@import './src/components/notes/notes.css';
 @import './src/components/note/note.css';
 @import './src/components/note-editor/note-editor.css';
 @import 'src/components/image/image.css';
 @import './src/components/link/link.css';
-@import './src/components/home/home.css';
 @import './src/components/input/input.css';
 @import "src/components/button/button.css";
 @import "src/components/wrapper/wrapper.css";
