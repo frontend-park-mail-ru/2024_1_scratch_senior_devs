@@ -61,6 +61,6 @@ const server = http.createServer((req, res) => {
 
 })
 
-server.listen(SERVER_PORT, "37.139.41.247");
-console.log("Server listening 3000");
-console.log("http://37.139.41.247:8010");
+server.listen(SERVER_PORT, "127.0.0.1");
+console.log("Server listening 8010");
+console.log("http://127.0.0.1:8010");
