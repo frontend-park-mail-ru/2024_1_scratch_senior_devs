@@ -1,7 +1,7 @@
 const fs = require('fs');
 const http = require('http');
 const path = require("path");
-const SERVER_PORT = 3000
+const SERVER_PORT = 8010
 
 const mimeTypes = {
     '.html': 'text/html',
@@ -63,4 +63,4 @@ const server = http.createServer((req, res) => {
 
 server.listen(SERVER_PORT, "37.139.41.247");
 console.log("Server listening 3000");
-console.log("http://127.0.0.1:3000");
+console.log("http://37.139.41.247:8010");
