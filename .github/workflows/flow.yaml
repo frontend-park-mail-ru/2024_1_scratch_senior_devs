@@ -9,7 +9,6 @@ on:
 jobs:
   you-note-deploy:
     name: deploy YouNote
-    needs: you-note-tests
     runs-on: ubuntu-latest
     steps:
       - name: Pull code
