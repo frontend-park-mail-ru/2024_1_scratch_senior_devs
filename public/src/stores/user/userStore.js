@@ -2,6 +2,7 @@ import {AppDispatcher} from "../../modules/dispathcer.js";
 import {AppEventMaker} from "../../modules/eventMaker.js";
 import {UserStoreEvents} from "./events.js";
 import {router} from "../../modules/router.js";
+import {AppAuthRequests} from "../../modules/ajax.js";
 
 class UserStore {
     #state = {
@@ -11,13 +12,16 @@ class UserStore {
     }
 
     registerEvents(){
-        AppDispatcher.register((action) => {
+        AppDispatcher.register(async (action) => {
             switch (action.type){
                 case UserActions.LOGIN:
-                    this.login(action.payload);
+                    await this.login(action.payload);
                     break;
                 case UserActions.LOGOUT:
-                    this.logout();
+                    await this.logout();
+                    break;
+                case UserActions.REGISTER:
+                    await this.register(action.payload);
                     break;
             }
         })
@@ -35,19 +39,42 @@ class UserStore {
         return this.#state.isAuth;
     }
 
-    login(username){
-        console.log("login successfull");
-        this.#state.isAuth = true;
-        this.#state.username = username;
-        AppEventMaker.notify(UserStoreEvents.SUCCSSESFUL_LOGIN);
+    async login(credentials){
+        try {
+            const res = await AppAuthRequests.Login(credentials.login, credentials.password)
+            console.log("login successfull");
+            this.#state.isAuth = true;
+            this.#state.username = res.username;
+            AppEventMaker.notify(UserStoreEvents.SUCCESSFUL_LOGIN);
+        } catch (err) {
+            console.log(err);
+        }
     }
 
-    logout() {
-        console.log("logout successfull");
-        this.#state.isAuth = false;
-        this.#state.username = "";
-        AppEventMaker.notify(UserStoreEvents.LOGOUT);
-        router.redirect("/");
+    async logout() {
+        try {
+            await AppAuthRequests.Logout();
+            console.log("logout successful");
+            this.#state.isAuth = false;
+            this.#state.username = "";
+            router.redirect('/');
+            AppEventMaker.notify(UserStoreEvents.LOGOUT);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    async register(credentials) {
+        try {
+            const res = await AppAuthRequests.SignUp(credentials.login, credentials.password)
+            console.log("signup successfull");
+            this.#state.isAuth = true;
+            this.#state.username = res.username;
+            router.redirect('/');
+            AppEventMaker.notify(UserStoreEvents.SUCCESSFUL_LOGIN);
+        } catch (err) {
+            console.log(err);
+        }
     }
 }
 

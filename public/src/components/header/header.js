@@ -38,7 +38,7 @@ export class Header {
         });
 
 
-        AppEventMaker.subscribe(UserStoreEvents.SUCCSSESFUL_LOGIN, () => {
+        AppEventMaker.subscribe(UserStoreEvents.SUCCESSFUL_LOGIN, () => {
             if (this.#settingsPanel === undefined) {
                 this.#settingsPanel = new SettingsPanel(document.querySelector(".right-container"), this.#config.settings)
             }

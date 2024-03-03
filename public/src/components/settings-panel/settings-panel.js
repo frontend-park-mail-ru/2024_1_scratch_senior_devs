@@ -5,6 +5,8 @@ import {Span} from "../span/span.js";
 import {AppUserStore, UserActions} from "../../stores/user/userStore.js";
 import {AppDispatcher} from "../../modules/dispathcer.js";
 import {router} from "../../modules/router.js";
+import {AppEventMaker} from "../../modules/eventMaker.js";
+import {UserStoreEvents} from "../../stores/user/events.js";
 
 export class SettingsPanel {
     #parent;
@@ -36,8 +38,6 @@ export class SettingsPanel {
         AppDispatcher.dispatch({
             type: UserActions.LOGOUT
         })
-
-        router.redirect("/")
     }
 
     handleClick = (e) => {

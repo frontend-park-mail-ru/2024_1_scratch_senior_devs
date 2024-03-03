@@ -46,11 +46,12 @@ export default class RegisterPage {
         if (validateLogin && validatePassword) {
 
             AppDispatcher.dispatch({
-                type: UserActions.LOGIN,
-                payload: this.#loginInput.value
+                type: UserActions.REGISTER,
+                payload: {
+                    login: this.#loginInput.value,
+                    password: this.#passwordInput.value
+                }
             })
-
-            router.redirect("/")
         }
     }
 

@@ -8,6 +8,7 @@ import {UserActions} from "../../stores/user/userStore.js";
 import {Link} from "../../components/link/link.js";
 import {ValidateLogin, ValidatePassword} from "../../shared/validation.js";
 import {router} from "../../modules/router.js";
+import {UserStoreEvents} from "../../stores/user/events.js";
 
 export default class LoginPage {
     #parent;
@@ -46,11 +47,16 @@ export default class LoginPage {
 
             AppDispatcher.dispatch({
                 type: UserActions.LOGIN,
-                payload: this.#loginInput.value
+                payload: {
+                    login: this.#loginInput.value,
+                    password: this.#passwordInput.value
+                }
             })
-
-            router.redirect("/notes")
         }
+    }
+
+    #successfulLogin = () => {
+        router.redirect("/")
     }
 
     #inputEventHandler = (id) => {
@@ -63,13 +69,13 @@ export default class LoginPage {
 
     #subscribeToEvents(){
         console.log("subscribeToEvents")
-
+        AppEventMaker.subscribe(UserStoreEvents.SUCCESSFUL_LOGIN, this.#successfulLogin)
         AppEventMaker.subscribe(inputEvents.INPUT_CHANGE, this.#inputEventHandler);
     }
 
     #unsubscribeToEvents(){
         console.log("unsubscribeToEvents login")
-
+        AppEventMaker.unsubscribe(UserStoreEvents.SUCCESSFUL_LOGIN, this.#successfulLogin)
         AppEventMaker.unsubscribe(inputEvents.INPUT_CHANGE, this.#inputEventHandler);
     }
 

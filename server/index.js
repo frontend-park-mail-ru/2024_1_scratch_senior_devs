@@ -55,6 +55,6 @@ const server = http.createServer((req, res) => {
 
 })
 
-server.listen(SERVER_PORT);
+server.listen(SERVER_PORT, "192.168.64.1");
 console.log("Server listening 3000");
-console.log("http://localhost:3000");
+console.log("http://192.168.64.1:3000");
