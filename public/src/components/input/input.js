@@ -18,7 +18,7 @@ export class Input {
     constructor(parent, config) {
         this.#parent = parent;
         this.#config = config;
-        this.#config.id = crypto.randomUUID();
+        this.#config.id = Symbol().toString();
 
         this.id = this.#config.id;
 
