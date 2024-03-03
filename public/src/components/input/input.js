@@ -1,6 +1,7 @@
 import "../../../build/input.js"
 import {inputEvents} from "./events.js";
 import {AppEventMaker} from "../../modules/eventMaker.js";
+import {create_UUID} from "../../shared/uuid.js";
 
 export class Input {
     #parent;
@@ -18,7 +19,7 @@ export class Input {
     constructor(parent, config) {
         this.#parent = parent;
         this.#config = config;
-        this.#config.id = Symbol().toString();
+        this.#config.id = create_UUID();
 
         this.id = this.#config.id;
 

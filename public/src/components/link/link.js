@@ -1,5 +1,6 @@
 import "../../../build/link.js"
 import {router} from "../../modules/router.js";
+import {create_UUID} from "../../shared/uuid.js";
 
 export class Link {
     #parent;
@@ -9,7 +10,7 @@ export class Link {
     id;
 
     constructor(parent, config) {
-        this.id = Symbol().toString();
+        this.id = create_UUID();
 
         this.#parent = parent;
 

@@ -1,4 +1,5 @@
 import '../../../build/button.js'
+import {create_UUID} from "../../shared/uuid.js";
 
 export class Button {
     #parent;
@@ -9,7 +10,8 @@ export class Button {
     #onSubmit;
 
     constructor(parent, config, onSubmit) {
-        this.id = Symbol().toString();
+        this.id = create_UUID();
+        console.log(this.id);
         this.#parent = parent;
         this.#props.id = this.id;
         this.#props.text = config.text;
