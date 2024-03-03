@@ -45,6 +45,7 @@ class UserStore {
             console.log("login successfull");
             this.#state.isAuth = true;
             this.#state.username = res.username;
+            router.redirect('/notes');
             AppEventMaker.notify(UserStoreEvents.SUCCESSFUL_LOGIN);
         } catch (err) {
             console.log(err);

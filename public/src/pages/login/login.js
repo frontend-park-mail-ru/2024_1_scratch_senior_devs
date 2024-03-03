@@ -69,13 +69,13 @@ export default class LoginPage {
 
     #subscribeToEvents(){
         console.log("subscribeToEvents")
-        AppEventMaker.subscribe(UserStoreEvents.SUCCESSFUL_LOGIN, this.#successfulLogin)
+        // AppEventMaker.subscribe(UserStoreEvents.SUCCESSFUL_LOGIN, this.#successfulLogin)
         AppEventMaker.subscribe(inputEvents.INPUT_CHANGE, this.#inputEventHandler);
     }
 
     #unsubscribeToEvents(){
         console.log("unsubscribeToEvents login")
-        AppEventMaker.unsubscribe(UserStoreEvents.SUCCESSFUL_LOGIN, this.#successfulLogin)
+        // AppEventMaker.unsubscribe(UserStoreEvents.SUCCESSFUL_LOGIN, this.#successfulLogin)
         AppEventMaker.unsubscribe(inputEvents.INPUT_CHANGE, this.#inputEventHandler);
     }
 
