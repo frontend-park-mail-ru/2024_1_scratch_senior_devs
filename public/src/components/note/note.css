@@ -7,4 +7,10 @@
     border-radius: 15px;
     padding: 15px;
     width: 300px;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.note-container:hover {
+    transform: scale(1.1);
 }

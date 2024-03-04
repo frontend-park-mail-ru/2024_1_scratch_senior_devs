@@ -1,7 +1,8 @@
 {
   "scripts": {
     "start": "npm run build && node server/index.js",
-    "build": "./build.sh"
+    "lint": "npx eslint --fix ./public/src",
+    "build": "build.sh"
   },
   "dependencies": {
     "handlebars": "^4.7.8",

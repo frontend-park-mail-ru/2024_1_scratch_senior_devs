@@ -24,7 +24,7 @@ class EventMaker{
 
         this.#eventsMap[event].forEach((listener) => {
             listener.apply(this, args);
-        })
+        });
     }
 }
 

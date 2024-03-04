@@ -1,4 +1,4 @@
-import "../../../build/wrapper.js"
+import "../../../build/wrapper.js";
 
 export class Wrapper {
     #parent;
@@ -10,11 +10,11 @@ export class Wrapper {
     }
 
     get self() {
-        return document.getElementById(`${this.#config.id}`)
+        return document.getElementById(`${this.#config.id}`);
     }
 
     render() {
         const template = window.Handlebars.templates["wrapper.hbs"];
-        this.#parent.insertAdjacentHTML('afterbegin', template(this.#config));
+        this.#parent.insertAdjacentHTML("afterbegin", template(this.#config));
     }
 }

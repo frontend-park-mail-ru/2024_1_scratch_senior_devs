@@ -1,4 +1,4 @@
-import "../../../build/span.js"
+import "../../../build/span.js";
 
 export class Span {
     #parent;
@@ -14,14 +14,14 @@ export class Span {
     }
 
     setText(text) {
-        console.log(text)
-        this.self.innerHTML = text
+        console.log(text);
+        this.self.innerHTML = text;
     }
 
     render() {
         this.#parent.insertAdjacentHTML(
-            'beforeend',
-            Handlebars.templates['span.hbs'](this.#config)
-        )
+            "beforeend",
+            window.Handlebars.templates["span.hbs"](this.#config)
+        );
     }
 }

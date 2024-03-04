@@ -1,4 +1,4 @@
-import "../../../build/footer.js"
+import "../../../build/footer.js";
 
 export class Footer {
     #parent;
@@ -10,11 +10,11 @@ export class Footer {
     }
 
     get self() {
-        return document.getElementById(`${this.#config.id}`)
+        return document.getElementById(`${this.#config.id}`);
     }
 
     render() {
         const template = window.Handlebars.templates["footer.hbs"];
-        this.#parent.insertAdjacentHTML('beforeend', template(this.#config));
+        this.#parent.insertAdjacentHTML("beforeend", template(this.#config));
     }
 }

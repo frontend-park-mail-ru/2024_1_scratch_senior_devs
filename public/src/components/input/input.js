@@ -1,4 +1,4 @@
-import "../../../build/input.js"
+import "../../../build/input.js";
 import {inputEvents} from "./events.js";
 import {AppEventMaker} from "../../modules/eventMaker.js";
 import {create_UUID} from "../../shared/uuid.js";
@@ -7,9 +7,9 @@ export class Input {
     #parent;
     #config;
     #listeners = {
-        showPassword: '',
-        change: ''
-    }
+        showPassword: "",
+        change: ""
+    };
 
     #image;
     #input;
@@ -26,7 +26,7 @@ export class Input {
         this.#listeners.showPassword = this.#showPassword.bind(this);
         this.#listeners.change = this.#change.bind(this);
 
-        this.#config.isPassword = this.#config.type === 'password';
+        this.#config.isPassword = this.#config.type === "password";
     }
 
     get self() {
@@ -38,12 +38,19 @@ export class Input {
     }
 
     throwError(message) {
-        this.self.dataset.error = message
+        this.self.classList.remove("success");
+        this.self.classList.add("error");
+        this.self.querySelector(".errors-container").innerText = message;
     }
 
-    #change(){
-        AppEventMaker.notify(inputEvents.INPUT_CHANGE, this.#config.id);
+    cleanError() {
+        this.self.classList.remove("error");
+        this.self.querySelector(".errors-container").innerText = "";
     }
+
+    #change = () => {
+        AppEventMaker.notify(inputEvents.INPUT_CHANGE, this.#config.id);
+    };
 
     #showPassword() {
         if (this.#input.type === "password") {
@@ -57,16 +64,18 @@ export class Input {
 
     #addEventListeners() {
         if(this.#config.isPassword){
-            this.#image.addEventListener('click', this.#listeners.showPassword);
+            this.#image.addEventListener("click", this.#listeners.showPassword);
         }
-        this.#input.addEventListener('change', this.#listeners.change);
+
+        this.#input.addEventListener("input", this.#listeners.change);
     }
 
     #removeEventListeners() {
         if (this.#config.isPassword){
-            this.#image.removeEventListener('click', this.#listeners.showPassword);
+            this.#image.removeEventListener("click", this.#listeners.showPassword);
         }
-        this.#input.removeEventListener('change', this.#listeners.change);
+
+        this.#input.removeEventListener("input", this.#listeners.change);
     }
 
     remove(){
@@ -74,11 +83,11 @@ export class Input {
     }
 
     render() {
-        const template = Handlebars.templates["input.hbs"];
+        const template = window.Handlebars.templates["input.hbs"];
 
         if(this.self === null){
             this.#parent.insertAdjacentHTML(
-                'beforeend',
+                "beforeend",
                 template(this.#config)
             );
 

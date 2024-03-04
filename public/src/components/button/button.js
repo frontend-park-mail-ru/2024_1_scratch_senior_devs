@@ -1,4 +1,4 @@
-import '../../../build/button.js'
+import "../../../build/button.js";
 import {create_UUID} from "../../shared/uuid.js";
 
 export class Button {
@@ -11,7 +11,6 @@ export class Button {
 
     constructor(parent, config, onSubmit) {
         this.id = create_UUID();
-        console.log(this.id);
         this.#parent = parent;
         this.#props.id = this.id;
         this.#props.text = config.text;
@@ -19,20 +18,20 @@ export class Button {
     }
 
     get self(){
-        return document.getElementById(`submit-btn-${this.id}`);
+        return document.getElementById(this.id);
     }
 
     #addEventListeners(){
         if (this.#onSubmit !== undefined) {
-            this.self.addEventListener('click', (e) => {
-                e.preventDefault()
-                this.#onSubmit()
+            this.self.addEventListener("click", (e) => {
+                e.preventDefault();
+                this.#onSubmit();
             });
         }
     }
 
     #removeEventListeners(){
-        this.self.removeEventListener('click', this.#onSubmit);
+        this.self.removeEventListener("click", this.#onSubmit);
     }
 
     remove(){
@@ -42,13 +41,10 @@ export class Button {
     }
 
     render(){
-
-
         this.#parent.insertAdjacentHTML(
-            'beforeend',
-            Handlebars.templates['button.hbs'](this.#props)
-        )
-
+            "beforeend",
+            window.Handlebars.templates["button.hbs"](this.#props)
+        );
 
         this.#addEventListeners();
     }

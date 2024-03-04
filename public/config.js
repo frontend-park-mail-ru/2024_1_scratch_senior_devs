@@ -10,14 +10,24 @@ const homePage = {
 const notesPage = {
     id: "notes-page",
     href: "/notes",
-    needAuth: true
+    needAuth: true,
+    noteEditor: {
+        id: "note-editor",
+        closeBtn: {
+            id: "close-editor-btn",
+            src: "/src/assets/close.png"
+        }
+    }
 }
 
 const header = {
     name: "YouNote",
     logo: {
-        href: "/",
-        text: "YouNote"
+        id: "logo",
+        img: {
+            id: "logo-icon",
+            src: "/src/assets/logo.png"
+        }
     },
     settings: {
         id: "settings-wrapper",
@@ -170,7 +180,6 @@ export const config = {
     notFoundPage: notFoundPage,
     header: header,
     notes: notes,
-    noteEditor: noteEditor,
     note: note,
     avatar: avatar,
     wrapper: wrapper,

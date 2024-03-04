@@ -12,7 +12,7 @@ class Dispatcher{
     dispatch(action){
         this.#callbacks.forEach((callback) => {
             callback(action);
-        })
+        });
     }
 }
 

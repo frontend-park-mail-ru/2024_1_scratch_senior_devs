@@ -16,4 +16,5 @@ handlebars -m public/src/components/footer/footer.hbs -f public/build/footer.js
 handlebars -m public/src/components/button/button.hbs -f public/build/button.js
 handlebars -m public/src/components/settings-panel/settings-panel.hbs -f public/build/settings-panel.js
 handlebars -m public/src/components/span/span.hbs -f public/build/span.js
+handlebars -m public/src/components/logo/logo.hbs -f public/build/logo.js
 

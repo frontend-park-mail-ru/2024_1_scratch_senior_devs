@@ -14,6 +14,7 @@
 @import "src/components/wrapper/wrapper.css";
 @import "src/components/footer/footer.css";
 @import "src/components/settings-panel/settings-panel.css";
+@import "src/components/logo/logo.css";
 
 *, *::before, *::after {
     box-sizing: border-box;

@@ -8,7 +8,7 @@
 }
 
 .login-form {
-    min-width: 300px;
+    width: 300px;
     padding: 20px;
     border-radius: 20px;
     display: flex;
@@ -16,11 +16,11 @@
     align-items: center;
     justify-content: center;
     background: #ffffff;
-    width: 300px;
-    gap: 20px;
+    gap: 15px;
     box-shadow: 0 4px 30px -10px rgba(0, 0, 0, 0.2);
 }
 
-.login-window > div {
-    margin: 10px;
+.login-form .login-title {
+    margin-bottom: 10px;
 }
+

@@ -16,26 +16,9 @@ header.black {
     background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0));
 }
 
-header.black .logo-container a {
-    color: #fff;
-}
-
-header .logo-container a.white {
-    color: #fff;
-}
-
-header .logo-container a{
-    color: #000;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 22px;
-    transition: 0.5s;
-}
-
 header .right-container {
     display: flex;
     align-items: center;
-    gap: 25px;
 }
 
 header .menu-container {

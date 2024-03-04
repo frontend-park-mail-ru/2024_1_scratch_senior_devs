@@ -19,61 +19,53 @@ class Router {
     }
 
     init(root, config){
-        const homePage = new Home(root, config.homePage)
-        this.registerPage(homePage)
+        const homePage = new Home(root, config.homePage);
+        this.registerPage(homePage);
 
-        const notesPage = new NotesPage(root, config.notesPage)
-        this.registerPage(notesPage)
+        const notesPage = new NotesPage(root, config.notesPage);
+        this.registerPage(notesPage);
 
-        const loginPage = new LoginPage(root, config.loginPage)
-        this.registerPage(loginPage)
+        const loginPage = new LoginPage(root, config.loginPage);
+        this.registerPage(loginPage);
 
-        const registerPage = new RegisterPage(root, config.registerPage)
-        this.registerPage(registerPage)
+        const registerPage = new RegisterPage(root, config.registerPage);
+        this.registerPage(registerPage);
 
-        const notFoundPage = new NotFoundPage(root, config.notFoundPage)
-        this.registerPage(notFoundPage)
+        const notFoundPage = new NotFoundPage(root, config.notFoundPage);
+        this.registerPage(notFoundPage);
 
-        console.log("dispatching")
-
+        console.log("dispatching");
         AppDispatcher.dispatch({type: UserActions.CHECK_USER});
+        this.redirect(this.#currentUrl);
     }
 
     registerPage(page) {
-        this.#pages[page.href] = page
+        this.#pages[page.href] = page;
     }
 
     redirect(href) {
-        console.log("redirect " + href)
+        console.log("redirect " + href);
 
-        if (href === "") href = "/"
+        if (href === "") href = "/";
 
-        const page = this.#pages[href]
-
-        console.log(page)
+        const page = this.#pages[href];
 
         if (page === undefined) {
-            this.redirect("/404")
+            this.redirect("/404");
             return;
         }
-        console.log(page.href)
 
         if (page.needAuth === true && !AppUserStore.IsAuthenticated()) {
-            this.redirect("/")
-            return
+            this.redirect("/");
+            return;
         }
+        
+        this.#currentPage?.remove();
+        page.render();
+        this.#currentPage = page;
+        history.pushState(null, null, page.href);
 
-        if (page.needAuth === false && AppUserStore.IsAuthenticated()) {
-            this.redirect("/")
-            return
-        }
-
-        this.#currentPage?.remove()
-        page.render()
-        this.#currentPage = page
-        history.pushState(null, null, page.href)
-
-        AppEventMaker.notify(UserActions.CHANGE_PAGE, href)
+        AppEventMaker.notify(UserActions.CHANGE_PAGE, href);
     }
 
     parseUrl() {
@@ -81,4 +73,4 @@ class Router {
     }
 }
 
-export const router = new Router()
+export const router = new Router();
