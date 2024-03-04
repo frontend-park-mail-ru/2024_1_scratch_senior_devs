@@ -1,4 +1,4 @@
-const baseUrl = "http://you-note.ru:8080/api"
+const baseUrl = "http://127.0.0.1:8080/api"
 
 const methods = {
     POST: 'POST',
@@ -39,7 +39,7 @@ const baseRequest = async (method, url, data = null) => {
         for (const header of response.headers) {
             console.log(header)
         }
-        if (response.headers.get('Authorization') !== undefined) {
+        if (response.headers.get('Authorization') !== null) {
             JWT = response.headers.get('Authorization');
             console.log(JWT)
         }
