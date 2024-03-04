@@ -120,7 +120,7 @@ class NoteRequests {
             for (const elem of body) {
                 const decoded = atob(elem.data)
                 const bytes = Uint8Array.from(decoded, (m) => m.codePointAt(0));
-                elem.data = JSON.parse(bytes.toString())
+                elem.data = JSON.parse(new TextDecoder().decode(bytes))
             }
             console.log(body)
             return body
