@@ -121,7 +121,7 @@ const registerPage = {
         inputs: {
             login: {
                 type: "text",
-                placeholder: "Введите логин"
+                placeholder: "Придумайте логин"
             },
             password: {
                 type: "password",

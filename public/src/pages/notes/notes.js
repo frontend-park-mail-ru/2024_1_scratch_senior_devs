@@ -3,6 +3,7 @@ import {Note} from "../../components/note/note.js";
 import {AppNoteRequests} from "../../modules/ajax.js";
 import Page from "../page.js";
 import {NoteEditor} from "../../components/note-editor/note-editor.js";
+import {EmptyNote} from "../../components/empty-note/empty-note.js";
 
 export default class NotesPage extends Page {
     #notesContainer;
@@ -29,24 +30,17 @@ export default class NotesPage extends Page {
 
         this.#notesContainer = document.querySelector(".notes-container");
 
-        const emptyNoteData = {
-            id: "empty-note",
-            data: {
-                title: "У вас пока нет заметок :(",
-                content: ""
-            }
-        }
 
         AppNoteRequests.GetAll().then((notes) => {
             if (notes.length > 0) {
                 this.#renderNotes(notes);
             } else {
-                let emptyNote = new Note(this.#notesContainer, emptyNoteData);
+                let emptyNote = new EmptyNote(this.#notesContainer);
                 emptyNote.render()
             }
-        }).catch(() => {
+        }).catch((err) => {
             console.log(err)
-            let emptyNote = new Note(this.#notesContainer, emptyNoteData);
+            let emptyNote = new EmptyNote(this.#notesContainer);
             emptyNote.render()
         })
 

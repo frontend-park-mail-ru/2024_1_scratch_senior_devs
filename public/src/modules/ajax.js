@@ -1,7 +1,7 @@
 import {AppEventMaker} from "./eventMaker.js";
 import {UserStoreEvents} from "../stores/user/events.js";
 
-const isDebug = false;
+const isDebug = true;
 
 const baseUrl = `http://${isDebug ? "127.0.0.1" : "you-note.ru"}:8080/api`;
 
