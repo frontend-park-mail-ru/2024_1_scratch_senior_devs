@@ -105,6 +105,16 @@ class AuthRequests {
             throw Error(body.message)
         }
     }
+
+    CheckUser = async () => {
+        const {status, body} = await baseRequest(methods.GET, this.#baseUrl + '/check_user')
+
+        if (status === 200) {
+            return body;
+        } else {
+            throw Error('not authorized');
+        }
+    }
 }
 
 class NoteRequests {

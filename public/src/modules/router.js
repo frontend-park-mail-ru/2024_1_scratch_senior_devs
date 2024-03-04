@@ -5,6 +5,7 @@ import NotFoundPage from "../pages/notFound/not-found.js";
 import NotesPage from "../pages/notes/notes.js";
 import {AppUserStore, UserActions} from "../stores/user/userStore.js";
 import {AppEventMaker} from "./eventMaker.js";
+import {AppDispatcher} from "./dispathcer.js";
 
 class Router {
     #currentUrl;
@@ -33,7 +34,7 @@ class Router {
         const notFoundPage = new NotFoundPage(root, config.notFoundPage)
         this.registerPage(notFoundPage)
 
-        this.redirect(this.#currentUrl)
+        AppDispatcher.dispatch(UserActions.CHECK_USER);
     }
 
     registerPage(page) {

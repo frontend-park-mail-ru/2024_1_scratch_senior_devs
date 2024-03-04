@@ -23,6 +23,9 @@ class UserStore {
                 case UserActions.REGISTER:
                     await this.register(action.payload);
                     break;
+                case UserActions.CHANGE_PAGE:
+                    await this.checkUser();
+                    break;
             }
         })
     }
@@ -77,6 +80,17 @@ class UserStore {
             console.log(err);
         }
     }
+
+    async checkUser(){
+        try {
+            const res = await AppAuthRequests.CheckUser();
+            this.#state.isAuth = true;
+            this.#state.username = res.username;
+            router.redirect("/notes")
+        } catch (err) {
+            router.redirect("/")
+        }
+    }
 }
 
 export const AppUserStore = new UserStore();
@@ -85,5 +99,6 @@ export const UserActions = {
     LOGIN: "LOGIN",
     REGISTER: "REGISTER",
     LOGOUT: "LOGOUT",
-    CHANGE_PAGE: "CHANGE_PAGE"
+    CHANGE_PAGE: "CHANGE_PAGE",
+    CHECK_USER: "CHECK_USER"
 }
