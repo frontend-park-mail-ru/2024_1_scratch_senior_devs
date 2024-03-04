@@ -118,7 +118,9 @@ class NoteRequests {
 
         if (status === 200) {
             for (const elem of body) {
-                elem.data = JSON.parse( atob(elem.data))
+                const decoded = atob(elem.data)
+                const bytes = Uint8Array.from(decoded, (m) => m.codePointAt(0));
+                elem.data = JSON.parse(bytes.toString())
             }
             console.log(body)
             return body
