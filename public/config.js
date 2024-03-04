@@ -96,7 +96,7 @@ const loginPage = {
             password: {
                 id: "password",
                 type: "password",
-                placeholder: "Придумайте пароль"
+                placeholder: "Введите пароль"
             }
         },
         links: {
@@ -125,7 +125,7 @@ const registerPage = {
             },
             password: {
                 type: "password",
-                placeholder: "Введите пароль"
+                placeholder: "Придумайте пароль"
             },
             repeatPassword: {
                 type: "password",
