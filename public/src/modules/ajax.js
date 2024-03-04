@@ -9,6 +9,8 @@ const methods = {
 
 let JWT = null
 
+JWT = window.localStorage.getItem('Authorization')
+
 const baseRequest = async (method, url, data = null) => {
     const options = {
         method: method,
@@ -36,12 +38,9 @@ const baseRequest = async (method, url, data = null) => {
         } catch (err) {
             console.log("no body")
         }
-        for (const header of response.headers) {
-            console.log(header)
-        }
         if (response.headers.get('Authorization') !== null) {
             JWT = response.headers.get('Authorization');
-            console.log(JWT)
+            window.localStorage.setItem('Authorization', JWT)
         }
         return {status: response.status, body}
     } catch (err) {
