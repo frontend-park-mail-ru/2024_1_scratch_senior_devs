@@ -39,8 +39,8 @@ export default class NotesPage extends Page {
 
         AppNoteRequests.GetAll().then((notes) => {
             if (notes.length > 0) {
-                notes.then(resp => {
-                    this.#renderNotes(resp);
+                notes.forEach(note => {
+                    this.#renderNotes(note);
                 });
             } else {
                 let emptyNote = new Note(this.#notesContainer, emptyNoteData);
