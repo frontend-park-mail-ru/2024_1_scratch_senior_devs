@@ -29,22 +29,31 @@ export default class NotesPage extends Page {
 
         this.#notesContainer = document.querySelector(".notes-container");
 
-        let notes = AppNoteRequests.GetAll()
-        if (notes.length > 0) {
-            notes.then(resp => {
-                this.#renderNotes(resp);
-            });
-        } else {
-            const emptyNoteData = {
-                id: "empty-note",
-                data: {
-                    title: "У вас пока нет заметок :(",
-                    content: ""
-                }
+        const emptyNoteData = {
+            id: "empty-note",
+            data: {
+                title: "У вас пока нет заметок :(",
+                content: ""
             }
+        }
+
+        AppNoteRequests.GetAll().then((notes) => {
+            if (notes.length > 0) {
+                notes.then(resp => {
+                    this.#renderNotes(resp);
+                });
+            } else {
+                let emptyNote = new Note(this.#notesContainer, emptyNoteData);
+                emptyNote.render()
+            }
+        }).catch((err) => {
+            console.log(err)
             let emptyNote = new Note(this.#notesContainer, emptyNoteData);
             emptyNote.render()
-        }
+        })
+
+
+
 
 
         this.#notesEditor = new NoteEditor(this.self.querySelector(".wrapper"), this.config.noteEditor);
