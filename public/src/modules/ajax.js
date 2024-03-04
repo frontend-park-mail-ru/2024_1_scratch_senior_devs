@@ -1,4 +1,4 @@
-const baseUrl = "http://127.0.0.1:8080/api"
+const baseUrl = "http://you-note.ru:8080/api"
 
 const methods = {
     POST: 'POST',
