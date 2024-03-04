@@ -23,7 +23,7 @@ class UserStore {
                 case UserActions.REGISTER:
                     await this.register(action.payload);
                     break;
-                case UserActions.CHANGE_PAGE:
+                case UserActions.CHECK_USER:
                     await this.checkUser();
                     break;
             }
