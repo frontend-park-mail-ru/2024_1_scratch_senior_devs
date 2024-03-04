@@ -34,7 +34,9 @@ class Router {
         const notFoundPage = new NotFoundPage(root, config.notFoundPage)
         this.registerPage(notFoundPage)
 
-        AppDispatcher.dispatch(UserActions.CHECK_USER);
+        console.log("dispatching")
+
+        AppDispatcher.dispatch({type: UserActions.CHECK_USER});
     }
 
     registerPage(page) {

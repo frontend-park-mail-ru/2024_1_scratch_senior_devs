@@ -24,6 +24,7 @@ class UserStore {
                     await this.register(action.payload);
                     break;
                 case UserActions.CHECK_USER:
+                    console.log("action handled")
                     await this.checkUser();
                     break;
             }
@@ -83,11 +84,14 @@ class UserStore {
 
     async checkUser(){
         try {
+            console.log("зареган")
             const res = await AppAuthRequests.CheckUser();
             this.#state.isAuth = true;
             this.#state.username = res.username;
             router.redirect("/notes")
+            AppEventMaker.notify(UserStoreEvents.SUCCESSFUL_LOGIN);
         } catch (err) {
+            console.log("не зареган")
             router.redirect("/")
         }
     }
