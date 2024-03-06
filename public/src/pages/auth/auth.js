@@ -72,11 +72,15 @@ export class AuthPage extends Page{
      * Очищает DOM
      */
     remove() {
-        this.#loginForm.remove()
-        this.#loginForm = undefined
+        if (this.#loginForm !== undefined) {
+            this.#loginForm.remove()
+            this.#loginForm = undefined
+        }
 
-        this.#registerForm.remove()
-        this.#registerForm = undefined
+        if (this.#registerForm !== undefined) {
+            this.#registerForm.remove()
+            this.#registerForm = undefined
+        }
 
         this.self.remove();
     }
