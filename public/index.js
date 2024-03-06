@@ -15,4 +15,3 @@ const header = new Header(root, config.header);
 header.render();
 
 router.init(wrapper.self, config);
-

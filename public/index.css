@@ -1,6 +1,5 @@
 @import 'src/pages/home/home.css';
-@import "src/pages/login/login.css";
-@import "src/pages/register/register.css";
+@import "src/pages/auth/auth.css";
 @import "src/pages/notFound/not-found.css";
 @import './src/pages/notes/notes.css';
 @import './src/pages/home/home.css';

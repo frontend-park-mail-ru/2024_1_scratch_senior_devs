@@ -1,24 +1,34 @@
-import "../../../build/register.js";
-import {Input} from "../../components/input/input.js";
-import {Link} from "../../components/link/link.js";
-import {Button} from "../../components/button/button.js";
-import {ValidateLogin, ValidatePassword} from "../../shared/validation.js";
-import {AppEventMaker} from "../../modules/eventMaker.js";
-import {inputEvents} from "../../components/input/events.js";
-import {AppDispatcher} from "../../modules/dispathcer.js";
-import {UserActions} from "../../stores/user/userStore.js";
-import Page from "../page.js";
-import {UserStoreEvents} from "../../stores/user/events.js";
+import "../../../../build/register.js"
+import {Input} from "../../../components/input/input.js";
+import {Button} from "../../../components/button/button.js";
+import {AppEventMaker} from "../../../modules/eventMaker.js";
+import {UserStoreEvents} from "../../../stores/user/events.js";
+import {inputEvents} from "../../../components/input/events.js";
+import {AppDispatcher} from "../../../modules/dispathcer.js";
+import {UserActions} from "../../../stores/user/userStore.js";
+import {ValidateLogin, ValidatePassword} from "../../../shared/validation.js";
 
-export default class RegisterPage extends Page {
+export class RegisterForm {
+    #parent;
+    #config;
+
     #loginInput;
     #passwordInput;
     #repeatPasswordInput;
-    #link;
     #submitBtn;
-    
-    get form () {
-        return document.getElementById(this.config.form.id);
+
+    /**
+     * Конструктор класса
+     * @param parent объект родителя
+     * @param config конфиг
+     */
+    constructor(parent, config) {
+        this.#parent = parent;
+        this.#config = config;
+    }
+
+    get self () {
+        return document.getElementById(this.#config.id);
     }
 
     validateData = () => {
@@ -34,7 +44,7 @@ export default class RegisterPage extends Page {
                 }
             });
         }
-    };
+    }
 
     #validateLogin(){
         delete this.#loginInput.self.dataset.error;
@@ -141,29 +151,25 @@ export default class RegisterPage extends Page {
     }
 
     render() {
+        console.log("register form render");
 
-        this.parent.insertAdjacentHTML(
+        this.#parent.insertAdjacentHTML(
             "beforeend",
-            window.Handlebars.templates["register.hbs"](this.config.form)
+            window.Handlebars.templates["register.hbs"](this.#config)
         );
 
-        this.#loginInput = new Input(this.form, this.config.form.inputs.login);
+        this.#loginInput = new Input(this.self, this.#config.inputs.login);
         this.#loginInput.render();
 
-        this.#passwordInput = new Input(this.form, this.config.form.inputs.password);
+        this.#passwordInput = new Input(this.self, this.#config.inputs.password);
         this.#passwordInput.render();
 
-        this.#repeatPasswordInput = new Input(this.form, this.config.form.inputs.repeatPassword);
+        this.#repeatPasswordInput = new Input(this.self, this.#config.inputs.repeatPassword);
         this.#repeatPasswordInput.render();
 
-        this.#link = new Link(this.form, this.config.form.links.loginPage);
-        this.#link.render();
-
-        this.#submitBtn = new Button(this.form, this.config.form.buttons.submitBtn, this.validateData);
+        this.#submitBtn = new Button(this.self, this.#config.buttons.submitBtn, this.validateData);
         this.#submitBtn.render();
 
         this.#subscribeToEvents();
-
-        document.title = "Регистрация";
     }
 }

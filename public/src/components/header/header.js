@@ -40,7 +40,6 @@ export class Header {
 
         AppEventMaker.subscribe(UserStoreEvents.CHANGE_PAGE, (href) => {
             console.log("CHANGE_PAGE");
-            console.log(href);
             if (href === "/") {
                 if (!AppUserStore.IsAuthenticated()) {
                     this.#authPageLink.self.classList.remove("hidden");

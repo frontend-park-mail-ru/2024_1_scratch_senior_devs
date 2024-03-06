@@ -46,11 +46,7 @@ const staticFile = (res, filePath, ext) => {
 const server = http.createServer((req, res) => {
     const {url} = req
 
-    // console.log(url)
-
-    if (url.startsWith("/api/")) {
-
-    }
+    console.log(url)
 
     const extname = String(path.extname(url)).toLocaleLowerCase()
     if (extname in mimeTypes) {

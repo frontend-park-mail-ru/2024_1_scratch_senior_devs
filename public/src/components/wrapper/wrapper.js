@@ -4,13 +4,18 @@ export class Wrapper {
     #parent;
     #config;
 
+    /**
+     * Конструктор класса
+     * @param parent объект родителя
+     * @param config конфиг
+     */
     constructor(parent, config) {
         this.#parent = parent;
         this.#config = config;
     }
 
     get self() {
-        return document.getElementById(`${this.#config.id}`);
+        return document.getElementById(this.#config.id);
     }
 
     render() {

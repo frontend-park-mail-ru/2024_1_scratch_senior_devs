@@ -5,11 +5,15 @@ import {router} from "../../modules/router.js";
 import {AppAuthRequests} from "../../modules/ajax.js";
 
 class UserStore {
-    #state = {
-        username: "YarikMix",
-        avatarUrl: "/src/assets/avatar.png",
-        isAuth: false
-    };
+    #state
+
+    constructor() {
+        this.#state = {
+            username: "",
+            avatarUrl: "/src/assets/avatar.png",
+            isAuth: false
+        };
+    }
 
     registerEvents(){
         AppDispatcher.register(async (action) => {
@@ -40,6 +44,8 @@ class UserStore {
     }
 
     IsAuthenticated() {
+        console.log("IsAuthenticated")
+        console.log(this.#state)
         return this.#state.isAuth;
     }
 

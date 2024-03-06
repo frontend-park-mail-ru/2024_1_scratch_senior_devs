@@ -1,10 +1,11 @@
 #!/bin/bash
 mkdir -p public/build
 handlebars -m public/src/pages/home/home.hbs -f public/build/home.js
-handlebars -m public/src/pages/login/login.hbs -f public/build/login.js
-handlebars -m public/src/pages/register/register.hbs -f public/build/register.js
 handlebars -m public/src/pages/notFound/not-found.hbs -f public/build/not-found.js
 handlebars -m public/src/pages/notes/notes.hbs -f public/build/notes.js
+handlebars -m public/src/pages/auth/auth.hbs -f public/build/auth.js
+handlebars -m public/src/pages/auth/login/login.hbs -f public/build/login.js
+handlebars -m public/src/pages/auth/register/register.hbs -f public/build/register.js
 handlebars -m public/src/components/image/image.hbs -f public/build/image.js
 handlebars -m public/src/components/header/header.hbs -f public/build/header.js
 handlebars -m public/src/components/note/note.hbs -f public/build/note.js

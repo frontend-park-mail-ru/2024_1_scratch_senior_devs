@@ -55,10 +55,10 @@ export class Input {
     #showPassword() {
         if (this.#input.type === "password") {
             this.#input.type = "text";
-            this.#image.src = "/src/assets/eye-open.svg";
+            this.#image.src = "/src/assets/eye.svg";
         } else {
             this.#input.type = "password";
-            this.#image.src = "/src/assets/eye-close.svg";
+            this.#image.src = "/src/assets/eye-slash.svg";
         }
     }
 

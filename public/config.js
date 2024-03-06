@@ -1,7 +1,6 @@
 const homePage = {
     id: "home",
     href: "/",
-    needAuth: false,
     linkToLoginPage: {
         text: "Попробовать"
     }
@@ -46,22 +45,10 @@ const header = {
         }
     },
     menu: {
-        home: {
-            href: "/",
-            text: "Главная"
-        },
-        main: {
-            href: "/",
-            text: "Мои заметки"
-        },
         auth: {
             id: "link-to-login",
-            href: "/login",
+            href: "/auth",
             text: "Вход"
-        },
-        register: {
-            href: "/register",
-            text: "Регистрация"
         }
     }
 }
@@ -74,76 +61,62 @@ const wrapper = {
     id: "wrapper"
 }
 
-const profilePage = {
-    href: "/profile",
-    id: "profile-page",
-    logoutBtn: {
-        text: "Выйти"
-    }
-}
-
-const loginPage = {
-    id: "login-page",
-    href: "/login",
-    form: {
-        id: "login-form",
-        inputs: {
-            login: {
-                id: "login",
-                type: 'text',
-                placeholder: 'Введите логин'
+const authPage = {
+    id: "auth-page",
+    href: "/auth",
+    needAuth: false,
+    forms: {
+        login: {
+            id: "login-form",
+            inputs: {
+                login: {
+                    id: "login",
+                    type: 'text',
+                    placeholder: 'Введите логин'
+                },
+                password: {
+                    id: "password",
+                    type: "password",
+                    placeholder: "Введите пароль"
+                }
             },
-            password: {
-                id: "password",
-                type: "password",
-                placeholder: "Введите пароль"
+            buttons: {
+                submitBtn: {
+                    text: "Войти"
+                }
             }
         },
-        links: {
-            registerPage: {
-                href: "/register",
-                text: "Ещё не зарегистрированы?",
-            }
-        },
-        buttons: {
-            submitBtn: {
-                text: "Войти"
-            }
-        }
-    }
-}
-
-const registerPage = {
-    href: "/register",
-    id: "register-page",
-    form: {
-        id: "register-form",
-        inputs: {
-            login: {
-                type: "text",
-                placeholder: "Придумайте логин"
+        register: {
+            id: "register-form",
+            inputs: {
+                login: {
+                    type: "text",
+                    placeholder: "Придумайте логин"
+                },
+                password: {
+                    type: "password",
+                    placeholder: "Придумайте пароль"
+                },
+                repeatPassword: {
+                    type: "password",
+                    placeholder: "Повторите пароль"
+                }
             },
-            password: {
-                type: "password",
-                placeholder: "Придумайте пароль"
-            },
-            repeatPassword: {
-                type: "password",
-                placeholder: "Повторите пароль"
-            }
-        },
-        links: {
-            loginPage: {
-                href: "/login",
-                text: "Уже есть аккаунт?",
-            }
-        },
-        buttons: {
-            submitBtn: {
-                text: "Зарегистрироваться"
+            buttons: {
+                submitBtn: {
+                    text: "Зарегистрироваться"
+                }
             }
         }
     },
+    links: {
+        linkToLogin: {
+            text: "Войти"
+        },
+        linkToRegister: {
+            text: "Регистрация"
+        }
+    }
 }
 
 const notFoundPage = {
@@ -174,9 +147,7 @@ const avatar = {
 export const config = {
     homePage: homePage,
     notesPage: notesPage,
-    loginPage: loginPage,
-    registerPage: registerPage,
-    profilePage: profilePage,
+    authPage: authPage,
     notFoundPage: notFoundPage,
     header: header,
     notes: notes,
