@@ -29,7 +29,7 @@
     flex-direction: column;
     gap: 25px;
     overflow-y: auto;
-    max-height: 600px;
+    height: 600px;
     width: 325px;
     padding-top: 5px;
 }
