@@ -86,8 +86,8 @@
     display: flex;
     transition: all .5s;
     border-radius: 50%;
-    background: #56A6F0;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    background: #56A6F0;
 }
 
 #settings-wrapper.show #settings-panel {
@@ -96,15 +96,9 @@
     border-radius: 25px;
 }
 
-#settings-wrapper .background {
-    transition: all 0.5s;
+#settings-panel #popup-content {
     height: 100%;
     width: 100%;
-}
-
-#settings-panel #popup-content {
-    height: 200px;
-    width: 150px;
     display: flex;
     flex-direction: column;
     justify-content: center;
