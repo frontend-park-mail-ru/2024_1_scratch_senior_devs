@@ -3,7 +3,6 @@
     flex-direction: column;
     gap: 10px;
     background: #fff;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     border-radius: 15px;
     padding: 15px;
     width: 300px;
@@ -12,5 +11,14 @@
 }
 
 .note-container:hover {
-    transform: scale(1.1);
+    transform: scale(1.05);
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.note-container p {
+    color: #575757;
+}
+
+.note-container.selected {
+    background: #e9f3ff;
 }

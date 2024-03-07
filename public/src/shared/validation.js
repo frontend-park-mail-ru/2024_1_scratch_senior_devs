@@ -30,6 +30,11 @@ export const ValidatePassword = (value) => {
     return ValidationResult(true);
 };
 
+/**
+ *
+ * @param value{string}
+ * @returns {{result: boolean, message: string | null}}
+ */
 export const ValidateLogin = (value) => {
     for (let index = 0; index < value.length; ++index){
         if (!(value.charCodeAt(index) >= 97 && value.charCodeAt(index) <= 122 ||
@@ -55,6 +60,12 @@ export const ValidateLogin = (value) => {
     return ValidationResult(true);
 };
 
+/**
+ *
+ * @param result{boolean}
+ * @param message{string | null}
+ * @returns {{result: boolean, message: string | null}}
+ */
 const ValidationResult = (result, message = null) => {
     return {result, message};
 };

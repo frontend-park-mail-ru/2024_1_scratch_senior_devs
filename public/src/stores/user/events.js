@@ -1,3 +1,7 @@
+/**
+ *
+ * @type {{LOGOUT: string, SUCCESSFUL_LOGIN: string, CHANGE_PAGE: string, LOGIN_ALREADY_EXIST: string, INVALID_LOGIN_OR_PASSWORD: string}}
+ */
 export const UserStoreEvents = {
     SUCCESSFUL_LOGIN: "SUCCESSFUL_LOGIN",
     LOGOUT: "LOGOUT",

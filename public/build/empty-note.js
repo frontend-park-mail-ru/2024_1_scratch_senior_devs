@@ -1,0 +1,1 @@
+!function(){var e=Handlebars.template;(Handlebars.templates=Handlebars.templates||{})["empty-note.hbs"]=e({compiler:[8,">= 4.3.0"],main:function(e,a,t,n,r){return'<div class="empty-note-wrapper">\r\n\t<h3>У вас еще нет заметок ;(</h3>\r\n</div>'},useData:!0})}();

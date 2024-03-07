@@ -26,12 +26,12 @@
 }
 
 .input-container .errors-container {
-    height: 30px;
+    height: 40px;
     color: #c92432;
     font-size: 13px;
 }
 
-.input-container .show-password-btn {
+.input-container .show-btn, .hide-btn{
     position: absolute;
     width: 24px;
     height: 24px;
@@ -39,6 +39,27 @@
     right: 16px;
     cursor: pointer;
     filter: invert(85%) sepia(3%) saturate(47%) hue-rotate(328deg) brightness(80%) contrast(91%);
+    transition: 0.5s ease;
+}
+
+.input-container input[type="password"] ~ .show-btn {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.input-container input[type="password"] ~ .hide-btn {
+    opacity: 0;
+    transform: scale(0);
+}
+
+.input-container input[type="text"] ~ .show-btn {
+    opacity: 0;
+    transform: scale(0);
+}
+
+.input-container input[type="text"] ~ .hide-btn {
+    opacity: 1;
+    transform: scale(1);
 }
 
 .input-container .form-label {

@@ -11,7 +11,7 @@ export class Input {
         change: ""
     };
 
-    #image;
+    #images;
     #input;
 
     id;
@@ -55,16 +55,14 @@ export class Input {
     #showPassword() {
         if (this.#input.type === "password") {
             this.#input.type = "text";
-            this.#image.src = "/src/assets/eye.svg";
         } else {
             this.#input.type = "password";
-            this.#image.src = "/src/assets/eye-slash.svg";
         }
     }
 
     #addEventListeners() {
         if(this.#config.isPassword){
-            this.#image.addEventListener("click", this.#listeners.showPassword);
+            this.#images.forEach(img => img.addEventListener("click", this.#listeners.showPassword));
         }
 
         this.#input.addEventListener("input", this.#listeners.change);
@@ -72,7 +70,7 @@ export class Input {
 
     #removeEventListeners() {
         if (this.#config.isPassword){
-            this.#image.removeEventListener("click", this.#listeners.showPassword);
+            this.#images.forEach(img => img.removeEventListener("click", this.#listeners.showPassword));
         }
 
         this.#input.removeEventListener("input", this.#listeners.change);
@@ -83,47 +81,14 @@ export class Input {
     }
 
     render() {
-        const template = window.Handlebars.templates["input.hbs"];
+        this.#parent.insertAdjacentHTML(
+            "beforeend",
+            window.Handlebars.templates["input.hbs"](this.#config)
+        );
 
-        if(this.self === null){
-            this.#parent.insertAdjacentHTML(
-                "beforeend",
-                template(this.#config)
-            );
-
-            this.#image = document.querySelector(`#input-${this.#config.id} > img`);
-            this.#input = document.querySelector(`#input-${this.#config.id} > input`);
-            this.#addEventListeners();
-        }
-
-
-        // const div = document.createElement('div');
-        // div.className = "input-container"
-        //
-        // // const template = Handlebars.templates["input.hbs"];
-        // div.innerHTML = template(this.#config);
-        //
-        // const input = div.querySelector("input");
-        //
-        // if (this.#config.type === "password") {
-        //     this.#image = document.createElement("img");
-        //     image.src = "/src/assets/eye-close.svg";
-        //     image.className = "show-password-btn";
-        //
-        //     image.addEventListener("click", function () {
-        //         if (input.type === "password") {
-        //             input.type = "text";
-        //             image.src = "/src/assets/eye-open.svg";
-        //         } else {
-        //             input.type = "password";
-        //             image.src = "/src/assets/eye-close.svg";
-        //         }
-        //     })
-        //
-        //     div.appendChild(image);
-        // }
-        //
-        // this.#parent.appendChild(div);
+        this.#images = document.querySelectorAll(`#input-${this.#config.id} > img`);
+        this.#input = document.querySelector(`#input-${this.#config.id} > input`);
+        this.#addEventListeners();
 
     }
 }

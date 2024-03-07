@@ -35,20 +35,38 @@ class UserStore {
         });
     }
 
+    /**
+     *
+     * @returns {string}
+     */
     get username() {
         return this.#state.username;
     }
 
+    /**
+     *
+     * @returns {string}
+     */
     get avatar() {
         return this.#state.avatarUrl;
     }
 
+    /**
+     *
+     * @returns {boolean}
+     * @constructor
+     */
     IsAuthenticated() {
         console.log("IsAuthenticated")
         console.log(this.#state)
         return this.#state.isAuth;
     }
 
+    /**
+     *
+     * @param credentials{{login: string, password: string}}
+     * @returns {Promise<void>}
+     */
     async login(credentials){
         try {
             const res = await AppAuthRequests.Login(credentials.login, credentials.password);
@@ -62,6 +80,10 @@ class UserStore {
         }
     }
 
+    /**
+     *
+     * @returns {Promise<void>}
+     */
     async logout() {
         try {
             await AppAuthRequests.Logout();
@@ -75,6 +97,11 @@ class UserStore {
         }
     }
 
+    /**
+     *
+     * @param credentials
+     * @returns {Promise<void>}
+     */
     async register(credentials) {
         try {
             const res = await AppAuthRequests.SignUp(credentials.login, credentials.password);
@@ -88,6 +115,10 @@ class UserStore {
         }
     }
 
+    /**
+     *
+     * @returns {Promise<void>}
+     */
     async checkUser(){
         try {
             console.log("зареган");
@@ -103,8 +134,16 @@ class UserStore {
     }
 }
 
+/**
+ *
+ * @type {UserStore}
+ */
 export const AppUserStore = new UserStore();
 
+/**
+ *
+ * @type {{REGISTER: string, LOGOUT: string, CHANGE_PAGE: string, LOGIN: string, CHECK_USER: string}}
+ */
 export const UserActions = {
     LOGIN: "LOGIN",
     REGISTER: "REGISTER",

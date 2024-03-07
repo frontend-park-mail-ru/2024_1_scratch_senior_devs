@@ -1,7 +1,7 @@
 import {AppEventMaker} from "./eventMaker.js";
 import {UserStoreEvents} from "../stores/user/events.js";
 
-const isDebug = false;
+const isDebug = true;
 
 const baseUrl = `http://${isDebug ? "127.0.0.1" : "you-note.ru"}:8080/api`;
 
@@ -16,6 +16,13 @@ let JWT = null;
 
 JWT = window.localStorage.getItem("Authorization");
 
+/**
+ *
+ * @param method {methods}
+ * @param url {string}
+ * @param data {any}
+ * @returns {Promise<{body: {message}, status: number}|{body: any, status: number}>}
+ */
 const baseRequest = async (method, url, data = null) => {
     const options = {
         method: method,
@@ -57,6 +64,12 @@ const baseRequest = async (method, url, data = null) => {
 class AuthRequests {
     #baseUrl = "/auth";
 
+    /**
+     *
+     * @param username{string}
+     * @param password{string}
+     * @returns {Promise<{create_time: string, image_path: string, id: string, username: string}>}
+     */
     Login = async (username, password) => {
         const {status, body} = await baseRequest(
             methods.POST,this.#baseUrl + "/login",
@@ -79,6 +92,12 @@ class AuthRequests {
         throw Error(body.message);
     };
 
+    /**
+     *
+     * @param username{string}
+     * @param password{string}
+     * @returns {Promise<{create_time: string, image_path: string, id: string, username: string}>}
+     */
     SignUp = async (username, password) => {
         const {status, body} = await baseRequest(
             methods.POST,this.#baseUrl + "/signup",
@@ -101,6 +120,10 @@ class AuthRequests {
         throw Error(body.message);
     };
 
+    /**
+     *
+     * @returns {Promise<{message: string}>}
+     */
     Logout = async () => {
         const {status, body} = await baseRequest(
             methods.DELETE,this.#baseUrl + "/logout"
@@ -119,6 +142,11 @@ class AuthRequests {
         }
     };
 
+    /**
+     *
+     * @returns {Promise<{message}|null>}
+     * @throws Error - not authorized
+     */
     CheckUser = async () => {
         const {status, body} = await baseRequest(methods.GET, this.#baseUrl + "/check_user");
 
@@ -133,6 +161,10 @@ class AuthRequests {
 class NoteRequests {
     #baseUrl = "/note";
 
+    /**
+     *
+     * @returns {Promise<{message}|{any}>}
+     */
     GetAll = async () => {
         const {status, body} = await baseRequest(
             methods.GET,this.#baseUrl + "/get_all"
@@ -144,7 +176,6 @@ class NoteRequests {
                 const bytes = Uint8Array.from(decoded, (m) => m.codePointAt(0));
                 elem.data = JSON.parse(new TextDecoder().decode(bytes));
             }
-            console.log(body);
             return body;
         } else {
             throw Error(body.message);

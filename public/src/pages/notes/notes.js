@@ -10,9 +10,11 @@ export default class NotesPage extends Page {
 
     #notesEditor;
 
+    #selectedNote;
+
     #renderNotes = (notes) => {
         for (const note of notes) {
-            const noteClass = new Note(this.#notesContainer, note);
+            const noteClass = new Note(this.#notesContainer, note, this.selectNote);
             noteClass.render();
         }
     };
@@ -20,6 +22,15 @@ export default class NotesPage extends Page {
     remove() {
         this.#notesEditor.remove();
         super.remove();
+    }
+
+    selectNote = (note) => {
+        if (this.#selectedNote !== undefined) {
+            this.#selectedNote.classList.remove("selected")
+        }
+
+        this.#selectedNote = note;
+        note.classList.add("selected")
     }
 
     render() {
