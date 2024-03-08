@@ -14,20 +14,33 @@ export default class NotesPage extends Page {
 
     #searchBar;
 
-    #renderNotes = (notes) => {
-        this.#notesContainer.innerHTML = "";
+    #renderNotes = (notes, reset=false) => {
+        if (reset){
+            this.#notesContainer.innerHTML = "";
+        }
 
         if (notes.length > 0) {
             for (const note of notes) {
                 const noteClass = new Note(this.#notesContainer, note, this.selectNote);
                 noteClass.render();
             }
-        } else {
-            const h3 = document.createElement("h3")
-            h3.innerText = "Ничего не найдено ;("
-            this.#notesContainer.append(h3)
+
+            this.createObserver();
         }
     };
+
+    createObserver() {
+        const intersectionObserver = new IntersectionObserver(entries => {
+            const lastNote = entries[0]
+            if (lastNote.intersectionRatio <= 0) return;
+
+            intersectionObserver.unobserve(lastNote.target)
+
+            AppNotesStore.loadNotes()
+        });
+
+        intersectionObserver.observe(this.#notesContainer.querySelector(".note-container:last-child"));
+    }
 
     remove() {
         this.#searchBar.remove();
@@ -37,8 +50,10 @@ export default class NotesPage extends Page {
     }
 
     selectNote = (note) => {
+        console.log("selectNote")
+        console.log(note.id)
         AppNotesStore.unselectNote();
-        AppNotesStore.selectNote(note);
+        AppNotesStore.fetchNote(note);
         note.classList.add("selected");
     }
 
@@ -57,6 +72,24 @@ export default class NotesPage extends Page {
         );
 
         this.#notesContainer = document.querySelector(".notes-container");
+
+        this.#notesContainer.addEventListener("click", (e) => {
+
+            let id = undefined;
+
+            if (e.target.matches(".note-container")) {
+                id = e.target.id;
+            } else if (e.target.matches(".note-container *")) {
+                id = e.target.parentNode.id;
+            }
+
+            if (id !== undefined) {
+                this.self.classList.add("selected");
+                this.selectNote(document.getElementById(id))
+            }
+        });
+
+
 
         this.#searchBar = new SearchBar(this.self.querySelector("aside"), this.config.searchBar);
         this.#searchBar.render();

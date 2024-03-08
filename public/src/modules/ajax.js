@@ -1,5 +1,6 @@
 import {AppEventMaker} from "./eventMaker.js";
 import {UserStoreEvents} from "../stores/user/events.js";
+import {decode} from "./utils.js";
 
 const isDebug = false;
 
@@ -176,7 +177,7 @@ class NoteRequests {
      *
      * @returns {Promise<{message}|{any}>}
      */
-    GetAll = async (params) => {
+    GetAll = async (params=null) => {
 
         const {status, body} = await baseRequest(
             methods.GET,
@@ -187,10 +188,24 @@ class NoteRequests {
 
         if (status === 200) {
             for (const elem of body) {
-                const decoded = atob(elem.data);
-                const bytes = Uint8Array.from(decoded, (m) => m.codePointAt(0));
-                elem.data = JSON.parse(new TextDecoder().decode(bytes));
+                elem.data = decode(elem)
             }
+            return body;
+        } else {
+            throw Error(body.message);
+        }
+    };
+
+    Get = async (id) => {
+
+        const {status, body} = await baseRequest(
+            methods.GET,
+            this.#baseUrl + "/" + id,
+            null
+        );
+
+        if (status === 200) {
+            body.data = decode(body)
             return body;
         } else {
             throw Error(body.message);

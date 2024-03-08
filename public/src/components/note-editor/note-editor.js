@@ -31,7 +31,6 @@ export class NoteEditor{
         content.innerText = note.data.content;
         this.#content.appendChild(content);
 
-        console.log(this.#parent);
         this.self.classList.add("active");
         this.#parent.classList.add("active");
     }

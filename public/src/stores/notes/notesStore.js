@@ -1,26 +1,34 @@
 import {AppNoteRequests} from "../../modules/ajax.js";
 import {AppEventMaker} from "../../modules/eventMaker.js";
 import {NotesStoreEvents} from "./events.js";
+import {noteEvents} from "../../pages/notes/events.js";
 
 class NotesStore {
-    #selectedNote;
+    #selectedNoteData;
+    #selectedNoteDOM;
+
     #notes;
 
-    get selectedNote() {
-        return this.#selectedNote;
-    }
+    #query = "";
+    #offset = 0;
+    #count = 10;
+
 
     get notes() {
         return this.#notes;
     }
 
-    selectNote(note) {
-        this.#selectedNote = note;
+    fetchNote(note) {
+        AppNoteRequests.Get(note.id).then(data => {
+            this.#selectedNoteDOM = note
+            this.#selectedNoteData = data
+            AppEventMaker.notify(noteEvents.NOTE_SELECTED, data);
+        })
     }
 
     unselectNote() {
-        if (this.#selectedNote !== undefined) {
-            this.#selectedNote.classList.remove("selected")
+        if (this.#selectedNoteDOM !== undefined) {
+            this.#selectedNoteDOM.classList.remove("selected")
         }
     }
 
@@ -32,8 +40,20 @@ class NotesStore {
     }
 
     searchNotes (query) {
-        AppNoteRequests.GetAll({title: query}).then(notes => {
+        this.#query = query;
+        this.#offset = 0;
+
+        AppNoteRequests.GetAll({title: query, offset: this.#offset, count: this.#count}).then(notes => {
             this.#notes = notes;
+            AppEventMaker.notify(NotesStoreEvents.NOTES_RECEIVED, notes, true);
+        })
+    }
+
+    loadNotes() {
+        this.#offset += this.#count;
+
+        AppNoteRequests.GetAll({title: this.#query, offset: this.#offset}).then(notes => {
+            this.#notes += notes;
             AppEventMaker.notify(NotesStoreEvents.NOTES_RECEIVED, notes);
         })
     }
