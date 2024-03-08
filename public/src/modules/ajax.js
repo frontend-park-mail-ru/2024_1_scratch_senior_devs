@@ -188,7 +188,7 @@ class NoteRequests {
 
         if (status === 200) {
             for (const elem of body) {
-                elem.data = decode(elem)
+                elem.data = decode(elem.data)
             }
             return body;
         } else {
@@ -205,7 +205,7 @@ class NoteRequests {
         );
 
         if (status === 200) {
-            body.data = decode(body)
+            body.data = decode(body.data)
             return body;
         } else {
             throw Error(body.message);

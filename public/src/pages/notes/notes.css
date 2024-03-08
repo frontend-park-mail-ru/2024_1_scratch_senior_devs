@@ -20,6 +20,11 @@
     flex-direction: column;
     align-items: center;
     gap: 15px;
+    width: 500px;
+}
+
+#notes-page.active aside {
+    width: 325px;
 }
 
 .notes-container {
@@ -30,7 +35,7 @@
     gap: 25px;
     overflow-y: auto;
     height: 650px;
-    width: 325px;
+    width: 100%;
     padding: 5px 15px;
 }
 

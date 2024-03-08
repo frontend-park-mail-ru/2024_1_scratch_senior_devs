@@ -49,7 +49,7 @@
 .home .first svg {
     position: absolute;
     width: 100%;
-    bottom: -140px;
+    bottom: -75px;
     right: 0;
     z-index: 1;
 }
@@ -79,6 +79,7 @@
     border-radius: 30px;
     padding: 12px 20px;
     max-width: 300px;
+    background: #007FFF;
 }
 
 .home .second {
@@ -89,12 +90,12 @@
     flex-direction: column;
     color: #fff;
     padding: 0 15%;
-    gap: 50px;
+    gap: 75px;
     height: 100vh;
 }
 
 .home .second h2 {
-    font-size: 32px;
+    font-size: 36px;
 }
 
 .home .second .cards-container {

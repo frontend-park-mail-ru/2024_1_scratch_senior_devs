@@ -14,6 +14,11 @@ export default class NotesPage extends Page {
 
     #searchBar;
 
+    /**
+     * Рендеринг списка заметок
+     * @param notes
+     * @param reset {boolean}
+     */
     #renderNotes = (notes, reset=false) => {
         if (reset){
             this.#notesContainer.innerHTML = "";
@@ -29,6 +34,9 @@ export default class NotesPage extends Page {
         }
     };
 
+    /**
+     * Инициализация обсервера для динамической пагинации заметок
+     */
     createObserver() {
         const intersectionObserver = new IntersectionObserver(entries => {
             const lastNote = entries[0]
@@ -42,6 +50,9 @@ export default class NotesPage extends Page {
         intersectionObserver.observe(this.#notesContainer.querySelector(".note-container:last-child"));
     }
 
+    /**
+     * Очистка мусора
+     */
     remove() {
         this.#searchBar.remove();
         this.#notesEditor.remove();
@@ -49,22 +60,33 @@ export default class NotesPage extends Page {
         super.remove();
     }
 
+    /**
+     * Срабатывает при клике по заметке из списка
+     * @param note {Element}
+     */
     selectNote = (note) => {
-        console.log("selectNote")
-        console.log(note.id)
         AppNotesStore.unselectNote();
         AppNotesStore.fetchNote(note);
         note.classList.add("selected");
     }
 
+    /**
+     * Подписка на ивенты
+     */
     #subscribeToEvents() {
         AppEventMaker.subscribe(NotesStoreEvents.NOTES_RECEIVED, this.#renderNotes);
     }
 
+    /**
+     * Отписка от ивентов
+     */
     #unsubscribeFromEvents() {
         AppEventMaker.subscribe(NotesStoreEvents.NOTES_RECEIVED, this.#renderNotes);
     }
 
+    /**
+     * Рендеринг страницы
+     */
     render() {
         this.parent.insertAdjacentHTML(
             "afterbegin",
@@ -74,7 +96,6 @@ export default class NotesPage extends Page {
         this.#notesContainer = document.querySelector(".notes-container");
 
         this.#notesContainer.addEventListener("click", (e) => {
-
             let id = undefined;
 
             if (e.target.matches(".note-container")) {
@@ -89,8 +110,6 @@ export default class NotesPage extends Page {
             }
         });
 
-
-
         this.#searchBar = new SearchBar(this.self.querySelector("aside"), this.config.searchBar);
         this.#searchBar.render();
 
@@ -100,8 +119,6 @@ export default class NotesPage extends Page {
         document.title = "Заметки";
         this.#subscribeToEvents();
 
-
         AppNotesStore.init();
-
     }
 }

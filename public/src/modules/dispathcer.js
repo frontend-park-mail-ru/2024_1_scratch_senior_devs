@@ -7,7 +7,7 @@ class Dispatcher{
 
     /**
      *
-     * @param callback{function}
+     * @param callback {function}
      */
     register(callback){
         this.#callbacks.push(callback);
@@ -15,7 +15,7 @@ class Dispatcher{
 
     /**
      *
-     * @param action{type: string, payload: any}
+     * @param action{{type: string, payload: any}}
      */
     dispatch(action){
         this.#callbacks.forEach((callback) => {

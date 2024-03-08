@@ -14,10 +14,18 @@ class NotesStore {
     #count = 10;
 
 
+    /**
+     * Возвращает список заметок
+     * @returns {any}
+     */
     get notes() {
         return this.#notes;
     }
 
+    /**
+     * Получение данных выбранной заметки
+     * @param note {Element}
+     */
     fetchNote(note) {
         AppNoteRequests.Get(note.id).then(data => {
             this.#selectedNoteDOM = note
@@ -26,12 +34,16 @@ class NotesStore {
         })
     }
 
+    /**
+     * Отключает стиль у заметки
+     */
     unselectNote() {
-        if (this.#selectedNoteDOM !== undefined) {
-            this.#selectedNoteDOM.classList.remove("selected")
-        }
+        this.#selectedNoteDOM?.classList.remove("selected")
     }
 
+    /**
+     * Инициализация списка заметок
+     */
     init () {
         AppNoteRequests.GetAll().then(notes => {
             this.#notes = notes;
@@ -39,6 +51,10 @@ class NotesStore {
         })
     }
 
+    /**
+     * Поиск заметок по названию
+     * @param query {string} поисковой запрос
+     */
     searchNotes (query) {
         this.#query = query;
         this.#offset = 0;
@@ -49,10 +65,18 @@ class NotesStore {
         })
     }
 
+    /**
+     * Подгрузка новых заметок
+     */
     loadNotes() {
         this.#offset += this.#count;
 
-        AppNoteRequests.GetAll({title: this.#query, offset: this.#offset}).then(notes => {
+        const params = {
+            title: this.#query,
+            offset: this.#offset
+        }
+
+        AppNoteRequests.GetAll(params).then(notes => {
             this.#notes += notes;
             AppEventMaker.notify(NotesStoreEvents.NOTES_RECEIVED, notes);
         })

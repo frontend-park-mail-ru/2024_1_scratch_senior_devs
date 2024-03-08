@@ -7,6 +7,9 @@ import {AppAuthRequests} from "../../modules/ajax.js";
 class UserStore {
     #state
 
+    /**
+     * Конструктор класса
+     */
     constructor() {
         this.#state = {
             username: "",
@@ -15,6 +18,9 @@ class UserStore {
         };
     }
 
+    /**
+     * Регистрирует ивенты
+     */
     registerEvents(){
         AppDispatcher.register(async (action) => {
             switch (action.type){
@@ -36,7 +42,7 @@ class UserStore {
     }
 
     /**
-     *
+     * Возвращает логин пользователя
      * @returns {string}
      */
     get username() {
@@ -44,7 +50,7 @@ class UserStore {
     }
 
     /**
-     *
+     * Возвращает url аватарки пользователя
      * @returns {string}
      */
     get avatar() {
@@ -52,9 +58,8 @@ class UserStore {
     }
 
     /**
-     *
+     * Возвращает true, если пользователь авторизован, иначе false
      * @returns {boolean}
-     * @constructor
      */
     IsAuthenticated() {
         console.log("IsAuthenticated")
@@ -63,8 +68,8 @@ class UserStore {
     }
 
     /**
-     *
-     * @param credentials{{login: string, password: string}}
+     * Выполняет авторизацию пользователя
+     * @param credentials{{login: string, password: string}} принимает логин и пароль
      * @returns {Promise<void>}
      */
     async login(credentials){
@@ -81,7 +86,7 @@ class UserStore {
     }
 
     /**
-     *
+     * Делает выход из аккаунта
      * @returns {Promise<void>}
      */
     async logout() {
@@ -98,7 +103,7 @@ class UserStore {
     }
 
     /**
-     *
+     * Выполняет регистрацию пользователя
      * @param credentials
      * @returns {Promise<void>}
      */
@@ -116,7 +121,7 @@ class UserStore {
     }
 
     /**
-     *
+     * Проверяет, авторизован ли пользователь
      * @returns {Promise<void>}
      */
     async checkUser(){

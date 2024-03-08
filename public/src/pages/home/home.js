@@ -6,11 +6,17 @@ import Page from "../page.js";
 import {mapNumberRange} from "../../modules/utils.js";
 
 export default class Home extends Page {
+    /**
+     * Если пользователь авторизован, то перенаправляет его на страницу с заметками, если нет - то на страницу входа
+     */
     handleButtonClick = () => {
         const href = AppUserStore.IsAuthenticated() ? "/notes" : "/login";
         router.redirect(href);
     };
 
+    /**
+     * Инициализация обсервера для анимации плавного появления карточек
+     */
     #createObserver() {
         let observer = new IntersectionObserver(
             function (entries, observer) {
@@ -33,6 +39,10 @@ export default class Home extends Page {
         });
     }
 
+    /**
+     * Инициализация 3d tilt эффекта при ховере карточки
+     * @param card {Element} карточка
+     */
     #initCard(card) {
         card.addEventListener('mousemove', (e) => {
             const pointerX = e.clientX
@@ -66,12 +76,18 @@ export default class Home extends Page {
         })
     }
 
+    /**
+     * Инициализация 3d tilt эффекта при ховере карточек
+     */
     #setupTilt() {
         Array.from(document.querySelectorAll(".second .cards-container .card")).map((cardEl) =>
             this.#initCard(cardEl)
         )
     }
 
+    /**
+     * Рендерит страницу
+     */
     render() {
         this.parent.insertAdjacentHTML(
             "afterbegin",

@@ -46,8 +46,8 @@ class Router {
 
     /**
      * Регистрирует страницу
-     * @param href адрес
-     * @param page объект страницы
+     * @param href {string} адрес
+     * @param page {Page} объект страницы
      */
     registerPage(href, page) {
         this.#pages[href] = page;
@@ -55,7 +55,7 @@ class Router {
 
     /**
      * Редиректит пользователя по переданному адресу
-     * @param href адрес
+     * @param href {string} адрес
      */
     redirect(href) {
         console.log("redirect " + href);
@@ -74,8 +74,6 @@ class Router {
             return;
         }
 
-        console.log(page.needAuth)
-        console.log(AppUserStore.IsAuthenticated())
         if (page.needAuth === false && AppUserStore.IsAuthenticated()) {
             this.redirect("/");
             return;

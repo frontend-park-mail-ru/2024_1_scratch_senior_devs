@@ -1,3 +1,8 @@
+/**
+ * Выполняет валидацию пароля
+ * @param value {string} переданная строка
+ * @returns {{result: boolean, message: (string|null)}} вернет true - если пароль подходит, в противном случае false, а также сообщение об ошибке
+ */
 export const ValidatePassword = (value) => {
     for (let index = 0; index < value.length; ++index){
         if (!(value.charCodeAt(index) >= 97 && value.charCodeAt(index) <= 122 ||
@@ -31,9 +36,9 @@ export const ValidatePassword = (value) => {
 };
 
 /**
- *
- * @param value{string}
- * @returns {{result: boolean, message: string | null}}
+ * Выполняет валидацию логина
+ * @param value {string} переданная строка
+ * @returns {{result: boolean, message: string | null}} вернет true - если логин подходит, в противном случае false, а также сообщение об ошибке
  */
 export const ValidateLogin = (value) => {
     for (let index = 0; index < value.length; ++index){
@@ -61,9 +66,9 @@ export const ValidateLogin = (value) => {
 };
 
 /**
- *
- * @param result{boolean}
- * @param message{string | null}
+ * Результат валидации
+ * @param result {boolean} результат проверки
+ * @param message {string | null} сообщение об ошибке
  * @returns {{result: boolean, message: string | null}}
  */
 const ValidationResult = (result, message = null) => {

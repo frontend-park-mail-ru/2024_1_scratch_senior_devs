@@ -93,6 +93,9 @@ export class AuthPage extends Page{
         return window.location.href.includes("login")
     }
 
+    /**
+     * Рендерит страницу
+     */
     render() {
         console.log("auth page render")
 

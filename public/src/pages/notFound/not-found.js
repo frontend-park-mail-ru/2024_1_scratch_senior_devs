@@ -4,10 +4,16 @@ import {Button} from "../../components/button/button.js";
 import Page from "../page.js";
 
 export default class NotFoundPage extends Page {
+    /**
+     * Перенаправление пользователя на главную страницу
+     */
     handleButtonClick = () => {
         router.redirect("/");
     };
 
+    /**
+     * Рендеринг страницы
+     */
     render() {
         console.log("404 page render");
 
