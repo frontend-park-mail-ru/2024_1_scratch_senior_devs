@@ -4,10 +4,11 @@
     gap: 10px;
     background: #fff;
     border-radius: 15px;
-    padding: 15px;
+    padding: 15px 15px 30px 15px;
     width: 100%;
     cursor: pointer;
     transition: 0.5s;
+    position: relative;
 }
 
 .note-container:hover {
@@ -21,4 +22,11 @@
 
 .note-container.selected {
     background: #e9f3ff;
+}
+
+.note-container .update_time {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    color: #787878;
 }

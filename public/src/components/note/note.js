@@ -13,12 +13,15 @@ export class Note {
     constructor(parent, config, selectNote) {
         this.#parent = parent;
         this.#config = config;
+
+
+
         this.#props = {
             id: this.#config.id,
             title: this.#config.data.title,
             content: truncate(this.#config.data.content, 50),
             create_time: this.#config.create_time,
-            update_time: this.#config.update_time
+            update_time: new Intl.DateTimeFormat("ru", {dateStyle: "medium"}).format(new Date(this.#config.update_time))
         };
 
         this.#selectNote = selectNote;

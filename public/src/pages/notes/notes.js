@@ -16,9 +16,16 @@ export default class NotesPage extends Page {
 
     #renderNotes = (notes) => {
         this.#notesContainer.innerHTML = "";
-        for (const note of notes) {
-            const noteClass = new Note(this.#notesContainer, note, this.selectNote);
-            noteClass.render();
+
+        if (notes.length > 0) {
+            for (const note of notes) {
+                const noteClass = new Note(this.#notesContainer, note, this.selectNote);
+                noteClass.render();
+            }
+        } else {
+            const h3 = document.createElement("h3")
+            h3.innerText = "Ничего не найдено ;("
+            this.#notesContainer.append(h3)
         }
     };
 

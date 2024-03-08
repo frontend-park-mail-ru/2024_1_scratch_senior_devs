@@ -17,7 +17,6 @@ export class SearchBar {
     }
 
     #handleChange = (e) => {
-        console.log(e.target.value);
         const query = e.target.value;
         AppNotesStore.searchNotes(query);
     }
