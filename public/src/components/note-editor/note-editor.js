@@ -1,6 +1,7 @@
 import "../../../build/note-editor.js";
 import {AppEventMaker} from "../../modules/eventMaker.js";
 import {noteEvents} from "../../pages/notes/events.js";
+import {AppNotesStore} from "../../stores/notes/notesStore.js";
 
 export class NoteEditor{
     #parent;
@@ -41,6 +42,8 @@ export class NoteEditor{
 
         this.#title.innerText = ""
         this.#content.innerText = ""
+
+        AppNotesStore.unselectNote();
     }
 
     #subscribeToEvents() {

@@ -10,6 +10,9 @@ const notesPage = {
     id: "notes-page",
     href: "/notes",
     needAuth: true,
+    searchBar: {
+        id: "notes-search-bar",
+    },
     noteEditor: {
         id: "note-editor",
         closeBtn: {
@@ -129,10 +132,6 @@ const notFoundPage = {
 }
 
 const notes = {
-
-}
-
-const noteEditor = {
 
 }
 

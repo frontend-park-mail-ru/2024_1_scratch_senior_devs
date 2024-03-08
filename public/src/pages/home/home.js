@@ -36,7 +36,8 @@ export default class Home extends Page {
             window.Handlebars.templates["home.hbs"](this.config)
         );
 
-        const link = new Button(this.self.querySelector(".left-container"), this.config.linkToLoginPage, this.handleButtonClick);
+        const container = this.self.querySelector(".text-container");
+        const link = new Button(container, this.config.linkToLoginPage, this.handleButtonClick);
         link.render();
 
         this.createObserver();

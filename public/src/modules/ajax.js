@@ -1,7 +1,7 @@
 import {AppEventMaker} from "./eventMaker.js";
 import {UserStoreEvents} from "../stores/user/events.js";
 
-const isDebug = false;
+const isDebug = true;
 
 const baseUrl = `http://${isDebug ? "127.0.0.1" : "you-note.ru"}:8080/api`;
 
@@ -21,9 +21,10 @@ JWT = window.localStorage.getItem("Authorization");
  * @param method {methods}
  * @param url {string}
  * @param data {any}
+ * @param params {Dict<string, string>}
  * @returns {Promise<{body: {message}, status: number}|{body: any, status: number}>}
  */
-const baseRequest = async (method, url, data = null) => {
+const baseRequest = async (method, url, data = null, params=null) => {
     const options = {
         method: method,
         mode: "cors",
@@ -42,8 +43,13 @@ const baseRequest = async (method, url, data = null) => {
         options.body = JSON.stringify(data);
     }
 
+    let query_url = new URL(baseUrl + url);
+    if (params != null) {
+        query_url.search = new URLSearchParams(params);
+    }
+
     try{
-        const response = await fetch(baseUrl + url, options);
+        const response = await fetch(query_url.toString(), options);
         let body = null;
         try {
             body = await response.json();
@@ -100,7 +106,8 @@ class AuthRequests {
      */
     SignUp = async (username, password) => {
         const {status, body} = await baseRequest(
-            methods.POST,this.#baseUrl + "/signup",
+            methods.POST,
+            this.#baseUrl + "/signup",
             {username, password}
         );
 
@@ -126,7 +133,8 @@ class AuthRequests {
      */
     Logout = async () => {
         const {status, body} = await baseRequest(
-            methods.DELETE,this.#baseUrl + "/logout"
+            methods.DELETE,
+            this.#baseUrl + "/logout"
         );
 
         console.log(status);
@@ -148,7 +156,10 @@ class AuthRequests {
      * @throws Error - not authorized
      */
     CheckUser = async () => {
-        const {status, body} = await baseRequest(methods.GET, this.#baseUrl + "/check_user");
+        const {status, body} = await baseRequest(
+            methods.GET,
+            this.#baseUrl + "/check_user"
+        );
 
         if (status === 200) {
             return body;
@@ -165,9 +176,13 @@ class NoteRequests {
      *
      * @returns {Promise<{message}|{any}>}
      */
-    GetAll = async () => {
+    GetAll = async (params) => {
+
         const {status, body} = await baseRequest(
-            methods.GET,this.#baseUrl + "/get_all"
+            methods.GET,
+            this.#baseUrl + "/get_all",
+            null,
+            params
         );
 
         if (status === 200) {

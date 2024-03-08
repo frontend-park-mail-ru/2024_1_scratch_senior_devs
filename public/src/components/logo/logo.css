@@ -5,4 +5,9 @@
 #logo img {
     width: 36px;
     height: 36px;
+    transition: 0.3s;
+}
+
+#logo img:hover {
+    transform: rotate(15deg);
 }

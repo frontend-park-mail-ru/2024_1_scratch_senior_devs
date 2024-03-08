@@ -129,6 +129,7 @@ class UserStore {
             AppEventMaker.notify(UserStoreEvents.SUCCESSFUL_LOGIN);
         } catch (err) {
             console.log("не зареган");
+            console.log(err);
             // router.redirect("/");
         }
     }

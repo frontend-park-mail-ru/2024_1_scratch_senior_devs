@@ -42,7 +42,7 @@
 
 @keyframes parallax {
     to {
-        transform: translateY(calc(300px));
+        transform: translateY(300px);
     }
 }
 
@@ -54,7 +54,7 @@
     z-index: 1;
 }
 
-.home .first .left-container {
+.home .first .text-container {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -68,13 +68,13 @@
     animation-name: fadeIn;
 }
 
-.home .first .left-container h1 {
+.home .first .text-container h1 {
     text-align: center;
-    font-size: 42px;
+    font-size: 36px;
     color: #fff;
 }
 
-.home .first .left-container button {
+.home .first .text-container button {
     font-size: 36px;
     border-radius: 30px;
     padding: 12px 20px;
@@ -111,6 +111,8 @@
     padding: 15px;
     border-radius: 20px;
     display: flex;
+    justify-content: center;
+    align-items: center;
     flex-direction: column;
     gap: 10px;
     opacity: 0;
@@ -148,6 +150,7 @@
 
 .home .second .cards-container .card span {
     color: #696969;
+    text-align: center;
 }
 
 

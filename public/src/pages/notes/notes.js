@@ -1,18 +1,21 @@
 import "../../../build/notes.js";
 import {Note} from "../../components/note/note.js";
-import {AppNoteRequests} from "../../modules/ajax.js";
 import Page from "../page.js";
 import {NoteEditor} from "../../components/note-editor/note-editor.js";
-import {EmptyNote} from "../../components/empty-note/empty-note.js";
+import {AppNotesStore} from "../../stores/notes/notesStore.js";
+import {SearchBar} from "../../components/search-bar/search-bar.js";
+import {AppEventMaker} from "../../modules/eventMaker.js";
+import {NotesStoreEvents} from "../../stores/notes/events.js";
 
 export default class NotesPage extends Page {
     #notesContainer;
 
     #notesEditor;
 
-    #selectedNote;
+    #searchBar;
 
     #renderNotes = (notes) => {
+        this.#notesContainer.innerHTML = "";
         for (const note of notes) {
             const noteClass = new Note(this.#notesContainer, note, this.selectNote);
             noteClass.render();
@@ -20,17 +23,24 @@ export default class NotesPage extends Page {
     };
 
     remove() {
+        this.#searchBar.remove();
         this.#notesEditor.remove();
+        this.#unsubscribeFromEvents();
         super.remove();
     }
 
     selectNote = (note) => {
-        if (this.#selectedNote !== undefined) {
-            this.#selectedNote.classList.remove("selected")
-        }
+        AppNotesStore.unselectNote();
+        AppNotesStore.selectNote(note);
+        note.classList.add("selected");
+    }
 
-        this.#selectedNote = note;
-        note.classList.add("selected")
+    #subscribeToEvents() {
+        AppEventMaker.subscribe(NotesStoreEvents.NOTES_RECEIVED, this.#renderNotes);
+    }
+
+    #unsubscribeFromEvents() {
+        AppEventMaker.subscribe(NotesStoreEvents.NOTES_RECEIVED, this.#renderNotes);
     }
 
     render() {
@@ -41,24 +51,17 @@ export default class NotesPage extends Page {
 
         this.#notesContainer = document.querySelector(".notes-container");
 
+        this.#searchBar = new SearchBar(this.self.querySelector("aside"), this.config.searchBar);
+        this.#searchBar.render();
 
-        AppNoteRequests.GetAll().then((notes) => {
-            if (notes.length > 0) {
-                this.#renderNotes(notes);
-            } else {
-                let emptyNote = new EmptyNote(this.#notesContainer);
-                emptyNote.render()
-            }
-        }).catch((err) => {
-            console.log(err)
-            let emptyNote = new EmptyNote(this.#notesContainer);
-            emptyNote.render()
-        })
-
-        this.#notesEditor = new NoteEditor(this.self.querySelector(".wrapper"), this.config.noteEditor);
+        this.#notesEditor = new NoteEditor(this.self, this.config.noteEditor);
         this.#notesEditor.render();
 
-
         document.title = "Заметки";
+        this.#subscribeToEvents();
+
+
+        AppNotesStore.init();
+
     }
 }

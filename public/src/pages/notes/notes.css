@@ -2,24 +2,24 @@
     width: 100%;
     height: 100%;
     display: flex;
+    justify-content: center;
     align-items: flex-start;
-    padding: 125px 15% 125px calc(15% - 10px);
+    gap: 25px;
+    padding: 125px 15% 75px calc(15% - 10px);
     background: #dfe9f5;
     overflow: hidden;
 }
 
-#notes-page .wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 25px;
-    width: 100%;
-    height: 100%;
-}
-
-#notes-page .wrapper.active  {
+#notes-page.active  {
     display: grid;
     grid-template-columns: 325px 1fr;
+}
+
+#notes-page aside {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
 }
 
 .notes-container {
@@ -29,9 +29,9 @@
     flex-direction: column;
     gap: 25px;
     overflow-y: auto;
-    height: 600px;
+    height: 650px;
     width: 325px;
-    padding-top: 5px;
+    padding: 5px 15px;
 }
 
 .notes-container::-webkit-scrollbar-track {

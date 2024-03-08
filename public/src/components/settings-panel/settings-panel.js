@@ -4,10 +4,13 @@ import {Button} from "../button/button.js";
 import {Span} from "../span/span.js";
 import {AppUserStore, UserActions} from "../../stores/user/userStore.js";
 import {AppDispatcher} from "../../modules/dispathcer.js";
+import {SettingsButton} from "./settings-button/settings-button.js";
 
 export class SettingsPanel {
     #parent;
     #config;
+
+    #settingsButton;
 
     constructor(parent, config) {
         this.#parent = parent;
@@ -18,16 +21,12 @@ export class SettingsPanel {
         return document.getElementById(this.#config.id);
     }
 
-    get button() {
-        return document.getElementById("settings-button");
-    }
-
     get panel(){
         return document.getElementById(this.#config.panel.id);
     }
 
     remove() {
-        this.#removeEventListeners();
+        this.#settingsButton.remove();
         this.self.remove();
     }
 
@@ -37,24 +36,19 @@ export class SettingsPanel {
         });
     }
 
-    handleClick = (e) => {
-        e.preventDefault();
+    handleClick = () => {
         this.self.classList.toggle("show");
     };
 
-    #addEventListeners(){
-        this.button.addEventListener("click", this.handleClick);
-    }
-
-    #removeEventListeners(){
-        this.button.removeEventListener("click", this.handleClick);
-    }
 
     render(){
         this.#parent.insertAdjacentHTML(
             "beforeend",
             window.Handlebars.templates["settings-panel.hbs"](this.#config)
         );
+
+        this.#settingsButton = new SettingsButton(this.self, this.handleClick)
+        this.#settingsButton.render()
 
         const avatar = new Image(this.panel, this.#config.panel.avatar);
         avatar.render();
@@ -66,7 +60,5 @@ export class SettingsPanel {
 
         const logoutBtn = new Button(this.panel, this.#config.panel.logoutBtn, this.handleLogout);
         logoutBtn.render();
-
-        this.#addEventListeners();
     }
 }

@@ -16,7 +16,9 @@ export class Note {
         this.#props = {
             id: this.#config.id,
             title: this.#config.data.title,
-            content: truncate(this.#config.data.content, 50)
+            content: truncate(this.#config.data.content, 50),
+            create_time: this.#config.create_time,
+            update_time: this.#config.update_time
         };
 
         this.#selectNote = selectNote;
