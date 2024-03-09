@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    background: #fff;
+    background: #333437;
     border-radius: 15px;
     padding: 15px 15px 40px 15px;
     width: 100%;
@@ -13,20 +13,25 @@
 
 .note-container:hover {
     transform: scale(1.05);
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+
+.note-container h3 {
+    color: #f4f6f9;
 }
 
 .note-container p {
-    color: #575757;
+    color: #f4f6f9;
 }
 
 .note-container.selected {
-    background: #e9f3ff;
+    box-shadow: 0 0 5px #007FFF,
+                0 0 15px #007FFF;
 }
 
 .note-container .update-time {
     position: absolute;
     right: 10px;
     bottom: 10px;
-    color: #787878;
+    color: #f4f6f9;
 }

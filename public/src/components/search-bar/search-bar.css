@@ -4,13 +4,12 @@
     align-items: center;
     padding: 12px 16px;
     border-radius: 28px;
-    background: #fff;
-    box-shadow: rgba(149, 157, 165, 0.2) 0 8px 24px;
+    background: #333437;
 }
 
 .search-input {
     font-size: 16px;
-    color: #333;
+    color: #f4f6f9;
     outline: none;
     border: none;
     background: transparent;
@@ -18,5 +17,5 @@
 }
 
 .search-input::placeholder {
-    color: rgba(0,0,0,0.5);
+    color: #f4f6f9;
 }

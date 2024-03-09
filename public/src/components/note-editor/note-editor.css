@@ -1,13 +1,13 @@
 #note-editor {
     min-width: 500px;
     border-radius: 15px;
-    background: #fff;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    background: #333437;
     display: none;
     flex-direction: column;
     padding: 20px;
     gap: 10px;
     position: relative;
+    color: #f4f6f9;
 }
 
 #note-editor.active {
@@ -30,7 +30,7 @@
 
 #note-editor span {
     font-size: 18px;
-    color: #4d4e53;
+    color: #f4f6f9;
 }
 
 #note-editor .note-content {
@@ -62,6 +62,7 @@
     cursor: pointer;
     display: none;
     transition: 0.3s;
+    filter: invert(80%);
 }
 
 #note-editor .close-editor-btn:hover {

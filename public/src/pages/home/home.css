@@ -83,7 +83,7 @@
 }
 
 .home .second {
-    background: #007FFF;
+    background: #222226;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -92,10 +92,15 @@
     padding: 0 15%;
     gap: 75px;
     height: 100vh;
+    z-index: 100;
 }
 
 .home .second h2 {
     font-size: 36px;
+    text-shadow: 0 0 10px #007FFF,
+                0 0 20px #007FFF,
+                0 0 40px #007FFF,
+                0 0 80px #007FFF;
 }
 
 .home .second .cards-container {

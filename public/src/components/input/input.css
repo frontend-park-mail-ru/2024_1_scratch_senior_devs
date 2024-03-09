@@ -9,12 +9,18 @@
     padding: 12px;
     border: 1px solid #ddd;
     outline: none;
-    border-radius: 5px;
+    border-radius: 99px;
     transition: 0.3s;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.input-container input::placeholder {
+    color: rgba(255, 255, 255, 0.8)
 }
 
 .input-container input:focus {
-    border: 1px solid #56A6F0;
+    border: 1px solid #007FFF;
 }
 
 .input-container.success input {
@@ -29,6 +35,7 @@
     height: 40px;
     color: #c92432;
     font-size: 13px;
+    padding: 0 10px;
 }
 
 .input-container .show-btn, .hide-btn{
@@ -38,7 +45,7 @@
     top: 12px;
     right: 16px;
     cursor: pointer;
-    filter: invert(85%) sepia(3%) saturate(47%) hue-rotate(328deg) brightness(80%) contrast(91%);
+    filter: invert(85%);
     transition: 0.5s ease;
 }
 

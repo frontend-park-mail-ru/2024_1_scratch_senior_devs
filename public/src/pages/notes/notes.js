@@ -38,12 +38,14 @@ export default class NotesPage extends Page {
      * Инициализация обсервера для динамической пагинации заметок
      */
     createObserver() {
+        console.log("createObserver");
         const intersectionObserver = new IntersectionObserver(entries => {
             const lastNote = entries[0]
             if (lastNote.intersectionRatio <= 0) return;
 
             intersectionObserver.unobserve(lastNote.target)
 
+            console.log("AppNotesStore.loadNotes()");
             AppNotesStore.loadNotes()
         });
 
@@ -54,6 +56,7 @@ export default class NotesPage extends Page {
      * Очистка мусора
      */
     remove() {
+        AppNotesStore.clean();
         this.#searchBar.remove();
         this.#notesEditor.remove();
         this.#unsubscribeFromEvents();

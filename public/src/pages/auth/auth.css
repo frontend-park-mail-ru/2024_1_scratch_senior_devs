@@ -4,22 +4,50 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #dfe9f5;
+    background: #222226;
 }
 
-#auth-page .auth-container {
-    background-color: #fff;
-    border-radius: 30px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
+.glassmorphism-container {
     position: relative;
-    overflow: hidden;
+}
+
+.glassmorphism-container::before, .glassmorphism-container::after {
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    border-radius: 50%;
+    content: '';
+}
+
+.glassmorphism-container:before {
+    background: linear-gradient(#9b22ea, #bf23f6);
+    top: -100px;
+    left: -100px;
+}
+
+.glassmorphism-container:after {
+    background: linear-gradient(#ff512f, #f09819);
+    bottom: -100px;
+    right: -100px;
+}
+
+.auth-container {
+    background: rgba(64, 64, 64, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(25px);
+    border-radius: 30px;
+    box-shadow: 0 0px 15px rgba(0, 0, 0, 0.35);
+    position: relative;
     width: 768px;
     max-width: 100%;
     min-height: 500px;
     animation-duration: 1s;
     animation-fill-mode: both;
     animation-name: fadeIn;
+    overflow: hidden;
+    z-index: 10;
 }
+
 
 @keyframes fadeIn {
     from {
@@ -52,6 +80,7 @@
 #auth-page .auth-container .form-container form h3 {
     font-size: 28px;
     margin-bottom: 25px;
+    color: #fff;
 }
 
 #auth-page .auth-container .form-container form button {
