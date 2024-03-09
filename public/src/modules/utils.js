@@ -9,7 +9,7 @@ export function truncate(str, n){
 }
 
 /**
- * Декодирует строку из base64 в utf-8
+ * Декодирует строку из base64 в unicode
  * @param raw {string} закодированная строка
  * @returns {Object} декодированный объект
  */

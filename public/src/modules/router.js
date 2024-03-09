@@ -15,7 +15,7 @@ class Router {
      * Конструктор класса
      */
     constructor() {
-        this.#currentUrl = this.parseUrl();
+        this.#currentUrl = window.location.pathname;
         this.#currentPage = undefined;
         this.#pages = new Map();
     }
@@ -42,6 +42,10 @@ class Router {
         console.log("dispatching");
         AppDispatcher.dispatch({type: UserActions.CHECK_USER});
         this.redirect(this.#currentUrl);
+
+        window.addEventListener("popstate", () => {
+            this.redirect(window.location.pathname)
+        });
     }
 
     /**
@@ -85,16 +89,6 @@ class Router {
         this.#currentPage = page;
 
         AppEventMaker.notify(UserActions.CHANGE_PAGE, href);
-    }
-
-    /**
-     * Возвращает относительный адрес страницы
-     * @returns {string} относительный адрес
-     */
-    parseUrl() {
-        console.log("parseUrl")
-
-        return  "/" + window.location.href.split("/").slice(-1)[0];
     }
 }
 
