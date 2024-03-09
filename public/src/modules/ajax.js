@@ -2,7 +2,7 @@ import {AppEventMaker} from "./eventMaker.js";
 import {UserStoreEvents} from "../stores/user/events.js";
 import {decode} from "./utils.js";
 
-const isDebug = true;
+const isDebug = false;
 
 const baseUrl = `http://${isDebug ? "127.0.0.1" : "you-note.ru"}:8080/api`;
 
