@@ -51,6 +51,7 @@
 #note-editor .note-content::-webkit-scrollbar-thumb {
     border-radius: 10px;
     box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+    background: #C0C9CB;
 }
 
 #note-editor .close-editor-btn {
