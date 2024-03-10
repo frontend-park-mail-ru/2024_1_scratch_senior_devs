@@ -73,13 +73,13 @@ const authPage = {
             id: "login-form",
             inputs: {
                 login: {
-                    id: "login",
                     type: 'text',
+                    icon: "/src/assets/user.png",
                     placeholder: 'Введите логин'
                 },
                 password: {
-                    id: "password",
                     type: "password",
+                    icon: "/src/assets/password.png",
                     placeholder: "Введите пароль"
                 }
             },
@@ -94,14 +94,17 @@ const authPage = {
             inputs: {
                 login: {
                     type: "text",
+                    icon: "/src/assets/user.png",
                     placeholder: "Придумайте логин"
                 },
                 password: {
                     type: "password",
+                    icon: "/src/assets/password.png",
                     placeholder: "Придумайте пароль"
                 },
                 repeatPassword: {
                     type: "password",
+                    icon: "/src/assets/password.png",
                     placeholder: "Повторите пароль"
                 }
             },

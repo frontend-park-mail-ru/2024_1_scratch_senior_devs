@@ -15,8 +15,6 @@ export default class NotFoundPage extends Page {
      * Рендеринг страницы
      */
     render() {
-        console.log("404 page render");
-
         this.parent.insertAdjacentHTML(
             "afterbegin",
             window.Handlebars.templates["not-found.hbs"](this.config)

@@ -4,20 +4,35 @@ export class Span {
     #parent;
     #config;
 
+    /**
+     * Конструктор класса
+     * @param parent {HTMLElement} - родительский элемент
+     * @param config {Object} - пропсы
+     */
     constructor(parent, config) {
         this.#parent = parent;
         this.#config = config;
     }
 
+    /**
+     * Возвращает HTML элемент компонента
+     * @returns {HTMLElement}
+     */
     get self(){
         return document.querySelector(`.${this.#config.class}`);
     }
 
+    /**
+     * Меняет текст
+     * @param text {string}
+     */
     setText(text) {
-        console.log(text);
         this.self.innerHTML = text;
     }
 
+    /**
+     * Рендеринг компонента
+     */
     render() {
         this.#parent.insertAdjacentHTML(
             "beforeend",

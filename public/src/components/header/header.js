@@ -19,15 +19,29 @@ export class Header {
 
     #settingsPanel;
 
+    /**
+     * Конструктор класса
+     * @param parent {HTMLElement} - родительский элемент
+     * @param config {Object} - пропсы
+     */
     constructor(parent, config) {
         this.#parent = parent;
         this.#config = config;
     }
 
+    /**
+     * Возвращает HTML элемент компонента
+     * @returns {HTMLElement}
+     */
     get self () {
         return document.getElementById("header");
     }
 
+    /**
+     * Подписка на события
+     * При успешном логине - удалить ссылку на страницу авторизации и вывести профиль пользователя
+     * При логауте - удалить профиль пользователя и вывести ссылку на страницу авторизации
+     */
     #addEventListeners(){
         AppEventMaker.subscribe(UserStoreEvents.SUCCESSFUL_LOGIN, () => {
             if (this.#settingsPanel === undefined) {
@@ -63,13 +77,17 @@ export class Header {
         });
     }
 
+    /**
+     * Перенаправление пользователя на страницу авторизации
+     */
     handleButtonClick = () => {
         router.redirect("/login");
     };
 
+    /**
+     * Рендеринг компонента
+     */
     render() {
-        console.log("header render");
-
         this.#parent.insertAdjacentHTML(
             "afterbegin",
             window.Handlebars.templates["header.hbs"](this.#config)

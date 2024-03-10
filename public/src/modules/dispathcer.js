@@ -1,12 +1,17 @@
+/** @typedef  {{type: string, payload: any}} CallbackAction**/
+
 class Dispatcher{
     #callbacks;
 
+    /**
+     * Конструктор класса
+     */
     constructor() {
         this.#callbacks = [];
     }
 
     /**
-     *
+     * Регистрация калбэка
      * @param callback {function}
      */
     register(callback){
@@ -15,7 +20,7 @@ class Dispatcher{
 
     /**
      *
-     * @param action{{type: string, payload: any}}
+     * @param action {CallbackAction}
      */
     dispatch(action){
         this.#callbacks.forEach((callback) => {

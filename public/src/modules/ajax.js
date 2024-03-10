@@ -2,6 +2,9 @@ import {AppEventMaker} from "./eventMaker.js";
 import {UserStoreEvents} from "../stores/user/events.js";
 import {decode} from "./utils.js";
 
+/** @typedef {Promise<{create_time: string, image_path: string, id: string, username: string}>} UserData **/
+
+
 const isDebug = false;
 
 const baseUrl = `http://${isDebug ? "127.0.0.1" : "you-note.ru"}:8080/api`;
@@ -18,12 +21,12 @@ let JWT = null;
 JWT = window.localStorage.getItem("Authorization");
 
 /**
- *
+ * Базовый запрос
  * @param method {methods}
  * @param url {string}
  * @param data {any}
  * @param params {Dict<string, string>}
- * @returns {Promise<{body: {message}, status: number}|{body: any, status: number}>}
+ * @returns UserDataResponse
  */
 const baseRequest = async (method, url, data = null, params=null) => {
     const options = {
@@ -72,10 +75,10 @@ class AuthRequests {
     #baseUrl = "/auth";
 
     /**
-     *
-     * @param username{string}
-     * @param password{string}
-     * @returns {Promise<{create_time: string, image_path: string, id: string, username: string}>}
+     * Запрос на логин пользователя
+     * @param username {string}
+     * @param password {string}
+     * @returns UserDataResponse
      */
     Login = async (username, password) => {
         const {status, body} = await baseRequest(
@@ -100,10 +103,10 @@ class AuthRequests {
     };
 
     /**
-     *
+     * Запрос на регистрацию нового пользователя
      * @param username{string}
      * @param password{string}
-     * @returns {Promise<{create_time: string, image_path: string, id: string, username: string}>}
+     * @returns UserDataResponse
      */
     SignUp = async (username, password) => {
         const {status, body} = await baseRequest(
@@ -129,7 +132,7 @@ class AuthRequests {
     };
 
     /**
-     *
+     * Запрос на логаут пользователя
      * @returns {Promise<{message: string}>}
      */
     Logout = async () => {
@@ -137,8 +140,6 @@ class AuthRequests {
             methods.DELETE,
             this.#baseUrl + "/logout"
         );
-
-        console.log(status);
 
         if (status === 204){
             console.log("logged out");
@@ -152,7 +153,7 @@ class AuthRequests {
     };
 
     /**
-     *
+     * Запрос на проверку пользователя
      * @returns {Promise<{message}|null>}
      * @throws Error - not authorized
      */
@@ -174,7 +175,7 @@ class NoteRequests {
     #baseUrl = "/note";
 
     /**
-     *
+     * Получение списка всех заметок
      * @returns {Promise<{message}|{any}>}
      */
     GetAll = async (params=null) => {
@@ -196,6 +197,11 @@ class NoteRequests {
         }
     };
 
+    /**
+     * Получение одной заметки
+     * @param id {number} - id заметки
+     * @returns {Promise<*>}
+     */
     Get = async (id) => {
 
         const {status, body} = await baseRequest(

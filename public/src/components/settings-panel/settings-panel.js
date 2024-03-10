@@ -12,42 +12,59 @@ export class SettingsPanel {
 
     #settingsButton;
 
+    /**
+     * Конструктор класса
+     * @param parent {HTMLElement} - родительский элемент
+     * @param config {Object} - пропсы
+     */
     constructor(parent, config) {
         this.#parent = parent;
         this.#config = config;
     }
 
+    /**
+     * Возвращает HTML элемент компонента
+     * @returns {HTMLElement}
+     */
     get self(){
         return document.getElementById(this.#config.id);
     }
 
+    /**
+     * Возвращает HTML элемент панели профиля
+     * @returns {HTMLElement}
+     */
     get panel(){
         return document.getElementById(this.#config.panel.id);
     }
 
+    /**
+     * Очистка
+     */
     remove() {
         this.#settingsButton.remove();
         this.self.remove();
     }
 
+    /**
+     * Обработка нажатия на кнопку логаута
+     */
     handleLogout() {
         AppDispatcher.dispatch({
             type: UserActions.LOGOUT
         });
     }
 
-    handleClick = () => {
-        this.self.classList.toggle("show");
-    };
-
-
+    /**
+     * Рендеринг компонента
+     */
     render(){
         this.#parent.insertAdjacentHTML(
             "beforeend",
             window.Handlebars.templates["settings-panel.hbs"](this.#config)
         );
 
-        this.#settingsButton = new SettingsButton(this.self, this.handleClick)
+        this.#settingsButton = new SettingsButton(this.self)
         this.#settingsButton.render()
 
         const avatar = new Image(this.panel, this.#config.panel.avatar);

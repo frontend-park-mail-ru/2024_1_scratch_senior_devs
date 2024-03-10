@@ -4,11 +4,19 @@ export class EmptyNote {
     #parent;
     #config;
 
+    /**
+     * Конструктор класса
+     * @param parent {HTMLElement}
+     * @param config {Object}
+     */
     constructor(parent, config) {
         this.#parent = parent;
         this.#config = config;
     }
 
+    /**
+     * Рендеринг компонента
+     */
     render() {
         this.#parent.insertAdjacentHTML(
             "beforeend",

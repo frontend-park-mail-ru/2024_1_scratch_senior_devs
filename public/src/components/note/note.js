@@ -6,9 +6,12 @@ export class Note {
     #props;
     #config;
 
-    #selectNote;
-
-    constructor(parent, config, selectNote) {
+    /**
+     * Конструктор класса
+     * @param parent {HTMLElement} - родительский элемент
+     * @param config {Object} - пропсы
+     */
+    constructor(parent, config) {
         this.#parent = parent;
         this.#config = config;
 
@@ -24,14 +27,19 @@ export class Note {
                 hourCycle: 'h23'
             }).format(new Date(this.#config.update_time)).replace(',', '')
         };
-
-        this.#selectNote = selectNote;
     }
 
+    /**
+     * Возвращает HTML элемент заметки
+     * @returns {HTMLElement}
+     */
     get self() {
         return document.getElementById(this.#config.id);
     }
 
+    /**
+     * Рендеринг заметки
+     */
     render() {
         this.#parent.insertAdjacentHTML(
             "beforeend",

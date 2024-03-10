@@ -22,8 +22,8 @@ class Router {
 
     /**
      * Инициализирует основные страницы сайта
-     * @param root родительский объект
-     * @param config глобальный конфиг
+     * @param root {HTMLElement} - родительский объект
+     * @param config {Object} - глобальный конфиг
      */
     init(root, config){
         const homePage = new Home(root, config.homePage);
@@ -39,7 +39,6 @@ class Router {
         const notFoundPage = new NotFoundPage(root, config.notFoundPage);
         this.registerPage("/404", notFoundPage);
 
-        console.log("dispatching");
         AppDispatcher.dispatch({type: UserActions.CHECK_USER});
         this.redirect(this.#currentUrl);
 
@@ -62,8 +61,6 @@ class Router {
      * @param href {string} адрес
      */
     redirect(href) {
-        console.log("redirect " + href);
-
         if (href === "") href = "/";
 
         const page = this.#pages[href];
@@ -84,7 +81,8 @@ class Router {
         }
 
         this.#currentPage?.remove();
-        history.pushState(null, null, href);
+        history.pushState({ href }, '', href);
+
         page.render();
         this.#currentPage = page;
 

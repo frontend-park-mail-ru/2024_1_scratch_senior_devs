@@ -1,10 +1,10 @@
 .submit-btn{
-    background-color: #007FFF;
+    background-color: var(--primary-color);
     border-radius: 20px;
     padding: 8px 16px;
     border: none;
     outline: none;
-    color: #ffffff;
+    color: var(--white);
     text-align: center;
     cursor: pointer;
     transition: 0.3s;

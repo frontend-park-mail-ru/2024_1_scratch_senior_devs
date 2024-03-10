@@ -6,20 +6,29 @@ export class Wrapper {
 
     /**
      * Конструктор класса
-     * @param parent объект родителя
-     * @param config конфиг
+     * @param parent {HTMLElement} - родительский элемент
+     * @param config {Object} - пропсы
      */
     constructor(parent, config) {
         this.#parent = parent;
         this.#config = config;
     }
 
+    /**
+     * Возвращает HTML элемент компонента
+     * @returns {HTMLElement}
+     */
     get self() {
         return document.getElementById(this.#config.id);
     }
 
+    /**
+     * Рендеринг компонента
+     */
     render() {
-        const template = window.Handlebars.templates["wrapper.hbs"];
-        this.#parent.insertAdjacentHTML("afterbegin", template(this.#config));
+        this.#parent.insertAdjacentHTML(
+            "beforeend",
+            window.Handlebars.templates["wrapper.hbs"](this.#config)
+        );
     }
 }

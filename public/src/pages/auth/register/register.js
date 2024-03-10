@@ -19,18 +19,25 @@ export class RegisterForm {
 
     /**
      * Конструктор класса
-     * @param parent объект родителя
-     * @param config конфиг
+     * @param parent {HTMLElement} - родительский элемент
+     * @param config {Object} - пропсы
      */
     constructor(parent, config) {
         this.#parent = parent;
         this.#config = config;
     }
 
+    /**
+     * Возвращает HTML элемент компонента
+     * @returns {HTMLElement}
+     */
     get self () {
         return document.getElementById(this.#config.id);
     }
 
+    /**
+     * Валидация введенных данных
+     */
     validateData = () => {
         const validateLogin = this.#validateLogin();
         const validatePassword = this.#validatePassword();
@@ -46,6 +53,10 @@ export class RegisterForm {
         }
     }
 
+    /**
+     * Валидация логина
+     * @returns {boolean}
+     */
     #validateLogin(){
         delete this.#loginInput.self.dataset.error;
 
@@ -65,6 +76,10 @@ export class RegisterForm {
         return validationResult.result;
     }
 
+    /**
+     * Валидация пароля
+     * @returns {boolean}
+     */
     #validatePassword(){
         const value = this.#passwordInput.value;
 
@@ -93,6 +108,10 @@ export class RegisterForm {
         return validationResult.result;
     }
 
+    /**
+     * Обработка события ввода данных
+     * @param id {number}
+     */
     #inputEventHandler = (id) => {
         if (id === this.#loginInput.id){
             this.#validateLogin();
@@ -103,6 +122,10 @@ export class RegisterForm {
         }
     };
 
+    /**
+     * Валидация пароля
+     * @returns {boolean}
+     */
     #validateRepeatPassword(){
         const value = this.#repeatPasswordInput.value;
 
@@ -131,25 +154,40 @@ export class RegisterForm {
         return validationResult.result;
     }
 
+    /**
+     * Вывод сообщения об ошибке
+     */
     #throwLoginAlreadyExistError = () => {
         this.#loginInput.throwError("Пользователь с таким логином уже существует!");
     };
 
+    /**
+     * Подписка на события
+     */
     #subscribeToEvents(){
         AppEventMaker.subscribe(inputEvents.INPUT_CHANGE, this.#inputEventHandler);
         AppEventMaker.subscribe(UserStoreEvents.LOGIN_ALREADY_EXIST, this.#throwLoginAlreadyExistError);
     }
 
+    /**
+     * Отписка от событий
+     */
     #unsubscribeToEvents(){
         AppEventMaker.unsubscribe(inputEvents.INPUT_CHANGE, this.#inputEventHandler);
         AppEventMaker.unsubscribe(UserStoreEvents.LOGIN_ALREADY_EXIST, this.#throwLoginAlreadyExistError);
     }
 
+    /**
+     * Очистка
+     */
     remove(){
         this.#unsubscribeToEvents();
         this.self.remove();
     }
 
+    /**
+     * Рендеринг формы
+     */
     render() {
         console.log("register form render");
 

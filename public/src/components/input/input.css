@@ -4,15 +4,14 @@
 }
 
 .input-container input {
-    display: block;
     width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
+    padding: 12px 12px 12px 40px;
+    border: 1px solid var(--input-border-color);
     outline: none;
     border-radius: 99px;
     transition: 0.3s;
     background: rgba(255, 255, 255, 0.1);
-    color: #fff;
+    color: var(--text-main-color);
 }
 
 .input-container input::placeholder {
@@ -20,25 +19,25 @@
 }
 
 .input-container input:focus {
-    border: 1px solid #007FFF;
+    border: 1px solid var(--primary-color);
 }
 
 .input-container.success input {
-    border: 1px solid green;
+    border: 1px solid var(--success-color);
 }
 
 .input-container.error input {
-    border: 1px solid #c92432;
+    border: 1px solid var(--error-color);
 }
 
 .input-container .errors-container {
     height: 40px;
-    color: #c92432;
+    color: var(--error-color);
     font-size: 13px;
     padding: 0 10px;
 }
 
-.input-container .show-btn, .hide-btn{
+.input-container .password-toggle-btn{
     position: absolute;
     width: 24px;
     height: 24px;
@@ -47,6 +46,10 @@
     cursor: pointer;
     filter: invert(85%);
     transition: 0.5s ease;
+}
+
+.input-container .password-toggle-btn:hover {
+    filter: invert(75%);
 }
 
 .input-container input[type="password"] ~ .show-btn {
@@ -69,16 +72,11 @@
     transform: scale(1);
 }
 
-.input-container .form-label {
+.input-container .icon {
     position: absolute;
-    font-family: inherit;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    left: 0.75rem;
-    top: 0.75rem;
-    padding: 0 0.35rem;
-    color: #7C7E83;
-    background: #fff;
-    transition: all 0.35s ease;
+    top: 16px;
+    left: 16px;
+    width: 16px;
+    height: 16px;
+    filter: invert(85%);
 }

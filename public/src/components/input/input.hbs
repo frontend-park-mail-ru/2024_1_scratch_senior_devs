@@ -1,4 +1,7 @@
-<div class="input-container" id="input-{{id}}">
+<div class="input-container icon" id="input-{{id}}">
+
+	<img class="icon" src="{{icon}}" />
+
     <input type="{{type}}" placeholder="{{placeholder}}">
 
 	<div class="errors-container">
@@ -6,7 +9,7 @@
 	</div>
 
     {{#if isPassword}}
-	    <img class="show-btn" src="/src/assets/eye-slash.svg">
-	    <img class="hide-btn" src="/src/assets/eye.svg">
+	    <img class="password-toggle-btn show-btn" src="/src/assets/eye-slash.svg">
+	    <img class="password-toggle-btn hide-btn" src="/src/assets/eye.svg">
     {{/if}}
 </div>

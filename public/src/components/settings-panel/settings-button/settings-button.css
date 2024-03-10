@@ -7,7 +7,7 @@
     padding: 14px 10px;
     position: relative;
     cursor: pointer;
-    background: #56A6F0;
+    background: var(--secondary-color);
     z-index: 10;
 }
 #settings-wrapper.show #settings-button .one {
@@ -30,7 +30,7 @@
     width: 22px;
     border-radius: 4px;
     height: 2px;
-    background: #fff;
+    background: var(--white);
     position: absolute;
     transform-origin: 2px 2px;
     transition: all 500ms cubic-bezier(0, 1, 0, 1);
@@ -41,7 +41,7 @@
     margin-top: -2px;
     margin-left: -3px;
     border-radius: 999px;
-    background: #fff;
+    background: var(--white);
     display: inline-block;
     content: ' ';
     position: absolute;

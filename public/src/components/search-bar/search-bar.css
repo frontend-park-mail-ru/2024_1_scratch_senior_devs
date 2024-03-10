@@ -4,12 +4,12 @@
     align-items: center;
     padding: 12px 16px;
     border-radius: 28px;
-    background: #333437;
+    background: var(--background-secondary-color);
 }
 
 .search-input {
     font-size: 16px;
-    color: #f4f6f9;
+    color: var(--text-main-color);
     outline: none;
     border: none;
     background: transparent;
@@ -17,5 +17,5 @@
 }
 
 .search-input::placeholder {
-    color: #f4f6f9;
+    color: var(--text-main-color--darker);
 }

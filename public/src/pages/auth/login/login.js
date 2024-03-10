@@ -18,18 +18,25 @@ export class LoginForm {
 
     /**
      * Конструктор класса
-     * @param parent объект родителя
-     * @param config конфиг
+     * @param parent {HTMLElement} - родительский элемент
+     * @param config {Object} - пропсы
      */
     constructor(parent, config) {
         this.#parent = parent;
         this.#config = config;
     }
 
+    /**
+     * Получение HTML элемента формы
+     * @returns {HTMLElement}
+     */
     get self () {
         return document.getElementById(this.#config.id);
     }
 
+    /**
+     * Валидация данных
+     */
     validateData = () => {
         const validateLogin = this.#validateLogin();
         const validatePassword = this.#validatePassword();
@@ -44,9 +51,11 @@ export class LoginForm {
         }
     }
 
+    /**
+     * Валидация логина
+     * @returns {boolean}
+     */
     #validateLogin(){
-        console.log("login validation started");
-
         delete this.#loginInput.self.dataset.error;
 
         const value = this.#loginInput.value;
@@ -63,6 +72,10 @@ export class LoginForm {
         return validationResult.result;
     }
 
+    /**
+     * Валидация пароля
+     * @returns {boolean}
+     */
     #validatePassword(){
         const value = this.#passwordInput.value;
 
@@ -81,6 +94,10 @@ export class LoginForm {
         return validationResult.result;
     }
 
+    /**
+     * Обработка события ввода данных
+     * @param id {number}
+     */
     #inputEventHandler = (id) => {
         if(id === this.#passwordInput.id){
             this.#validatePassword();
@@ -89,23 +106,33 @@ export class LoginForm {
         }
     };
 
+    /**
+     * Отображение сообщения об ошибках
+     */
     #throwIncorrectData = () => {
         this.#loginInput.throwError("Неправильный логин или пароль!");
         this.#passwordInput.throwError("Неправильный логин или пароль!");
     }
 
+    /**
+     * Подписка на события
+     */
     #subscribeToEvents(){
-        console.log("subscribeToEvents");
         AppEventMaker.subscribe(inputEvents.INPUT_CHANGE, this.#inputEventHandler);
         AppEventMaker.subscribe(UserStoreEvents.INVALID_LOGIN_OR_PASSWORD, this.#throwIncorrectData);
     }
 
+    /**
+     * Отписка от событий
+     */
     #unsubscribeToEvents(){
-        console.log("unsubscribeToEvents login");
         AppEventMaker.unsubscribe(inputEvents.INPUT_CHANGE, this.#inputEventHandler);
         AppEventMaker.unsubscribe(UserStoreEvents.INVALID_LOGIN_OR_PASSWORD, this.#throwIncorrectData);
     }
 
+    /**
+     * Очистка
+     */
     remove(){
         this.#unsubscribeToEvents();
         this.#submitBtn.remove();
@@ -114,9 +141,10 @@ export class LoginForm {
         this.self.remove();
     }
 
+    /**
+     * Рендеринг формы
+     */
     render() {
-        console.log("login form render");
-
         this.#parent.insertAdjacentHTML(
             "beforeend",
             window.Handlebars.templates["login.hbs"](this.#config)

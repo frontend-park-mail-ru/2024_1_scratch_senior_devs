@@ -9,6 +9,12 @@ export class Button {
     };
     #onSubmit;
 
+    /**
+     * Конструктор класса
+     * @param parent {HTMLElement} - родительский элемент
+     * @param config {Object} - пропсы
+     * @param onSubmit {Function} - колбэк-функция, срабатывающая при клике
+     */
     constructor(parent, config, onSubmit) {
         this.id = create_UUID();
         this.#parent = parent;
@@ -17,10 +23,17 @@ export class Button {
         this.#onSubmit = onSubmit;
     }
 
+    /**
+     * Возвращает элемент кнопки
+     * @returns {HTMLElement}
+     */
     get self(){
         return document.getElementById(this.id);
     }
 
+    /**
+     * Подписка на событие клика по кнопке
+     */
     #addEventListeners(){
         if (this.#onSubmit !== undefined) {
             this.self.addEventListener("click", (e) => {
@@ -30,16 +43,25 @@ export class Button {
         }
     }
 
+    /**
+     * Отписка от события клика по кнопке
+     */
     #removeEventListeners(){
-        this.self.removeEventListener("click", this.#onSubmit);
-    }
-
-    remove(){
         if (this.#onSubmit !== undefined) {
-            this.#removeEventListeners();
+            this.self.removeEventListener("click", this.#onSubmit);
         }
     }
 
+    /**
+     * Очистка
+     */
+    remove(){
+        this.#removeEventListeners();
+    }
+
+    /**
+     * Рендеринг компонента
+     */
     render(){
         this.#parent.insertAdjacentHTML(
             "beforeend",

@@ -10,15 +10,28 @@ export class NoteEditor{
     #title;
     #content;
 
+    /**
+     * Конструктор класса
+     * @param parent {HTMLElement} - родительский элемент
+     * @param config {Object} - пропсы
+     */
     constructor(parent, config) {
         this.#parent = parent;
         this.#config = config;
     }
 
+    /**
+     * Возвращает HTML элемент компонента
+     * @returns {HTMLElement}
+     */
     get self() {
         return document.getElementById(this.#config.id);
     }
 
+    /**
+     * Обработчик выбора заметки
+     * @param note {Object}
+     */
     #onNoteSelect = (note) => {
         this.#title.innerHTML = "";
         this.#content.innerHTML = "";
@@ -35,6 +48,9 @@ export class NoteEditor{
         this.#parent.classList.add("active");
     }
 
+    /**
+     * Обработчик закрытия окна просмотра заметки
+     */
     #closeEditor = () => {
         this.self.classList.remove("active");
         this.#parent.classList.remove("active");
@@ -45,18 +61,30 @@ export class NoteEditor{
         AppNotesStore.unselectNote();
     }
 
+    /**
+     * Подписка на события
+     */
     #subscribeToEvents() {
         AppEventMaker.subscribe(noteEvents.NOTE_SELECTED, this.#onNoteSelect);
     }
 
+    /**
+     * Отписка от событий
+     */
     #unsubscribeToEvents() {
         AppEventMaker.unsubscribe(noteEvents.NOTE_SELECTED,this.#onNoteSelect);
     }
 
+    /**
+     * Очистка
+     */
     remove() {
         this.#unsubscribeToEvents();
     }
 
+    /**
+     * Рендеринг компонента
+     */
     render() {
         this.#parent.insertAdjacentHTML(
             "beforeend",
