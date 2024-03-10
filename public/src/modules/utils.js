@@ -18,16 +18,3 @@ export function decode(raw) {
     const bytes = Uint8Array.from(decoded, (m) => m.codePointAt(0));
     return JSON.parse(new TextDecoder().decode(bytes));
 }
-
-/**
- * Страшная математическая формула. Нужна для 3d tilt эффекта у карточек на главной странице
- * @param n
- * @param a
- * @param b
- * @param c
- * @param d
- * @returns {float}
- */
-export function mapNumberRange(n, a, b, c, d) {
-    return ((n - a) * (d - c)) / (b - a) + c
-}

@@ -30,7 +30,9 @@ export default class NotesPage extends Page {
                 noteClass.render();
             }
 
-            this.createObserver();
+            let hasVerticalScrollbar = this.#notesContainer.scrollHeight > this.#notesContainer.clientHeight;
+
+            hasVerticalScrollbar && this.createObserver();
         }
     };
 
@@ -38,14 +40,15 @@ export default class NotesPage extends Page {
      * Инициализация обсервера для динамической пагинации заметок
      */
     createObserver() {
-        console.log("createObserver");
         const intersectionObserver = new IntersectionObserver(entries => {
-            const lastNote = entries[0]
-            if (lastNote.intersectionRatio <= 0) return;
+            const lastNote = entries[0];
 
-            intersectionObserver.unobserve(lastNote.target)
+            if (lastNote.intersectionRatio === 0) {
+                return
+            }
 
-            console.log("AppNotesStore.loadNotes()");
+            intersectionObserver.unobserve(lastNote.target);
+
             AppNotesStore.loadNotes()
         });
 
