@@ -1,6 +1,7 @@
 import {AppEventMaker} from "./eventMaker.js";
 import {UserStoreEvents} from "../stores/user/events.js";
 import {decode} from "./utils.js";
+import {toasts} from "./toasts.js";
 
 /** @typedef {Promise<{create_time: string, image_path: string, id: string, username: string}>} UserData **/
 
@@ -29,10 +30,18 @@ JWT = window.localStorage.getItem("Authorization");
  * @returns UserDataResponse
  */
 const baseRequest = async (method, url, data = null, params=null) => {
+
+    let timeout = function timeout(ms) {
+        const ctrl = new AbortController();
+        setTimeout(() => ctrl.abort(), ms);
+        return ctrl.signal;
+    };
+
     const options = {
         method: method,
         mode: "cors",
         credentials: "include",
+        signal: timeout(1000),
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/json",
@@ -53,7 +62,9 @@ const baseRequest = async (method, url, data = null, params=null) => {
     }
 
     try{
-        const response = await fetch(query_url.toString(), options);
+        const response = await fetch(query_url.toString(), options).catch(() => {
+            toasts.error("Ошибка", "Что-то пошло не так");
+        });
         let body = null;
         try {
             body = await response.json();
@@ -189,7 +200,7 @@ class NoteRequests {
 
         if (status === 200) {
             for (const elem of body) {
-                elem.data = decode(elem.data)
+                elem.data = decode(elem.data);
             }
             return body;
         } else {
@@ -211,7 +222,7 @@ class NoteRequests {
         );
 
         if (status === 200) {
-            body.data = decode(body.data)
+            body.data = decode(body.data);
             return body;
         } else {
             throw Error(body.message);

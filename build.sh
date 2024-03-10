@@ -13,7 +13,6 @@ handlebars -m public/src/components/note-editor/note-editor.hbs -f public/build/
 handlebars -m public/src/components/link/link.hbs -f public/build/link.js
 handlebars -m public/src/components/input/input.hbs -f public/build/input.js
 handlebars -m public/src/components/wrapper/wrapper.hbs -f public/build/wrapper.js
-handlebars -m public/src/components/footer/footer.hbs -f public/build/footer.js
 handlebars -m public/src/components/button/button.hbs -f public/build/button.js
 handlebars -m public/src/components/settings-panel/settings-panel.hbs -f public/build/settings-panel.js
 handlebars -m public/src/components/settings-panel/settings-button/settings-button.hbs -f public/build/settings-button.js
@@ -21,4 +20,5 @@ handlebars -m public/src/components/span/span.hbs -f public/build/span.js
 handlebars -m public/src/components/logo/logo.hbs -f public/build/logo.js
 handlebars -m public/src/components/empty-note/empty-note.hbs -f public/build/empty-note.js
 handlebars -m public/src/components/search-bar/search-bar.hbs -f public/build/search-bar.js
+handlebars -m public/src/components/toast/toast.hbs -f public/build/toast.js
 

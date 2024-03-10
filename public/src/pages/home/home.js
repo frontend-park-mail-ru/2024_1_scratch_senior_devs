@@ -22,9 +22,6 @@ export default class Home extends Page {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add("animate");
-                        setTimeout(() => {
-                            entry.target.classList.remove("animate")
-                        }, 1000)
                         observer.unobserve(entry.target);
                     }
                 });

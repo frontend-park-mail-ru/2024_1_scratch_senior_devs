@@ -46,7 +46,7 @@ export class NoteEditor{
 
         this.self.classList.add("active");
         this.#parent.classList.add("active");
-    }
+    };
 
     /**
      * Обработчик закрытия окна просмотра заметки
@@ -55,11 +55,11 @@ export class NoteEditor{
         this.self.classList.remove("active");
         this.#parent.classList.remove("active");
 
-        this.#title.innerText = ""
-        this.#content.innerText = ""
+        this.#title.innerText = "";
+        this.#content.innerText = "";
 
         AppNotesStore.unselectNote();
-    }
+    };
 
     /**
      * Подписка на события
@@ -91,11 +91,11 @@ export class NoteEditor{
             window.Handlebars.templates["note-editor.hbs"](this.#config)
         );
 
-        const closeBtn = this.self.querySelector(".close-editor-btn")
-        closeBtn.addEventListener("click", this.#closeEditor)
+        const closeBtn = this.self.querySelector(".close-editor-btn");
+        closeBtn.addEventListener("click", this.#closeEditor);
 
-        this.#title = this.self.querySelector(".note-title")
-        this.#content = this.self.querySelector(".note-content")
+        this.#title = this.self.querySelector(".note-title");
+        this.#content = this.self.querySelector(".note-content");
 
         this.#subscribeToEvents();
     }

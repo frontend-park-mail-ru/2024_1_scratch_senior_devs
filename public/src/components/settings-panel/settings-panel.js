@@ -64,8 +64,8 @@ export class SettingsPanel {
             window.Handlebars.templates["settings-panel.hbs"](this.#config)
         );
 
-        this.#settingsButton = new SettingsButton(this.self)
-        this.#settingsButton.render()
+        this.#settingsButton = new SettingsButton(this.self);
+        this.#settingsButton.render();
 
         const avatar = new Image(this.panel, this.#config.panel.avatar);
         avatar.render();

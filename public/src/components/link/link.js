@@ -59,7 +59,7 @@ export class Link {
      * Очистка
      */
     remove() {
-        this.#removeListeners()
+        this.#removeListeners();
     }
 
     /**

@@ -26,13 +26,17 @@ export default class NotesPage extends Page {
 
         if (notes.length > 0) {
             for (const note of notes) {
-                const noteClass = new Note(this.#notesContainer, note, this.selectNote);
+                const noteClass = new Note(this.#notesContainer, note);
                 noteClass.render();
             }
 
             let hasVerticalScrollbar = this.#notesContainer.scrollHeight > this.#notesContainer.clientHeight;
-
             hasVerticalScrollbar && this.createObserver();
+        } else if (AppNotesStore.notes.length === 0) {
+            const h3 = document.createElement("h1");
+            h3.innerText = "Не найдено ни одной заметки ;(";
+            h3.className = "not-found-label";
+            this.#notesContainer.append(h3);
         }
     };
 
@@ -44,12 +48,12 @@ export default class NotesPage extends Page {
             const lastNote = entries[0];
 
             if (lastNote.intersectionRatio === 0) {
-                return
+                return;
             }
 
             intersectionObserver.unobserve(lastNote.target);
 
-            AppNotesStore.loadNotes()
+            AppNotesStore.loadNotes();
         });
 
         intersectionObserver.observe(this.#notesContainer.querySelector(".note-container:last-child"));
@@ -74,7 +78,7 @@ export default class NotesPage extends Page {
         AppNotesStore.unselectNote();
         AppNotesStore.fetchNote(note);
         note.classList.add("selected");
-    }
+    };
 
     /**
      * Подписка на ивенты
@@ -112,7 +116,7 @@ export default class NotesPage extends Page {
 
             if (id !== undefined) {
                 this.self.classList.add("selected");
-                this.selectNote(document.getElementById(id))
+                this.selectNote(document.getElementById(id));
             }
         });
 

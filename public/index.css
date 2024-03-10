@@ -16,7 +16,7 @@
 @import "src/components/empty-note/empty-note.css";
 @import "src/components/settings-panel/settings-button/settings-button.css";
 @import "src/components/search-bar/search-bar.css";
-
+@import "src/components/toast/toast.css";
 
 :root {
     --white: #fff;
@@ -50,6 +50,7 @@ body {
 html,
 body {
     height: 100%;
+    overflow-x: hidden;
 }
 
 img, picture, video, canvas, svg {

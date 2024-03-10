@@ -5,6 +5,7 @@ import {AppUserStore, UserActions} from "../stores/user/userStore.js";
 import {AppEventMaker} from "./eventMaker.js";
 import {AppDispatcher} from "./dispathcer.js";
 import {AuthPage} from "../pages/auth/auth.js";
+import {UserStoreEvents} from "../stores/user/events.js";
 
 class Router {
     #currentUrl;
@@ -40,10 +41,23 @@ class Router {
         this.registerPage("/404", notFoundPage);
 
         AppDispatcher.dispatch({type: UserActions.CHECK_USER});
+
+        AppEventMaker.subscribe(UserStoreEvents.SUCCESSFUL_LOGIN, () => {
+            if (this.#currentPage?.needAuth === false) {
+                this.redirect("/");
+            }
+        });
+
+        AppEventMaker.subscribe(UserStoreEvents.USER_CHECKED, () => {
+            if (this.#currentPage?.needAuth === true && !AppUserStore.IsAuthenticated()) {
+                this.redirect("/");
+            }
+        });
+
         this.redirect(this.#currentUrl);
 
         window.addEventListener("popstate", () => {
-            this.redirect(window.location.pathname)
+            this.redirect(window.location.pathname);
         });
     }
 
@@ -70,18 +84,14 @@ class Router {
             return;
         }
 
-        if (page.needAuth === true && !AppUserStore.IsAuthenticated()) {
-            this.redirect("/");
-            return;
-        }
-
-        if (page.needAuth === false && AppUserStore.IsAuthenticated()) {
-            this.redirect("/");
-            return;
-        }
+        // TODO
+        // if (page.needAuth === false && AppUserStore.IsAuthenticated()) {
+        //     this.redirect("/");
+        //     return;
+        // }
 
         this.#currentPage?.remove();
-        history.pushState({ href }, '', href);
+        history.pushState({ href }, "", href);
 
         page.render();
         this.#currentPage = page;

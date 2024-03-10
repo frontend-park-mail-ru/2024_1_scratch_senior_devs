@@ -1,4 +1,4 @@
-import "../../../../build/register.js"
+import "../../../../build/register.js";
 import {Input} from "../../../components/input/input.js";
 import {Button} from "../../../components/button/button.js";
 import {AppEventMaker} from "../../../modules/eventMaker.js";
@@ -51,7 +51,7 @@ export class RegisterForm {
                 }
             });
         }
-    }
+    };
 
     /**
      * Валидация логина

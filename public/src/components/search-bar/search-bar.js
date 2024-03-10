@@ -1,4 +1,4 @@
-import "../../../build/search-bar.js"
+import "../../../build/search-bar.js";
 import {AppNotesStore} from "../../stores/notes/notesStore.js";
 
 export class SearchBar {
@@ -32,20 +32,20 @@ export class SearchBar {
     #handleChange = (e) => {
         const query = e.target.value;
         AppNotesStore.searchNotes(query);
-    }
+    };
 
     /**
      * Подписка на события
      */
     #addEventListeners() {
-        this.#input.addEventListener("input", this.#handleChange)
+        this.#input.addEventListener("input", this.#handleChange);
     }
 
     /**
      * Отписка от событий
      */
     #removeEventListeners() {
-        this.#input.removeEventListener("input", this.#handleChange)
+        this.#input.removeEventListener("input", this.#handleChange);
     }
 
     /**

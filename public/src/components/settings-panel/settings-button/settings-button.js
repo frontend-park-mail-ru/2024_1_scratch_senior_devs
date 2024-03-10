@@ -1,4 +1,4 @@
-import "../../../../build/settings-button.js"
+import "../../../../build/settings-button.js";
 
 export class SettingsButton {
     #config;
@@ -17,12 +17,12 @@ export class SettingsButton {
      * @returns {HTMLElement}
      */
     get self() {
-        return this.#parent.querySelector("#settings-button")
+        return this.#parent.querySelector("#settings-button");
     }
 
     #handleClick = () => {
-        this.#parent.classList.toggle("show")
-    }
+        this.#parent.classList.toggle("show");
+    };
 
     /**
      * Подписка на события
@@ -42,7 +42,7 @@ export class SettingsButton {
      * Очистка
      */
     remove() {
-        this.#removeEventListeners()
+        this.#removeEventListeners();
     }
 
     /**
@@ -54,6 +54,6 @@ export class SettingsButton {
             window.Handlebars.templates["settings-button.hbs"](this.#config)
         );
 
-        this.#addEventListeners()
+        this.#addEventListeners();
     }
 }

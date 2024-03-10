@@ -5,7 +5,8 @@ import {router} from "../../modules/router.js";
 import {AppAuthRequests} from "../../modules/ajax.js";
 
 class UserStore {
-    #state
+    #state;
+    #fetchUserData;
 
     /**
      * Конструктор класса
@@ -62,8 +63,8 @@ class UserStore {
      * @returns {boolean}
      */
     IsAuthenticated() {
-        console.log("IsAuthenticated")
-        console.log(this.#state)
+        console.log("IsAuthenticated");
+        console.log(this.#state);
         return this.#state.isAuth;
     }
 
@@ -126,7 +127,6 @@ class UserStore {
      */
     async checkUser(){
         try {
-            console.log("зареган");
             const res = await AppAuthRequests.CheckUser();
             this.#state.isAuth = true;
             this.#state.username = res.username;
@@ -136,6 +136,8 @@ class UserStore {
             console.log("не зареган");
             console.log(err);
             // router.redirect("/");
+        } finally {
+            AppEventMaker.notify(UserStoreEvents.USER_CHECKED);
         }
     }
 }

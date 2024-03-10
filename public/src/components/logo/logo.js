@@ -46,7 +46,7 @@ export class Logo {
             window.Handlebars.templates["logo.hbs"](this.#config)
         );
 
-        this.self.addEventListener("click", this.#handleClick)
+        this.self.addEventListener("click", this.#handleClick);
 
         this.#img = new Image(this.self, this.#config.img);
         this.#img.render();

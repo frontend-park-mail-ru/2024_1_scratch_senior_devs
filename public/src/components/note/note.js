@@ -21,11 +21,11 @@ export class Note {
             content: truncate(this.#config.data.content, 50),
             create_time: this.#config.create_time,
             update_time: new Intl.DateTimeFormat("ru", {
-                month: 'short', day: 'numeric',
-                hour: 'numeric',
-                minute: 'numeric',
-                hourCycle: 'h23'
-            }).format(new Date(this.#config.update_time)).replace(',', '')
+                month: "short", day: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+                hourCycle: "h23"
+            }).format(new Date(this.#config.update_time)).replace(",", "")
         };
     }
 

@@ -1,6 +1,6 @@
 import {Input} from "../../../components/input/input.js";
 import {Button} from "../../../components/button/button.js";
-import "../../../../build/login.js"
+import "../../../../build/login.js";
 import {AppEventMaker} from "../../../modules/eventMaker.js";
 import {inputEvents} from "../../../components/input/events.js";
 import {UserStoreEvents} from "../../../stores/user/events.js";
@@ -49,15 +49,13 @@ export class LoginForm {
                 }
             });
         }
-    }
+    };
 
     /**
      * Валидация логина
      * @returns {boolean}
      */
     #validateLogin(){
-        delete this.#loginInput.self.dataset.error;
-
         const value = this.#loginInput.value;
 
         const validationResult = ValidateLogin(value);
@@ -112,7 +110,7 @@ export class LoginForm {
     #throwIncorrectData = () => {
         this.#loginInput.throwError("Неправильный логин или пароль!");
         this.#passwordInput.throwError("Неправильный логин или пароль!");
-    }
+    };
 
     /**
      * Подписка на события

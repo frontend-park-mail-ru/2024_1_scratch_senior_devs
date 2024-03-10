@@ -24,21 +24,21 @@ class NotesStore {
 
     /**
      * Получение данных выбранной заметки
-     * @param note {Element}
+     * @param note {HTMLElement}
      */
     fetchNote(note) {
         AppNoteRequests.Get(note.id).then(data => {
-            this.#selectedNoteDOM = note
-            this.#selectedNoteData = data
+            this.#selectedNoteDOM = note;
+            this.#selectedNoteData = data;
             AppEventMaker.notify(noteEvents.NOTE_SELECTED, data);
-        })
+        });
     }
 
     /**
      * Отключает стиль у заметки
      */
     unselectNote() {
-        this.#selectedNoteDOM?.classList.remove("selected")
+        this.#selectedNoteDOM?.classList.remove("selected");
     }
 
     /**
@@ -48,7 +48,7 @@ class NotesStore {
         AppNoteRequests.GetAll().then(notes => {
             this.#notes = notes;
             AppEventMaker.notify(NotesStoreEvents.NOTES_RECEIVED, notes);
-        })
+        });
     }
 
     /**
@@ -69,7 +69,7 @@ class NotesStore {
         AppNoteRequests.GetAll({title: query, offset: this.#offset, count: this.#count}).then(notes => {
             this.#notes = notes;
             AppEventMaker.notify(NotesStoreEvents.NOTES_RECEIVED, notes, true);
-        })
+        });
     }
 
     /**
@@ -81,13 +81,13 @@ class NotesStore {
         const params = {
             title: this.#query,
             offset: this.#offset
-        }
+        };
 
         AppNoteRequests.GetAll(params).then(notes => {
             this.#notes += notes;
             AppEventMaker.notify(NotesStoreEvents.NOTES_RECEIVED, notes);
-        })
+        });
     }
 }
 
-export const AppNotesStore = new NotesStore()
+export const AppNotesStore = new NotesStore();
