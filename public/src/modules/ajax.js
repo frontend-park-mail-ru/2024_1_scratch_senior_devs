@@ -8,7 +8,7 @@ import {toasts} from "./toasts.js";
 
 const isDebug = false;
 
-const REQUEST_TIMEOUT = 1000;
+const REQUEST_TIMEOUT = 2000;
 
 const baseUrl = `http://${isDebug ? "127.0.0.1" : "you-note.ru"}:8080/api`;
 
