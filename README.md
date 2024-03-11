@@ -3,10 +3,10 @@
 Frontend проекта "Notion" команды scratch senior devs
 
 # Деплой
-* TBD
+* [YouNote](http://you-note.ru:8010)
 
 # API
-* TBD
+* [swagger](http://you-note.ru:8080/api/swagger/index.html)
 
 # Авторы
 * [Михалёв Ярослав](https://github.com/YarikMix) - _frontend_
@@ -17,7 +17,7 @@ Frontend проекта "Notion" команды scratch senior devs
 # Менторы
 * [Габриелян Геворк](https://github.com/Gev0rg) - _frontend_
 * [Кочкарова Лейла](https://github.com/k-t-l-h) - _backend_
-* TDB - _ux_
+* [Бирюков Иван]() - _ux_
 
 # Backend
 * [Backend](https://github.com/go-park-mail-ru/2024_1_scratch_senior_devs)

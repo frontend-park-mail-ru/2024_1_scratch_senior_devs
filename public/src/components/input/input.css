@@ -1,0 +1,82 @@
+.input-container {
+    width: 100%;
+    position: relative;
+}
+
+.input-container input {
+    width: 100%;
+    padding: 12px 12px 12px 40px;
+    border: 1px solid var(--input-border-color);
+    outline: none;
+    border-radius: 99px;
+    transition: 0.3s;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-main-color);
+}
+
+.input-container input::placeholder {
+    color: rgba(255, 255, 255, 0.8)
+}
+
+.input-container input:focus {
+    border: 1px solid var(--primary-color);
+}
+
+.input-container.success input {
+    border: 1px solid var(--success-color);
+}
+
+.input-container.error input {
+    border: 1px solid var(--error-color);
+}
+
+.input-container .errors-container {
+    height: 40px;
+    color: var(--error-color);
+    font-size: 13px;
+    padding: 0 10px;
+}
+
+.input-container .password-toggle-btn{
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    top: 12px;
+    right: 16px;
+    cursor: pointer;
+    filter: invert(85%);
+    transition: 0.5s ease;
+}
+
+.input-container .password-toggle-btn:hover {
+    filter: invert(75%);
+}
+
+.input-container input[type="password"] ~ .show-btn {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.input-container input[type="password"] ~ .hide-btn {
+    opacity: 0;
+    transform: scale(0);
+}
+
+.input-container input[type="text"] ~ .show-btn {
+    opacity: 0;
+    transform: scale(0);
+}
+
+.input-container input[type="text"] ~ .hide-btn {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.input-container .icon {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    width: 16px;
+    height: 16px;
+    filter: invert(85%);
+}

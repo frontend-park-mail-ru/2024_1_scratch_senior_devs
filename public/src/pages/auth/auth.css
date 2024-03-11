@@ -1,0 +1,254 @@
+#auth-page {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #222226;
+}
+
+.glassmorphism-container {
+    position: relative;
+}
+
+.glassmorphism-container::before, .glassmorphism-container::after {
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    border-radius: 50%;
+    content: '';
+}
+
+.glassmorphism-container:before {
+    background: linear-gradient(#9b22ea, #bf23f6);
+    top: -100px;
+    left: -100px;
+}
+
+.glassmorphism-container:after {
+    background: linear-gradient(#ff512f, #f09819);
+    bottom: -100px;
+    right: -100px;
+}
+
+.auth-container {
+    background: rgba(64, 64, 64, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(25px);
+    border-radius: 30px;
+    box-shadow: 0 0px 15px rgba(0, 0, 0, 0.35);
+    position: relative;
+    width: 768px;
+    max-width: 100%;
+    min-height: 500px;
+    animation-duration: 1s;
+    animation-fill-mode: both;
+    animation-name: fadeIn;
+    overflow: hidden;
+    z-index: 10;
+}
+
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1
+    }
+}
+
+#auth-page .auth-container .form-container {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    transition: all 0.6s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#auth-page .auth-container .form-container form {
+    width: 300px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#auth-page .auth-container .form-container form h3 {
+    font-size: 28px;
+    margin-bottom: 25px;
+    color: var(--white);
+}
+
+#auth-page .auth-container .form-container form button {
+    font-size: 20px;
+    min-width: 120px;
+    background: var(--primary-color);
+    border-radius: 20px;
+    color: var(--white);
+    cursor: pointer;
+    line-height: 24px;
+    outline: 0 solid transparent;
+    padding: 12px 18px;
+    user-select: none;
+    border: 0;
+}
+
+#auth-page .auth-container .form-container form button:hover {
+    background: var(--primary-color--darker);
+    transform: scale(1);
+}
+
+#auth-page .auth-container .form-container.sign-up {
+    left: 0;
+    width: 50%;
+    opacity: 0;
+    z-index: 1;
+}
+
+#auth-page.active .auth-container .form-container.sign-up {
+    transform: translateX(100%);
+    opacity: 1;
+    z-index: 5;
+}
+
+#auth-page .auth-container .form-container.fade-left {
+    animation: move1 0.6s;
+}
+
+#auth-page .auth-container .form-container.fade-right {
+    animation: move2 0.6s;
+}
+
+@keyframes move1 {
+    0%, 49.99% {
+        opacity: 0;
+        z-index: 1;
+    }
+    50%, 100% {
+        opacity: 1;
+        z-index: 5;
+    }
+}
+
+@keyframes move2 {
+    0%, 49.99% {
+        opacity: 1;
+        z-index: 5;
+    }
+    50%, 100% {
+        opacity: 0;
+        z-index: 1;
+    }
+}
+
+#auth-page .auth-container .form-container.sign-in {
+    left: 0;
+    width: 50%;
+    z-index: 2;
+    opacity: 1;
+}
+
+@keyframes move_login1 {
+    0%, 49.99% {
+        opacity: 1;
+    }
+    50%, 100% {
+        opacity: 0;
+    }
+}
+
+@keyframes move_login2 {
+    0%, 98% {
+        opacity: 0;
+    }
+    99%, 100% {
+        opacity: 1;
+    }
+}
+
+#auth-page.active .auth-container .form-container.sign-in {
+    transform: translateX(40%);
+    opacity: 0;
+    animation: move_login1 0.6s;
+}
+
+#auth-page .auth-container .toggle-container {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    transition: all 0.6s ease-in-out;
+    border-radius: 150px 0 0 100px;
+    z-index: 1000;
+}
+
+#auth-page.active .auth-container .toggle-container {
+    transform: translateX(-100%);
+    border-radius: 0 150px 100px 0;
+}
+
+#auth-page .auth-container .toggle-container .toggle {
+    background: var(--primary-color);
+    color: var(--white);
+    position: relative;
+    left: -100%;
+    height: 100%;
+    width: 200%;
+    transform: translateX(0);
+    transition: all 0.6s ease-in-out;
+}
+
+#auth-page.active .auth-container .toggle-container .toggle {
+    transform: translateX(50%);
+}
+
+#auth-page .auth-container .toggle-container .toggle .toggle-panel {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 25px;
+    top: 0;
+    transform: translateX(0);
+    transition: all 0.6s ease-in-out;
+}
+
+#auth-page .auth-container .toggle-container .toggle .toggle-panel button {
+    background-color: transparent;
+    color: var(--white);
+    font-size: 14px;
+    padding: 10px 45px;
+    border: 1px solid var(--white);
+    border-radius: 8px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#auth-page .auth-container .toggle-container .toggle .toggle-left {
+    transform: translateX(-200%);
+}
+
+#auth-page.active .auth-container .toggle-container .toggle-left {
+    transform: translateX(0);
+}
+
+#auth-page .auth-container .toggle-container .toggle .toggle-right {
+    right: 0;
+    transform: translateX(0);
+}
+
+#auth-page.active .auth-container .toggle-container .toggle-right {
+    transform: translateX(200%);
+}

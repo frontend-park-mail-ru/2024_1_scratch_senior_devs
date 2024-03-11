@@ -1,0 +1,77 @@
+@import 'src/pages/home/home.css';
+@import "src/pages/auth/auth.css";
+@import "src/pages/notFound/not-found.css";
+@import './src/pages/notes/notes.css';
+@import './src/pages/home/home.css';
+@import './src/components/header/header.css';
+@import './src/components/note/note.css';
+@import './src/components/note-editor/note-editor.css';
+@import 'src/components/image/image.css';
+@import './src/components/link/link.css';
+@import './src/components/input/input.css';
+@import "src/components/button/button.css";
+@import "src/components/wrapper/wrapper.css";
+@import "src/components/settings-panel/settings-panel.css";
+@import "src/components/logo/logo.css";
+@import "src/components/empty-note/empty-note.css";
+@import "src/components/settings-panel/settings-button/settings-button.css";
+@import "src/components/search-bar/search-bar.css";
+@import "src/components/toast/toast.css";
+
+:root {
+    --white: #fff;
+    --primary-color: #007FFF;
+    --primary-color--darker: #1e59f1;
+    --secondary-color: #56A6F0;
+    --background-main-color: #222226;
+    --background-secondary-color: #333437;
+    --text-main-color: #f4f6f9;
+    --text-main-color--darker: #A1A1AA;
+    --scrollbar-main-color: #A1A1AA;
+    --success-color: #568203;
+    --error-color: #c92432;
+    --input-border-color: #ddd;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+* {
+    margin: 0;
+    font-family: "Roboto", sans-serif;
+}
+
+body {
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+html,
+body {
+    height: 100%;
+    overflow-x: hidden;
+}
+
+img, picture, video, canvas, svg {
+    display: block;
+    max-width: 100%;
+}
+
+input, button, textarea, select {
+    font: inherit;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+    overflow-wrap: break-word;
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+#wrapper{
+    flex: 1 0 auto;
+}

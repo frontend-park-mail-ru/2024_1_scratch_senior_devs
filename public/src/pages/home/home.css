@@ -1,0 +1,185 @@
+.home {
+    width: 100%;
+    display: flex;
+    flex-direction: column
+}
+
+.home section {
+    width: 100%;
+}
+
+.home .first {
+    position: relative;
+    display: grid;
+    grid-template-areas: "stack";
+    height: 100vh;
+}
+
+.home .first .parallax-bg {
+    background: 50% 50% / cover;
+    object-fit: cover;
+    z-index: -1;
+    min-height: 100%;
+    width: 100%;
+    grid-area: stack;
+    animation: parallax linear;
+    animation-timeline: scroll();
+    filter: blur(2px);
+}
+
+.home .first:before {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color:rgba(0, 0, 0, 0.3);
+}
+
+@keyframes parallax {
+    to {
+        transform: translateY(300px);
+    }
+}
+
+.home .first svg {
+    position: absolute;
+    width: 100%;
+    bottom: -75px;
+    right: 0;
+    z-index: 1;
+}
+
+.home .first .text-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+    grid-area: stack;
+    z-index: 10;
+    animation-duration: 1s;
+    animation-fill-mode: both;
+    animation-name: fadeIn;
+}
+
+.home .first .text-container h1 {
+    text-align: center;
+    font-size: 36px;
+    color: var(--text-main-color);
+}
+
+.home .first .text-container button {
+    font-size: 36px;
+    border-radius: 30px;
+    padding: 12px 20px;
+    max-width: 300px;
+    background: var(--primary-color);
+}
+
+.home .second {
+    background: var(--background-main-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: var(--text-main-color);
+    padding: 0 15%;
+    gap: 75px;
+    height: 100vh;
+    z-index: 100;
+}
+
+.home .second h2 {
+    font-size: 36px;
+    text-shadow: 0 0 10px var(--primary-color),
+                0 0 20px var(--primary-color),
+                0 0 40px var(--primary-color),
+                0 0 80px var(--primary-color);
+}
+
+.home .second .cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(275px, 0.15fr));
+    justify-content: center;
+    width: 100%;
+    gap: 25px;
+}
+
+.home .second .cards-container .card {
+    background: rgba(255, 255, 255, .015);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05), 0 8px 15px rgba(0, 0, 0, 0.1), 0 0 0 1px  rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+    transition: all 0.25s ease-out;
+    cursor: pointer;
+}
+
+.home .second .cards-container .card:hover {
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.04), 0px 15px 25px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+.home .second .cards-container .card:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.home .second .cards-container .card:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+.home .second .cards-container .card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.home .second .cards-container .card:nth-child(4) {
+    animation-delay: 0.45s;
+}
+
+.home .second .cards-container .animate {
+    animation: 1s both fadeInUp;
+}
+
+.home .second .cards-container .card img {
+    width: 52px;
+    height: 52px;
+}
+.home .second .cards-container .card h3 {
+    color: var(--white);
+}
+
+.home .second .cards-container .card span {
+    color: var(--text-main-color--darker);
+    text-align: center;
+}
+
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translate3d(0,40px,0)
+    }
+
+    to {
+        transform: translate3d(0,0,0);
+        opacity: 1
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1
+    }
+}

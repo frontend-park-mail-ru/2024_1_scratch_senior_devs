@@ -1,0 +1,50 @@
+#settings-wrapper {
+    position: relative;
+}
+
+#settings-panel {
+    height: 42px;
+    width: 42px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    overflow: hidden;
+    display: flex;
+    transition: all 0.5s;
+    border-radius: 50%;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    background: var(--secondary-color);
+}
+
+#settings-wrapper.show #settings-panel {
+    height: 200px;
+    width: 150px;
+    border-radius: 25px;
+}
+
+#settings-panel #popup-content {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    transition: all .5s;
+    position: absolute;
+    right: 0;
+}
+
+#settings-panel #popup-content img {
+    width: 80px;
+    height: 80px;
+}
+
+#settings-panel #popup-content span {
+    color: var(--white);
+}
+
+#settings-panel #popup-content button {
+    background: var(--white);
+    color: var(--secondary-color);
+}
