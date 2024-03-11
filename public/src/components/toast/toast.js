@@ -47,9 +47,9 @@ export class Toast {
 
     #icon(type) {
         if (type === TOAST_TYPE.SUCCESS) {
-            return "./src/assets/success.png";
+            return "./src/assets/success.svg";
         } else if (type === TOAST_TYPE.ERROR) {
-            return "./src/assets/error.png";
+            return "./src/assets/error.svg";
         }
     }
 

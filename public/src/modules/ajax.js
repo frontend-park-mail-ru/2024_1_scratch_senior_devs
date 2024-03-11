@@ -1,12 +1,14 @@
 import {AppEventMaker} from "./eventMaker.js";
 import {UserStoreEvents} from "../stores/user/events.js";
-import {decode} from "./utils.js";
+import {decode, timeout} from "./utils.js";
 import {toasts} from "./toasts.js";
 
 /** @typedef {Promise<{create_time: string, image_path: string, id: string, username: string}>} UserData **/
 
 
 const isDebug = false;
+
+const REQUEST_TIMEOUT = 1000;
 
 const baseUrl = `http://${isDebug ? "127.0.0.1" : "you-note.ru"}:8080/api`;
 
@@ -30,18 +32,11 @@ JWT = window.localStorage.getItem("Authorization");
  * @returns UserDataResponse
  */
 const baseRequest = async (method, url, data = null, params=null) => {
-
-    let timeout = function timeout(ms) {
-        const ctrl = new AbortController();
-        setTimeout(() => ctrl.abort(), ms);
-        return ctrl.signal;
-    };
-
     const options = {
         method: method,
         mode: "cors",
         credentials: "include",
-        signal: timeout(1000),
+        signal: timeout(REQUEST_TIMEOUT),
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/json",

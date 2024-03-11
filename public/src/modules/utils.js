@@ -18,3 +18,15 @@ export function decode(raw) {
     const bytes = Uint8Array.from(decoded, (m) => m.codePointAt(0));
     return JSON.parse(new TextDecoder().decode(bytes));
 }
+
+
+/**
+ * Определеяет максимальную задержку в ожидании ответа от сервера
+ * @param ms - время в милисекундах
+ * @returns {AbortSignal}
+ */
+export function timeout(ms) {
+    const ctrl = new AbortController();
+    setTimeout(() => ctrl.abort(), ms);
+    return ctrl.signal;
+}
