@@ -20,6 +20,7 @@ export default class NotesPage extends Page {
      * @param reset {boolean}
      */
     #renderNotes = (notes, reset=false) => {
+        console.log("renderNotes");
         if (reset){
             this.#notesContainer.innerHTML = "";
         }
@@ -32,6 +33,7 @@ export default class NotesPage extends Page {
 
             let hasVerticalScrollbar = this.#notesContainer.scrollHeight > this.#notesContainer.clientHeight;
             hasVerticalScrollbar && this.createObserver();
+
         } else if (AppNotesStore.notes.length === 0) {
             const h3 = document.createElement("h1");
             h3.innerText = "Не найдено ни одной заметки ;(";
@@ -44,19 +46,17 @@ export default class NotesPage extends Page {
      * Инициализация обсервера для динамической пагинации заметок
      */
     createObserver() {
-        const intersectionObserver = new IntersectionObserver(entries => {
-            const lastNote = entries[0];
+        let observer = new IntersectionObserver(
+            function (entries, observer) {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        AppNotesStore.loadNotes();
+                        observer.unobserve(entry.target);
+                    }
+                });
+            });
 
-            if (lastNote.intersectionRatio === 0) {
-                return;
-            }
-
-            intersectionObserver.unobserve(lastNote.target);
-
-            AppNotesStore.loadNotes();
-        });
-
-        intersectionObserver.observe(this.#notesContainer.querySelector(".note-container:last-child"));
+        observer.observe(this.#notesContainer.querySelector(".note-container:last-child"));
     }
 
     /**
@@ -72,7 +72,7 @@ export default class NotesPage extends Page {
 
     /**
      * Срабатывает при клике по заметке из списка
-     * @param note {Element}
+     * @param note {HTMLElement}
      */
     selectNote = (note) => {
         AppNotesStore.unselectNote();
@@ -116,7 +116,21 @@ export default class NotesPage extends Page {
 
             if (id !== undefined) {
                 this.self.classList.add("selected");
+
                 this.selectNote(document.getElementById(id));
+
+                // TODO
+                // const note = document.getElementById(id);
+                //
+                // var rect = this.#notesContainer.getBoundingClientRect();
+                // var y = e.clientY - rect.top;
+                // console.log("Top? : " + y + ".");
+                //
+                //
+                // let scrollOptions = {
+                //     top: note.offsetTop - y
+                // }
+                // this.#notesContainer.scrollTo(scrollOptions)
             }
         });
 

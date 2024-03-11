@@ -95,7 +95,7 @@ export class Toast {
         this.#progressBar = this.self.querySelector(".progress");
         this.#progressBar.classList.add("active");
 
-        this.self.querySelector(".toast-content").insertAdjacentHTML("afterbegin", this.#icon(this.type))
+        this.self.querySelector(".toast-content").insertAdjacentHTML("afterbegin", this.#icon(this.type));
 
         setTimeout(() => this.close(), 3000);
     }
