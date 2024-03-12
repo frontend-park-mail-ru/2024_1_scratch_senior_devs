@@ -1,14 +1,41 @@
 {
   "scripts": {
-    "start": "npm run build && node server/index.js",
-    "lint": "npx eslint --fix ./public/src",
-    "build": "build.sh"
-  },
-  "dependencies": {
-    "handlebars": "^4.7.8",
-    "ws": "^8.16.0"
+    "build": "webpack --mode=production --node-env=production",
+    "build:dev": "webpack --mode=development",
+    "build:prod": "webpack --mode=production --node-env=production",
+    "watch": "webpack --watch",
+    "serve": "webpack serve"
   },
   "devDependencies": {
-    "eslint": "^8.57.0"
+    "@babel/cli": "^7.23.9",
+    "@babel/core": "^7.24.0",
+    "@babel/plugin-proposal-decorators": "^7.24.0",
+    "@babel/plugin-transform-react-jsx": "^7.23.4",
+    "@babel/preset-env": "^7.24.0",
+    "@babel/preset-typescript": "^7.23.3",
+    "@types/mini-css-extract-plugin": "^2.5.1",
+    "@types/node": "^20.11.25",
+    "@types/webpack": "^5.28.5",
+    "@types/webpack-dev-server": "^4.7.2",
+    "@typescript-eslint/eslint-plugin": "^7.1.1",
+    "@typescript-eslint/parser": "^7.1.1",
+    "@veglem/screact": "^1.0.5",
+    "@webpack-cli/generators": "^3.0.7",
+    "babel-loader": "^9.1.3",
+    "css-loader": "^6.10.0",
+    "eslint": "^8.57.0",
+    "html-webpack-plugin": "^5.6.0",
+    "mini-css-extract-plugin": "^2.8.1",
+    "prettier": "^3.2.5",
+    "sass": "^1.71.1",
+    "sass-loader": "^14.1.1",
+    "style-loader": "^3.3.4",
+    "ts-loader": "^9.5.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.2",
+    "webpack": "^5.90.3",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.0.2",
+    "@types/html-webpack-plugin": "^3.2.9"
   }
 }
