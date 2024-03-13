@@ -2,6 +2,7 @@ import {ScReact} from "@veglem/screact";
 import {VDomNode} from "@veglem/screact/dist/vdom";
 import {Button} from "../../components/Button/Button";
 import "./style.sass"
+import {LoginForm} from "../../components/Login/login";
 
 export class AuthPage extends ScReact.Component<any, any> {
     render(): VDomNode {
@@ -10,7 +11,7 @@ export class AuthPage extends ScReact.Component<any, any> {
                 <div className="glassmorphism-container">
                     <div className="auth-container">
                         <div className="form-container sign-in">
-
+                            <LoginForm />
                         </div>
                         <div className="form-container sign-up">
 

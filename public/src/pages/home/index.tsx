@@ -14,7 +14,7 @@ export class HomePage extends ScReact.Component<any, any> {
                         <h1>YouNote - современный сервис для ведения заметок</h1>
                         <Button onclick={() => {
                             AppRouter.go("/auth")
-                        }} title="Попробовать"></Button>
+                        }} label="Попробовать"></Button>
                     </div>
                     <img src="src/assets/5.jpg" className="parallax-bg"/>
                     <img src="src/assets/wave.svg" className="wave" />
