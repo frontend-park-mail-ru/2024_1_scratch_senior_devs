@@ -166,7 +166,7 @@ class AuthRequests {
     CheckUser = async () => {
         const {status, body} = await baseRequest(
             methods.GET,
-            this.#baseUrl + "/check_user"
+            "/profile/get" // БЫЛО: this.#baseUrl + "/check_user"
         );
 
         if (status === 200) {
