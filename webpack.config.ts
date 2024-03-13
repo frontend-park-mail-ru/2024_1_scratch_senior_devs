@@ -18,6 +18,7 @@ const config : webpack.Configuration = {
     devServer: {
         open: true,
         host: 'localhost',
+
     },
     plugins: [
         new HtmlWebpackPlugin({

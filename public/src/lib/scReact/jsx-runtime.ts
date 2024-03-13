@@ -3,6 +3,10 @@ import {VDOMAttributes} from "@veglem/screact/dist/vdom";
 
 export const jsx = (tag: any, { children, ...props}) => {
 
+    if (children === undefined) {
+        children = []
+    }
+
     if (typeof tag != "string") {
         if ("key1" in props) {
             props.key = props.key1

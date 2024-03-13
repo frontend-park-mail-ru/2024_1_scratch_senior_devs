@@ -16,6 +16,7 @@
         "@typescript-eslint"
     ],
     "rules": {
+
     }
 }
 //todo: ругаться ; , if, tab,
