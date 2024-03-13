@@ -1,10 +1,9 @@
 import {Component} from "@veglem/screact/dist/component";
 import {ScReact} from "@veglem/screact";
 import {VDomNode} from "@veglem/screact/dist/vdom";
-import {MainPage} from "../pages/main";
-import {MainLoader} from "../pages/main/loader";
-import {Skeleton} from "../pages/skeleton/skeleton";
+import {HomePage} from "../pages/home";
 import {ErrorPage} from "../pages/ErrorPage/errorPage";
+import {AuthPage} from "../pages/Auth";
 
 type routerState = {
     currPage: {new(): Component<any, any> }
@@ -15,7 +14,7 @@ export class Router extends ScReact.Component<any, routerState> {
     private pages: Map<string, {page: {new(): Component<any, any> }, loader: () => Promise<any>}>
 
     state = {
-        currPage: Skeleton,
+        currPage: HomePage,
         PageProps: {}
     }
 
@@ -29,16 +28,21 @@ export class Router extends ScReact.Component<any, routerState> {
 
     componentDidMount() {
         const path = window.location.pathname;
+        window.addEventListener("popstate", () => {
+            this.go(window.location.pathname);
+        })
         this.go(path);
     }
 
     private initPages = () => {
-        this.pages['/'] = {page: MainPage, loader: MainLoader}
-
+        this.pages['/'] = {page: HomePage}
+        this.pages['/auth'] = {page: AuthPage}
     }
 
     public go(path: string): void {
         const page: {page: {new(): Component<any, any> }, loader: () => Promise<any>} = this.pages[path];
+
+        console.log(page)
 
         history.pushState({ path }, "", path);
 
@@ -53,29 +57,30 @@ export class Router extends ScReact.Component<any, routerState> {
             return
         }
 
+        if (page.loader !== undefined) {
+            page.loader().then((props) => {
+                this.setState(s => ({
+                    ...s,
+                    currPage: page.page,
+                    PageProps: props
+                }));
 
-
-        this.setState(s => ({
-            ...s,
-            currPage: Skeleton
-        }));
-
-        page.loader().then((props) => {
+            }).catch((err) => {
+                this.setState(s => ({
+                    ...s,
+                    currPage: ErrorPage,
+                    PageProps: {
+                        err: err
+                    }
+                }));
+            })
+        } else {
             this.setState(s => ({
                 ...s,
-                currPage: page.page,
-                PageProps: props
+                currPage: page.page
             }));
+        }
 
-        }).catch((err) => {
-            this.setState(s => ({
-                ...s,
-                currPage: ErrorPage,
-                PageProps: {
-                    err: err
-                }
-            }));
-        })
     }
 
     render(): VDomNode {

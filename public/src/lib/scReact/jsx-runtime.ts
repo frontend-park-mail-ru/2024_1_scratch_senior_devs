@@ -13,7 +13,6 @@ export const jsx = (tag: any, { children, ...props}) => {
         } else {
             props.key = tag.name;
         }
-        console.log(tag, props)
         return ScReact.createComponent(tag, props as { [x: string]: any; } & { key: string; });
     }
 
@@ -35,7 +34,6 @@ export const jsx = (tag: any, { children, ...props}) => {
             children[i] = ScReact.createText(children[i]);
         }
     }
-    console.log(tag, props, children)
     return ScReact.createElement(tag, props as VDOMAttributes & {key: string}, ...children);
 }
 

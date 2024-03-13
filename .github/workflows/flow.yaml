@@ -3,7 +3,7 @@ name: YouNote build
 on:
   push:
     branches:
-      - main
+      - home
       - dev
       - vls-36
 jobs:

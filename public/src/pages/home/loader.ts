@@ -1,5 +1,7 @@
-export const MainLoader = async () => {
-    await delay(1000);
+const DELAY = 0
+
+export const HomeLoader = async () => {
+    await delay(DELAY);
     return {};
 }
 
