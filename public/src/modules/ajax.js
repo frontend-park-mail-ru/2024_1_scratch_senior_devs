@@ -6,7 +6,7 @@ import {toasts} from "./toasts.js";
 /** @typedef {Promise<{create_time: string, image_path: string, id: string, username: string}>} UserData **/
 
 
-const isDebug = true;
+const isDebug = false;
 
 const REQUEST_TIMEOUT = 2000;
 
