@@ -16,20 +16,20 @@ export const ValidatePassword = (value) => {
     let regExp = /[a-zA-Z]/g;
     if (!regExp.test(value))
     {
-        return ValidationResult(false, "Пароль должен содержать хотя бы одну букву!");
+        return ValidationResult(false, "Пароль должен содержать хотя бы одну букву");
     }
 
     if (value === "")
     {
-        return ValidationResult(false, "Пароль не может быть пустым!");
+        return ValidationResult(false, "Пароль не может быть пустым");
     }
 
     if (value.length < 8){
-        return ValidationResult(false, "Пароль должен быть не менее 8 символов!");
+        return ValidationResult(false, "Пароль должен быть не менее 8 символов");
     }
 
     if (value.length > 20){
-        return ValidationResult(false, "Пароль должен быть короче 20 символов!");
+        return ValidationResult(false, "Пароль должен быть короче 20 символов");
     }
 
     return ValidationResult(true);
@@ -51,15 +51,15 @@ export const ValidateLogin = (value) => {
 
     if (value === "")
     {
-        return ValidationResult(false, "Логин не может быть пустым!");
+        return ValidationResult(false, "Логин не может быть пустым");
     }
 
     if (value.length < 4){
-        return ValidationResult(false, "Логин должен быть не менее 4 символов!");
+        return ValidationResult(false, "Логин должен быть не менее 4 символов");
     }
 
     if (value.length > 12){
-        return ValidationResult(false, "Логин должен быть короче 12 символов!");
+        return ValidationResult(false, "Логин должен быть короче 12 символов");
     }
 
     return ValidationResult(true);
