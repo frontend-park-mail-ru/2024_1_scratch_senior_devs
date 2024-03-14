@@ -10,13 +10,38 @@ export class LoginForm extends  ScReact.Component<any, any> {
         passwordValidated: false
     }
 
+    handleSubmit(e) {
+        e.preventDefault()
+        console.log("handleSubmit")
+
+        if (this.state.loginValidated && this.state.passwordValidated) {
+
+            // TODO
+
+        }
+    }
+
+    setLoginValidated = (value:boolean)=> {
+        this.setState(state => ({
+            ...state,
+            loginValidated: value
+        }))
+    }
+
+    setPasswordValidated = (value:boolean)=> {
+        this.setState(state => ({
+            ...state,
+            passwordValidated: value
+        }))
+    }
+
     render(): VDomNode {
         return (
             <form className="login-form">
                 <h3>Вход</h3>
-                <Input type="text" placeholder="Введите логин" icon="src/assets/user.png" validation={ValidateLogin}/>
-                <Input type="password" placeholder="Введите пароль" icon="src/assets/password.png" validation={ValidatePassword}/>
-                <Button label="Войти" />
+                <Input type="text" placeholder="Введите логин" icon="src/assets/user.png" validation={ValidateLogin} setSuccess={this.setLoginValidated}/>
+                <Input type="password" placeholder="Введите пароль" icon="src/assets/password.png" validation={ValidatePassword} setSuccess={this.setPasswordValidated}/>
+                <Button label="Войти" onclick={(e) => this.handleSubmit(e)}/>
             </form>
         );
     }

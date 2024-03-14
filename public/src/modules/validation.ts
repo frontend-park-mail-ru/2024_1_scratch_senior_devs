@@ -1,4 +1,9 @@
-export const ValidatePassword = (value) => {
+export type ValidationResult = {
+    message?: string,
+    result: boolean
+}
+
+export const ValidatePassword = (value:string):ValidationResult   => {
     for (let index = 0; index < value.length; ++index){
         if (!(value.charCodeAt(index) >= 97 && value.charCodeAt(index) <= 122 ||
             value.charCodeAt(index) >= 64 && value.charCodeAt(index) <= 90 ||
@@ -8,7 +13,7 @@ export const ValidatePassword = (value) => {
         }
     }
 
-    let regExp = /[a-zA-Z]/g;
+    const regExp = /[a-zA-Z]/g;
     if (!regExp.test(value))
     {
         return ValidationResult(false, "Пароль должен содержать хотя бы одну букву");
@@ -31,7 +36,7 @@ export const ValidatePassword = (value) => {
 };
 
 
-export const ValidateLogin = (value) => {
+export const ValidateLogin = (value):ValidationResult => {
     for (let index = 0; index < value.length; ++index){
         if (!(value.charCodeAt(index) >= 97 && value.charCodeAt(index) <= 122 ||
             value.charCodeAt(index) >= 64 && value.charCodeAt(index) <= 90 ||
@@ -56,7 +61,6 @@ export const ValidateLogin = (value) => {
     return ValidationResult(true);
 };
 
-
-const ValidationResult = (result, message = null) => {
+const ValidationResult = (result:boolean, message:string = null):ValidationResult => {
     return {result, message};
 };

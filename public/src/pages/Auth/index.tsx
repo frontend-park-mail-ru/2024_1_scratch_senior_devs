@@ -32,15 +32,12 @@ export class AuthPage extends ScReact.Component<any, any> {
             <div className={"auth-page-wrapper " + (window.location.pathname.includes("login") ? (this.state.selectedForm === "login" ? "" : "active") : (this.state.toggled ? "" : "active"))}>
                 <div className="glassmorphism-container">
                     <div className="auth-container">
-
                         <div className="form-container sign-in">
                             <LoginForm/>
                         </div>
-
                         <div className={"form-container sign-up" + (this.state.toggled ? " fade-left" : "") + (window.location.pathname.includes("login") && this.state.toggled ? " fade-right" : "")}>
                             <RegisterForm/>
                         </div>
-
                         <div className="toggle-container">
                             <div className="toggle">
                                 <div className="toggle-panel toggle-left">

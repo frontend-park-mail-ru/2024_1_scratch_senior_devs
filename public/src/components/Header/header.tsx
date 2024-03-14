@@ -9,7 +9,7 @@ export class Header extends ScReact.Component<any, any>{
         return (
             <header id="header">
                 <Logo />
-                <Button label="Вход" onclick={() => AppRouter.go("/auth")}></Button>
+                <Button label="Вход" onclick={() => AppRouter.go("/login")}></Button>
             </header>
         )
     }
