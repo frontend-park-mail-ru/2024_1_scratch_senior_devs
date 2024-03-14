@@ -36,7 +36,8 @@ export class Router extends ScReact.Component<any, routerState> {
 
     private initPages = () => {
         this.pages['/'] = {page: HomePage}
-        this.pages['/auth'] = {page: AuthPage}
+        this.pages['/login'] = {page: AuthPage}
+        this.pages['/register'] = {page: AuthPage}
     }
 
     public go(path: string): void {

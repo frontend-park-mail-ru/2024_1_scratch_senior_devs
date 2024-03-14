@@ -13,7 +13,7 @@ export class HomePage extends ScReact.Component<any, any> {
                     <div className="text-container">
                         <h1>YouNote - современный сервис для ведения заметок</h1>
                         <Button onclick={() => {
-                            AppRouter.go("/auth")
+                            AppRouter.go("/login")
                         }} label="Попробовать"></Button>
                     </div>
                     <img src="src/assets/5.jpg" className="parallax-bg"/>
