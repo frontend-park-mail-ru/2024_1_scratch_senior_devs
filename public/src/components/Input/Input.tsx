@@ -1,6 +1,5 @@
 import {ScReact} from "@veglem/screact";
 import "./Input.sass"
-import {ValidationResult} from "../../modules/validation";
 
 
 type InputState = {
@@ -9,13 +8,7 @@ type InputState = {
     placeholder?: string,
     icon?: string,
     hasIcon?: boolean
-    validation?: ValidationCallback,
-    success?: boolean,
-    error?: string,
-    validationResult?: boolean
 }
-
-type ValidationCallback = (value: string) => ValidationResult
 
 
 export class Input extends ScReact.Component<any, InputState>{
@@ -30,8 +23,7 @@ export class Input extends ScReact.Component<any, InputState>{
             placeholder: this.props.placeholder ? this.props.placeholder : "",
             isPassword: this.props.type == "password",
             icon: this.props.icon ? this.props.icon : "",
-            hasIcon: this.props.icon != undefined,
-            validation: this.props.validation
+            hasIcon: this.props.icon != undefined
         }))
     }
 
@@ -44,28 +36,16 @@ export class Input extends ScReact.Component<any, InputState>{
 
     handleChange = (e) => {
         this.props.onChange && this.props.onChange(e.target.value)
-
-        if (this.state.validation) {
-            const {result, message} = this.state.validation(e.target.value)
-
-            this.setState(state => ({
-                ...state,
-                validationResult: result,
-                error: message ? message : ""
-            }))
-
-            this.props.setSuccess(result)
-        }
     }
 
     render() {
         return (
-            <div className={"input-container " + (this.state.validationResult ? "success" : "") + (this.state.error ? "error" : "")}>
+            <div className={"input-container " + (this.props.validationResult ? "success" : "") + (this.props.error ? "error" : "")}>
 
                 <input type={this.state.type} placeholder={this.state.placeholder} oninput={this.handleChange}/>
 
                 <div className="errors-container">
-                    {this.state.error != "" ? this.state.error : ""}
+                    {this.props.error != "" ? this.props.error : ""}
                 </div>
 
                 {this.state.isPassword ?

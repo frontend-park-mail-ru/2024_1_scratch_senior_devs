@@ -6,15 +6,17 @@ import {ValidateLogin, ValidatePassword} from "../../modules/validation";
 
 export class LoginForm extends  ScReact.Component<any, any> {
     state = {
-        loginValidated: false,
-        passwordValidated: false
+        errorLogin: "",
+        loginValidationResult: false,
+
+        errorPassword: "",
+        passwordValidationResult: false
     }
 
-    handleSubmit(e) {
+    handleSubmit = (e) => {
         e.preventDefault()
-        console.log("handleSubmit")
 
-        if (this.state.loginValidated && this.state.passwordValidated) {
+        if (this.state.loginValidationResult && this.state.passwordValidationResult) {
 
             // TODO
 
@@ -24,14 +26,50 @@ export class LoginForm extends  ScReact.Component<any, any> {
     setLoginValidated = (value:boolean)=> {
         this.setState(state => ({
             ...state,
-            loginValidated: value
+            loginValidationResult: value
+        }))
+    }
+
+    setLogin = (value:string) => {
+        const {message, result} = ValidateLogin(value)
+        this.setLoginValidated(result)
+
+        if (!result) {
+            this.setLoginError(message)
+        } else {
+            this.setLoginError("")
+        }
+    }
+
+    setLoginError = (value:string) => {
+        this.setState(state => ({
+            ...state,
+            errorLogin: value
+        }))
+    }
+
+    setPassword = (value:string) => {
+        const {message, result} = ValidatePassword(value)
+        this.setPasswordValidated(result)
+
+        if (!result) {
+            this.setPasswordError(message)
+        } else {
+            this.setPasswordError("")
+        }
+    }
+
+    setPasswordError = (value:string) => {
+        this.setState(state => ({
+            ...state,
+            errorPassword: value
         }))
     }
 
     setPasswordValidated = (value:boolean)=> {
         this.setState(state => ({
             ...state,
-            passwordValidated: value
+            passwordValidationResult: value
         }))
     }
 
@@ -39,9 +77,23 @@ export class LoginForm extends  ScReact.Component<any, any> {
         return (
             <form className="login-form">
                 <h3>Вход</h3>
-                <Input type="text" placeholder="Введите логин" icon="src/assets/user.png" validation={ValidateLogin} setSuccess={this.setLoginValidated}/>
-                <Input type="password" placeholder="Введите пароль" icon="src/assets/password.png" validation={ValidatePassword} setSuccess={this.setPasswordValidated}/>
-                <Button label="Войти" onclick={(e) => this.handleSubmit(e)}/>
+                <Input
+                    type="text"
+                    placeholder="Введите логин"
+                    icon="src/assets/user.png"
+                    error={this.state.errorLogin}
+                    validationResult={this.state.loginValidationResult}
+                    onChange={this.setLogin}
+                />
+                <Input
+                    type="password"
+                    placeholder="Введите пароль"
+                    icon="src/assets/password.png"
+                    error={this.state.errorPassword}
+                    validationResult={this.state.passwordValidationResult}
+                    onChange={this.setPassword}
+                />
+                <Button label="Войти" onclick={this.handleSubmit}/>
             </form>
         );
     }

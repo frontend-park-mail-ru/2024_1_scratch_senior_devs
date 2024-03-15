@@ -4,6 +4,7 @@ import {VDomNode} from "@veglem/screact/dist/vdom";
 import {HomePage} from "../pages/home";
 import {ErrorPage} from "../pages/ErrorPage/errorPage";
 import {AuthPage} from "../pages/Auth";
+import {NotesPage} from "../pages/Notes";
 
 type routerState = {
     currPage: {new(): Component<any, any> }
@@ -38,12 +39,11 @@ export class Router extends ScReact.Component<any, routerState> {
         this.pages['/'] = {page: HomePage}
         this.pages['/login'] = {page: AuthPage}
         this.pages['/register'] = {page: AuthPage}
+        this.pages['/notes'] = {page: NotesPage}
     }
 
     public go(path: string): void {
         const page: {page: {new(): Component<any, any> }, loader: () => Promise<any>} = this.pages[path];
-
-        console.log(page)
 
         history.pushState({ path }, "", path);
 
@@ -81,7 +81,6 @@ export class Router extends ScReact.Component<any, routerState> {
                 currPage: page.page
             }));
         }
-
     }
 
     render(): VDomNode {
