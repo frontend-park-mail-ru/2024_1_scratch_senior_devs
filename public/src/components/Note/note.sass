@@ -1,0 +1,31 @@
+@import "/public/src/utils/variables.sass"
+
+.note-container
+	display: flex
+	flex-direction: column
+	gap: 10px
+	background: $background-secondary-color
+	border-radius: 15px
+	padding: 15px 15px 40px 15px
+	width: 100%
+	cursor: pointer
+	transition: 0.5s
+	position: relative
+
+	&:hover
+		transform: scale(1.05)
+
+	h3
+		color: $text-main-color
+
+	p
+		color: $text-main-color--darker
+
+	&.selected
+		box-shadow: 0 0 5px $primary-color, 0 0 15px $primary-color
+
+	.update-time
+		position: absolute
+		right: 10px
+		bottom: 10px
+		color: $text-main-color--darker
