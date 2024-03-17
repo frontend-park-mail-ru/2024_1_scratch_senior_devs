@@ -77,8 +77,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
             ...state,
             selectedNote: note
         }))
-
-
     }
 
     async init () {

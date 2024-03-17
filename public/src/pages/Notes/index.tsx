@@ -75,12 +75,12 @@ export class NotesPage extends ScReact.Component<any, any> {
 
     render() {
         return (
-            <div className={"notes-page-wrapper " + (AppNotesStore.state.selectedNote !== undefined ? "active" : "")}>
+            <div className={"notes-page-wrapper " + (this.state.selectedNote ? "active" : "")}>
                 <aside>
                     <SearchBar onChange={this.searchNotes} />
                     <div className="notes-container" onclick={this.handleSelectNote}>
                         {this.state.notes.map(note => (
-                            <Note key1={note.id} note={note} selected={AppNotesStore.state.selectedNote?.id == note.id} />
+                            <Note key1={note.id} note={note} selected={this.state.selectedNote?.id == note.id} />
                         ))}
                     </div>
                 </aside>

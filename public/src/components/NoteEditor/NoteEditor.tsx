@@ -1,13 +1,14 @@
 import {ScReact} from "@veglem/screact";
 import "./NoteEditor.sass"
 import {Img} from "../Image/Image";
-import {AppNotesStore, NotesActions} from "../../modules/stores/NotesStore";
+import {AppNotesStore, NotesActions, NotesStoreState} from "../../modules/stores/NotesStore";
 import {AppDispatcher} from "../../modules/dispatcher";
 
 
 export class NoteEditor extends ScReact.Component<any, any> {
     state = {
-        open: false
+        open: false,
+        selectedNote: undefined
     }
 
     componentDidMount() {
@@ -18,10 +19,11 @@ export class NoteEditor extends ScReact.Component<any, any> {
         AppDispatcher.dispatch(NotesActions.CLOSE_NOTE)
     }
 
-    updateState = (storeState) => {
+    updateState = (store:NotesStoreState) => {
         this.setState(state => ({
             ...state,
-            open: storeState.selectedNote !== undefined
+            selectedNote: store.selectedNote,
+            open: store.selectedNote !== undefined
         }))
     }
 
@@ -45,11 +47,11 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
                 <div className="bottom-panel">
                     <div className="note-title-container" contentEditable="true">
-                        <h3 className="note-title">{AppNotesStore.state.selectedNote?.data.title}</h3>
+                        <h3 className="note-title">{this.state.selectedNote?.data.title}</h3>
                     </div>
 
                     <div className="note-content" contentEditable="true">
-                        <span>{AppNotesStore.state.selectedNote?.data.content}</span>
+                        <span>{this.state.selectedNote?.data.content}</span>
                     </div>
                 </div>
 

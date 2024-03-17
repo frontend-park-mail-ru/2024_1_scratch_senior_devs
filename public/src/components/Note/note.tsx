@@ -9,6 +9,7 @@ type NoteState = {
     update_time: string
 }
 
+const MAX_NOTE_CONTENT_PREVIEW_LENGTH = 30
 
 export class Note extends ScReact.Component<any, NoteState> {
     state = {
@@ -20,9 +21,10 @@ export class Note extends ScReact.Component<any, NoteState> {
 
     componentDidMount() {
         this.setState(state => ({
+            ...state,
             id: this.props.note.id,
             title: this.props.note.data.title,
-            content: truncate(this.props.note.data.content, 30),
+            content: truncate(this.props.note.data.content, MAX_NOTE_CONTENT_PREVIEW_LENGTH),
             update_time: formatDate(this.props.note.update_time)
         }))
     }
