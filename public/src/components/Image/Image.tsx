@@ -7,7 +7,7 @@ type ImageProps = {
 }
 
 
-export class Image extends ScReact.Component<ImageProps, any> {
+export class Img extends ScReact.Component<ImageProps, any> {
     render() {
         return (
             <img src={this.props.src} alt="" className={this.props.className} onclick={this.props.onClick}/>

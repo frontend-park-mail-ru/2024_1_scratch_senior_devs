@@ -7,7 +7,7 @@ import {NoteEditor} from "../../components/NoteEditor/NoteEditor";
 export class NotesPage extends ScReact.Component<any, any> {
 
     state = {
-        noteSelected: false
+        noteSelected: true
     }
 
     notes = [

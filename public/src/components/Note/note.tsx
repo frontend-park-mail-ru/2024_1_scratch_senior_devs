@@ -3,7 +3,12 @@ import "./note.sass"
 
 export class Note extends ScReact.Component<any, any> {
     state = {
-        update_time: new Date()
+        update_time: new Intl.DateTimeFormat("ru", {
+            month: "short", day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            hourCycle: "h23"
+        }).format(new Date()).replace(",", "")
     }
 
     render() {

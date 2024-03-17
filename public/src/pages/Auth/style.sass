@@ -6,7 +6,7 @@
 	display: flex
 	justify-content: center
 	align-items: center
-	background: #222226
+	background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%)
 
 	.glassmorphism-container
 		position: relative
@@ -17,6 +17,7 @@
 			position: absolute
 			border-radius: 50%
 			content: ''
+			z-index: 1
 
 		&:before
 			background: linear-gradient(#9b22ea, #bf23f6)
@@ -106,7 +107,7 @@
 					@keyframes move2
 						0%
 							opacity: 1
-						100%
+						80%
 							opacity: 0
 
 				&.fade-right

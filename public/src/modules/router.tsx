@@ -5,6 +5,9 @@ import {HomePage} from "../pages/home";
 import {ErrorPage} from "../pages/ErrorPage/errorPage";
 import {AuthPage} from "../pages/Auth";
 import {NotesPage} from "../pages/Notes";
+import {Header} from "../components/Header/header";
+import {Background} from "../components/Background/Background";
+import {Note} from "../components/Note/note";
 
 type routerState = {
     currPage: {new(): Component<any, any> }
@@ -36,10 +39,10 @@ export class Router extends ScReact.Component<any, routerState> {
     }
 
     private initPages = () => {
-        this.pages['/'] = {page: HomePage}
-        this.pages['/login'] = {page: AuthPage}
-        this.pages['/register'] = {page: AuthPage}
-        this.pages['/notes'] = {page: NotesPage}
+        this.pages['/'] = {page: HomePage, pageProps: {title: "Главная"}}
+        this.pages['/login'] = {page: AuthPage, pageProps: {title: "Вход"}}
+        this.pages['/register'] = {page: AuthPage, pageProps: {title: "Регистрация"}}
+        this.pages['/notes'] = {page: NotesPage, pageProps: {title: "Заметки"}}
     }
 
     public go(path: string): void {
@@ -81,11 +84,17 @@ export class Router extends ScReact.Component<any, routerState> {
                 currPage: page.page
             }));
         }
+
+        document.title = page.pageProps.title
     }
 
     render(): VDomNode {
         return (
-            ScReact.createComponent(this.state.currPage, this.state.PageProps)
+            <div>
+                <Header currPage={this.state.currPage}/>
+                { ScReact.createComponent(this.state.currPage, {...this.state.PageProps, key: this.state.currPage.name}) }
+                { this.state.currPage !== NotesPage ? <Background currPage={this.state.currPage}/> : ""}
+            </div>
         );
     }
 }

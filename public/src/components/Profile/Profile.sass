@@ -1,0 +1,121 @@
+@import "/public/src/utils/variables.sass"
+
+.user-profile-wrapper
+	position: relative
+
+	.toggle-profile-button
+		font-size: 0
+		width: 42px
+		height: 42px
+		box-sizing: border-box
+		border-radius: 100%
+		padding: 14px 10px
+		position: relative
+		cursor: pointer
+		background: $secondary-color
+		z-index: 10
+
+		&:hover .slider:before
+			left: 30%
+
+		&:hover .slider.two:before
+			left: 70%
+
+		&:hover .slider.three:before
+			left: 30%
+
+		.slider
+			width: 22px
+			border-radius: 4px
+			height: 2px
+			background: $white
+			position: absolute
+			transform-origin: 2px 2px
+			transition: all 500ms cubic-bezier(0, 1, 0, 1)
+
+			&.two
+				margin-top: 6px
+
+				&:before
+					left: 30%
+					transition-delay: 55ms
+
+			&.three
+				margin-top: 12px
+
+				&:before
+					left: 70%
+					transition-delay: 110ms
+
+			&:before
+				width: 6px
+				height: 6px
+				margin-top: -2px
+				margin-left: -3px
+				border-radius: 999px
+				background: $white
+				display: inline-block
+				content: ''
+				position: absolute
+				left: 70%
+				transition: left 140ms cubic-bezier(0, 2, 1, 1)
+
+	&.open
+		.toggle-profile-button
+			.one
+				transform: translate3d(4px, 1px, 0) rotate(45deg)
+				width: 18px
+
+			.three
+				transform: translate3d(5px, -1px, 0) rotate(-45deg)
+				width: 18px
+
+			.two
+				width: 0
+				display: none
+
+			.slider:before
+				width: 0
+				height: 0
+
+	.panel
+		height: 42px
+		width: 42px
+		position: absolute
+		top: 0
+		right: 0
+		overflow: hidden
+		display: flex
+		transition: all 0.5s
+		border-radius: 50%
+		box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px
+		background: $secondary-color
+
+		.popup-content
+			height: 100%
+			width: 100%
+			display: flex
+			flex-direction: column
+			justify-content: center
+			align-items: center
+			gap: 10px
+			transition: all .5s
+			position: absolute
+			right: 0
+
+			img
+				width: 80px
+				height: 80px
+
+			span
+				color: $white
+
+			button
+				background: $white
+				color: $secondary-color
+
+	&.open
+		.panel
+			height: 200px
+			width: 150px
+			border-radius: 25px

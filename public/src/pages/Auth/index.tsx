@@ -25,6 +25,7 @@ export class AuthPage extends ScReact.Component<any, any> {
         }))
 
         history.pushState(null, null, this.state.selectedForm);
+        document.title = this.state.selectedForm === "login" ? "Вход" : "Регистрация"
     }
 
     render(): VDomNode {
