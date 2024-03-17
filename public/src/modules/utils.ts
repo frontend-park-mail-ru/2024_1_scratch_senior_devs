@@ -30,3 +30,12 @@ export function timeout(ms: number): AbortSignal {
     setTimeout(() => ctrl.abort(), ms);
     return ctrl.signal;
 }
+
+export function formatDate(date:string): string {
+    return new Intl.DateTimeFormat("ru", {
+        month: "short", day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        hourCycle: "h23"
+    }).format(new Date(date)).replace(",", "")
+}

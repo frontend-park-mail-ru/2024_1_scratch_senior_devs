@@ -21,6 +21,7 @@ class UserStore extends BaseStore<UserStoreState>{
         super();
         this.state.JWT = window.localStorage.getItem('Authorization');
         this.registerEvents();
+        this.checkUser()
     }
 
     private registerEvents(){
@@ -55,6 +56,8 @@ class UserStore extends BaseStore<UserStoreState>{
                     avatarUrl: res.image_path
                 }
             })
+            console.log(res.jwt)
+            console.log(this.state.JWT)
             localStorage.setItem('Authorization', this.state.JWT)
             console.log("login successfull");
             AppRouter.go("/notes");
@@ -63,7 +66,7 @@ class UserStore extends BaseStore<UserStoreState>{
         }
     }
 
-    private async logout() {
+    public async logout() {
         try {
             await AppAuthRequests.Logout(this.state.JWT);
             this.SetState(s => {
@@ -102,7 +105,10 @@ class UserStore extends BaseStore<UserStoreState>{
 
     private async checkUser(){
         try {
-            const res = await AppAuthRequests.CheckUser(this.state.JWT);
+            const res = await AppAuthRequests.CheckUser(this.state.JWT)
+
+            console.log(res)
+
             this.SetState(s => {
                 return {
                     ...s,

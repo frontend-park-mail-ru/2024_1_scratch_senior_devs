@@ -1,6 +1,6 @@
 type Action = {
     type: string,
-    payload: object
+    payload?: any
 }
 
 class Dispatcher {
@@ -10,7 +10,12 @@ class Dispatcher {
         this.callbacks.push(callback);
     }
 
-    dispatch(action: Action) {
+    dispatch(type:string, payload:any=null) {
+        const action = {
+            type: type,
+            payload: payload
+        }
+
         this.callbacks.forEach((callback) => {
             callback(action);
         })

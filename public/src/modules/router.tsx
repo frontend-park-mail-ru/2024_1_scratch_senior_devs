@@ -7,12 +7,13 @@ import {AuthPage} from "../pages/Auth";
 import {NotesPage} from "../pages/Notes";
 import {Header} from "../components/Header/header";
 import {Background} from "../components/Background/Background";
-import {Note} from "../components/Note/note";
 
 type routerState = {
     currPage: {new(): Component<any, any> }
     PageProps: any
 }
+
+
 
 export class Router extends ScReact.Component<any, routerState> {
     private pages: Map<string, {page: {new(): Component<any, any> }, loader: () => Promise<any>}>
@@ -39,14 +40,14 @@ export class Router extends ScReact.Component<any, routerState> {
     }
 
     private initPages = () => {
-        this.pages['/'] = {page: HomePage, pageProps: {title: "Главная"}}
-        this.pages['/login'] = {page: AuthPage, pageProps: {title: "Вход"}}
-        this.pages['/register'] = {page: AuthPage, pageProps: {title: "Регистрация"}}
-        this.pages['/notes'] = {page: NotesPage, pageProps: {title: "Заметки"}}
+        this.pages['/'] = {page: HomePage}
+        this.pages['/login'] = {page: AuthPage}
+        this.pages['/register'] = {page: AuthPage}
+        this.pages['/notes'] = {page: NotesPage}
     }
 
     public go(path: string): void {
-        const page: {page: {new(): Component<any, any> }, loader: () => Promise<any>} = this.pages[path];
+        const page: {page: {new(): Component<any, any> }, pageProps: object, loader: () => Promise<any>} = this.pages[path];
 
         history.pushState({ path }, "", path);
 
@@ -84,8 +85,6 @@ export class Router extends ScReact.Component<any, routerState> {
                 currPage: page.page
             }));
         }
-
-        document.title = page.pageProps.title
     }
 
     render(): VDomNode {

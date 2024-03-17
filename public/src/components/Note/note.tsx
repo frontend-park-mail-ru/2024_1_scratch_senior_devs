@@ -1,21 +1,37 @@
 import {ScReact} from "@veglem/screact";
 import "./note.sass"
+import {formatDate, truncate} from "../../modules/utils";
 
-export class Note extends ScReact.Component<any, any> {
+type NoteState = {
+    id: number,
+    title: string,
+    content: string,
+    update_time: string
+}
+
+
+export class Note extends ScReact.Component<any, NoteState> {
     state = {
-        update_time: new Intl.DateTimeFormat("ru", {
-            month: "short", day: "numeric",
-            hour: "numeric",
-            minute: "numeric",
-            hourCycle: "h23"
-        }).format(new Date()).replace(",", "")
+        id: 0,
+        title: "",
+        content: "",
+        update_time: ""
+    }
+
+    componentDidMount() {
+        this.setState(state => ({
+            id: this.props.note.id,
+            title: this.props.note.data.title,
+            content: truncate(this.props.note.data.content, 30),
+            update_time: formatDate(this.props.note.update_time)
+        }))
     }
 
     render() {
         return (
-            <div className="note-container" id={this.props.id}>
-                <h3>{this.props.title}</h3>
-                <p>{this.props.content}</p>
+            <div className={"note-container " + (this.props.selected ? "selected" : "")} id={this.state.id}>
+                <h3>{this.state.title}</h3>
+                <p>{this.state.content}</p>
                 <span className="update-time">{this.state.update_time}</span>
             </div>
         )

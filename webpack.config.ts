@@ -18,6 +18,7 @@ const config : webpack.Configuration = {
     devServer: {
         open: true,
         host: 'localhost',
+        port: 8010,
         historyApiFallback: true
     },
     plugins: [

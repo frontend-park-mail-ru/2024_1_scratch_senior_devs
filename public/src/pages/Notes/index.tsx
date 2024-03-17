@@ -3,40 +3,45 @@ import "./style.sass"
 import {Note} from "../../components/Note/note";
 import {SearchBar} from "../../components/SearchBar/SearchBar";
 import {NoteEditor} from "../../components/NoteEditor/NoteEditor";
+import {AppNotesStore, NotesActions, NotesStoreState} from "../../modules/stores/NotesStore";
+import {AppDispatcher} from "../../modules/dispatcher";
 
 export class NotesPage extends ScReact.Component<any, any> {
-
     state = {
-        noteSelected: true
+        notes: [],
+        selectedNote: undefined
     }
 
-    notes = [
-        {
-            id: 1,
-            title: "Note title №1",
-            content: "Note content №1"
-        },
-        {
-            id: 2,
-            title: "Note title №2",
-            content: "Note content №3"
-        },
-        {
-            id: 3,
-            title: "Note title №3",
-            content: "Note content №3"
-        },
-        {
-            id: 4,
-            title: "Note title №4",
-            content: "Note content №4"
-        },
-        {
-            id: 5,
-            title: "Note title №5",
-            content: "Note content №5"
-        }
-    ]
+    componentDidMount() {
+        document.title = "Заметки"
+
+        AppNotesStore.SubscribeToStore(this.updateState)
+
+        AppNotesStore.init().then(() => {
+            this.createObserver()
+        })
+    }
+
+    componentWillUnmount() {
+
+        AppDispatcher.dispatch(NotesActions.EXIT)
+
+        AppNotesStore.UnSubscribeToStore(this.updateState)
+    }
+
+    updateState = (storeState:NotesStoreState) => {
+        this.setState(state => {
+            if (state.notes.length > 0 && state.notes.length < AppNotesStore.state.notes.length) {
+                this.createObserver()
+            }
+
+            return {
+                ...state,
+                selectedNote: storeState.selectedNote,
+                notes: storeState.notes
+            }
+        })
+    }
 
     handleSelectNote = (e) => {
         let id = undefined;
@@ -47,27 +52,35 @@ export class NotesPage extends ScReact.Component<any, any> {
             id = e.target.parentNode.id;
         }
 
-        if (id !== undefined) {
-            console.log(id) // TODO
-            this.setNoteSelected(true)
-        }
-    };
+        id && AppDispatcher.dispatch(NotesActions.SELECT_NOTE, id)
+    }
 
-    setNoteSelected = (value:boolean) => {
-        this.setState(state => ({
-            ...state,
-            noteSelected: value
-        }))
+    createObserver() {
+        const observer = new IntersectionObserver(
+            function (entries, observer) {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        AppDispatcher.dispatch(NotesActions.LOAD_NOTES);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            });
+
+        observer.observe(document.querySelector(".note-container:last-child"));
+    }
+
+    searchNotes = (value:string) => {
+        AppDispatcher.dispatch(NotesActions.SEARCH_NOTES, value)
     }
 
     render() {
         return (
-            <div className={"notes-page-wrapper " + (this.state.noteSelected ? "active" : "")}>
+            <div className={"notes-page-wrapper " + (AppNotesStore.state.selectedNote !== undefined ? "active" : "")}>
                 <aside>
-                    <SearchBar />
+                    <SearchBar onChange={this.searchNotes} />
                     <div className="notes-container" onclick={this.handleSelectNote}>
-                        { this.notes.map(note => (
-                            <Note key1={note.id} id={note.id} title={note.title} content={note.content}></Note>
+                        {this.state.notes.map(note => (
+                            <Note key1={note.id} note={note} selected={AppNotesStore.state.selectedNote?.id == note.id} />
                         ))}
                     </div>
                 </aside>

@@ -1,10 +1,8 @@
-import {decode, timeout} from "./utils";
+import {decode} from "./utils";
 
 const isDebug = true;
 
-const REQUEST_TIMEOUT = 1000;
-
-const baseUrl = `http://${isDebug ? "127.0.0.1" : "you-note.ru"}:8080/api`;
+const baseUrl = `http://${isDebug ? "localhost" : "you-note.ru"}:8080/api`;
 
 enum RequestMethods {
     POST = "POST",
@@ -16,7 +14,7 @@ enum RequestMethods {
 type RequestParams = {
     headers?: HeadersInit,
     body?: any;
-    query?: Record<string, string>
+    query?: Record<string, string | number>
 }
 
 type Response = {
@@ -31,7 +29,6 @@ const Ajax = {
             method: method,
             mode: "cors",
             credentials: "include",
-            signal: timeout(REQUEST_TIMEOUT),
             headers: {
                 ...params.headers,
                 "Content-Type": "application/json",
@@ -42,24 +39,27 @@ const Ajax = {
 
         const reqUrl = new URL(baseUrl + url);
         for (const paramKey in params.query) {
-            reqUrl.searchParams.set(paramKey, params.query[paramKey]);
+            reqUrl.searchParams.set(paramKey, params.query[paramKey].toString());
         }
 
         try {
             const response:globalThis.Response = await fetch(reqUrl, options);
-            let responseData: Response = {
+
+            const responseData: Response = {
                 body: null,
                 headers: {},
                 status: 503
             };
+
             try {
-                responseData.body = response.json();
-            } catch (er) {
+                responseData.body = await response.json();
+            } catch {
                 responseData.body = null;
             }
+
             responseData.status = response.status;
             response.headers.forEach((key, value) => {
-                responseData.headers[key] = value;
+                responseData.headers[value] = key;
             });
 
             return responseData;
@@ -102,7 +102,7 @@ class AuthRequests {
                 username: response.body.username,
                 create_time: response.body.create_time,
                 image_path: response.body.image_path,
-                jwt: response.headers["Authorization"]
+                jwt: response.headers.authorization
             }
         }
 
@@ -154,24 +154,39 @@ class AuthRequests {
         });
 
         if (response.status === 200) {
-            return {
-                id: response.body.id,
-                username: response.body.username,
-                create_time: response.body.create_time,
-                image_path: response.body.image_path,
-
-            }
+            return AppProfileRequests.Get(jwt)
         } else {
             throw Error("not authorized");
         }
     };
 }
 
+class ProfileRequests {
+        Get = async (jwt:string)=> {
+            const response = await Ajax.Get("/profile" + "/get", {
+                headers: {
+                    "Authorization": jwt
+                }
+            });
+
+            if (response.status == 200) {
+                return {
+                    id: response.body.id,
+                    username: response.body.username,
+                    create_time: response.body.create_time,
+                    image_path: response.body.image_path,
+                }
+            }
+        }
+}
+
+
+
 
 class NoteRequests {
     private baseUrl = "/note";
 
-    GetAll = async (jwt: string, params: Record<string, string> | null = null) => {
+    GetAll = async (jwt: string, params: Record<string, string | number> | null = null) => {
 
         const response = await Ajax.Get(this.baseUrl + "/get_all", {
             headers: {
@@ -210,3 +225,5 @@ class NoteRequests {
 export const AppAuthRequests = new AuthRequests();
 
 export const AppNoteRequests = new NoteRequests();
+
+export const AppProfileRequests = new ProfileRequests();

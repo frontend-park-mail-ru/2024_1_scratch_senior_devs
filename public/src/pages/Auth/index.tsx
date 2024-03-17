@@ -16,6 +16,8 @@ export class AuthPage extends ScReact.Component<any, any> {
             ...state,
             selectedForm: window.location.pathname.replace("/", '')
         }))
+
+        document.title = this.state.selectedForm === "login" ? "Вход" : "Регистрация"
     }
 
     toggleForm = () => {
@@ -43,11 +45,11 @@ export class AuthPage extends ScReact.Component<any, any> {
                             <div className="toggle">
                                 <div className="toggle-panel toggle-left">
                                     <h2>Уже есть аккаунт?</h2>
-                                    <Button label="Войти" onclick={this.toggleForm}></Button>
+                                    <Button label="Войти" onClick={this.toggleForm}></Button>
                                 </div>
                                 <div className="toggle-panel toggle-right">
                                     <h2>Ещё нет аккаунта?</h2>
-                                    <Button label="Зарегистрироваться" onclick={this.toggleForm}></Button>
+                                    <Button label="Зарегистрироваться" onClick={this.toggleForm}></Button>
                                 </div>
                             </div>
                         </div>

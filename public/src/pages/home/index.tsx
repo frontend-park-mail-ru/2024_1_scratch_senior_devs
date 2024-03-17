@@ -3,9 +3,12 @@ import {VDomNode} from "@veglem/screact/dist/vdom";
 import "./style.sass"
 import {Button} from "../../components/Button/Button";
 import {AppRouter} from "../../modules/router";
+import {AppUserStore} from "../../modules/stores/UserStore";
 
 export class HomePage extends ScReact.Component<any, any> {
     componentDidMount() {
+        document.title = "Главная"
+
         const observer = new IntersectionObserver(
             function (entries, observer) {
                 entries.forEach((entry) => {
@@ -31,8 +34,8 @@ export class HomePage extends ScReact.Component<any, any> {
                 <section className="first">
                     <div className="text-container">
                         <h1>YouNote - современный сервис для ведения заметок</h1>
-                        <Button onclick={() => {
-                            AppRouter.go("/login")
+                        <Button onClick={() => {
+                            AppRouter.go(AppUserStore.state.isAuth ? "/notes" : "/login")
                         }} label="Попробовать"></Button>
                     </div>
                 </section>
