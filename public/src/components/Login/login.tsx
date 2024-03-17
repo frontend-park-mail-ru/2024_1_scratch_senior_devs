@@ -3,14 +3,18 @@ import {VDomNode} from "@veglem/screact/dist/vdom";
 import {Input} from "../Input/Input";
 import {Button} from "../Button/Button";
 import {ValidateLogin, ValidatePassword} from "../../modules/validation";
+import {AppDispatcher} from "../../modules/dispatcher";
+import {UserActions} from "../../modules/stores/UserStore";
 
 export class LoginForm extends  ScReact.Component<any, any> {
     state = {
         errorLogin: "",
         loginValidationResult: false,
+        username: "",
 
         errorPassword: "",
-        passwordValidationResult: false
+        passwordValidationResult: false,
+        password: ""
     }
 
     handleSubmit = (e) => {
@@ -19,7 +23,13 @@ export class LoginForm extends  ScReact.Component<any, any> {
         if (this.state.loginValidationResult && this.state.passwordValidationResult) {
 
             // TODO
-
+            AppDispatcher.dispatch({
+                type: UserActions.LOGIN,
+                payload: {
+                    username: this.state.username,
+                    password: this.state.password
+                }
+            })
         }
     }
 
@@ -32,6 +42,12 @@ export class LoginForm extends  ScReact.Component<any, any> {
 
     setLogin = (value:string) => {
         const {message, result} = ValidateLogin(value)
+        this.setState(s => {
+            return {
+                ...s,
+                username: value
+            }
+        })
         this.setLoginValidated(result)
 
         if (!result) {
@@ -50,6 +66,12 @@ export class LoginForm extends  ScReact.Component<any, any> {
 
     setPassword = (value:string) => {
         const {message, result} = ValidatePassword(value)
+        this.setState(s => {
+            return {
+                ...s,
+                password: value
+            }
+        })
         this.setPasswordValidated(result)
 
         if (!result) {
