@@ -28,7 +28,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
     }
 
     deleteNote = () => {
-        // TODO
+        AppDispatcher.dispatch(NotesActions.OPEN_DELETE_NOTE_DIALOG)
     }
 
     render() {

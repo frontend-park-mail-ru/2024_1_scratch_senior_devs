@@ -15,7 +15,8 @@ export type NotesStoreState = {
     selectedNote: Note,
     query: string,
     offset: number,
-    count: number
+    count: number,
+    modalOpen: boolean
 }
 
 class NotesStore extends BaseStore<NotesStoreState> {
@@ -24,7 +25,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
         selectedNote: undefined,
         query: "",
         offset: 0,
-        count: 10
+        count: 10,
+        modalOpen: false
     }
 
     constructor() {
@@ -48,10 +50,33 @@ class NotesStore extends BaseStore<NotesStoreState> {
                     await this.loadNotes();
                     break;
                 case NotesActions.EXIT:
-                    await this.exit();
+                    this.exit();
+                    break;
+                case NotesActions.OPEN_DELETE_NOTE_DIALOG:
+                    this.openModal();
+                    break;
+                case NotesActions.CLOSE_DELETE_NOTE_DIALOG:
+                    this.closeModal();
+                    break;
+                case NotesActions.DELETE_NOTE:
+                    await this.deleteNote();
                     break;
             }
         });
+    }
+
+    openModal () {
+        this.SetState(state => ({
+            ...state,
+            modalOpen: true
+        }))
+    }
+
+    closeModal () {
+        this.SetState(state => ({
+            ...state,
+            modalOpen: false
+        }))
     }
 
     exit () {
@@ -116,6 +141,12 @@ class NotesStore extends BaseStore<NotesStoreState> {
             notes: reset ? notes : state.notes.concat(notes)
         }))
     }
+
+    async deleteNote() {
+        console.log("deleteNote")
+        console.log(this.state.selectedNote.id)
+        // TODO
+    }
 }
 
 export const NotesActions = {
@@ -123,7 +154,10 @@ export const NotesActions = {
     SEARCH_NOTES: "SEARCH_NOTES",
     LOAD_NOTES: "LOAD_NOTES",
     CLOSE_NOTE: "CLOSE_NOTE",
-    EXIT: "EXIT"
+    EXIT: "EXIT_NOTES_PAGE",
+    OPEN_DELETE_NOTE_DIALOG: "OPEN_DELETE_NOTE_DIALOG",
+    CLOSE_DELETE_NOTE_DIALOG: "CLOSE_DELETE_NOTE_DIALOG",
+    DELETE_NOTE: "DELETE_NOTE"
 }
 
 export const AppNotesStore = new NotesStore();

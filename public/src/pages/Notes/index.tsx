@@ -5,6 +5,7 @@ import {SearchBar} from "../../components/SearchBar/SearchBar";
 import {NoteEditor} from "../../components/NoteEditor/NoteEditor";
 import {AppNotesStore, NotesActions, NotesStoreState} from "../../modules/stores/NotesStore";
 import {AppDispatcher} from "../../modules/dispatcher";
+import {Modal} from "../../components/Modal/Modal";
 
 export class NotesPage extends ScReact.Component<any, any> {
     state = {
@@ -77,6 +78,7 @@ export class NotesPage extends ScReact.Component<any, any> {
         return (
             <div className={"notes-page-wrapper " + (this.state.selectedNote ? "active" : "")}>
                 <aside>
+                    <Modal />
                     <SearchBar onChange={this.searchNotes} />
                     <div className="notes-container" onclick={this.handleSelectNote}>
                         {this.state.notes.map(note => (
