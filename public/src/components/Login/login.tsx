@@ -10,26 +10,25 @@ export class LoginForm extends  ScReact.Component<any, any> {
     state = {
         errorLogin: "",
         loginValidationResult: false,
-        username: "",
+        login: "",
 
         errorPassword: "",
         passwordValidationResult: false,
         password: ""
     }
 
-    handleSubmit = (e) => {
-        e.preventDefault()
+    handleSubmit = () => {
+        this.checkLogin()
+        this.checkPassword()
 
         if (this.state.loginValidationResult && this.state.passwordValidationResult) {
-
-            // TODO
-            AppDispatcher.dispatch({
-                type: UserActions.LOGIN,
-                payload: {
-                    username: this.state.username,
+            AppDispatcher.dispatch(
+                UserActions.LOGIN,
+                {
+                    username: this.state.login,
                     password: this.state.password
                 }
-            })
+            )
         }
     }
 
@@ -41,13 +40,18 @@ export class LoginForm extends  ScReact.Component<any, any> {
     }
 
     setLogin = (value:string) => {
-        const {message, result} = ValidateLogin(value)
         this.setState(s => {
             return {
                 ...s,
-                username: value
+                login: value
             }
         })
+
+        this.checkLogin()
+    }
+
+    checkLogin = () => {
+        const {message, result} = ValidateLogin(this.state.login)
         this.setLoginValidated(result)
 
         if (!result) {
@@ -65,13 +69,17 @@ export class LoginForm extends  ScReact.Component<any, any> {
     }
 
     setPassword = (value:string) => {
-        const {message, result} = ValidatePassword(value)
-        this.setState(s => {
-            return {
-                ...s,
-                password: value
-            }
-        })
+        this.setState(state => ({
+            ...state,
+            password: value
+        }))
+
+        this.checkPassword()
+    }
+
+    checkPassword = () => {
+        const {message, result} = ValidatePassword(this.state.password)
+
         this.setPasswordValidated(result)
 
         if (!result) {
@@ -103,6 +111,7 @@ export class LoginForm extends  ScReact.Component<any, any> {
                     type="text"
                     placeholder="Введите логин"
                     icon="src/assets/user.png"
+                    value={this.state.login}
                     error={this.state.errorLogin}
                     validationResult={this.state.loginValidationResult}
                     onChange={this.setLogin}
@@ -111,6 +120,7 @@ export class LoginForm extends  ScReact.Component<any, any> {
                     type="password"
                     placeholder="Введите пароль"
                     icon="src/assets/password.png"
+                    value={this.state.password}
                     error={this.state.errorPassword}
                     validationResult={this.state.passwordValidationResult}
                     onChange={this.setPassword}

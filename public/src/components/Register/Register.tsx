@@ -3,9 +3,12 @@ import {VDomNode} from "@veglem/screact/dist/vdom";
 import {Input} from "../Input/Input";
 import {Button} from "../Button/Button";
 import {ValidateLogin, ValidatePassword} from "../../modules/validation";
+import {AppDispatcher} from "../../modules/dispatcher";
+import {UserActions} from "../../modules/stores/UserStore";
 
 export class RegisterForm extends  ScReact.Component<any, any> {
     state = {
+        login: "",
         errorLogin: "",
         loginValidationResult: false,
 
@@ -18,13 +21,15 @@ export class RegisterForm extends  ScReact.Component<any, any> {
         repeatPasswordValidationResult: false
     }
 
-    handleSubmit = (e) => {
-        e.preventDefault()
-
+    handleSubmit = () => {
         if (this.state.loginValidationResult && this.state.passwordValidationResult && this.state.repeatPasswordValidationResult) {
-
-            // TODO
-
+            AppDispatcher.dispatch(
+                UserActions.REGISTER,
+                {
+                    username: this.state.login,
+                    password: this.state.password
+                }
+            )
         }
     }
 
@@ -36,6 +41,11 @@ export class RegisterForm extends  ScReact.Component<any, any> {
     }
 
     setLogin = (value:string) => {
+        this.setState(state => ({
+            ...state,
+            login: value
+        }))
+
         const {message, result} = ValidateLogin(value)
         this.setLoginValidated(result)
 
@@ -144,6 +154,7 @@ export class RegisterForm extends  ScReact.Component<any, any> {
                     placeholder="Придумайте логин"
                     icon="/src/assets/user.png"
                     onChange={this.setLogin}
+                    value={this.state.login}
                     error={this.state.errorLogin}
                     validationResult={this.state.loginValidationResult}
                 />
@@ -151,6 +162,7 @@ export class RegisterForm extends  ScReact.Component<any, any> {
                     type="password"
                     placeholder="Придумайте пароль"
                     icon="src/assets/password.png"
+                    value={this.state.password}
                     onChange={this.setPassword}
                     error={this.state.errorPassword}
                     validationResult={this.state.passwordValidationResult}
@@ -159,11 +171,12 @@ export class RegisterForm extends  ScReact.Component<any, any> {
                     type="password"
                     placeholder="Повторите пароль"
                     icon="src/assets/password.png"
+                    value={this.state.repeatPassword}
                     onChange={this.setRepeatPassword}
                     error={this.state.errorRepeatPassword}
                     validationResult={this.state.repeatPasswordValidationResult}
                 />
-                <Button label="Войти"></Button>
+                <Button label="Войти" onClick={this.handleSubmit} />
             </form>
         );
     }

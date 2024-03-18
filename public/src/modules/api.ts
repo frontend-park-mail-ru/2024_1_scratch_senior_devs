@@ -89,6 +89,10 @@ class AuthRequests {
     private baseUrl = "/auth";
 
     public Login = async (username: string, password: string) => {
+
+        console.log(username)
+        console.log(password)
+
         const response = await Ajax.Post(this.baseUrl + "/login", {
             body: {
                 username,
@@ -123,7 +127,7 @@ class AuthRequests {
                 username: response.body.username,
                 create_time: response.body.create_time,
                 image_path: response.body.image_path,
-                jwt: response.headers["Authorization"]
+                jwt: response.headers.authorization
             };
         }
 
@@ -147,6 +151,7 @@ class AuthRequests {
     };
 
     CheckUser = async (jwt: string) => {
+
         const response = await Ajax.Get(this.baseUrl + "/check_user", {
             headers: {
                 "Authorization": jwt
@@ -162,22 +167,63 @@ class AuthRequests {
 }
 
 class ProfileRequests {
-        Get = async (jwt:string)=> {
-            const response = await Ajax.Get("/profile" + "/get", {
-                headers: {
-                    "Authorization": jwt
-                }
-            });
+    Get = async (jwt:string)=> {
+        const response = await Ajax.Get("/profile" + "/get", {
+            headers: {
+                "Authorization": jwt
+            }
+        });
 
-            if (response.status == 200) {
-                return {
-                    id: response.body.id,
-                    username: response.body.username,
-                    create_time: response.body.create_time,
-                    image_path: response.body.image_path,
-                }
+        if (response.status == 200) {
+            return {
+                id: response.body.id,
+                username: response.body.username,
+                create_time: response.body.create_time,
+                image_path: response.body.image_path,
             }
         }
+    }
+
+    UpdateAvatar = async(photo:File, jwt:string) => {
+        const form_data = new FormData()
+
+        form_data.append('avatar', photo)
+
+        const options: RequestInit = {
+            method: RequestMethods.POST,
+            mode: "cors",
+            credentials: "include",
+            headers: {
+                "Authorization": jwt
+            },
+            body: form_data
+        }
+
+        const response = await fetch(baseUrl + "/profile/update_avatar/", options);
+
+        const body = await response.json()
+
+        return body.image_path
+    }
+
+    UpdatePassword = async(oldPassword:string, newPassword:string, jwt:string)=> {
+        console.log("UpdatePassword")
+        const response = await Ajax.Post("/profile/update/", {
+            headers: {
+                "Authorization": jwt
+            },
+            body: {
+                description: "string",
+                password: {
+                    new: newPassword,
+                    old: oldPassword
+                }
+            }
+        });
+
+        console.log(response.status)
+        return response.status
+    }
 }
 
 
@@ -187,7 +233,6 @@ class NoteRequests {
     private baseUrl = "/note";
 
     GetAll = async (jwt: string, params: Record<string, string | number> | null = null) => {
-
         const response = await Ajax.Get(this.baseUrl + "/get_all", {
             headers: {
                 "Authorization": jwt
@@ -206,7 +251,6 @@ class NoteRequests {
     };
 
     Get = async (id: number, jwt: string) => {
-
         const response = await Ajax.Get(this.baseUrl + "/" + id, {
             headers: {
                 "Authorization": jwt
@@ -220,6 +264,16 @@ class NoteRequests {
 
         throw Error(response.body.message);
     };
+
+    Delete = async (id: number, jwt: string) => {
+        const response = await Ajax.Delete(this.baseUrl + "/" + id + "/delete", {
+            headers: {
+                "Authorization": jwt
+            },
+        });
+
+        return response.status
+    }
 }
 
 export const AppAuthRequests = new AuthRequests();

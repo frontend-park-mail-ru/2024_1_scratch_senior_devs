@@ -1,0 +1,94 @@
+@import "/public/src/utils/variables.sass"
+
+.toast
+	background: $modal-background
+	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1)
+	padding: 15px 35px 15px 20px
+	position: absolute
+	bottom: 25px
+	right: 30px
+	border-radius: 12px
+	min-width: 300px
+	z-index: 1000
+	overflow: hidden
+	animation: fadeLeft 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.35)
+	transition: 0.5s
+
+	&.hide
+		animation: fadeRight 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.35)
+
+	.toast-content
+		display: flex
+		align-items: center
+		gap: 15px
+		pointer-events: none
+
+	@keyframes fadeLeft
+		0%
+			transform: translateX(calc(100% + 30px))
+
+		100%
+			transform: translateX(0%)
+
+	@keyframes fadeRight
+		0%
+			transform: translateX(0%)
+
+		100%
+			transform: translateX(calc(100% + 30px))
+
+.toast-content
+	.toast-icon
+		height: 30px
+		width: 30px
+
+	.content
+		display: flex
+		flex-direction: column
+
+		.title
+			font-size: 20px
+			color: $text-main-color
+			font-weight: 600
+
+		.message
+			font-size: 14px
+			color: $text-main-color
+
+.toast
+	.toast-close-btn
+		position: absolute
+		top: 10px
+		right: 15px
+		cursor: pointer
+		width: 16px
+		height: 16px
+		opacity: 0.8
+		filter: invert(80%)
+
+		&:hover
+			opacity: 1
+
+	.progress
+		position: absolute
+		bottom: 0
+		left: 0
+		height: 3px
+		width: 100%
+		background: transparent
+
+		&:before
+			content: ''
+			position: absolute
+			bottom: 0
+			right: 0
+			height: 100%
+			width: 100%
+			animation: progress 3s linear forwards
+			background-color: #546189
+
+			@keyframes progress
+				100%
+					right: 100%
+
+

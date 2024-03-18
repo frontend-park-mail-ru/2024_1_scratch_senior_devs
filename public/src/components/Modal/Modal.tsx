@@ -39,6 +39,7 @@ export class Modal extends ScReact.Component<any, any> {
 
     deleteNote = () => {
         AppDispatcher.dispatch(NotesActions.DELETE_NOTE)
+        AppDispatcher.dispatch(NotesActions.CLOSE_DELETE_NOTE_DIALOG)
     }
 
     render() {
@@ -46,16 +47,15 @@ export class Modal extends ScReact.Component<any, any> {
             <div className={"modal-wrapper " + (this.state.open ? "active" : "")}>
                 <div className="overlay"></div>
                 <div className="modal-content">
-                    <h3>Удалить заметку?</h3>
+                    <h2>Удалить заметку?</h2>
                     <span>Заметка и данные в ней будут удалены без возможности восстановления</span>
                     <div className="buttons-container">
                         <Button label="Удалить" onClick={this.deleteNote}/>
-                        <Button label="Отменить" onClick={this.closeModal}/>
+                        <Button label="Отменить" className="cancel-btn" onClick={this.closeModal}/>
                     </div>
                     <Img src="/src/assets/close.svg" className="close-modal-btn" onClick={this.closeModal}/>
                 </div>
             </div>
-
         )
     }
 }

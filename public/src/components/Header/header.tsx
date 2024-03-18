@@ -9,17 +9,19 @@ import {AppUserStore} from "../../modules/stores/UserStore";
 
 export class Header extends ScReact.Component<any, any>{
     state = {
-        isAuth: false
+        isAuth: false,
+        avatarUrl: ""
     }
 
     componentDidMount() {
         AppUserStore.SubscribeToStore(this.updateState)
     }
 
-    updateState = (storeState) => {
+    updateState = (store) => {
         this.setState(state => ({
             ...state,
-            isAuth: storeState.isAuth
+            isAuth: store.isAuth,
+            avatarUrl: store.avatarUrl
         }))
     }
 
@@ -27,7 +29,7 @@ export class Header extends ScReact.Component<any, any>{
         return (
             <header id="header">
                 <Logo />
-                { this.state.isAuth ? <Profile /> : (this.props.currPage !== AuthPage ? <Button label="Вход" onClick={() => AppRouter.go("/login")} /> : "") }
+                { this.state.isAuth ? <Profile avatarUrl={this.state.avatarUrl}/> : (this.props.currPage !== AuthPage ? <Button label="Вход" onClick={() => AppRouter.go("/login")} /> : "") }
             </header>
         )
     }

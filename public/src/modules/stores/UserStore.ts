@@ -1,5 +1,5 @@
 import {AppDispatcher} from "../dispatcher";
-import {AppAuthRequests} from "../api";
+import {AppAuthRequests, AppProfileRequests} from "../api";
 import {AppRouter} from "../router";
 import {BaseStore} from "./BaseStore";
 
@@ -7,14 +7,16 @@ export type UserStoreState = {
     JWT: string | null | undefined,
     username: string,
     avatarUrl: string,
-    isAuth: boolean
+    isAuth: boolean,
+    error:string
 }
 class UserStore extends BaseStore<UserStoreState>{
     state = {
         JWT: null,
         username: "",
         avatarUrl: "",
-        isAuth: false
+        isAuth: false,
+        error: ""
     }
 
     constructor() {
@@ -37,8 +39,13 @@ class UserStore extends BaseStore<UserStoreState>{
                     await this.register(action.payload);
                     break;
                 case UserActions.CHECK_USER:
-                    console.log("action handled");
                     await this.checkUser();
+                    break;
+                case UserActions.UPDATE_AVATAR:
+                    await this.updateAvatar(action.payload);
+                    break;
+                case UserActions.UPDATE_PASSWORD:
+                    await this.updatePassword(action.payload);
                     break;
             }
         });
@@ -56,8 +63,6 @@ class UserStore extends BaseStore<UserStoreState>{
                     avatarUrl: res.image_path
                 }
             })
-            console.log(res.jwt)
-            console.log(this.state.JWT)
             localStorage.setItem('Authorization', this.state.JWT)
             console.log("login successfull");
             AppRouter.go("/notes");
@@ -87,6 +92,7 @@ class UserStore extends BaseStore<UserStoreState>{
     private async register(credentials) {
         try {
             const res = await AppAuthRequests.SignUp(credentials.username, credentials.password);
+            console.log(res)
             this.SetState(s => {
                 return {
                     ...s,
@@ -107,8 +113,6 @@ class UserStore extends BaseStore<UserStoreState>{
         try {
             const res = await AppAuthRequests.CheckUser(this.state.JWT)
 
-            console.log(res)
-
             this.SetState(s => {
                 return {
                     ...s,
@@ -122,6 +126,37 @@ class UserStore extends BaseStore<UserStoreState>{
             console.log(err);
         }
     }
+
+    private async updateAvatar(file:File) {
+        const avatarUrl = await AppProfileRequests.UpdateAvatar(file, this.state.JWT)
+
+        this.SetState(state => {
+            return {
+                ...state,
+                avatarUrl: avatarUrl
+            }
+        })
+    }
+
+    private async updatePassword({oldPassword, newPassword}) {
+        console.log("updatePassword")
+        const status = await AppProfileRequests.UpdatePassword(oldPassword, newPassword, this.state.JWT)
+
+        if (status == 200) {
+            // TODO
+            // new Toast
+
+            this.SetState(state => ({
+                ...state,
+                error: ""
+            }))
+        } else {
+            this.SetState(state => ({
+                ...state,
+                error: "Неправильный пароль"
+            }))
+        }
+    }
 }
 
 export const AppUserStore = new UserStore();
@@ -130,5 +165,7 @@ export const UserActions = {
     LOGIN: "LOGIN",
     LOGOUT: "LOGOUT",
     REGISTER: "REGISTER",
-    CHECK_USER: "CHECK_USER"
+    CHECK_USER: "CHECK_USER",
+    UPDATE_AVATAR: "UPDATE_AVATAR",
+    UPDATE_PASSWORD: "UPDATE_PASSWORD"
 }

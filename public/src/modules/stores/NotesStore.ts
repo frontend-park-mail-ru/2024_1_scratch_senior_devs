@@ -143,9 +143,16 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     async deleteNote() {
-        console.log("deleteNote")
-        console.log(this.state.selectedNote.id)
-        // TODO
+        const status = await AppNoteRequests.Delete(this.state.selectedNote.id, AppUserStore.state.JWT)
+
+        if (status == 204) {
+            this.SetState(state => ({
+                ...state,
+                notes: state.notes.filter(item => item.id !== this.state.selectedNote.id)
+            }))
+
+            this.closeNote()
+        }
     }
 }
 
