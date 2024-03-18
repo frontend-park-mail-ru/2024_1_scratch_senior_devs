@@ -10,7 +10,7 @@ const isDebug = false;
 
 const REQUEST_TIMEOUT = 2000;
 
-const baseUrl = `http://${isDebug ? "127.0.0.1" : "you-note.ru"}:8080/api`;
+const baseUrl = `${isDebug ? "http://127.0.0.1:8080/api" : "https://you-note.ru/api"}`;
 
 const methods = {
     POST: "POST",
