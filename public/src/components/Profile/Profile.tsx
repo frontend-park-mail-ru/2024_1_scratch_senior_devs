@@ -5,6 +5,10 @@ import {Button} from "../Button/Button";
 import {AppUserStore, UserActions} from "../../modules/stores/UserStore";
 import {AppDispatcher} from "../../modules/dispatcher";
 import {UpdatePasswordForm} from "../UpdatePassword/UpdatePassword";
+import {AppToasts} from "../Toasts/Toasts";
+
+const MEGABYTE_SIZE = 1024 * 1024
+const MAX_AVATAR_SIZE = 5 * MEGABYTE_SIZE
 
 export class Profile extends ScReact.Component<any, any> {
     state = {
@@ -22,7 +26,7 @@ export class Profile extends ScReact.Component<any, any> {
     }
 
     handleClickOutside = (e) => {
-        if (!document.querySelector(".toggle-profile-button").contains(e.target) && !document.querySelector(".popup-content").contains(e.target) && !document.querySelector(".modal-wrapper").contains(e.target)) {
+        if (!document.querySelector(".toast")?.contains(e.target) && !document.querySelector(".toggle-profile-button").contains(e.target) && !document.querySelector(".popup-content").contains(e.target) && !document.querySelector(".modal-wrapper").contains(e.target)) {
             this.close()
         }
     }
@@ -46,18 +50,29 @@ export class Profile extends ScReact.Component<any, any> {
     }
 
     handlePhotoUpload = (e) => {
+        const file = e.target.files[0]
+
+        if (file.size > MAX_AVATAR_SIZE) {
+            AppToasts.error("Фото слишком большое")
+            console.log(e.target)
+            e.target.value = null
+            return
+        }
+
         this.setState(state => ({
             ...state,
             inUpload: true
         }))
 
-        AppDispatcher.dispatch(UserActions.UPDATE_AVATAR, e.target.files[0])
+        AppDispatcher.dispatch(UserActions.UPDATE_AVATAR, file)
 
         setTimeout(() => {
             this.setState(state => ({
                 ...state,
                 inUpload: false
             }))
+
+            e.target.value = null
         }, 3000)
     }
 
@@ -118,6 +133,8 @@ export class Profile extends ScReact.Component<any, any> {
                 </div>
 
                 {this.state.updatePasswordFormOpen ? <UpdatePasswordForm open={this.state.updatePasswordFormOpen} closeModal={this.closeModal}/> : "" }
+                {/*<UpdatePasswordForm open={this.state.updatePasswordFormOpen} closeModal={this.closeModal}/>*/}
+
 
             </div>
         )

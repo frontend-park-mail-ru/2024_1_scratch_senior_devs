@@ -40,6 +40,9 @@ export class UpdatePasswordForm extends ScReact.Component<any, any> {
             this.setPasswordError("Неправильный пароль")
             this.setPasswordValidated(false)
         } else {
+            // TODO
+            // При логауте все крашится
+            console.log("fasdfasdfasdfasdfasdfasdfasdfsdf")
             this.closeModal()
             AppToasts.success("Пароль успешно изменен")
         }
@@ -58,6 +61,8 @@ export class UpdatePasswordForm extends ScReact.Component<any, any> {
         //         repeatPasswordValidationResult: false
         //     }))
         // }, 500)
+
+        console.log("closeModal")
 
         this.props.closeModal()
     }
