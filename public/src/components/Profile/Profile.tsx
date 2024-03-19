@@ -69,6 +69,7 @@ export class Profile extends ScReact.Component<any, any> {
     }
 
     closeModal = () => {
+        console.log("closeModal")
         this.setState(state => ({
             ...state,
             updatePasswordFormOpen: false
@@ -78,9 +79,6 @@ export class Profile extends ScReact.Component<any, any> {
     render() {
         return (
             <div className={"user-profile-wrapper " + (this.state.open ? "open" : "")}>
-
-                <UpdatePasswordForm open={this.state.updatePasswordFormOpen} closeModal={this.closeModal}/>
-
                 <div className="toggle-profile-button" onclick={this.toggleOpen}>
                     <div className="slider one"></div>
                     <div className="slider two"></div>
@@ -89,7 +87,6 @@ export class Profile extends ScReact.Component<any, any> {
                 <div className="panel">
                     <div className="popup-content">
                         <div className="user-avatar-container">
-
                             <Img src={"http://localhost/images/" + this.props.avatarUrl} className={"user-avatar " + (this.state.inUpload ? "loading" : "")}/>
 
                             <form className="upload-preview">
@@ -119,6 +116,9 @@ export class Profile extends ScReact.Component<any, any> {
                         <Button label="Выйти" className="logout-btn" onClick={this.handleLogout}/>
                     </div>
                 </div>
+
+                {this.state.updatePasswordFormOpen ? <UpdatePasswordForm open={this.state.updatePasswordFormOpen} closeModal={this.closeModal}/> : "" }
+
             </div>
         )
     }

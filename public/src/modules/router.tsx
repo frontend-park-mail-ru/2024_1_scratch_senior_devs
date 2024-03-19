@@ -7,14 +7,12 @@ import {AuthPage} from "../pages/Auth";
 import {NotesPage} from "../pages/Notes";
 import {Header} from "../components/Header/header";
 import {Background} from "../components/Background/Background";
-import {Toast} from "../components/Toast/Toast";
+import {Toasts} from "../components/Toasts/Toasts";
 
 type routerState = {
     currPage: {new(): Component<any, any> }
     PageProps: any
 }
-
-
 
 export class Router extends ScReact.Component<any, routerState> {
     private pages: Map<string, {page: {new(): Component<any, any> }, loader: () => Promise<any>}>
@@ -91,9 +89,7 @@ export class Router extends ScReact.Component<any, routerState> {
     render(): VDomNode {
         return (
             <div>
-                {/*<div className="toasts-wrapper">*/}
-                {/*    <Toast />*/}
-                {/*</div>*/}
+                <Toasts />
                 <Header currPage={this.state.currPage}/>
                 { ScReact.createComponent(this.state.currPage, {...this.state.PageProps, key: this.state.currPage.name}) }
                 { this.state.currPage !== NotesPage ? <Background currPage={this.state.currPage}/> : ""}

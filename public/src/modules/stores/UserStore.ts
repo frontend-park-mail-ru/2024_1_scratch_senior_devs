@@ -8,15 +8,20 @@ export type UserStoreState = {
     username: string,
     avatarUrl: string,
     isAuth: boolean,
-    error:string
+    errorLoginForm: string | undefined,
+    errorRegisterForm: string | undefined,
+    errorUpdatePasswordForm: string | undefined,
 }
+
 class UserStore extends BaseStore<UserStoreState>{
     state = {
         JWT: null,
         username: "",
         avatarUrl: "",
         isAuth: false,
-        error: ""
+        errorLoginForm: undefined,
+        errorRegisterForm: undefined,
+        errorUpdatePasswordForm: undefined
     }
 
     constructor() {
@@ -52,6 +57,11 @@ class UserStore extends BaseStore<UserStoreState>{
     }
 
     private async login(credentials){
+        this.SetState(state => ({
+            ...state,
+            errorLoginForm: undefined
+        }))
+
         try {
             const res = await AppAuthRequests.Login(credentials.username, credentials.password);
             this.SetState(s => {
@@ -68,6 +78,12 @@ class UserStore extends BaseStore<UserStoreState>{
             AppRouter.go("/notes");
         } catch (err) {
             console.log(err);
+
+            this.SetState(state => ({
+                ...state,
+                errorLoginForm: "Неправильный логин или пароль"
+            }))
+
         }
     }
 
@@ -90,15 +106,21 @@ class UserStore extends BaseStore<UserStoreState>{
     }
 
     private async register(credentials) {
+        this.SetState(state => ({
+            ...state,
+            errorRegisterForm: undefined
+        }))
+
         try {
             const res = await AppAuthRequests.SignUp(credentials.username, credentials.password);
-            console.log(res)
+
             this.SetState(s => {
                 return {
                     ...s,
                     isAuth: true,
                     username: res.username,
-                    avatarUrl: res.image_path
+                    avatarUrl: res.image_path,
+                    JWT: res.jwt
                 }
             })
             localStorage.setItem('Authorization', this.state.JWT)
@@ -106,6 +128,12 @@ class UserStore extends BaseStore<UserStoreState>{
             AppRouter.go("/notes")
         } catch (err) {
             console.log(err);
+
+            console.log("username already taken");
+            this.SetState(state => ({
+                ...state,
+                errorRegisterForm: "Неправильный пароль"
+            }))
         }
     }
 
@@ -139,22 +167,26 @@ class UserStore extends BaseStore<UserStoreState>{
     }
 
     private async updatePassword({oldPassword, newPassword}) {
-        console.log("updatePassword")
-        const status = await AppProfileRequests.UpdatePassword(oldPassword, newPassword, this.state.JWT)
+        try {
+            console.log("updatePassword")
+            await AppProfileRequests.UpdatePassword(oldPassword, newPassword, this.state.JWT)
 
-        if (status == 200) {
             // TODO
             // new Toast
 
             this.SetState(state => ({
                 ...state,
-                error: ""
+                errorUpdatePasswordForm: undefined
             }))
-        } else {
-            this.SetState(state => ({
-                ...state,
-                error: "Неправильный пароль"
-            }))
+        }
+        catch (err) {
+            if (err.message == "Неверный пароль") {
+                console.log("fsdadfasdfasdf")
+                this.SetState(state => ({
+                    ...state,
+                    errorUpdatePasswordForm: "Неправильный пароль"
+                }))
+            }
         }
     }
 }

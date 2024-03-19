@@ -5,7 +5,8 @@ import {Img} from "../Image/Image";
 import "./UpdatePassword.sass"
 import {ValidatePassword} from "../../modules/validation";
 import {AppDispatcher} from "../../modules/dispatcher";
-import {UserActions, UserStoreState} from "../../modules/stores/UserStore";
+import {AppUserStore, UserActions, UserStoreState} from "../../modules/stores/UserStore";
+import {AppToasts} from "../Toasts/Toasts";
 
 export class UpdatePasswordForm extends ScReact.Component<any, any> {
     state = {
@@ -19,12 +20,12 @@ export class UpdatePasswordForm extends ScReact.Component<any, any> {
     }
 
     componentDidMount() {
-        // AppUserStore.SubscribeToStore(this.updateState)
+        AppUserStore.SubscribeToStore(this.updateState)
         document.addEventListener('click', this.handleClickOutside, true)
     }
 
     componentWillUnmount() {
-        // AppUserStore.UnSubscribeToStore(this.updateState)
+        AppUserStore.UnSubscribeToStore(this.updateState)
         document.removeEventListener('click', this.handleClickOutside, true)
     }
 
@@ -35,27 +36,28 @@ export class UpdatePasswordForm extends ScReact.Component<any, any> {
     }
 
     updateState = (store:UserStoreState) => {
-        if (store.error == "Неправильный пароль") {
+        if (store.errorUpdatePasswordForm == "Неправильный пароль") {
             this.setPasswordError("Неправильный пароль")
             this.setPasswordValidated(false)
         } else {
-            // TODO
-            // this.closeModal()
+            this.closeModal()
+            AppToasts.success("Пароль успешно изменен")
         }
     }
 
     closeModal = () => {
-        setTimeout(() => {
-            this.setState(state => ({
-                password: "",
-                errorPassword: "",
-                passwordValidationResult: false,
-
-                repeatPassword: "",
-                errorRepeatPassword: "",
-                repeatPasswordValidationResult: false
-            }))
-        }, 500)
+        // TODO
+        // this.state.timer = setTimeout(() => {
+        //     this.setState(() => ({
+        //         password: "",
+        //         errorPassword: "",
+        //         passwordValidationResult: false,
+        //
+        //         repeatPassword: "",
+        //         errorRepeatPassword: "",
+        //         repeatPasswordValidationResult: false
+        //     }))
+        // }, 500)
 
         this.props.closeModal()
     }

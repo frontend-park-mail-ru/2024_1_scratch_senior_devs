@@ -131,6 +131,8 @@ class AuthRequests {
             };
         }
 
+        console.log(response.status)
+
         throw Error(response.body.message);
     };
 
@@ -221,8 +223,11 @@ class ProfileRequests {
             }
         });
 
-        console.log(response.status)
-        return response.status
+        if (response.status == 200) {
+            return
+        }
+
+        throw Error("Неверный пароль");
     }
 }
 
@@ -246,6 +251,7 @@ class NoteRequests {
             }
             return response.body;
         }
+
 
         throw Error(response.body.message);
     };

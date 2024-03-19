@@ -4,7 +4,7 @@ import {Input} from "../Input/Input";
 import {Button} from "../Button/Button";
 import {ValidateLogin, ValidatePassword} from "../../modules/validation";
 import {AppDispatcher} from "../../modules/dispatcher";
-import {UserActions} from "../../modules/stores/UserStore";
+import {AppUserStore, UserActions, UserStoreState} from "../../modules/stores/UserStore";
 
 export class RegisterForm extends  ScReact.Component<any, any> {
     state = {
@@ -19,6 +19,21 @@ export class RegisterForm extends  ScReact.Component<any, any> {
         repeatPassword: "",
         errorRepeatPassword: "",
         repeatPasswordValidationResult: false
+    }
+
+    componentDidMount() {
+        AppUserStore.SubscribeToStore(this.updateState)
+    }
+
+    componentWillUnmount() {
+        AppUserStore.UnSubscribeToStore(this.updateState)
+    }
+
+    updateState = (store:UserStoreState) => {
+        if (store.errorRegisterForm !== undefined) {
+            this.setLoginError(store.errorRegisterForm)
+            this.setLoginValidated(false)
+        }
     }
 
     handleSubmit = () => {
