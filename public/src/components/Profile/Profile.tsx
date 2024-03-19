@@ -93,7 +93,7 @@ export class Profile extends ScReact.Component<any, any> {
                             <Img src={"http://localhost/images/" + this.props.avatarUrl} className={"user-avatar " + (this.state.inUpload ? "loading" : "")}/>
 
                             <form className="upload-preview">
-                                <input type="file" id="upload-image-input" hidden="true" onchange={this.handlePhotoUpload}/>
+                                <input type="file" accept=".jpg,.png" id="upload-image-input" hidden="true" onchange={this.handlePhotoUpload}/>
                                 <label htmlFor="upload-image-input"></label>
                                 <Img src="src/assets/photo.svg" className="upload-preview-icon"/>
                             </form>
