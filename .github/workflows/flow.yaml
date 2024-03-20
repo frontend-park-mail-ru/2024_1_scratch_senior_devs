@@ -34,4 +34,4 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.PRIVATE_KEY }}
-          script: cp -r /home/${{ secrets.USERNAME}}/frontend/2024_1_scratch_senior_devs/dist/* /opt/public/
+          script: sudo cp -r /home/${{ secrets.USERNAME}}/frontend/2024_1_scratch_senior_devs/dist/* /opt/public/
