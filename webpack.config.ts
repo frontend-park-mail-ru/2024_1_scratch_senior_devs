@@ -2,13 +2,9 @@ import path from 'path';
 import webpack from "webpack";
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-
 import 'webpack-dev-server'
 
 const isProduction = process.env.NODE_ENV == 'production';
-
-const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : 'style-loader';
 
 const config : webpack.Configuration = {
     entry: path.resolve(__dirname, 'public', 'index.ts'),
@@ -48,23 +44,6 @@ const config : webpack.Configuration = {
                         ]
                     }
                 }
-            },
-            {
-                test: /\.css$/i,
-                use: [stylesHandler,'css-loader'],
-            },
-            {
-                test: /\.s[ac]ss$/i,
-                use: [stylesHandler, 'css-loader', 'sass-loader'],
-            },
-            {
-                test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
-                use: [
-                    {
-                        loader: 'file-loader',
-                    },
-                ],
-                type: 'asset'
             }
 
             // Add your rules for custom modules here
@@ -80,8 +59,7 @@ module.exports = () => {
     if (isProduction) {
         config.mode = 'production';
         
-        config.plugins.push(new MiniCssExtractPlugin());
-        
+
         
     } else {
         config.mode = 'development';
