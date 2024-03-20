@@ -26,7 +26,7 @@ export class Profile extends ScReact.Component<any, any> {
     }
 
     handleClickOutside = (e) => {
-        if (!document.querySelector(".toast")?.contains(e.target) && !document.querySelector(".toggle-profile-button").contains(e.target) && !document.querySelector(".popup-content").contains(e.target) && !document.querySelector(".modal-wrapper").contains(e.target)) {
+        if (!document.querySelector(".toast")?.contains(e.target) && !document.querySelector(".toggle-profile-button")?.contains(e.target) && !document.querySelector(".popup-content")?.contains(e.target) && !document.querySelector(".modal-wrapper")?.contains(e.target)) {
             this.close()
         }
     }

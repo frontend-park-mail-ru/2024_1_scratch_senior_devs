@@ -8,6 +8,7 @@ import {NotesPage} from "../pages/Notes";
 import {Header} from "../components/Header/header";
 import {Background} from "../components/Background/Background";
 import {Toasts} from "../components/Toasts/Toasts";
+import {AppUserStore} from "./stores/UserStore";
 
 type routerState = {
     currPage: {new(): Component<any, any> }
@@ -39,14 +40,21 @@ export class Router extends ScReact.Component<any, routerState> {
     }
 
     private initPages = () => {
-        this.pages['/'] = {page: HomePage}
-        this.pages['/login'] = {page: AuthPage}
-        this.pages['/register'] = {page: AuthPage}
-        this.pages['/notes'] = {page: NotesPage}
+        this.pages['/'] = {page: HomePage, pageProps: {}}
+        this.pages['/login'] = {page: AuthPage, pageProps: {needAuth: false}}
+        this.pages['/register'] = {page: AuthPage, pageProps: {needAuth: false}}
+        this.pages['/notes'] = {page: NotesPage, pageProps: {needAuth: true}}
     }
 
     public go(path: string): void {
         const page: {page: {new(): Component<any, any> }, pageProps: object, loader: () => Promise<any>} = this.pages[path];
+
+        // if (page.pageProps.needAuth && !AppUserStore.state.isAuth) {
+        //     console.log("zsdf")
+        //     this.go("/")
+        //     return
+        // }
+
 
         history.pushState({ path }, "", path);
 

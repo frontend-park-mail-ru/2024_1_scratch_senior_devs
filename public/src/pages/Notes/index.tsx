@@ -14,6 +14,7 @@ export class NotesPage extends ScReact.Component<any, any> {
     }
 
     componentDidMount() {
+        console.log("componentDidMount")
         document.title = "Заметки"
 
         AppNotesStore.SubscribeToStore(this.updateState)
@@ -24,7 +25,6 @@ export class NotesPage extends ScReact.Component<any, any> {
     }
 
     componentWillUnmount() {
-
         AppDispatcher.dispatch(NotesActions.EXIT)
 
         AppNotesStore.UnSubscribeToStore(this.updateState)
