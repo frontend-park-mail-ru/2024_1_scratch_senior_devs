@@ -58,14 +58,18 @@ const config : webpack.Configuration = {
                 use: [stylesHandler, 'css-loader', 'sass-loader'],
             },
             {
-                test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
+                test: /\.(eot|svg|png|jpg|gif)$/i,
                 use: [
                     {
                         loader: 'file-loader',
                     },
                 ],
                 type: 'asset'
-            }
+            },
+            {
+                test: /\.(woff|woff2|eot|ttf|otf)$/i,
+                type: 'asset/resource',
+            },
 
             // Add your rules for custom modules here
             // Learn more about loaders from https://webpack.js.org/loaders/
