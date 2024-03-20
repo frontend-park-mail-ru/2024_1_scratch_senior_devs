@@ -2,13 +2,13 @@ import {decode} from "./utils";
 
 const isDebug = false;
 
-const baseUrl = `${isDebug ? "http://localhost:8080/api" : "https://you-note.ru/api"}`;
+const baseUrl = "https://you-note.ru/api";
 
 enum RequestMethods {
     POST = "POST",
     GET = "GET",
     DELETE = "DELETE",
-    PUT = "PUT"
+    PUT = "PUT",
 }
 
 type RequestParams = {
