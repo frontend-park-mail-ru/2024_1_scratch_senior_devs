@@ -1,6 +1,6 @@
 import {decode} from "./utils";
 
-const isDebug = false;
+export const isDebug = false;
 
 const baseUrl = "https://you-note.ru/api";
 

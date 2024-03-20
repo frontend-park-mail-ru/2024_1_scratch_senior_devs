@@ -6,6 +6,7 @@ import {AppUserStore, UserActions} from "../../modules/stores/UserStore";
 import {AppDispatcher} from "../../modules/dispatcher";
 import {UpdatePasswordForm} from "../UpdatePassword/UpdatePassword";
 import {AppToasts} from "../Toasts/Toasts";
+import {isDebug} from "../../modules/api";
 
 const MEGABYTE_SIZE = 1024 * 1024
 const MAX_AVATAR_SIZE = 5 * MEGABYTE_SIZE
@@ -102,7 +103,7 @@ export class Profile extends ScReact.Component<any, any> {
                 <div className="panel">
                     <div className="popup-content">
                         <div className="user-avatar-container">
-                            <Img src={"http://localhost/images/" + this.props.avatarUrl} className={"user-avatar " + (this.state.inUpload ? "loading" : "")}/>
+                            <Img src={isDebug ? "http://localhost/images/" : "https://you-note.ru/images/" + this.props.avatarUrl} className={"user-avatar " + (this.state.inUpload ? "loading" : "")}/>
 
                             <form className="upload-preview">
                                 <input type="file" accept=".jpg,.png" id="upload-image-input" hidden="true" onchange={this.handlePhotoUpload}/>
