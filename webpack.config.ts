@@ -59,11 +59,11 @@ const config : webpack.Configuration = {
             },
             {
                 test: /\.(eot|svg|png|jpg|gif)$/i,
-                use: [
-                    {
-                        loader: 'file-loader',
-                    },
-                ],
+                // use: [
+                //     {
+                //         loader: 'file-loader',
+                //     },
+                // ],
                 type: 'asset'
             },
             {
