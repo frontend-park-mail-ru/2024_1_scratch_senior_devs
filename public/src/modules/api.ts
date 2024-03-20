@@ -1,6 +1,6 @@
 import {decode} from "./utils";
 
-const isDebug = true;
+const isDebug = false;
 
 const baseUrl = `${isDebug ? "http://localhost:8080/api" : "https://you-note.ru/api"}`;
 
