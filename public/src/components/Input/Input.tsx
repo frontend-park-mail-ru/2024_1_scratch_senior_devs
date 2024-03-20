@@ -1,6 +1,7 @@
 import {ScReact} from "@veglem/screact";
 import "./Input.sass"
-
+import "../../../src/assets/eye.svg"
+import "../../../src/assets/eye-slash.svg"
 
 type InputState = {
     type?: string,

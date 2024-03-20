@@ -13,7 +13,7 @@ const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : 'style-loader
 const config : webpack.Configuration = {
     entry: path.resolve(__dirname, 'public', 'index.ts'),
     output: {
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, 'dist')
     },
     devServer: {
         open: true,
@@ -59,8 +59,13 @@ const config : webpack.Configuration = {
             },
             {
                 test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
-                type: 'asset',
-            },
+                use: [
+                    {
+                        loader: 'file-loader',
+                    },
+                ],
+                type: 'asset'
+            }
 
             // Add your rules for custom modules here
             // Learn more about loaders from https://webpack.js.org/loaders/
