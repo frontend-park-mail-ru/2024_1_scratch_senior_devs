@@ -9,7 +9,7 @@ import {AppToasts} from "../Toasts/Toasts";
 import {isDebug} from "../../modules/api";
 
 const MEGABYTE_SIZE = 1024 * 1024
-const MAX_AVATAR_SIZE = 5 * MEGABYTE_SIZE
+const MAX_AVATAR_SIZE = 1 * MEGABYTE_SIZE
 
 export class Profile extends ScReact.Component<any, any> {
     state = {
