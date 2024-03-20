@@ -6,7 +6,6 @@ import "./UpdatePassword.sass"
 import {ValidatePassword} from "../../modules/validation";
 import {AppDispatcher} from "../../modules/dispatcher";
 import {AppUserStore, UserActions, UserStoreState} from "../../modules/stores/UserStore";
-import {AppToasts} from "../Toasts/Toasts";
 
 export class UpdatePasswordForm extends ScReact.Component<any, any> {
     state = {
@@ -16,7 +15,9 @@ export class UpdatePasswordForm extends ScReact.Component<any, any> {
 
         repeatPassword: "",
         errorRepeatPassword: "",
-        repeatPasswordValidationResult: false
+        repeatPasswordValidationResult: false,
+
+        open: false
     }
 
     componentDidMount() {
@@ -36,15 +37,20 @@ export class UpdatePasswordForm extends ScReact.Component<any, any> {
     }
 
     updateState = (store:UserStoreState) => {
+        this.setState(state => ({
+            ...state,
+            open: store.updatePasswordFormOpen
+        }))
+
         if (store.errorUpdatePasswordForm == "Неправильный пароль") {
             this.setPasswordError("Неправильный пароль")
             this.setPasswordValidated(false)
         } else {
             // TODO
             // При логауте все крашится
-            console.log("fasdfasdfasdfasdfasdfasdfasdfsdf")
-            this.closeModal()
-            AppToasts.success("Пароль успешно изменен")
+            // Рекурсия блин получается
+            // this.closeModal()
+            // AppToasts.success("Пароль успешно изменен")
         }
     }
 
@@ -64,7 +70,7 @@ export class UpdatePasswordForm extends ScReact.Component<any, any> {
 
         console.log("closeModal")
 
-        this.props.closeModal()
+        AppDispatcher.dispatch(UserActions.CLOSE_CHANGE_PASSWORD_FORM)
     }
 
     setPassword = (value:string) => {
@@ -171,7 +177,7 @@ export class UpdatePasswordForm extends ScReact.Component<any, any> {
 
     render() {
         return (
-            <div className={"modal-wrapper " + (this.props.open ? "active" : "")}>
+            <div className={"modal-wrapper " + (this.state.open ? "active" : "")}>
                 <div className="overlay"></div>
                 <div className="modal-content change-password-form">
                     <h2>Форма изменения пароля</h2>

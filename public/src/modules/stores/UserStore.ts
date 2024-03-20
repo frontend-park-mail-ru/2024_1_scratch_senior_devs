@@ -11,6 +11,7 @@ export type UserStoreState = {
     errorLoginForm: string | undefined,
     errorRegisterForm: string | undefined,
     errorUpdatePasswordForm: string | undefined,
+    updatePasswordFormOpen:boolean
 }
 
 class UserStore extends BaseStore<UserStoreState>{
@@ -21,7 +22,8 @@ class UserStore extends BaseStore<UserStoreState>{
         isAuth: false,
         errorLoginForm: undefined,
         errorRegisterForm: undefined,
-        errorUpdatePasswordForm: undefined
+        errorUpdatePasswordForm: undefined,
+        updatePasswordFormOpen: false,
     }
 
     constructor() {
@@ -51,6 +53,12 @@ class UserStore extends BaseStore<UserStoreState>{
                     break;
                 case UserActions.UPDATE_PASSWORD:
                     await this.updatePassword(action.payload);
+                    break;
+                case UserActions.OPEN_CHANGE_PASSWORD_FORM:
+                    this.openChangePasswordForm();
+                    break;
+                case UserActions.CLOSE_CHANGE_PASSWORD_FORM:
+                    this.closeChangePasswordForm();
                     break;
             }
         });
@@ -189,6 +197,20 @@ class UserStore extends BaseStore<UserStoreState>{
             }
         }
     }
+
+    private openChangePasswordForm() {
+        this.SetState(state => ({
+            ...state,
+            updatePasswordFormOpen: true
+        }))
+    }
+
+    private closeChangePasswordForm() {
+        this.SetState(state => ({
+            ...state,
+            updatePasswordFormOpen: false
+        }))
+    }
 }
 
 export const AppUserStore = new UserStore();
@@ -199,5 +221,7 @@ export const UserActions = {
     REGISTER: "REGISTER",
     CHECK_USER: "CHECK_USER",
     UPDATE_AVATAR: "UPDATE_AVATAR",
-    UPDATE_PASSWORD: "UPDATE_PASSWORD"
+    UPDATE_PASSWORD: "UPDATE_PASSWORD",
+    OPEN_CHANGE_PASSWORD_FORM: "OPEN_CHANGE_PASSWORD_FORM",
+    CLOSE_CHANGE_PASSWORD_FORM: "CLOSE_CHANGE_PASSWORD_FORM",
 }

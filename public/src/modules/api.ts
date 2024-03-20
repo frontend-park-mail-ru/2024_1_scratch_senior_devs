@@ -2,7 +2,7 @@ import {decode} from "./utils";
 
 export const isDebug = false;
 
-const baseUrl = "https://you-note.ru/api";
+const baseUrl = isDebug ? "http://localhost:8080/api" : "https://you-note.ru/api";
 
 enum RequestMethods {
     POST = "POST",
