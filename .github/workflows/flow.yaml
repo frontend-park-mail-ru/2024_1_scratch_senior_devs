@@ -6,6 +6,7 @@ on:
       - home
       - dev
       - vls-36
+      - vls-58
 jobs:
   you-note-deploy:
     name: deploy YouNote
@@ -18,6 +19,14 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.PRIVATE_KEY }}
           script: cd /home/${{ secrets.USERNAME }}/frontend/2024_1_scratch_senior_devs && git pull
+#      - name: Build frontend
+#        uses: appleboy/ssh-action@master
+#        with:
+#          timeout: 10m
+#          host: ${{ secrets.HOST }}
+#          username: ${{ secrets.USERNAME }}
+#          key: ${{ secrets.PRIVATE_KEY }}
+#          script: cd /home/${{ secrets.USERNAME }}/frontend/2024_1_scratch_senior_devs && sh ./build.sh
       - name: Build frontend
         uses: appleboy/ssh-action@master
         with:
@@ -25,12 +34,4 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.PRIVATE_KEY }}
-          script: cd /home/${{ secrets.USERNAME }}/frontend/2024_1_scratch_senior_devs && sh ./build.sh
-      - name: Build frontend
-        uses: appleboy/ssh-action@master
-        with:
-          timeout: 10m
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.PRIVATE_KEY }}
-          script: cd /home/${{ secrets.USERNAME }}/frontend/2024_1_scratch_senior_devs && node ./server/index.js &
+          script: cp -r /home/${{ secrets.USERNAME}}/frontend/2024_1_scratch_senior_devs/dist/* /opt/public/
