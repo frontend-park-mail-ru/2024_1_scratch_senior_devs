@@ -2,6 +2,7 @@ import {AppDispatcher} from "../dispatcher";
 import {AppAuthRequests, AppProfileRequests} from "../api";
 import {AppRouter} from "../router";
 import {BaseStore} from "./BaseStore";
+import {AppToasts} from "../../components/Toasts/Toasts";
 
 export type UserStoreState = {
     JWT: string | null | undefined,
@@ -176,20 +177,16 @@ class UserStore extends BaseStore<UserStoreState>{
 
     private async updatePassword({oldPassword, newPassword}) {
         try {
-            console.log("updatePassword")
             await AppProfileRequests.UpdatePassword(oldPassword, newPassword, this.state.JWT)
 
-            // TODO
-            // new Toast
+            AppToasts.success("Пароль успешно изменен")
 
-            this.SetState(state => ({
-                ...state,
-                errorUpdatePasswordForm: undefined
-            }))
+            this.closeChangePasswordForm()
         }
         catch (err) {
             if (err.message == "Неверный пароль") {
-                console.log("fsdadfasdfasdf")
+                AppToasts.error("Неверный пароль")
+
                 this.SetState(state => ({
                     ...state,
                     errorUpdatePasswordForm: "Неправильный пароль"
@@ -208,7 +205,8 @@ class UserStore extends BaseStore<UserStoreState>{
     private closeChangePasswordForm() {
         this.SetState(state => ({
             ...state,
-            updatePasswordFormOpen: false
+            updatePasswordFormOpen: false,
+            errorUpdatePasswordForm: undefined
         }))
     }
 }

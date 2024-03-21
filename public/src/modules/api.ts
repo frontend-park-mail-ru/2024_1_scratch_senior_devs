@@ -92,9 +92,6 @@ class AuthRequests {
 
     public Login = async (username: string, password: string) => {
 
-        console.log(username)
-        console.log(password)
-
         const response = await Ajax.Post(this.baseUrl + "/login", {
             body: {
                 username,
@@ -132,8 +129,6 @@ class AuthRequests {
                 jwt: response.headers.authorization
             };
         }
-
-        console.log(response.status)
 
         throw Error(response.body.message);
     };

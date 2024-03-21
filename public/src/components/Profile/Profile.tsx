@@ -2,14 +2,14 @@ import {ScReact} from "@veglem/screact";
 import {Img} from "../Image/Image";
 import "./Profile.sass"
 import {Button} from "../Button/Button";
-import {AppUserStore, UserActions} from "../../modules/stores/UserStore";
+import {AppUserStore, UserActions, UserStoreState} from "../../modules/stores/UserStore";
 import {AppDispatcher} from "../../modules/dispatcher";
 import {UpdatePasswordForm} from "../UpdatePassword/UpdatePassword";
 import {AppToasts} from "../Toasts/Toasts";
 import {imagesUlr} from "../../modules/api";
 
 const MEGABYTE_SIZE = 1024 * 1024
-const MAX_AVATAR_SIZE = MEGABYTE_SIZE
+const MAX_AVATAR_SIZE = 2 * MEGABYTE_SIZE
 
 export class Profile extends ScReact.Component<any, any> {
     state = {
@@ -122,10 +122,7 @@ export class Profile extends ScReact.Component<any, any> {
                     </div>
                 </div>
 
-                {/*{this.state.updatePasswordFormOpen ? <UpdatePasswordForm open={this.state.updatePasswordFormOpen} closeModal={this.closeModal}/> : "" }*/}
-
                 <UpdatePasswordForm />
-
 
             </div>
         )

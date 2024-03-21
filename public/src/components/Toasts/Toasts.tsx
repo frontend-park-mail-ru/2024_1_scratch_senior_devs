@@ -62,7 +62,8 @@ export class Toasts extends ScReact.Component<any, ToastState> {
             toasts: state.toasts.concat(toast)
         }))
 
-        // this.state.toasts.splice(1).forEach(toast => {
+        // TODO: Ограничить количество тостов
+        // this.state.toasts.splice(4).forEach(toast => {
         //     this.removeToast(toast.id)
         // })
     }
