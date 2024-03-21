@@ -26,13 +26,16 @@ export class Toast extends ScReact.Component<ToastProps, ToastState> {
     }
 
     componentDidMount() {
-       this.state.timer = setTimeout(() => {
-            this.closeToast()
-        }, TOAST_DELAY)
+        this.setState(state => ({
+            ...state,
+            timer: setTimeout(() => {
+                this.closeToast()
+            }, TOAST_DELAY)
+        }))
     }
 
     componentWillUnmount() {
-        clearTimeout(this.state.timer)
+        this.state.timer && clearTimeout(this.state.timer)
     }
 
     closeToast = () => {

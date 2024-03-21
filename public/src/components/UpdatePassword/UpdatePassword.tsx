@@ -6,6 +6,7 @@ import "./UpdatePassword.sass"
 import {ValidatePassword} from "../../modules/validation";
 import {AppDispatcher} from "../../modules/dispatcher";
 import {AppUserStore, UserActions, UserStoreState} from "../../modules/stores/UserStore";
+import {AppToasts} from "../Toasts/Toasts";
 
 export class UpdatePasswordForm extends ScReact.Component<any, any> {
     state = {
@@ -53,7 +54,7 @@ export class UpdatePasswordForm extends ScReact.Component<any, any> {
             if (this.state.open) {
                 this.closeModal()
                 AppDispatcher.dispatch(UserActions.CLOSE_CHANGE_PASSWORD_FORM)
-                // AppToasts.success("Пароль успешно изменен")
+                AppToasts.success("Пароль успешно изменен")
             }
         }
     }

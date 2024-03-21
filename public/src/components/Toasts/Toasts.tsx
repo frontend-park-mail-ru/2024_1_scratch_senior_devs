@@ -61,6 +61,10 @@ export class Toasts extends ScReact.Component<any, ToastState> {
             ...state,
             toasts: state.toasts.concat(toast)
         }))
+
+        // this.state.toasts.splice(1).forEach(toast => {
+        //     this.removeToast(toast.id)
+        // })
     }
 
     removeToast = (id:string) => {
