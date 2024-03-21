@@ -49,8 +49,12 @@ export class UpdatePasswordForm extends ScReact.Component<any, any> {
             // TODO
             // При логауте все крашится
             // Рекурсия блин получается
-            // this.closeModal()
-            // AppToasts.success("Пароль успешно изменен")
+
+            if (this.state.open) {
+                this.closeModal()
+                AppDispatcher.dispatch(UserActions.CLOSE_CHANGE_PASSWORD_FORM)
+                // AppToasts.success("Пароль успешно изменен")
+            }
         }
     }
 
@@ -69,8 +73,8 @@ export class UpdatePasswordForm extends ScReact.Component<any, any> {
         // }, 500)
 
         console.log("closeModal")
-
         AppDispatcher.dispatch(UserActions.CLOSE_CHANGE_PASSWORD_FORM)
+
     }
 
     setPassword = (value:string) => {

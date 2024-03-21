@@ -1,8 +1,10 @@
 import {decode} from "./utils";
 
-export const isDebug = false;
+export const isDebug = process.env.NODE_ENV === "development";
 
 const baseUrl = isDebug ? "http://localhost:8080/api" : "https://you-note.ru/api";
+
+export const imagesUlr = isDebug ? "http://localhost/images/" : "https://you-note.ru/images/"
 
 enum RequestMethods {
     POST = "POST",
