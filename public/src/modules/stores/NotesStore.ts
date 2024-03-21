@@ -2,11 +2,14 @@ import {BaseStore} from "./BaseStore";
 import {AppNoteRequests} from "../api";
 import {AppUserStore} from "./UserStore";
 import {AppDispatcher} from "../dispatcher";
+import {AppToasts, Toasts} from "../toasts";
 
-type Note = {
+export type Note = {
     id: number,
-    title: string,
-    content: string,
+    data: {
+        title: string
+        content: string,
+    },
     update_time: string
 }
 
@@ -16,7 +19,8 @@ export type NotesStoreState = {
     query: string,
     offset: number,
     count: number,
-    modalOpen: boolean
+    modalOpen: boolean,
+    saving: boolean
 }
 
 class NotesStore extends BaseStore<NotesStoreState> {
@@ -26,7 +30,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
         query: "",
         offset: 0,
         count: 10,
-        modalOpen: false
+        modalOpen: false,
+        saving: false
     }
 
     constructor() {
@@ -60,6 +65,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
                     break;
                 case NotesActions.DELETE_NOTE:
                     await this.deleteNote();
+                    break;
+                case NotesActions.SAVE_NOTE:
+                    await this.saveNote(action.payload);
                     break;
             }
         });
@@ -154,6 +162,29 @@ class NotesStore extends BaseStore<NotesStoreState> {
             this.closeNote()
         }
     }
+
+    async saveNote(data) {
+        if (this.state.selectedNote.id == data.id) {
+            const note = await AppNoteRequests.Update(data, AppUserStore.state.JWT)
+            console.log(note)
+
+            AppToasts.success("Заметка успешно сохранена")
+
+            // TODO: Смена стейта вызывает анфокус заметки ;(
+            // this.SetState(state => ({
+            //     ...state,
+            //     selectedNote: {
+            //         id: state.selectedNote.id,
+            //         data: note.data,
+            //         update_time: note.update_time
+            //     }
+            // }))
+            // this.SetState(state => ({
+            //     ...state,
+            //     notes: state.notes.map(n => n.id == note.id ? note : n)
+            // }))
+        }
+    }
 }
 
 export const NotesActions = {
@@ -164,7 +195,8 @@ export const NotesActions = {
     EXIT: "EXIT_NOTES_PAGE",
     OPEN_DELETE_NOTE_DIALOG: "OPEN_DELETE_NOTE_DIALOG",
     CLOSE_DELETE_NOTE_DIALOG: "CLOSE_DELETE_NOTE_DIALOG",
-    DELETE_NOTE: "DELETE_NOTE"
+    DELETE_NOTE: "DELETE_NOTE",
+    SAVE_NOTE: "SAVE_NOTE"
 }
 
 export const AppNotesStore = new NotesStore();

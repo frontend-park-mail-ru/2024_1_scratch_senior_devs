@@ -7,8 +7,9 @@ import {AuthPage} from "../pages/Auth";
 import {NotesPage} from "../pages/Notes";
 import {Header} from "../components/Header/header";
 import {Background} from "../components/Background/Background";
-import {Toasts} from "../components/Toasts/Toasts";
-import {AppUserStore} from "./stores/UserStore";
+import {Toasts} from "./toasts";
+import NotesPageSkeleton from "../pages/Notes/Skeleton";
+import Skeleton from "../pages/Notes/Skeleton";
 
 type routerState = {
     currPage: {new(): Component<any, any> }
@@ -55,7 +56,6 @@ export class Router extends ScReact.Component<any, routerState> {
         //     return
         // }
 
-
         history.pushState({ path }, "", path);
 
         if (page === undefined) {
@@ -100,7 +100,7 @@ export class Router extends ScReact.Component<any, routerState> {
                 <Toasts />
                 <Header currPage={this.state.currPage}/>
                 { ScReact.createComponent(this.state.currPage, {...this.state.PageProps, key: this.state.currPage.name}) }
-                { this.state.currPage !== NotesPage ? <Background currPage={this.state.currPage}/> : ""}
+                { (this.state.currPage !== NotesPage && this.state.currPage !== NotesPageSkeleton) ? <Background currPage={this.state.currPage}/> : ""}
             </div>
         );
     }

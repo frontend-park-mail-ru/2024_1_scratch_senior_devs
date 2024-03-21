@@ -1,8 +1,7 @@
 import {ScReact} from "@veglem/screact";
 import {VDomNode} from "@veglem/screact/dist/vdom";
-import {Toast} from "../Toast/Toast";
-import {createUUID} from "../../modules/utils";
-import "./Toasts.sass"
+import {Toast} from "../components/Toast/Toast";
+import {createUUID} from "./utils";
 
 
 export const TOAST_TYPE = {
@@ -90,7 +89,7 @@ export class Toasts extends ScReact.Component<any, ToastState> {
 
     render(): VDomNode {
         return (
-            <div className="toasts-wrapper">
+            <div>
                 {this.state.toasts.map(toast => (
                     <Toast key1={toast.id} type={toast.type} message={toast.message} onHide={this.removeToast} offset={toast.offset}/>
                 ))}

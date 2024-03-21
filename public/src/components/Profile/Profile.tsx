@@ -2,10 +2,10 @@ import {ScReact} from "@veglem/screact";
 import {Img} from "../Image/Image";
 import "./Profile.sass"
 import {Button} from "../Button/Button";
-import {AppUserStore, UserActions, UserStoreState} from "../../modules/stores/UserStore";
+import {AppUserStore, UserActions} from "../../modules/stores/UserStore";
 import {AppDispatcher} from "../../modules/dispatcher";
 import {UpdatePasswordForm} from "../UpdatePassword/UpdatePassword";
-import {AppToasts} from "../Toasts/Toasts";
+import {AppToasts} from "../../modules/toasts";
 import {imagesUlr} from "../../modules/api";
 
 const MEGABYTE_SIZE = 1024 * 1024
@@ -77,7 +77,6 @@ export class Profile extends ScReact.Component<any, any> {
     }
 
     openModal = () => {
-        console.log("openModal")
         AppDispatcher.dispatch(UserActions.OPEN_CHANGE_PASSWORD_FORM)
     }
 

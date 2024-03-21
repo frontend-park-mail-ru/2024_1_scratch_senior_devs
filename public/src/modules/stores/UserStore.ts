@@ -2,7 +2,7 @@ import {AppDispatcher} from "../dispatcher";
 import {AppAuthRequests, AppProfileRequests} from "../api";
 import {AppRouter} from "../router";
 import {BaseStore} from "./BaseStore";
-import {AppToasts} from "../../components/Toasts/Toasts";
+import {AppToasts} from "../toasts";
 
 export type UserStoreState = {
     JWT: string | null | undefined,

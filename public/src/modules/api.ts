@@ -1,4 +1,5 @@
 import {decode} from "./utils";
+import {Note} from "./stores/NotesStore";
 
 export const isDebug = process.env.NODE_ENV === "development";
 
@@ -276,6 +277,21 @@ class NoteRequests {
         });
 
         return response.status
+    }
+
+    Update = async(note, jwt: string)=> {
+        console.log(note)
+        const response = await Ajax.Post(this.baseUrl + "/" + note.id + "/edit", {
+            headers: {
+                "Authorization": jwt
+            },
+            body: {
+                data: note
+            }
+        });
+
+        response.body.data = decode(response.body.data);
+        return response.body
     }
 }
 

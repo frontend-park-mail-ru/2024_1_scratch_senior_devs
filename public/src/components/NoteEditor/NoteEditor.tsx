@@ -3,6 +3,7 @@ import "./NoteEditor.sass"
 import {Img} from "../Image/Image";
 import {AppNotesStore, NotesActions, NotesStoreState} from "../../modules/stores/NotesStore";
 import {AppDispatcher} from "../../modules/dispatcher";
+import {debounce} from "../../modules/utils";
 
 
 export class NoteEditor extends ScReact.Component<any, any> {
@@ -13,6 +14,25 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
     componentDidMount() {
         AppNotesStore.SubscribeToStore(this.updateState)
+        const saveNote = debounce(this.handleKeypress, 1000)
+        window.addEventListener("keypress", saveNote)
+    }
+
+    handleKeypress = () => {
+        const activeElem = document.activeElement as HTMLElement
+        if (activeElem.isContentEditable) {
+
+            const titleElem = document.querySelector(".note-title") as HTMLElement
+            const contentElem = document.querySelector(".note-content > span") as HTMLElement
+
+            const data = {
+                id: this.state.selectedNote.id,
+                title: titleElem.innerText,
+                content: contentElem.innerText
+            }
+
+            AppDispatcher.dispatch(NotesActions.SAVE_NOTE, data)
+        }
     }
 
     closeEditor = () => {
@@ -53,8 +73,11 @@ export class NoteEditor extends ScReact.Component<any, any> {
                     <div className="note-content" contentEditable="true">
                         <span>{this.state.selectedNote?.data.content}</span>
                     </div>
-                </div>
 
+                    <div className="note-save-indicator">
+
+                    </div>
+                </div>
             </div>
         )
     }
