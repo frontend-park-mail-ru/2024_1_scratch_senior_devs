@@ -50,6 +50,7 @@ export class Router extends ScReact.Component<any, routerState> {
     public go(path: string): void {
         const page: {page: {new(): Component<any, any> }, pageProps: object, loader: () => Promise<any>} = this.pages[path];
 
+        // TODO: не пускать на страницу с заметками неавторизированного пользователя. Добавить скилетоны
         // if (page.pageProps.needAuth && !AppUserStore.state.isAuth) {
         //     console.log("zsdf")
         //     this.go("/")
