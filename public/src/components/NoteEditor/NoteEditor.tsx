@@ -9,30 +9,35 @@ import {debounce} from "../../modules/utils";
 export class NoteEditor extends ScReact.Component<any, any> {
     state = {
         open: false,
-        selectedNote: undefined
+        selectedNote: undefined,
+        saving: undefined
     }
 
     componentDidMount() {
         AppNotesStore.SubscribeToStore(this.updateState)
         const saveNote = debounce(this.handleKeypress, 1000)
-        window.addEventListener("keypress", saveNote)
+        document.querySelector(".note-editor").addEventListener("input", saveNote)
     }
 
     handleKeypress = () => {
-        const activeElem = document.activeElement as HTMLElement
-        if (activeElem.isContentEditable) {
-
-            const titleElem = document.querySelector(".note-title") as HTMLElement
-            const contentElem = document.querySelector(".note-content > span") as HTMLElement
-
-            const data = {
-                id: this.state.selectedNote.id,
-                title: titleElem.innerText,
-                content: contentElem.innerText
-            }
-
-            AppDispatcher.dispatch(NotesActions.SAVE_NOTE, data)
+        if (!this.state.selectedNote) {
+            return
         }
+
+        this.saveNote()
+    }
+
+    saveNote = () => {
+        const titleElem = document.querySelector(".note-title") as HTMLElement
+        const contentElem = document.querySelector(".note-content > span") as HTMLElement
+
+        const data = {
+            id: this.state.selectedNote.id,
+            title: titleElem.innerText,
+            content: contentElem.innerText
+        }
+
+        AppDispatcher.dispatch(NotesActions.SAVE_NOTE, data)
     }
 
     closeEditor = () => {
@@ -40,10 +45,13 @@ export class NoteEditor extends ScReact.Component<any, any> {
     }
 
     updateState = (store:NotesStoreState) => {
+        // if (this.state.open && store.)
+
         this.setState(state => ({
             ...state,
             selectedNote: store.selectedNote,
-            open: store.selectedNote !== undefined
+            open: store.selectedNote !== undefined,
+            saving: store.saving
         }))
     }
 
@@ -75,7 +83,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
                     </div>
 
                     <div className="note-save-indicator">
-
+                        {this.state.saving === false ? <h3>Сохранено</h3> : ""}
                     </div>
                 </div>
             </div>

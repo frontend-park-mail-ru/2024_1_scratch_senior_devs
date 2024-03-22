@@ -18,9 +18,16 @@ export class NotesPage extends ScReact.Component<any, any> {
 
         AppNotesStore.SubscribeToStore(this.updateState)
 
-        AppNotesStore.init().then(() => {
-            this.createObserver()
-        })
+        // AppNotesStore.init().then(() => {
+        //     this.createObserver()
+        // })
+
+        this.setState(state => ({
+            ...state,
+            notes: this.props.notes
+        }))
+
+        this.createObserver()
     }
 
     componentWillUnmount() {

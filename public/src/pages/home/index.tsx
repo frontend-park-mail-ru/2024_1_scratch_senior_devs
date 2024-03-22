@@ -36,7 +36,7 @@ export class HomePage extends ScReact.Component<any, any> {
                         <h1>YouNote - современный сервис для ведения заметок</h1>
                         <Button onClick={() => {
                             AppRouter.go(AppUserStore.state.isAuth ? "/notes" : "/login")
-                        }} label="Попробовать123"></Button>
+                        }} label="Попробовать"></Button>
                     </div>
                 </section>
 

@@ -31,7 +31,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
         offset: 0,
         count: 10,
         modalOpen: false,
-        saving: false
+        saving: undefined
     }
 
     constructor() {
@@ -114,6 +114,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
     async init () {
         await this.fetchNotes()
+        return this.state
     }
 
     async searchNotes (query) {
@@ -165,10 +166,22 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
     async saveNote(data) {
         if (this.state.selectedNote.id == data.id) {
+
+            // this.SetState(state => ({
+            //     ...state,
+            //     saving: true
+            // }))
+
             const note = await AppNoteRequests.Update(data, AppUserStore.state.JWT)
             console.log(note)
 
             AppToasts.success("Заметка успешно сохранена")
+
+            // this.SetState(state => ({
+            //     ...state,
+            //     saving: false
+            // }))
+
 
             // TODO: Смена стейта вызывает анфокус заметки ;(
             // this.SetState(state => ({
@@ -179,6 +192,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             //         update_time: note.update_time
             //     }
             // }))
+
             // this.SetState(state => ({
             //     ...state,
             //     notes: state.notes.map(n => n.id == note.id ? note : n)

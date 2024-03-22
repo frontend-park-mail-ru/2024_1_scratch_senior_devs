@@ -170,6 +170,7 @@ export class UpdatePasswordForm extends ScReact.Component<any, any> {
                 <div className="modal-content change-password-form">
                     <h2>Форма изменения пароля</h2>
                     <Input
+                        type="password"
                         placeholder="Старый пароль"
                         icon="src/assets/password.png"
                         value={this.state.password}
@@ -178,6 +179,7 @@ export class UpdatePasswordForm extends ScReact.Component<any, any> {
                         validationResult={this.state.passwordValidationResult}
                     />
                     <Input
+                        type="password"
                         placeholder="Новый пароль"
                         icon="src/assets/password.png"
                         value={this.state.repeatPassword}

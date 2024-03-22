@@ -9,15 +9,48 @@ import {Header} from "../components/Header/header";
 import {Background} from "../components/Background/Background";
 import {Toasts} from "./toasts";
 import NotesPageSkeleton from "../pages/Notes/Skeleton";
-import Skeleton from "../pages/Notes/Skeleton";
+import {AppUserStore, UserActions, UserStoreState} from "./stores/UserStore";
+import {AppDispatcher} from "./dispatcher";
+import {AppNotesStore} from "./stores/NotesStore";
 
 type routerState = {
     currPage: {new(): Component<any, any> }
     PageProps: any
 }
 
+type RouterMapValue = {
+    page: {new(): Component<any, any> },
+    loader: () => Promise<any>,
+    skeleton: {new(): Component<any, any> }
+}
+
+const NotesLoader = async () => {
+    const p = new Promise((resolve, reject) => {
+        let isAuth = undefined;
+        const callback = (state: UserStoreState) => {
+            isAuth = state.isAuth;
+
+            AppUserStore.UnSubscribeToStore(callback);
+
+            if (isAuth) {
+                AppNotesStore.init().then((store) => {
+                    resolve({notes: store.notes});
+                })
+            } else {
+                AppRouter.go("/")
+                reject()
+            }
+        }
+
+        AppUserStore.SubscribeToStore(callback);
+        AppDispatcher.dispatch(UserActions.CHECK_USER)
+    })
+
+    return await p;
+}
+
 export class Router extends ScReact.Component<any, routerState> {
-    private pages: Map<string, {page: {new(): Component<any, any> }, loader: () => Promise<any>}>
+    private pages: Map<string, RouterMapValue>
 
     state = {
         currPage: HomePage,
@@ -44,18 +77,11 @@ export class Router extends ScReact.Component<any, routerState> {
         this.pages['/'] = {page: HomePage, pageProps: {}}
         this.pages['/login'] = {page: AuthPage, pageProps: {needAuth: false}}
         this.pages['/register'] = {page: AuthPage, pageProps: {needAuth: false}}
-        this.pages['/notes'] = {page: NotesPage, pageProps: {needAuth: true}}
+        this.pages['/notes'] = {page: NotesPage, pageProps: {needAuth: true}, loader: NotesLoader, skeleton: NotesPageSkeleton}
     }
 
     public go(path: string): void {
-        const page: {page: {new(): Component<any, any> }, pageProps: object, loader: () => Promise<any>} = this.pages[path];
-
-        // TODO: не пускать на страницу с заметками неавторизированного пользователя. Добавить скилетоны
-        // if (page.pageProps.needAuth && !AppUserStore.state.isAuth) {
-        //     console.log("zsdf")
-        //     this.go("/")
-        //     return
-        // }
+        const page: RouterMapValue = this.pages[path];
 
         history.pushState({ path }, "", path);
 
@@ -67,25 +93,35 @@ export class Router extends ScReact.Component<any, routerState> {
                     err: "404 NotFound"
                 }
             }))
+
             return
         }
 
         if (page.loader !== undefined) {
+
+            this.setState(s => ({
+                ...s,
+                currPage: page.skeleton
+            }));
+
+
             page.loader().then((props) => {
+                console.log(props)
+
                 this.setState(s => ({
                     ...s,
                     currPage: page.page,
                     PageProps: props
                 }));
 
-            }).catch((err) => {
-                this.setState(s => ({
-                    ...s,
-                    currPage: ErrorPage,
-                    PageProps: {
-                        err: err
-                    }
-                }));
+            }).catch(() => {
+                // this.setState(s => ({
+                //     ...s,
+                //     currPage: ErrorPage,
+                //     PageProps: {
+                //         err: err
+                //     }
+                // }));
             })
         } else {
             this.setState(s => ({

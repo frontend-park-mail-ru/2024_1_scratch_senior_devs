@@ -161,6 +161,13 @@ class UserStore extends BaseStore<UserStoreState>{
         } catch (err) {
             console.log("не зареган");
             console.log(err);
+
+            this.SetState(s => {
+                return {
+                    ...s,
+                    isAuth: false
+                }
+            })
         }
     }
 
