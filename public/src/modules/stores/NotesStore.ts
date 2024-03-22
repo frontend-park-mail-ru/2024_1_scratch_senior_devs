@@ -3,6 +3,7 @@ import {AppNoteRequests} from "../api";
 import {AppUserStore} from "./UserStore";
 import {AppDispatcher} from "../dispatcher";
 import {AppToasts, Toasts} from "../toasts";
+import {createUUID} from "../utils";
 
 export type Note = {
     id: number,
@@ -68,6 +69,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
                     break;
                 case NotesActions.SAVE_NOTE:
                     await this.saveNote(action.payload);
+                    break;
+                case NotesActions.CREATE_EMPTY_NOTE:
+                    await this.createEmptyNote();
                     break;
             }
         });
@@ -167,20 +171,20 @@ class NotesStore extends BaseStore<NotesStoreState> {
     async saveNote(data) {
         if (this.state.selectedNote.id == data.id) {
 
-            // this.SetState(state => ({
-            //     ...state,
-            //     saving: true
-            // }))
+            this.SetState(state => ({
+                ...state,
+                saving: true
+            }))
 
             const note = await AppNoteRequests.Update(data, AppUserStore.state.JWT)
             console.log(note)
 
             AppToasts.success("Заметка успешно сохранена")
 
-            // this.SetState(state => ({
-            //     ...state,
-            //     saving: false
-            // }))
+            this.SetState(state => ({
+                ...state,
+                saving: false
+            }))
 
 
             // TODO: Смена стейта вызывает анфокус заметки ;(
@@ -199,6 +203,28 @@ class NotesStore extends BaseStore<NotesStoreState> {
             // }))
         }
     }
+
+    async createEmptyNote() {
+        // TODO
+
+        const note = await AppNoteRequests.Add(AppUserStore.state.JWT)
+
+        // const note = {
+        //     data: {
+        //         content: "",
+        //         title: "Новая заметка"
+        //     },
+        //     update_time: new Date().toISOString()
+        // }
+        //
+
+        this.SetState(state => ({
+            ...state,
+            notes: [note, ...state.notes]
+        }))
+
+        console.log(this.state.notes)
+    }
 }
 
 export const NotesActions = {
@@ -210,7 +236,8 @@ export const NotesActions = {
     OPEN_DELETE_NOTE_DIALOG: "OPEN_DELETE_NOTE_DIALOG",
     CLOSE_DELETE_NOTE_DIALOG: "CLOSE_DELETE_NOTE_DIALOG",
     DELETE_NOTE: "DELETE_NOTE",
-    SAVE_NOTE: "SAVE_NOTE"
+    SAVE_NOTE: "SAVE_NOTE",
+    CREATE_EMPTY_NOTE: "CREATE_EMPTY_NOTE"
 }
 
 export const AppNotesStore = new NotesStore();

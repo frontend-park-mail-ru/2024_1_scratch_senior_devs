@@ -31,7 +31,6 @@ class UserStore extends BaseStore<UserStoreState>{
         super();
         this.state.JWT = window.localStorage.getItem('Authorization');
         this.registerEvents();
-        this.checkUser()
     }
 
     private registerEvents(){

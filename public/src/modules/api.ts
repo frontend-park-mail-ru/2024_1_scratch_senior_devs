@@ -1,4 +1,4 @@
-import {decode} from "./utils";
+import {createUUID, decode} from "./utils";
 import {Note} from "./stores/NotesStore";
 
 export const isDebug = process.env.NODE_ENV === "development";
@@ -280,7 +280,6 @@ class NoteRequests {
     }
 
     Update = async(note, jwt: string)=> {
-        console.log(note)
         const response = await Ajax.Post(this.baseUrl + "/" + note.id + "/edit", {
             headers: {
                 "Authorization": jwt
@@ -290,6 +289,25 @@ class NoteRequests {
             }
         });
 
+        response.body.data = decode(response.body.data);
+        return response.body
+    }
+
+    Add = async (jwt:string) => {
+        const response = await Ajax.Post(this.baseUrl + "/add", {
+            headers: {
+                "Authorization": jwt
+            },
+            body: {
+                data: {
+                    content: createUUID(),
+                    title: "Новая заметка"
+                }
+            }
+        });
+
+        console.log(response.status)
+        console.log(response.body)
         response.body.data = decode(response.body.data);
         return response.body
     }

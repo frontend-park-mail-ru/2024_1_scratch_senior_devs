@@ -6,6 +6,7 @@ import {NoteEditor} from "../../components/NoteEditor/NoteEditor";
 import {AppNotesStore, NotesActions, NotesStoreState} from "../../modules/stores/NotesStore";
 import {AppDispatcher} from "../../modules/dispatcher";
 import {Modal} from "../../components/Modal/Modal";
+import {Button} from "../../components/Button/Button";
 
 export class NotesPage extends ScReact.Component<any, any> {
     state = {
@@ -18,10 +19,6 @@ export class NotesPage extends ScReact.Component<any, any> {
 
         AppNotesStore.SubscribeToStore(this.updateState)
 
-        // AppNotesStore.init().then(() => {
-        //     this.createObserver()
-        // })
-
         this.setState(state => ({
             ...state,
             notes: this.props.notes
@@ -32,7 +29,6 @@ export class NotesPage extends ScReact.Component<any, any> {
 
     componentWillUnmount() {
         AppDispatcher.dispatch(NotesActions.EXIT)
-
         AppNotesStore.UnSubscribeToStore(this.updateState)
     }
 
@@ -80,12 +76,20 @@ export class NotesPage extends ScReact.Component<any, any> {
         AppDispatcher.dispatch(NotesActions.SEARCH_NOTES, value)
     }
 
+    createEmptyNote = () => {
+        console.log("createEmptyNote")
+        AppDispatcher.dispatch(NotesActions.CREATE_EMPTY_NOTE)
+    }
+
     render() {
         return (
             <div className={"notes-page-wrapper " + (this.state.selectedNote ? "active" : "")}>
                 <aside>
                     <Modal />
-                    <SearchBar onChange={this.searchNotes} />
+                    <div className="top-panel">
+                        <Button label="Новая заметка" onClick={this.createEmptyNote} />
+                        <SearchBar onChange={this.searchNotes} />
+                    </div>
                     <div className="notes-container" onclick={this.handleSelectNote}>
                         {this.state.notes.map(note => (
                             <Note key1={note.id} note={note} selected={this.state.selectedNote?.id == note.id} />

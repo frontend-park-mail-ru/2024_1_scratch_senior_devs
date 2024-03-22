@@ -9,10 +9,9 @@ import {Header} from "../components/Header/header";
 import {Background} from "../components/Background/Background";
 import {Toasts} from "./toasts";
 import NotesPageSkeleton from "../pages/Notes/Skeleton";
-import {AppUserStore, UserActions, UserStoreState} from "./stores/UserStore";
-import {AppDispatcher} from "./dispatcher";
-import {AppNotesStore} from "./stores/NotesStore";
 import AuthPageSkeleton from "../pages/Auth/Skeleton";
+import {AuthPageLoader} from "../pages/Auth/loader";
+import {NotesLoader} from "../pages/Notes/loader";
 
 type routerState = {
     currPage: {new(): Component<any, any> }
@@ -25,53 +24,6 @@ type RouterMapValue = {
     skeleton: {new(): Component<any, any> }
 }
 
-const AuthPageLoader = async () => {
-    const p = new Promise((resolve, reject) => {
-        let isAuth = undefined;
-        const callback = (state: UserStoreState) => {
-            isAuth = state.isAuth;
-
-            AppUserStore.UnSubscribeToStore(callback);
-
-            if (isAuth) {
-                AppRouter.go("/")
-                reject()
-            } else {
-                resolve(null)
-            }
-        }
-
-        AppUserStore.SubscribeToStore(callback);
-        AppDispatcher.dispatch(UserActions.CHECK_USER)
-    })
-
-    return await p;
-}
-
-const NotesLoader = async () => {
-    const p = new Promise((resolve, reject) => {
-        let isAuth = undefined;
-        const callback = (state: UserStoreState) => {
-            isAuth = state.isAuth;
-
-            AppUserStore.UnSubscribeToStore(callback);
-
-            if (isAuth) {
-                AppNotesStore.init().then((store) => {
-                    resolve({notes: store.notes});
-                })
-            } else {
-                AppRouter.go("/")
-                reject()
-            }
-        }
-
-        AppUserStore.SubscribeToStore(callback);
-        AppDispatcher.dispatch(UserActions.CHECK_USER)
-    })
-
-    return await p;
-}
 
 export class Router extends ScReact.Component<any, routerState> {
     private pages: Map<string, RouterMapValue>
@@ -146,6 +98,7 @@ export class Router extends ScReact.Component<any, routerState> {
                 //     }
                 // }));
             })
+
         } else {
             this.setState(s => ({
                 ...s,

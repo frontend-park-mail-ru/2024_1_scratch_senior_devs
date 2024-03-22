@@ -10,21 +10,19 @@ export class NoteEditor extends ScReact.Component<any, any> {
     state = {
         open: false,
         selectedNote: undefined,
-        saving: undefined
+        saving: undefined,
+        content: undefined
     }
 
     componentDidMount() {
         AppNotesStore.SubscribeToStore(this.updateState)
-        const saveNote = debounce(this.handleKeypress, 1000)
-        document.querySelector(".note-editor").addEventListener("input", saveNote)
+        document.querySelector(".note-editor").addEventListener("input", debounce(this.handleKeypress, 1000))
     }
 
     handleKeypress = () => {
-        if (!this.state.selectedNote) {
-            return
+        if (this.state.selectedNote) {
+            this.saveNote()
         }
-
-        this.saveNote()
     }
 
     saveNote = () => {
@@ -37,22 +35,42 @@ export class NoteEditor extends ScReact.Component<any, any> {
             content: contentElem.innerText
         }
 
-        AppDispatcher.dispatch(NotesActions.SAVE_NOTE, data)
+        if (data.title !== this.state.selectedNote.data.title || data.content !== this.state.selectedNote.data.content) {
+            AppDispatcher.dispatch(NotesActions.SAVE_NOTE, data)
+        }
+
+        this.setState(state => ({
+            ...state,
+            selectedNote: {
+                id: state.selectedNote.id,
+                data: {
+                    title: data.title,
+                    content: data.content
+                },
+                update_time: state.selectedNote.update_time
+            }
+        }))
     }
 
     closeEditor = () => {
+        this.saveNote()
+
         AppDispatcher.dispatch(NotesActions.CLOSE_NOTE)
     }
 
     updateState = (store:NotesStoreState) => {
-        // if (this.state.open && store.)
-
-        this.setState(state => ({
-            ...state,
-            selectedNote: store.selectedNote,
-            open: store.selectedNote !== undefined,
-            saving: store.saving
-        }))
+        console.log("updateState")
+        console.log("2342342342342asdf")
+        console.log(this.state.selectedNote)
+        this.setState(state => {
+            return {
+                ...state,
+                selectedNote: store.selectedNote,
+                open: store.selectedNote !== undefined,
+                saving: store.saving
+            }
+        })
+        console.log(this.state.selectedNote)
     }
 
     deleteNote = () => {

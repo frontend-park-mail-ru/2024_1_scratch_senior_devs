@@ -5,23 +5,27 @@ import {AppRouter} from "../../modules/router";
 import {Logo} from "../Logo/logo";
 import {Profile} from "../Profile/Profile";
 import {AuthPage} from "../../pages/Auth";
-import {AppUserStore} from "../../modules/stores/UserStore";
+import {AppUserStore, UserActions, UserStoreState} from "../../modules/stores/UserStore";
+import {AppDispatcher} from "../../modules/dispatcher";
 
 export class Header extends ScReact.Component<any, any>{
     state = {
         isAuth: false,
-        avatarUrl: ""
+        userChecked: false,
+        avatarUrl: false
     }
 
     componentDidMount() {
         AppUserStore.SubscribeToStore(this.updateState)
+        AppDispatcher.dispatch(UserActions.CHECK_USER)
     }
 
-    updateState = (store) => {
+    updateState = (store:UserStoreState) => {
         this.setState(state => ({
             ...state,
             isAuth: store.isAuth,
-            avatarUrl: store.avatarUrl
+            avatarUrl: store.avatarUrl,
+            userChecked: true
         }))
     }
 
@@ -29,7 +33,12 @@ export class Header extends ScReact.Component<any, any>{
         return (
             <header id="header">
                 <Logo />
-                { this.state.isAuth ? <Profile avatarUrl={this.state.avatarUrl}/> : (this.props.currPage !== AuthPage ? <Button label="Вход" onClick={() => AppRouter.go("/login")} /> : "") }
+                { this.state.userChecked ? (
+                    this.state.isAuth ? <Profile avatarUrl={this.state.avatarUrl}/> : (
+                        this.props.currPage !== AuthPage ? <Button label="Вход" onClick={() => AppRouter.go("/login")} /> : ""
+                    )
+                 ) : ""
+                }
             </header>
         )
     }
