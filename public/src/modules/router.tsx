@@ -12,6 +12,7 @@ import NotesPageSkeleton from "../pages/Notes/Skeleton";
 import {AppUserStore, UserActions, UserStoreState} from "./stores/UserStore";
 import {AppDispatcher} from "./dispatcher";
 import {AppNotesStore} from "./stores/NotesStore";
+import AuthPageSkeleton from "../pages/Auth/Skeleton";
 
 type routerState = {
     currPage: {new(): Component<any, any> }
@@ -22,6 +23,29 @@ type RouterMapValue = {
     page: {new(): Component<any, any> },
     loader: () => Promise<any>,
     skeleton: {new(): Component<any, any> }
+}
+
+const AuthPageLoader = async () => {
+    const p = new Promise((resolve, reject) => {
+        let isAuth = undefined;
+        const callback = (state: UserStoreState) => {
+            isAuth = state.isAuth;
+
+            AppUserStore.UnSubscribeToStore(callback);
+
+            if (isAuth) {
+                AppRouter.go("/")
+                reject()
+            } else {
+                resolve(null)
+            }
+        }
+
+        AppUserStore.SubscribeToStore(callback);
+        AppDispatcher.dispatch(UserActions.CHECK_USER)
+    })
+
+    return await p;
 }
 
 const NotesLoader = async () => {
@@ -75,9 +99,9 @@ export class Router extends ScReact.Component<any, routerState> {
 
     private initPages = () => {
         this.pages['/'] = {page: HomePage, pageProps: {}}
-        this.pages['/login'] = {page: AuthPage, pageProps: {needAuth: false}}
-        this.pages['/register'] = {page: AuthPage, pageProps: {needAuth: false}}
-        this.pages['/notes'] = {page: NotesPage, pageProps: {needAuth: true}, loader: NotesLoader, skeleton: NotesPageSkeleton}
+        this.pages['/login'] = {page: AuthPage, loader: AuthPageLoader, skeleton: AuthPageSkeleton}
+        this.pages['/register'] = {page: AuthPage, loader: AuthPageLoader, skeleton: AuthPageSkeleton}
+        this.pages['/notes'] = {page: NotesPage, loader: NotesLoader, skeleton: NotesPageSkeleton}
     }
 
     public go(path: string): void {
@@ -104,10 +128,7 @@ export class Router extends ScReact.Component<any, routerState> {
                 currPage: page.skeleton
             }));
 
-
             page.loader().then((props) => {
-                console.log(props)
-
                 this.setState(s => ({
                     ...s,
                     currPage: page.page,
@@ -115,6 +136,8 @@ export class Router extends ScReact.Component<any, routerState> {
                 }));
 
             }).catch(() => {
+
+                // TODO
                 // this.setState(s => ({
                 //     ...s,
                 //     currPage: ErrorPage,
