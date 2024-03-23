@@ -1,0 +1,38 @@
+.auth-page-skeleton-wrapper
+	width: 100%
+	height: 100vh
+	display: flex
+	justify-content: center
+	align-items: center
+
+	.auth-form-container-skeleton
+		position: relative
+
+		.auth-form-skeleton
+			width: 768px
+			height: 500px
+			background: rgba(64, 64, 64, .15)
+			border: 2px solid rgba(255, 255, 255, .3)
+			backdrop-filter: blur(25px)
+			border-radius: 30px
+			box-shadow: 0 0 15px rgba(0,0,0,.35)
+			z-index: 10
+			position: relative
+
+		&::before, &::after
+			width: 300px
+			height: 300px
+			position: absolute
+			border-radius: 50%
+			content: ''
+			z-index: 1
+
+		&:before
+			background: linear-gradient(#9b22ea, #bf23f6)
+			top: -100px
+			left: -100px
+
+		&:after
+			background: linear-gradient(#ff512f, #f09819)
+			bottom: -100px
+			right: -100px
