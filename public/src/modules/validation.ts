@@ -9,7 +9,7 @@ export const ValidatePassword = (value:string):ValidationResult   => {
             value.charCodeAt(index) >= 64 && value.charCodeAt(index) <= 90 ||
             value.charCodeAt(index) >= 48 && value.charCodeAt(index) <= 57 ||
             value.charCodeAt(index) >= 35 && value.charCodeAt(index) <= 38)){
-            return ValidationResult(false, "Пароль должен содержать только латинские символы, цифры или символы #$%&");
+            return ValidationResult(false, "Пароль должен содержать только латинские символы или цифры");
         }
     }
 
