@@ -191,7 +191,8 @@ export class RegisterForm extends  ScReact.Component<any, any> {
                     error={this.state.errorRepeatPassword}
                     validationResult={this.state.repeatPasswordValidationResult}
                 />
-                <Button label="Войти" onClick={this.handleSubmit} />
+                <span onclick={this.props.toggleForm}>Еще не зарегистрированы?</span>
+                <Button label="Войти" onClick={this.handleSubmit}/>
             </form>
         );
     }
