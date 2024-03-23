@@ -142,6 +142,7 @@ export class LoginForm extends  ScReact.Component<any, any> {
                     validationResult={this.state.passwordValidationResult}
                     onChange={this.setPassword}
                 />
+                <span onclick={this.props.toggleForm}>Еще не зарегистрированы?</span>
                 <Button label="Войти" onClick={this.handleSubmit}/>
             </form>
         );
