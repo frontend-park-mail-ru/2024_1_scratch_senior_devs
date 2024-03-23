@@ -4,23 +4,28 @@ import {AppRouter} from "../../modules/router";
 
 export const AuthPageLoader = async () => {
     const p = new Promise((resolve, reject) => {
-        let isAuth = undefined;
-        const callback = (state: UserStoreState) => {
-            isAuth = state.isAuth;
+        let isAuth = AppUserStore.state.isAuth;
 
-            AppUserStore.UnSubscribeToStore(callback);
-
+        if (isAuth !== undefined) {
             if (isAuth) {
                 AppRouter.go("/")
                 reject()
             } else {
                 resolve(null)
             }
+
+            return
         }
 
-        if (AppUserStore.state.isAuth !== undefined) {
-            resolve(null)
-            return
+        const callback = (state: UserStoreState) => {
+            isAuth = state.isAuth;
+            AppUserStore.UnSubscribeToStore(callback);
+            if (isAuth) {
+                AppRouter.go("/")
+                reject()
+            } else {
+                resolve(null)
+            }
         }
 
         AppUserStore.SubscribeToStore(callback);
