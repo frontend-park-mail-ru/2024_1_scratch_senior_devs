@@ -1,0 +1,73 @@
+@import "/public/src/utils/variables.sass"
+
+$border-radius: 35px
+$border-width: 2px
+$blur-size: 10px
+
+.animated-border-box-container
+	display: flex
+	justify-content: center
+	align-items: center
+	position: relative
+	color: #fff
+	transition: transform .5s
+	cursor: pointer
+
+	h3
+		font-size: 28px
+
+	&:hover
+		transform: scale(1.05)
+
+	.animated-border-box
+		padding: 18px 32px
+		position: relative
+		overflow: hidden
+		z-index: 0
+		display: flex
+		justify-content: center
+		align-items: center
+		border-radius: $border-radius
+
+		&:after
+			content: ''
+			position: absolute
+			z-index: -1
+			left: $border-width
+			top: $border-width
+			width: calc(100% - $border-width * 2)
+			height: calc(100% - $border-width * 2)
+			background: $primary-color
+			border-radius: $border-radius
+
+	.animated-border-box-glow
+		height: 100%
+		width: 100%
+		position: absolute
+		overflow: hidden
+		top: 0
+		left: 0
+		z-index: 0
+		border-radius: $border-radius
+		filter: blur($blur-size)
+
+	.animated-border-box:before, .animated-border-box-glow:before
+		content: ''
+		z-index: -2
+		text-align: center
+		top: 50%
+		left: 50%
+		transform: translate(-50%, -50%) rotate(0deg)
+		position: absolute
+		width: 99999px
+		height: 99999px
+		background-repeat: no-repeat
+		background-position: 0 0
+		background-image: conic-gradient(rgba(0, 0, 0, 0), #fff, rgba(0, 0, 0, 0) 25%)
+		animation: rotate 4s linear infinite
+
+		@keyframes rotate
+			100%
+				transform: translate(-50%, -50%) rotate(1turn)
+
+

@@ -1,0 +1,28 @@
+@import "/public/src/utils/variables"
+
+.card
+	background: rgba(255, 255, 255, .015)
+	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05), 0 8px 15px rgba(0, 0, 0, 0.1), 0 0 0 1px  rgba(255, 255, 255, 0.1)
+	padding: 15px
+	border-radius: 15px
+	display: flex
+	justify-content: flex-start
+	align-items: center
+	flex-direction: column
+	gap: 10px
+	transition: all 0.25s ease-out
+	cursor: pointer
+
+	img
+		width: 52px
+		height: 52px
+
+	h3
+		color: $white
+
+	span
+		color: $text-main-color--darker
+		text-align: center
+
+	&:hover
+		box-shadow: 0 3px 6px rgba(0, 0, 0, 0.04), 0 15px 25px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.2)

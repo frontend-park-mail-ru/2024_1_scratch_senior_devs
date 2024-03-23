@@ -3,10 +3,10 @@
 Frontend проекта "Notion" команды scratch senior devs
 
 # Деплой
-* [YouNote](http://you-note.ru:8010)
+* [YouNote](https://you-note.ru)
 
 # API
-* [swagger](http://you-note.ru:8080/api/swagger/index.html)
+* [swagger](https://you-note.ru/api/swagger/index.html)
 
 # Авторы
 * [Михалёв Ярослав](https://github.com/YarikMix) - _frontend_

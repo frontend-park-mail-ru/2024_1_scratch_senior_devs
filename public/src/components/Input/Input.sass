@@ -1,0 +1,77 @@
+@import "/public/src/utils/variables.sass"
+
+.input-container
+	width: 100%
+	position: relative
+
+	input
+		width: 100%
+		padding: 12px 12px 12px 40px
+		border: 1px solid $input-border-color
+		outline: none
+		border-radius: 99px
+		transition: 0.3s
+		background: rgba(255, 255, 255, 0.1)
+		color: $text-main-color
+
+		&::placeholder
+			color: rgba(255, 255, 255, 0.8)
+
+		&:focus
+			border: 1px solid $primary-color
+
+	&.success input
+		border: 1px solid $success-color
+
+	&.error input
+		border: 1px solid $error-color
+
+	.errors-container
+		height: 40px
+		color: $error-color
+		font-size: 13px
+		padding: 0 10px
+
+	.password-toggle-btn
+		$p: &
+
+		position: absolute
+		width: 24px
+		height: 24px
+		top: 12px
+		right: 16px
+		cursor: pointer
+		filter: invert(85%)
+		transition: 0.5s ease
+
+		&:hover
+			filter: invert(75%)
+
+	input
+		&[type=password]
+			~ .password-toggle-btn-container
+				.show-btn
+					opacity: 1
+					transform: scale(1)
+
+				.hide-btn
+					opacity: 0
+					transform: scale(0)
+
+		&[type=text]
+			~ .password-toggle-btn-container
+				.show-btn
+					opacity: 0
+					transform: scale(0)
+
+				.hide-btn
+					opacity: 1
+					transform: scale(1)
+
+	.icon
+		position: absolute
+		top: 16px
+		left: 16px
+		width: 16px
+		height: 16px
+		filter: invert(85%)

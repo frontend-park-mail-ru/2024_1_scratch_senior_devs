@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "noImplicitAny": false,
+    "module": "ESNext",
+    "target": "es5",
+    "allowJs": true,
+    "jsx": "preserve",
+    "moduleResolution": "bundler"
+  },
+
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS",
+      "jsx": "preserve"
+    }
+  }
+}
