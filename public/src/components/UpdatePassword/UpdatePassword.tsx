@@ -113,7 +113,6 @@ export class UpdatePasswordForm extends ScReact.Component<any, any> {
         }))
 
         this.checkPassword()
-
         this.checkRepeatPassword()
     }
 

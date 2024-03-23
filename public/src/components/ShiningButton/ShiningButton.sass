@@ -13,11 +13,15 @@ $blur-size: 10px
 	transition: transform .5s
 	cursor: pointer
 
-	h3
-		font-size: 28px
-
 	&:hover
 		transform: scale(1.05)
+
+	span
+		font-size: 28px
+		font-weight: bold
+
+		@media screen and (max-width: $md)
+			font-size: 24px
 
 	.animated-border-box
 		padding: 18px 32px

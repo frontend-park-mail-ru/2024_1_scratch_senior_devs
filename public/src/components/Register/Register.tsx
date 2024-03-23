@@ -5,6 +5,7 @@ import {Button} from "../Button/Button";
 import {ValidateLogin, ValidatePassword} from "../../modules/validation";
 import {AppDispatcher} from "../../modules/dispatcher";
 import {AppUserStore, UserActions, UserStoreState} from "../../modules/stores/UserStore";
+import {Link} from "../Link/Link";
 
 export class RegisterForm extends  ScReact.Component<any, any> {
     state = {
@@ -37,6 +38,10 @@ export class RegisterForm extends  ScReact.Component<any, any> {
     }
 
     handleSubmit = () => {
+        this.checkLogin()
+        this.checkPassword()
+        this.checkRepeatPassword()
+
         if (this.state.loginValidationResult && this.state.passwordValidationResult && this.state.repeatPasswordValidationResult) {
             AppDispatcher.dispatch(
                 UserActions.REGISTER,
@@ -61,7 +66,11 @@ export class RegisterForm extends  ScReact.Component<any, any> {
             login: value
         }))
 
-        const {message, result} = ValidateLogin(value)
+        this.checkLogin()
+    }
+
+    checkLogin = () => {
+        const {message, result} = ValidateLogin(this.state.login)
         this.setLoginValidated(result)
 
         if (!result) {
@@ -84,24 +93,24 @@ export class RegisterForm extends  ScReact.Component<any, any> {
             password: value
         }))
 
-        if (this.state.password != this.state.repeatPassword) {
-            this.setRepeatPasswordError("Пароли не совпадают")
-            this.setPasswordError("Пароли не совпадают")
-            this.setPasswordValidated(false)
-            this.setRepeatPasswordValidated(false)
-            return
-        }
+        this.checkPassword()
+        this.checkRepeatPassword()
+    }
 
-        const {message, result} = ValidatePassword(value)
+    checkPassword = () => {
+        const {message, result} = ValidatePassword(this.state.password)
 
         if (!result) {
             this.setPasswordValidated(false)
             this.setPasswordError(message)
+        } else if (this.state.password.length > 0 && this.state.password !== this.state.repeatPassword){
+            this.setRepeatPasswordError("Пароли не совпадают")
+            this.setPasswordError("Пароли не совпадают")
+            this.setPasswordValidated(false)
+            this.setRepeatPasswordValidated(false)
         } else {
             this.setPasswordValidated(true)
-            this.setRepeatPasswordValidated(true)
             this.setPasswordError("")
-            this.setRepeatPasswordError("")
         }
     }
 
@@ -125,24 +134,24 @@ export class RegisterForm extends  ScReact.Component<any, any> {
             repeatPassword: value
         }))
 
-        if (this.state.password != this.state.repeatPassword) {
-            this.setRepeatPasswordError("Пароли не совпадают")
-            this.setPasswordError("Пароли не совпадают")
-            this.setPasswordValidated(false)
-            this.setRepeatPasswordValidated(false)
-            return
-        }
+        this.checkPassword()
+        this.checkRepeatPassword()
+    }
 
-        const {message, result} = ValidatePassword(value)
+    checkRepeatPassword = () => {
+        const {message, result} = ValidatePassword(this.state.repeatPassword)
 
         if (!result) {
             this.setRepeatPasswordValidated(false)
             this.setRepeatPasswordError(message)
+        } else if (this.state.repeatPassword.length > 0 && this.state.password !== this.state.repeatPassword) {
+            this.setRepeatPasswordError("Пароли не совпадают")
+            this.setPasswordError("Пароли не совпадают")
+            this.setPasswordValidated(false)
+            this.setRepeatPasswordValidated(false)
         } else {
-            this.setPasswordValidated(true)
             this.setRepeatPasswordValidated(true)
             this.setRepeatPasswordError("")
-            this.setPasswordError("")
         }
     }
 
@@ -191,8 +200,8 @@ export class RegisterForm extends  ScReact.Component<any, any> {
                     error={this.state.errorRepeatPassword}
                     validationResult={this.state.repeatPasswordValidationResult}
                 />
-                <span onclick={this.props.toggleForm}>Еще не зарегистрированы?</span>
-                <Button label="Войти" onClick={this.handleSubmit}/>
+                <Link label="Уже зарегистрированы?" onClick={this.props.toggleForm} />
+                <Button label="Зарегистрироваться" onClick={this.handleSubmit}/>
             </form>
         );
     }

@@ -5,6 +5,7 @@ import {Button} from "../Button/Button";
 import {ValidateLogin, ValidatePassword} from "../../modules/validation";
 import {AppDispatcher} from "../../modules/dispatcher";
 import {AppUserStore, UserActions, UserStoreState} from "../../modules/stores/UserStore";
+import {Link} from "../Link/Link";
 
 export class LoginForm extends  ScReact.Component<any, any> {
     state = {
@@ -142,7 +143,7 @@ export class LoginForm extends  ScReact.Component<any, any> {
                     validationResult={this.state.passwordValidationResult}
                     onChange={this.setPassword}
                 />
-                <span onclick={this.props.toggleForm}>Еще не зарегистрированы?</span>
+                <Link label="Еще нет аккаунта?" onClick={this.props.toggleForm} />
                 <Button label="Войти" onClick={this.handleSubmit}/>
             </form>
         );

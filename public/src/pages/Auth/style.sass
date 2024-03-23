@@ -8,6 +8,9 @@
 	padding: 0 50px
 	overflow: hidden
 
+	@media screen and (max-width: $md)
+		padding: 0
+
 	.glassmorphism-container
 		flex: 1
 		width: 100%
@@ -95,22 +98,24 @@
 						margin-bottom: 25px
 						color: $white
 
-					button
+					.link
+						display: none
+						margin-bottom: 20px
+
+						@media screen and (max-width: $md)
+							display: block
+
+					.button
 						font-size: 20px
 						min-width: 120px
 						background: $primary-color
 						border-radius: 20px
 						color: $white
 						cursor: pointer
-						line-height: 24px
 						outline: 0 solid transparent
 						padding: 12px 18px
 						user-select: none
 						border: 0
-
-						&:hover
-							background: $primary-color--darker
-							transform: scale(1)
 
 				&.sign-in
 					left: 0
@@ -190,19 +195,6 @@
 						top: 0
 						transform: translateX(0)
 						transition: all 0.6s ease-in-out
-
-						button
-							background-color: transparent
-							color: $white
-							font-size: 14px
-							padding: 10px 45px
-							border: 1px solid $white
-							border-radius: 8px
-							font-weight: 600
-							letter-spacing: 0.5px
-							text-transform: uppercase
-							cursor: pointer
-							transition: all 0.2s ease
 
 					.toggle-left
 						transform: translateX(-100%)

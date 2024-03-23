@@ -12,7 +12,7 @@ export class ShiningButton extends ScReact.Component<any, any> {
             <div className="animated-border-box-container" onclick={this.handleClick}>
                 <div className=" animated-border-box-glow"></div>
                 <div className="animated-border-box">
-                    <h3>{this.props.label}</h3>
+                    <span>{this.props.label}</span>
                 </div>
             </div>
         )

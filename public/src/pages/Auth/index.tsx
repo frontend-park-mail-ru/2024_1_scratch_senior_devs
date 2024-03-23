@@ -1,9 +1,9 @@
 import {ScReact} from "@veglem/screact";
 import {VDomNode} from "@veglem/screact/dist/vdom";
-import {Button} from "../../components/Button/Button";
 import "./style.sass"
 import {LoginForm} from "../../components/Login/login";
 import {RegisterForm} from "../../components/Register/Register";
+import {ShineButton} from "../../components/ShineButton/ShineButton";
 
 export class AuthPage extends ScReact.Component<any, any> {
     state = {
@@ -45,11 +45,11 @@ export class AuthPage extends ScReact.Component<any, any> {
                             <div className="toggle">
                                 <div className="toggle-panel toggle-left">
                                     <h2>Уже есть аккаунт?</h2>
-                                    <Button label="Войти" onClick={this.toggleForm}></Button>
+                                    <ShineButton label="Войти" onClick={this.toggleForm} />
                                 </div>
                                 <div className="toggle-panel toggle-right">
                                     <h2>Ещё нет аккаунта?</h2>
-                                    <Button label="Зарегистрироваться" onClick={this.toggleForm}></Button>
+                                    <ShineButton label="Зарегистрироваться" onClick={this.toggleForm} />
                                 </div>
                             </div>
                         </div>

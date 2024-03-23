@@ -7,6 +7,7 @@ import {AppDispatcher} from "../../modules/dispatcher";
 import {UpdatePasswordForm} from "../UpdatePassword/UpdatePassword";
 import {AppToasts} from "../../modules/toasts";
 import {imagesUlr} from "../../modules/api";
+import {Link} from "../Link/Link";
 
 const MEGABYTE_SIZE = 1024 * 1024
 const MAX_AVATAR_SIZE = 2 * MEGABYTE_SIZE
@@ -116,7 +117,7 @@ export class Profile extends ScReact.Component<any, any> {
                             </div>
                         </div>
                         <span className="username">{AppUserStore.state.username}</span>
-                        <span className="change-password-btn" onclick={this.openModal}>Изменить пароль</span>
+                        <Link label="Изменить пароль" onClick={this.openModal}/>
                         <Button label="Выйти" className="logout-btn" onClick={this.handleLogout}/>
                     </div>
                 </div>
