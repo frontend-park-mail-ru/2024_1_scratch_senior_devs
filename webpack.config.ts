@@ -55,15 +55,15 @@ const config : webpack.Configuration = {
             },
             {
                 test: /\.s[ac]ss$/i,
-                use: [stylesHandler, 'css-loader', 'sass-loader'],
+                use: [
+                    stylesHandler,
+                    'css-loader',
+                    "postcss-loader",
+                    'sass-loader'
+                ],
             },
             {
                 test: /\.(eot|svg|png|jpg|gif)$/i,
-                // use: [
-                //     {
-                //         loader: 'file-loader',
-                //     },
-                // ],
                 type: 'asset'
             },
             {

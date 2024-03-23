@@ -33,6 +33,8 @@ export class NotesPage extends ScReact.Component<any, any> {
     }
 
     updateState = (storeState:NotesStoreState) => {
+        console.log("updateState")
+        console.log(this.state.notes)
         this.setState(state => {
             if (state.notes.length > 0 && state.notes.length < AppNotesStore.state.notes.length) {
                 this.createObserver()
@@ -44,6 +46,7 @@ export class NotesPage extends ScReact.Component<any, any> {
                 notes: storeState.notes
             }
         })
+        console.log(this.state.notes)
     }
 
     handleSelectNote = (e) => {
@@ -54,6 +57,9 @@ export class NotesPage extends ScReact.Component<any, any> {
         } else if (e.target.matches(".note-container *")) {
             id = e.target.parentNode.id;
         }
+
+        console.log("handleSelectNote")
+        console.log(id)
 
         id && AppDispatcher.dispatch(NotesActions.SELECT_NOTE, id)
     }
