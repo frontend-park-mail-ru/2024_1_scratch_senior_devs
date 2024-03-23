@@ -9,8 +9,6 @@ $blur-size: 10px
 	justify-content: center
 	align-items: center
 	position: relative
-	height: 80px
-	width: 240px
 	color: #fff
 	transition: transform .5s
 	cursor: pointer
@@ -22,15 +20,13 @@ $blur-size: 10px
 		transform: scale(1.05)
 
 	.animated-border-box
-		height: 100%
-		width: 100%
-		position: absolute
+		padding: 18px 32px
+		position: relative
 		overflow: hidden
 		z-index: 0
 		display: flex
 		justify-content: center
 		align-items: center
-
 		border-radius: $border-radius
 
 		&:after
