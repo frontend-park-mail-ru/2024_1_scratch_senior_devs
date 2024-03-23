@@ -1,0 +1,92 @@
+@import "/public/src/utils/variables.sass"
+@import "/public/src/utils/breakpoints.sass"
+
+.home-wrapper
+	width: 100%
+	display: flex
+	flex-direction: column
+
+	section
+		width: 100%
+
+	.first
+		display: grid
+		position: relative
+		grid-template-areas: "stack"
+		height: 100vh
+
+		.container
+			display: flex
+			flex-direction: column
+			width: 100%
+			justify-content: center
+			align-items: center
+			gap: 60px
+			grid-area: stack
+			z-index: 10
+			animation-duration: 1s
+			animation-fill-mode: both
+			animation-name: fadeIn
+			padding: 0 15px
+
+			.title
+				text-align: center
+				font-size: 36px
+				color: #fff
+				text-shadow: 0 0 10px $primary-color, 0 0 20px $primary-color,0 0 40px $primary-color, 0 0 80px $primary-color
+
+				@media screen and (max-width: $md)
+					font-size: 28px
+
+	.second
+		display: flex
+		justify-content: center
+		align-items: center
+		flex-direction: column
+		color: $text-main-color
+		padding: 0 15%
+		gap: 75px
+		min-height: 100vh
+		z-index: 100
+
+		@media screen and (max-width: $md)
+			padding: 0 15px
+
+		h2
+			font-size: 36px
+			text-align: center
+			text-shadow: 0 0 10px $primary-color, 0 0 20px $primary-color,0 0 40px $primary-color, 0 0 80px $primary-color
+
+			@media screen and (max-width: $md)
+				font-size: 32px
+
+		.cards-container
+			display: grid
+			grid-template-columns: repeat(auto-fit, minmax(275px, 0.15fr))
+			justify-content: center
+			width: 100%
+			gap: 25px
+
+			.card.animate
+				animation: 1s both fadeInUp
+
+				&:nth-child(1)
+					animation-delay: 0s
+
+				&:nth-child(2)
+					animation-delay: 0.15s
+
+				&:nth-child(3)
+					animation-delay: 0.3s
+
+				&:nth-child(4)
+					animation-delay: 0.45s
+
+				@keyframes fadeInUp
+					from
+						opacity: 0
+						transform: translate3d(0,40px,0)
+
+					to
+						transform: translate3d(0,0,0)
+						opacity: 1
