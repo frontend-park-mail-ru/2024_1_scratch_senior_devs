@@ -20,7 +20,7 @@ class UserStore extends BaseStore<UserStoreState>{
         JWT: null,
         username: "",
         avatarUrl: "",
-        isAuth: false,
+        isAuth: undefined,
         errorLoginForm: undefined,
         errorRegisterForm: undefined,
         errorUpdatePasswordForm: undefined,

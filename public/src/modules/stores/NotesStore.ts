@@ -2,8 +2,7 @@ import {BaseStore} from "./BaseStore";
 import {AppNoteRequests} from "../api";
 import {AppUserStore} from "./UserStore";
 import {AppDispatcher} from "../dispatcher";
-import {AppToasts, Toasts} from "../toasts";
-import {createUUID} from "../utils";
+import {AppToasts} from "../toasts";
 
 export type Note = {
     id: number,

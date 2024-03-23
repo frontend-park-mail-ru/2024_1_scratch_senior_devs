@@ -18,6 +18,11 @@ export const AuthPageLoader = async () => {
             }
         }
 
+        if (AppUserStore.state.isAuth !== undefined) {
+            resolve(null)
+            return
+        }
+
         AppUserStore.SubscribeToStore(callback);
         AppDispatcher.dispatch(UserActions.CHECK_USER)
     })
