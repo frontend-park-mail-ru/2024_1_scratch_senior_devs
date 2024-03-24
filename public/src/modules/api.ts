@@ -207,7 +207,7 @@ class ProfileRequests {
                 username: response.body.username,
                 create_time: response.body.create_time,
                 image_path: response.body.image_path,
-                otp: response.body.secret
+                otp: response.body.second_factor
             }
         }
     }
