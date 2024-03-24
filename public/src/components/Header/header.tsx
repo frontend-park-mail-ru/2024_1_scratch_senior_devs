@@ -28,7 +28,7 @@ export class Header extends ScReact.Component<any, any>{
             isAuth: store.isAuth,
             avatarUrl: store.avatarUrl,
             userChecked: true,
-            otpEnabled: store.otp,
+            otpEnabled: store.otpEnabled,
             qr: store.qr
         }))
     }
