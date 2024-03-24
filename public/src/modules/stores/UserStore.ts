@@ -9,6 +9,7 @@ export type UserStoreState = {
     otpEnabled: boolean,
     otpDialogOpen: boolean,
     qr: string,
+    qrOpen: boolean,
     username: string,
     avatarUrl: string,
     isAuth: boolean,
@@ -24,6 +25,7 @@ class UserStore extends BaseStore<UserStoreState>{
         otpEnabled: undefined,
         otpDialogOpen: false,
         qr: undefined,
+        qrOpen: false,
         username: "",
         avatarUrl: "",
         isAuth: undefined,
@@ -68,6 +70,9 @@ class UserStore extends BaseStore<UserStoreState>{
                     break;
                 case UserActions.TOGGLE_TWO_FACTOR_AUTHORIZATION:
                     await this.toggleTwoFactorAuthorization(action.payload);
+                    break;
+                case UserActions.CLOSE_QR_WINDOW:
+                    this.closeQRWindow()
                     break;
             }
         });
@@ -127,8 +132,7 @@ class UserStore extends BaseStore<UserStoreState>{
                 isAuth: false,
                 username: "",
                 avatarUrl: "",
-                otpEnabled: false,
-                qr: ""
+                otpEnabled: false
             }))
             console.log("logout successful");
             AppRouter.go("/")
@@ -242,7 +246,15 @@ class UserStore extends BaseStore<UserStoreState>{
 
         this.SetState(state => ({
             ...state,
-            qr: image
+            qr: image,
+            qrOpen: true
+        }))
+    }
+
+    private closeQRWindow() {
+        this.SetState(state => ({
+            ...state,
+            qrOpen: false
         }))
     }
 }
@@ -259,4 +271,5 @@ export const UserActions = {
     OPEN_CHANGE_PASSWORD_FORM: "OPEN_CHANGE_PASSWORD_FORM",
     CLOSE_CHANGE_PASSWORD_FORM: "CLOSE_CHANGE_PASSWORD_FORM",
     TOGGLE_TWO_FACTOR_AUTHORIZATION: "TOGGLE_TWO_FACTOR_AUTHORIZATION",
+    CLOSE_QR_WINDOW: "CLOSE_QR_WINDOW"
 }

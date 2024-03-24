@@ -31,7 +31,8 @@ export class Profile extends ScReact.Component<any, any> {
     updateState = (store:UserStoreState) => {
         this.setState(state => ({
             ...state,
-            updatePasswordFormOpen: store.updatePasswordFormOpen
+            updatePasswordFormOpen: store.updatePasswordFormOpen,
+            qrOpen: store.qrOpen
         }))
     }
 
@@ -73,21 +74,15 @@ export class Profile extends ScReact.Component<any, any> {
     }
 
     toggleTwoFactorAuthorization = (value:boolean) => {
+        // TODO: отключение двухфакторки
         console.log("toggleTwoFactorAuthorization")
         if (value) {
             AppDispatcher.dispatch(UserActions.TOGGLE_TWO_FACTOR_AUTHORIZATION, value)
-            this.setState(state => ({
-                ...state,
-                qrOpen: true
-            }))
         }
     }
 
     closeQR = () => {
-        this.setState(state => ({
-            ...state,
-            qrOpen: false
-        }))
+        AppDispatcher.dispatch(UserActions.CLOSE_QR_WINDOW)
     }
 
     render() {

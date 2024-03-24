@@ -7,14 +7,14 @@ export class Modal extends ScReact.Component<any, any> {
         document.addEventListener('click', this.handleClickOutside, true)
     }
 
+    componentWillUnmount() {
+        document.removeEventListener('click', this.handleClickOutside, true)
+    }
+
     handleClickOutside = (e) => {
         if (e.target.classList.contains("overlay")) {
             this.props.handleClose()
         }
-    }
-
-    componentWillUnmount() {
-        document.removeEventListener('click', this.handleClickOutside, true)
     }
 
     render() {
