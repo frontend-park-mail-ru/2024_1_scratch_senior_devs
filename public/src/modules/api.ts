@@ -201,6 +201,8 @@ class ProfileRequests {
             }
         });
 
+        console.log(response.body.second_factor)
+
         if (response.status == 200) {
             return {
                 id: response.body.id,

@@ -79,7 +79,8 @@ export class NotesPage extends ScReact.Component<any, any> {
                 });
             });
 
-        observer.observe(document.querySelector(".note-container:last-child"));
+        const lastNote = document.querySelector(".note-container:last-child")
+        lastNote && observer.observe(lastNote);
     }
 
     searchNotes = (value:string) => {
