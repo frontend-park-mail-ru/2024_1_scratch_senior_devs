@@ -7,8 +7,8 @@ import {AppToasts} from "../toasts";
 export type UserStoreState = {
     JWT: string | null | undefined,
     otpEnabled: boolean,
-    qr: string,
     otpDialogOpen: boolean,
+    qr: string,
     username: string,
     avatarUrl: string,
     isAuth: boolean,
@@ -88,6 +88,7 @@ class UserStore extends BaseStore<UserStoreState>{
                     JWT: res.headers.authorization,
                     username: res.body.username,
                     avatarUrl: res.body.image_path,
+                    otpEnabled: res.body.second_factor,
                     isAuth: true,
                     otpDialogOpen: false
                 }))
@@ -104,7 +105,7 @@ class UserStore extends BaseStore<UserStoreState>{
             } else {
                 this.SetState(state => ({
                     ...state,
-                    errorLoginForm: "Неправильный логин или пароль"
+                    errorLoginForm: "Неправильный логин, пароль или код"
                 }))
             }
 
@@ -113,7 +114,7 @@ class UserStore extends BaseStore<UserStoreState>{
 
             this.SetState(state => ({
                 ...state,
-                errorLoginForm: "Неправильный логин или пароль"
+                errorLoginForm: "Неправильный логин, пароль или код"
             }))
         }
     }
@@ -125,7 +126,9 @@ class UserStore extends BaseStore<UserStoreState>{
                 ...state,
                 isAuth: false,
                 username: "",
-                avatarUrl: ""
+                avatarUrl: "",
+                otpEnabled: false,
+                qr: ""
             }))
             console.log("logout successful");
             AppRouter.go("/")
@@ -161,7 +164,7 @@ class UserStore extends BaseStore<UserStoreState>{
             console.log("username already taken");
             this.SetState(state => ({
                 ...state,
-                errorRegisterForm: "Неправильный пароль"
+                errorRegisterForm: "Этот логин уже занят"
             }))
         }
     }

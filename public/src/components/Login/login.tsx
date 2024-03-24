@@ -8,8 +8,12 @@ import {AppUserStore, UserActions, UserStoreState} from "../../modules/stores/Us
 import {Link} from "../Link/Link";
 import {OTPDialog} from "../OTPDialog/OTPDialog";
 
+const OTP_CODE_LENGTH = 6
+
 export class LoginForm extends  ScReact.Component<any, any> {
     state = {
+        error: false,
+
         errorLogin: "",
         loginValidationResult: false,
         login: "",
@@ -19,7 +23,7 @@ export class LoginForm extends  ScReact.Component<any, any> {
         password: "",
 
         otpDialogOpen: false,
-        otpValue: new Array(6).fill("")
+        otpValue: new Array(OTP_CODE_LENGTH).fill("")
     }
 
     componentDidMount() {
@@ -31,17 +35,18 @@ export class LoginForm extends  ScReact.Component<any, any> {
     }
 
     updateState = (store:UserStoreState) => {
-        if (store.errorLoginForm !== undefined) {
+        this.setState(state => ({
+            ...state,
+            error: store.errorLoginForm !== undefined,
+            otpDialogOpen: store.otpDialogOpen
+        }))
+
+        if (this.state.error) {
             this.setLoginError(store.errorLoginForm)
             this.setLoginValidated(false)
             this.setPasswordError(store.errorLoginForm)
             this.setPasswordValidated(false)
         }
-
-        this.setState(state => ({
-            ...state,
-            otpDialogOpen: store.otpDialogOpen
-        }))
     }
 
     setOtpValue = (value:string[]) => {
@@ -139,6 +144,9 @@ export class LoginForm extends  ScReact.Component<any, any> {
     }
 
     render(): VDomNode {
+        console.log(this.state.otpValue.join(""))
+        console.log(this.state.otpValue.join("").length)
+
         return (
             <form className="login-form">
                 <h3>Вход</h3>
@@ -160,9 +168,9 @@ export class LoginForm extends  ScReact.Component<any, any> {
                     validationResult={this.state.passwordValidationResult}
                     onChange={this.setPassword}
                 />
-                <OTPDialog open={this.state.otpDialogOpen} value={this.state.otpValue} setValue={this.setOtpValue}/>
+                <OTPDialog open={this.state.otpDialogOpen} value={this.state.otpValue} setValue={this.setOtpValue} error={this.state.error}/>
                 <Link label="Еще нет аккаунта?" onClick={this.props.toggleForm} />
-                <Button label="Войти" onClick={this.handleSubmit}/>
+                <Button label="Войти" onClick={this.handleSubmit} disabled={this.state.otpDialogOpen ? this.state.otpValue.join("").length !== OTP_CODE_LENGTH : false}/>
             </form>
         );
     }

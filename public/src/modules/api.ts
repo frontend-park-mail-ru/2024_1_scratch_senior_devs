@@ -93,10 +93,6 @@ class AuthRequests {
     private baseUrl = "/auth";
 
     public Login = async (username: string, password: string, code:string) => {
-
-        console.log("Login")
-        console.log(code)
-
         const response = await Ajax.Post(this.baseUrl + "/login", {
             body: {
                 username,
@@ -187,9 +183,8 @@ class AuthRequests {
         const response = await fetch(baseUrl + this.baseUrl + "/get_qr", options)
 
         const blob = await response.blob()
-        const img = URL.createObjectURL(blob)
 
-        return img
+        return URL.createObjectURL(blob)
     }
 }
 

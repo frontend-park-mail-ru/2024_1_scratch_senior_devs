@@ -66,9 +66,6 @@
 			overflow: hidden
 			z-index: 10
 
-			@media screen and (max-width: $md)
-				min-width: 300px
-
 			@keyframes fadeIn
 				from
 					opacity: 0
@@ -86,12 +83,18 @@
 				align-items: center
 
 				form
-					width: 300px
+					width: 275px
 					height: 100%
 					display: flex
 					justify-content: center
 					align-items: center
 					flex-direction: column
+
+					@media screen and (max-width: $md)
+						width: 275px
+
+					@media screen and (max-width: $sm)
+						width: 250px
 
 					h3
 						font-size: 28px
@@ -108,14 +111,8 @@
 					.button
 						font-size: 20px
 						min-width: 120px
-						background: $primary-color
 						border-radius: 20px
-						color: $white
-						cursor: pointer
-						outline: 0 solid transparent
 						padding: 12px 18px
-						user-select: none
-						border: 0
 
 				&.sign-in
 					left: 0

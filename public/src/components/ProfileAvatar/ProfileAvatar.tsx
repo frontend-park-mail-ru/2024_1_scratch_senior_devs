@@ -5,6 +5,7 @@ import {AppToasts} from "../../modules/toasts";
 import {AppDispatcher} from "../../modules/dispatcher";
 import {UserActions} from "../../modules/stores/UserStore";
 import "./ProfileAvatar.sass"
+import {AvatarUploadLoader} from "../AvatarUplodaLoader/AvatarUploadLoader";
 
 const MEGABYTE_SIZE = 1024 * 1024
 const MAX_AVATAR_SIZE = 5 * MEGABYTE_SIZE
@@ -51,21 +52,7 @@ export class ProfileAvatar extends ScReact.Component<any, any> {
                     <Img src="src/assets/photo.svg" className="upload-preview-icon"/>
                 </form>
 
-                <div className={"progress-wrapper " + (this.state.inUpload ? "active" : "")}>
-                    <div className="inner"></div>
-                    <div className="checkmark">
-                        <span></span>
-                        <span></span>
-                    </div>
-                    <div className="circle">
-                        <div className="bar left">
-                            <div className="progress"></div>
-                        </div>
-                        <div className="bar right">
-                            <div className="progress"></div>
-                        </div>
-                    </div>
-                </div>
+                <AvatarUploadLoader active={this.state.inUpload} />
             </div>
         )
     }

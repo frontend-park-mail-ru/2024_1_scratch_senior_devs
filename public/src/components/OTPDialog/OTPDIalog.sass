@@ -11,9 +11,13 @@
 	transition: 0.5s
 
 	&.open
-		height: 75px
+		height: 80px
 
-	h4
+	&.error
+		.input-field
+			input
+				border: 1px solid $error-color
+	span
 		color: $text-main-color
 		font-size: 18px
 
@@ -26,9 +30,14 @@
 			width: 36px
 			border-radius: 6px
 			outline: none
-			border: 1px solid #ddd
+			background: #e5e5e5
+			border: none
 			text-align: center
 			font-size: 18px
+
+			@media screen and (max-width: $md)
+				height: 35px
+				width: 32px
 
 			&::-webkit-inner-spin-button, &::-webkit-outer-spin-button
 				display: none
