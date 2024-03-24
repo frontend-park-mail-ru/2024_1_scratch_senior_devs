@@ -2,28 +2,39 @@ import {ScReact} from "@veglem/screact";
 import {Img} from "../Image/Image";
 import "./Profile.sass"
 import {Button} from "../Button/Button";
-import {AppUserStore, UserActions} from "../../modules/stores/UserStore";
+import {AppUserStore, UserActions, UserStoreState} from "../../modules/stores/UserStore";
 import {AppDispatcher} from "../../modules/dispatcher";
 import {UpdatePasswordForm} from "../UpdatePassword/UpdatePassword";
 import {AppToasts} from "../../modules/toasts";
 import {imagesUlr} from "../../modules/api";
 import {Link} from "../Link/Link";
+import {Modal} from "../Modal/Modal";
 
 const MEGABYTE_SIZE = 1024 * 1024
-const MAX_AVATAR_SIZE = 2 * MEGABYTE_SIZE
+const MAX_AVATAR_SIZE = 5 * MEGABYTE_SIZE
 
 export class Profile extends ScReact.Component<any, any> {
     state = {
         open: false,
-        inUpload: false
+        inUpload: false,
+        updatePasswordFormOpen: false
     }
 
     componentDidMount() {
+        AppUserStore.SubscribeToStore(this.updateState)
         document.addEventListener('click', this.handleClickOutside, true)
     }
 
     componentWillUnmount() {
+        AppUserStore.UnSubscribeToStore(this.updateState)
         document.removeEventListener('click', this.handleClickOutside, true)
+    }
+
+    updateState = (store:UserStoreState) => {
+        this.setState(state => ({
+            ...state,
+            updatePasswordFormOpen: store.updatePasswordFormOpen
+        }))
     }
 
     handleClickOutside = (e) => {
@@ -81,6 +92,10 @@ export class Profile extends ScReact.Component<any, any> {
         AppDispatcher.dispatch(UserActions.OPEN_CHANGE_PASSWORD_FORM)
     }
 
+    closeChangePasswordForm = () => {
+        AppDispatcher.dispatch(UserActions.CLOSE_CHANGE_PASSWORD_FORM)
+    }
+
     render() {
         return (
             <div className={"user-profile-wrapper " + (this.state.open ? "open" : "")}>
@@ -122,7 +137,7 @@ export class Profile extends ScReact.Component<any, any> {
                     </div>
                 </div>
 
-                <UpdatePasswordForm />
+                <Modal open={this.state.updatePasswordFormOpen} content={<UpdatePasswordForm />} handleClose={this.closeChangePasswordForm}/>
 
             </div>
         )

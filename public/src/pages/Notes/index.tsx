@@ -7,11 +7,14 @@ import {AppNotesStore, NotesActions, NotesStoreState} from "../../modules/stores
 import {AppDispatcher} from "../../modules/dispatcher";
 import {Modal} from "../../components/Modal/Modal";
 import {Button} from "../../components/Button/Button";
+import {Img} from "../../components/Image/Image";
+import {DeleteNoteDialog} from "../../components/DeleteNoteDialog/DeleteNoteDialog";
 
 export class NotesPage extends ScReact.Component<any, any> {
     state = {
         notes: [],
-        selectedNote: undefined
+        selectedNote: undefined,
+        deleteNoteModal: false
     }
 
     componentDidMount() {
@@ -32,7 +35,7 @@ export class NotesPage extends ScReact.Component<any, any> {
         AppNotesStore.UnSubscribeToStore(this.updateState)
     }
 
-    updateState = (storeState:NotesStoreState) => {
+    updateState = (store:NotesStoreState) => {
         console.log("updateState")
         console.log(this.state.notes)
         this.setState(state => {
@@ -42,8 +45,9 @@ export class NotesPage extends ScReact.Component<any, any> {
 
             return {
                 ...state,
-                selectedNote: storeState.selectedNote,
-                notes: storeState.notes
+                selectedNote: store.selectedNote,
+                notes: store.notes,
+                deleteNoteModal: store.modalOpen
             }
         })
         console.log(this.state.notes)
@@ -88,18 +92,20 @@ export class NotesPage extends ScReact.Component<any, any> {
     }
 
     render() {
+        const notes = this.state.notes.map(note => (
+            <Note key1={note.id} note={note} selected={this.state.selectedNote?.id == note.id} />
+        ))
+
         return (
             <div className={"notes-page-wrapper " + (this.state.selectedNote ? "active" : "")}>
                 <aside>
-                    <Modal />
+                    <Modal open={this.state.deleteNoteModal} content={<DeleteNoteDialog />} handleClose={() => AppDispatcher.dispatch(NotesActions.CLOSE_DELETE_NOTE_DIALOG)} />
                     <div className="top-panel">
-                        <Button label="Новая заметка" onClick={this.createEmptyNote} />
-                        <SearchBar onChange={this.searchNotes} />
+                        <Button label="Новая заметка" onClick={this.createEmptyNote}/>
+                        <SearchBar onChange={this.searchNotes}/>
                     </div>
                     <div className="notes-container" onclick={this.handleSelectNote}>
-                        {this.state.notes.map(note => (
-                            <Note key1={note.id} note={note} selected={this.state.selectedNote?.id == note.id} />
-                        ))}
+                        {notes}
                     </div>
                 </aside>
                <NoteEditor />

@@ -88,11 +88,13 @@ export class Toasts extends ScReact.Component<any, ToastState> {
     }
 
     render(): VDomNode {
+        const toasts = this.state.toasts.map(toast => (
+            <Toast key1={toast.id} type={toast.type} message={toast.message} onHide={this.removeToast} offset={toast.offset}/>
+        ))
+
         return (
             <div>
-                {this.state.toasts.map(toast => (
-                    <Toast key1={toast.id} type={toast.type} message={toast.message} onHide={this.removeToast} offset={toast.offset}/>
-                ))}
+                {toasts}
             </div>
         );
     }

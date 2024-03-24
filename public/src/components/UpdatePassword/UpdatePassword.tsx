@@ -5,7 +5,7 @@ import {Img} from "../Image/Image";
 import "./UpdatePassword.sass"
 import {ValidatePassword} from "../../modules/validation";
 import {AppDispatcher} from "../../modules/dispatcher";
-import {AppUserStore, UserActions, UserStoreState} from "../../modules/stores/UserStore";
+import {UserActions} from "../../modules/stores/UserStore";
 
 export class UpdatePasswordForm extends ScReact.Component<any, any> {
     state = {
@@ -16,49 +16,42 @@ export class UpdatePasswordForm extends ScReact.Component<any, any> {
         repeatPassword: "",
         errorRepeatPassword: "",
         repeatPasswordValidationResult: false,
-
-        open: false
     }
 
-    componentDidMount() {
-        AppUserStore.SubscribeToStore(this.updateState)
-        document.addEventListener('click', this.handleClickOutside, true)
-    }
+    componentDidUpdate() {
+        console.log("componentDidUpdate")
+        console.log(this.props) // Пусто
 
-    componentWillUnmount() {
-        AppUserStore.UnSubscribeToStore(this.updateState)
-        document.removeEventListener('click', this.handleClickOutside, true)
-    }
-
-    handleClickOutside = (e) => {
-        if (e.target.classList.contains("overlay")) {
-            this.closeModal()
-        }
-    }
-
-    updateState = (store:UserStoreState) => {
-        this.setState(state => ({
-            ...state,
-            open: store.updatePasswordFormOpen
-        }))
-
-        if (!this.state.open) {
-            setTimeout(() => {
-                this.setState(() => ({
-                    password: "",
-                    errorPassword: "",
-                    passwordValidationResult: false,
-
-                    repeatPassword: "",
-                    errorRepeatPassword: "",
-                    repeatPasswordValidationResult: false
-                }))
-            }, 500)
-        }
+        // TODO
+        // if (this.props.open === false) {
+        //     setTimeout(() => {
+        //         this.setState(() => ({
+        //             password: "",
+        //             errorPassword: "",
+        //             passwordValidationResult: false,
+        //
+        //             repeatPassword: "",
+        //             errorRepeatPassword: "",
+        //             repeatPasswordValidationResult: false
+        //         }))
+        //     }, 500)
+        // }
     }
 
     closeModal = () => {
         AppDispatcher.dispatch(UserActions.CLOSE_CHANGE_PASSWORD_FORM)
+
+        setTimeout(() => {
+            this.setState(() => ({
+                password: "",
+                errorPassword: "",
+                passwordValidationResult: false,
+
+                repeatPassword: "",
+                errorRepeatPassword: "",
+                repeatPasswordValidationResult: false
+            }))
+        }, 500)
     }
 
     setPassword = (value:string) => {
@@ -164,31 +157,27 @@ export class UpdatePasswordForm extends ScReact.Component<any, any> {
 
     render() {
         return (
-            <div className={"modal-wrapper " + (this.state.open ? "active" : "")}>
-                <div className="overlay"></div>
-                <div className="modal-content change-password-form">
-                    <h2>Форма изменения пароля</h2>
-                    <Input
-                        type="password"
-                        placeholder="Старый пароль"
-                        icon="src/assets/password.png"
-                        value={this.state.password}
-                        onChange={this.setPassword}
-                        error={this.state.errorPassword}
-                        validationResult={this.state.passwordValidationResult}
-                    />
-                    <Input
-                        type="password"
-                        placeholder="Новый пароль"
-                        icon="src/assets/password.png"
-                        value={this.state.repeatPassword}
-                        onChange={this.setRepeatPassword}
-                        error={this.state.errorRepeatPassword}
-                        validationResult={this.state.repeatPasswordValidationResult}
-                    />
-                    <Button label="Изменить" onClick={this.handleSubmit}/>
-                    <Img src="/src/assets/close.svg" className="close-modal-btn" onClick={this.closeModal}/>
-                </div>
+            <div className="change-password-form">
+                <h2>Форма изменения пароля</h2>
+                <Input
+                    type="password"
+                    placeholder="Старый пароль"
+                    icon="src/assets/password.png"
+                    value={this.state.password}
+                    onChange={this.setPassword}
+                    error={this.state.errorPassword}
+                    validationResult={this.state.passwordValidationResult}
+                />
+                <Input
+                    type="password"
+                    placeholder="Новый пароль"
+                    icon="src/assets/password.png"
+                    value={this.state.repeatPassword}
+                    onChange={this.setRepeatPassword}
+                    error={this.state.errorRepeatPassword}
+                    validationResult={this.state.repeatPasswordValidationResult}
+                />
+                <Button label="Изменить" onClick={this.handleSubmit}/>
             </div>
         )
     }
