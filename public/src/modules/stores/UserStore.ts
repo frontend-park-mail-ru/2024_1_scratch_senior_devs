@@ -6,6 +6,9 @@ import {AppToasts} from "../toasts";
 
 export type UserStoreState = {
     JWT: string | null | undefined,
+    otpEnabled: boolean,
+    qr: string,
+    otpDialogOpen: boolean,
     username: string,
     avatarUrl: string,
     isAuth: boolean,
@@ -18,13 +21,16 @@ export type UserStoreState = {
 class UserStore extends BaseStore<UserStoreState>{
     state = {
         JWT: null,
+        otpEnabled: undefined,
+        otpDialogOpen: false,
+        qr: undefined,
         username: "",
         avatarUrl: "",
         isAuth: undefined,
         errorLoginForm: undefined,
         errorRegisterForm: undefined,
         errorUpdatePasswordForm: undefined,
-        updatePasswordFormOpen: false,
+        updatePasswordFormOpen: false
     }
 
     constructor() {
@@ -60,6 +66,9 @@ class UserStore extends BaseStore<UserStoreState>{
                 case UserActions.CLOSE_CHANGE_PASSWORD_FORM:
                     this.closeChangePasswordForm();
                     break;
+                case UserActions.TOGGLE_TWO_FACTOR_AUTHORIZATION:
+                    await this.toggleTwoFactorAuthorization(action.payload);
+                    break;
             }
         });
     }
@@ -71,19 +80,34 @@ class UserStore extends BaseStore<UserStoreState>{
         }))
 
         try {
-            const res = await AppAuthRequests.Login(credentials.username, credentials.password);
-            this.SetState(s => {
-                return {
-                    ...s,
-                    JWT: res.jwt,
-                    username: res.username,
+            const res= await AppAuthRequests.Login(credentials.username, credentials.password, credentials.otp);
+
+            if (res.status == 200) {
+                this.SetState(state => ({
+                    ...state,
+                    JWT: res.headers.authorization,
+                    username: res.body.username,
+                    avatarUrl: res.body.image_path,
                     isAuth: true,
-                    avatarUrl: res.image_path
-                }
-            })
-            localStorage.setItem('Authorization', this.state.JWT)
-            console.log("login successfull");
-            AppRouter.go("/notes");
+                    otpDialogOpen: false
+                }))
+
+                localStorage.setItem('Authorization', this.state.JWT)
+                console.log("login successfull");
+                AppRouter.go("/notes");
+            } else if (res.status == 202) {
+                console.log("asdfasdfasdfas")
+                this.SetState(state => ({
+                    ...state,
+                    otpDialogOpen: true
+                }))
+            } else {
+                this.SetState(state => ({
+                    ...state,
+                    errorLoginForm: "Неправильный логин или пароль"
+                }))
+            }
+
         } catch (err) {
             console.log(err);
 
@@ -91,21 +115,18 @@ class UserStore extends BaseStore<UserStoreState>{
                 ...state,
                 errorLoginForm: "Неправильный логин или пароль"
             }))
-
         }
     }
 
     public async logout() {
         try {
             await AppAuthRequests.Logout(this.state.JWT);
-            this.SetState(s => {
-                return {
-                    ...s,
-                    isAuth: false,
-                    username: "",
-                    avatarUrl: ""
-                }
-            })
+            this.SetState(state => ({
+                ...state,
+                isAuth: false,
+                username: "",
+                avatarUrl: ""
+            }))
             console.log("logout successful");
             AppRouter.go("/")
         } catch (err) {
@@ -149,24 +170,21 @@ class UserStore extends BaseStore<UserStoreState>{
         try {
             const res = await AppAuthRequests.CheckUser(this.state.JWT)
 
-            this.SetState(s => {
-                return {
-                    ...s,
-                    isAuth: true,
-                    username: res.username,
-                    avatarUrl: res.image_path
-                }
-            })
+            this.SetState(state => ({
+                ...state,
+                isAuth: true,
+                username: res.username,
+                avatarUrl: res.image_path,
+                otpEnabled: res.otp
+            }))
         } catch (err) {
             console.log("не зареган");
             console.log(err);
 
-            this.SetState(s => {
-                return {
-                    ...s,
-                    isAuth: false
-                }
-            })
+            this.SetState(state => ({
+                ...state,
+                isAuth: false
+            }))
         }
     }
 
@@ -215,6 +233,15 @@ class UserStore extends BaseStore<UserStoreState>{
             errorUpdatePasswordForm: undefined
         }))
     }
+
+    private async toggleTwoFactorAuthorization(value:boolean) {
+        const image = await AppAuthRequests.GetQR(this.state.JWT)
+
+        this.SetState(state => ({
+            ...state,
+            qr: image
+        }))
+    }
 }
 
 export const AppUserStore = new UserStore();
@@ -228,4 +255,5 @@ export const UserActions = {
     UPDATE_PASSWORD: "UPDATE_PASSWORD",
     OPEN_CHANGE_PASSWORD_FORM: "OPEN_CHANGE_PASSWORD_FORM",
     CLOSE_CHANGE_PASSWORD_FORM: "CLOSE_CHANGE_PASSWORD_FORM",
+    TOGGLE_TWO_FACTOR_AUTHORIZATION: "TOGGLE_TWO_FACTOR_AUTHORIZATION",
 }

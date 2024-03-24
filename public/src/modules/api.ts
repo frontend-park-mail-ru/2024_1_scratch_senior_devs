@@ -57,6 +57,7 @@ const Ajax = {
             try {
                 responseData.body = await response.json();
             } catch {
+                // responseData.body = await response.blob();
                 responseData.body = null;
             }
 
@@ -91,26 +92,34 @@ const Ajax = {
 class AuthRequests {
     private baseUrl = "/auth";
 
-    public Login = async (username: string, password: string) => {
+    public Login = async (username: string, password: string, code:string) => {
+
+        console.log("Login")
+        console.log(code)
 
         const response = await Ajax.Post(this.baseUrl + "/login", {
             body: {
                 username,
-                password
+                password,
+                code
             }
         });
 
-        if (response.status == 200) {
-            return {
-                id: response.body.id,
-                username: response.body.username,
-                create_time: response.body.create_time,
-                image_path: response.body.image_path,
-                jwt: response.headers.authorization
-            }
-        }
+        return response
 
-        throw Error(response.body.message);
+        // console.log(response.status)
+        //
+        // if (response.status == 200) {
+        //     return {
+        //         id: response.body.id,
+        //         username: response.body.username,
+        //         create_time: response.body.create_time,
+        //         image_path: response.body.image_path,
+        //         jwt: response.headers.authorization
+        //     }
+        // }
+        //
+        // throw Error(response.body.message);
     };
 
     SignUp = async (username: string, password: string) => {
@@ -164,6 +173,24 @@ class AuthRequests {
             throw Error("not authorized");
         }
     };
+
+    GetQR = async (jwt: string) => {
+        const options: RequestInit = {
+            method: RequestMethods.GET,
+            mode: "cors",
+            credentials: "include",
+            headers: {
+                "Authorization": jwt
+            }
+        }
+
+        const response = await fetch(baseUrl + this.baseUrl + "/get_qr", options)
+
+        const blob = await response.blob()
+        const img = URL.createObjectURL(blob)
+
+        return img
+    }
 }
 
 class ProfileRequests {
@@ -180,6 +207,7 @@ class ProfileRequests {
                 username: response.body.username,
                 create_time: response.body.create_time,
                 image_path: response.body.image_path,
+                otp: response.body.secret
             }
         }
     }

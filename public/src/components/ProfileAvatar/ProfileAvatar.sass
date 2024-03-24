@@ -1,0 +1,157 @@
+@import "/public/src/utils/variables.sass"
+
+.user-avatar-container
+	width: 100px
+	height: 100px
+	position: relative
+	border-radius: 50%
+
+	&:hover
+		.upload-preview
+			opacity: 1
+
+	.user-avatar
+		width: 100px
+		height: 100px
+		border-radius: 50%
+
+		&.loading
+			display: none
+
+	.upload-preview
+		position: absolute
+		top: 0
+		right: 0
+		width: 100%
+		height: 100%
+		border-radius: 50%
+		background: rgba(0,0,0,0.8)
+		opacity: 0
+		cursor: pointer
+		transition: 0.3s
+		display: flex
+		justify-content: center
+		align-items: center
+
+		label
+			z-index: 100
+			width: 100%
+			height: 100%
+			position: absolute
+			top: 0
+			right: 0
+			border-radius: 50%
+			cursor: pointer
+
+		.upload-preview-icon
+			width: 32px
+			height: 32px
+			filter: invert(80%)
+
+	.progress-wrapper
+		width: 100px
+		height: 100px
+		transform: scale(0)
+		transition: 1s
+		position: absolute
+		top: 0
+		right: 0
+		z-index: 100
+
+		.inner
+			position: absolute
+			width: 90px
+			height: 90px
+			background: $modal-background
+			border-radius: 50%
+			top: 50%
+			left: 50%
+			transform: translate(-50%, -50%)
+			z-index: 2
+			transition: 1s ease
+			transition-delay: 1.5s
+
+		.circle
+			.bar
+				position: absolute
+				width: 100%
+				height: 100%
+				background: #ddd
+				border-radius: 50%
+				clip: rect(0px, 100px, 100px, 50px)
+
+				.progress
+					position: absolute
+					width: 100%
+					height: 100%
+					background: $primary-color--darker
+					border-radius: 50%
+					clip: rect(0px, 50px, 100px, 0px)
+					z-index: 1
+
+			.left
+				.progress
+					transition: 0.5s linear
+					transition-delay: 0.5s
+
+			.right
+				transform: rotate(180deg)
+
+				.progress
+					transition: 0.5s linear
+					transition-delay: 1s
+
+		.checkmark
+			position: absolute
+			width: 100%
+			height: 100%
+			border-radius: 50%
+			z-index: 2
+
+			span
+				position: absolute
+				display: block
+				width: 30px
+				height: 7px
+				background: #fff
+				border-radius: 5px
+				transform-origin: left
+				transition: 0.25s
+
+				&:first-child
+					top: 45px
+					left: 22px
+					width: 30px
+					transform: rotate(45deg) scaleX(0)
+					transition-delay: 2.5s
+
+				&:last-child
+					top: 65px
+					left: 40px
+					width: 50px
+					transform: rotate(-45deg) scaleX(0)
+					transition-delay: 2.75s
+
+		&.active
+			transform: scale(1)
+
+			.inner
+				transform: translate(-50%, -50%) scale(0)
+
+			.circle
+				.left
+					.progress
+						transform: rotate(180deg)
+
+				.right
+					.progress
+						transform: rotate(180deg)
+
+			.checkmark
+				span
+					&:first-child
+						transform: rotate(45deg) scaleX(1)
+
+					&:last-child
+						transform: rotate(-45deg) scaleX(1)
+

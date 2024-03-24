@@ -6,6 +6,7 @@ import {ValidateLogin, ValidatePassword} from "../../modules/validation";
 import {AppDispatcher} from "../../modules/dispatcher";
 import {AppUserStore, UserActions, UserStoreState} from "../../modules/stores/UserStore";
 import {Link} from "../Link/Link";
+import {OTPDialog} from "../OTPDialog/OTPDialog";
 
 export class LoginForm extends  ScReact.Component<any, any> {
     state = {
@@ -15,7 +16,10 @@ export class LoginForm extends  ScReact.Component<any, any> {
 
         errorPassword: "",
         passwordValidationResult: false,
-        password: ""
+        password: "",
+
+        otpDialogOpen: false,
+        otpValue: new Array(6).fill("")
     }
 
     componentDidMount() {
@@ -33,6 +37,18 @@ export class LoginForm extends  ScReact.Component<any, any> {
             this.setPasswordError(store.errorLoginForm)
             this.setPasswordValidated(false)
         }
+
+        this.setState(state => ({
+            ...state,
+            otpDialogOpen: store.otpDialogOpen
+        }))
+    }
+
+    setOtpValue = (value:string[]) => {
+        this.setState(state => ({
+            ...state,
+            otpValue: value
+        }))
     }
 
     handleSubmit = () => {
@@ -44,7 +60,8 @@ export class LoginForm extends  ScReact.Component<any, any> {
                 UserActions.LOGIN,
                 {
                     username: this.state.login,
-                    password: this.state.password
+                    password: this.state.password,
+                    otp: this.state.otpValue.join("")
                 }
             )
         }
@@ -143,6 +160,7 @@ export class LoginForm extends  ScReact.Component<any, any> {
                     validationResult={this.state.passwordValidationResult}
                     onChange={this.setPassword}
                 />
+                <OTPDialog open={this.state.otpDialogOpen} value={this.state.otpValue} setValue={this.setOtpValue}/>
                 <Link label="Еще нет аккаунта?" onClick={this.props.toggleForm} />
                 <Button label="Войти" onClick={this.handleSubmit}/>
             </form>

@@ -1,0 +1,34 @@
+@import "/public/src/utils/variables.sass"
+
+.otp-dialog-container
+	display: flex
+	flex-direction: column
+	align-items: center
+	margin-bottom: 25px
+	gap: 10px
+	height: 0
+	overflow: hidden
+	transition: 0.5s
+
+	&.open
+		height: 75px
+
+	h4
+		color: $text-main-color
+		font-size: 18px
+
+	.input-field
+		display: flex
+		gap: 10px
+
+		input
+			height: 40px
+			width: 36px
+			border-radius: 6px
+			outline: none
+			border: 1px solid #ddd
+			text-align: center
+			font-size: 18px
+
+			&::-webkit-inner-spin-button, &::-webkit-outer-spin-button
+				display: none

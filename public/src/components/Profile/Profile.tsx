@@ -1,23 +1,21 @@
 import {ScReact} from "@veglem/screact";
-import {Img} from "../Image/Image";
 import "./Profile.sass"
 import {Button} from "../Button/Button";
 import {AppUserStore, UserActions, UserStoreState} from "../../modules/stores/UserStore";
 import {AppDispatcher} from "../../modules/dispatcher";
 import {UpdatePasswordForm} from "../UpdatePassword/UpdatePassword";
-import {AppToasts} from "../../modules/toasts";
-import {imagesUlr} from "../../modules/api";
 import {Link} from "../Link/Link";
 import {Modal} from "../Modal/Modal";
+import {ToggleButton} from "../ToggleButton/ToggleButton";
+import {ProfileAvatar} from "../ProfileAvatar/ProfileAvatar";
+import {QRModal} from "../QRModal/QRModal";
 
-const MEGABYTE_SIZE = 1024 * 1024
-const MAX_AVATAR_SIZE = 5 * MEGABYTE_SIZE
 
 export class Profile extends ScReact.Component<any, any> {
     state = {
         open: false,
-        inUpload: false,
-        updatePasswordFormOpen: false
+        updatePasswordFormOpen: false,
+        qrOpen: false
     }
 
     componentDidMount() {
@@ -61,39 +59,30 @@ export class Profile extends ScReact.Component<any, any> {
         AppDispatcher.dispatch(UserActions.LOGOUT)
     }
 
-    handlePhotoUpload = (e) => {
-        const file = e.target.files[0]
-
-        if (file.size > MAX_AVATAR_SIZE) {
-            AppToasts.error("Фото слишком большое")
-            console.log(e.target)
-            e.target.value = null
-            return
-        }
-
-        this.setState(state => ({
-            ...state,
-            inUpload: true
-        }))
-
-        AppDispatcher.dispatch(UserActions.UPDATE_AVATAR, file)
-
-        setTimeout(() => {
-            this.setState(state => ({
-                ...state,
-                inUpload: false
-            }))
-
-            e.target.value = null
-        }, 3000)
-    }
-
     openModal = () => {
         AppDispatcher.dispatch(UserActions.OPEN_CHANGE_PASSWORD_FORM)
     }
 
     closeChangePasswordForm = () => {
         AppDispatcher.dispatch(UserActions.CLOSE_CHANGE_PASSWORD_FORM)
+    }
+
+    toggleTwoFactorAuthorization = (value:boolean) => {
+        console.log("toggleTwoFactorAuthorization")
+        if (value) {
+            AppDispatcher.dispatch(UserActions.TOGGLE_TWO_FACTOR_AUTHORIZATION, value)
+            this.setState(state => ({
+                ...state,
+                qrOpen: true
+            }))
+        }
+    }
+
+    closeQR = () => {
+        this.setState(state => ({
+            ...state,
+            qrOpen: false
+        }))
     }
 
     render() {
@@ -106,38 +95,23 @@ export class Profile extends ScReact.Component<any, any> {
                 </div>
                 <div className="panel">
                     <div className="popup-content">
-                        <div className="user-avatar-container">
-                            <Img src={imagesUlr + this.props.avatarUrl} className={"user-avatar " + (this.state.inUpload ? "loading" : "")}/>
 
-                            <form className="upload-preview">
-                                <input type="file" accept=".jpg,.png" id="upload-image-input" hidden="true" onchange={this.handlePhotoUpload}/>
-                                <label htmlFor="upload-image-input"></label>
-                                <Img src="src/assets/photo.svg" className="upload-preview-icon"/>
-                            </form>
+                       <ProfileAvatar avatarUrl={this.props.avatarUrl}/>
 
-                            <div className={"progress-wrapper " + (this.state.inUpload ? "active" : "")}>
-                                <div className="inner"></div>
-                                <div className="checkmark">
-                                    <span></span>
-                                    <span></span>
-                                </div>
-                                <div className="circle">
-                                    <div className="bar left">
-                                        <div className="progress"></div>
-                                    </div>
-                                    <div className="bar right">
-                                        <div className="progress"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <span className="username">{AppUserStore.state.username}</span>
+
                         <Link label="Изменить пароль" onClick={this.openModal}/>
+
+                        <ToggleButton label="Двухфакторная аутентификация" value={this.props.otpEnabled} onToggle={this.toggleTwoFactorAuthorization}/>
+
+                        <Modal open={this.state.qrOpen} content={<QRModal image={this.props.qr}/>} handleClose={this.closeQR}/>
+
                         <Button label="Выйти" className="logout-btn" onClick={this.handleLogout}/>
+
                     </div>
                 </div>
 
-                <Modal open={this.state.updatePasswordFormOpen} content={<UpdatePasswordForm />} handleClose={this.closeChangePasswordForm}/>
+                <Modal open={this.state.updatePasswordFormOpen} content={<UpdatePasswordForm/>} handleClose={this.closeChangePasswordForm}/>
 
             </div>
         )
