@@ -16,7 +16,7 @@
 	&.error
 		.input-field
 			input
-				border: 1px solid $error-color
+				border-bottom: 2px solid $error-color
 	span
 		color: $text-main-color
 		font-size: 18px
@@ -28,12 +28,17 @@
 		input
 			height: 40px
 			width: 36px
-			border-radius: 6px
 			outline: none
-			background: #e5e5e5
+			background: transparent
 			border: none
+			border-bottom: 2px solid rgba(255, 255, 255, 0.7)
 			text-align: center
 			font-size: 18px
+			color: $text-main-color
+			transition: 0.3s ease
+
+			&:focus
+				border-bottom: 2px solid $primary-color
 
 			@media screen and (max-width: $md)
 				height: 35px

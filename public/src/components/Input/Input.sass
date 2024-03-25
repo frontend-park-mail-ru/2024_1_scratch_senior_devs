@@ -6,6 +6,7 @@
 	.input-container
 		position: relative
 		z-index: 1
+		background: transparent
 
 		input
 			width: 100%
@@ -16,7 +17,7 @@
 			color: $text-main-color
 			z-index: 1111
 			border: none
-			border-bottom: 2px solid $input-border-color
+			border-bottom: 2px solid rgba(255, 255, 255, 0.7)
 
 			&::placeholder
 				color: rgba(255, 255, 255, 0.8)
@@ -88,19 +89,6 @@
 			height: 16px
 			filter: invert(85%)
 
-		.password-toggle-btn
-			position: absolute
-			width: 24px
-			height: 24px
-			top: 12px
-			right: 16px
-			cursor: pointer
-			filter: invert(85%)
-			transition: 0.5s ease
-
-			&:hover
-				filter: invert(75%)
-
 		input
 			&[type=password]
 				~ .password-toggle-btn-container
@@ -121,6 +109,19 @@
 					.hide-btn
 						opacity: 1
 						transform: scale(1)
+						
+		.password-toggle-btn
+			position: absolute
+			width: 24px
+			height: 24px
+			top: 12px
+			right: 16px
+			cursor: pointer
+			filter: invert(85%)
+			transition: 0.5s ease
+
+			&:hover
+				filter: invert(75%)
 
 	.errors-container
 		height: 50px
