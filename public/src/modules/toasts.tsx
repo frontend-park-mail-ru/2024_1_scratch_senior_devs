@@ -72,8 +72,11 @@ export class Toasts extends ScReact.Component<any, ToastState> {
             this.closeToast(toast.id)
         }, TOAST_SHOW_DELAY)
 
-        if (this.state.toasts.length > MAX_TOASTS) {
-            this.closeToast(this.state.toasts[0].id)
+        const count = this.state.toasts.length
+        if (count > MAX_TOASTS) {
+            this.state.toasts.slice(0, count - MAX_TOASTS).forEach(toast => {
+                this.closeToast(toast.id)
+            })
         }
     }
 
