@@ -154,6 +154,12 @@ class UserStore extends BaseStore<UserStoreState>{
      * Выход из аккаунта
      */
     public async logout() {
+
+        if (!window.navigator.onLine) {
+            AppToasts.error("Потеряно соединение с интернетом")
+            return
+        }
+
         try {
             await AppAuthRequests.Logout(this.state.JWT);
 
@@ -181,6 +187,11 @@ class UserStore extends BaseStore<UserStoreState>{
             ...state,
             errorRegisterForm: undefined
         }))
+
+        if (!window.navigator.onLine) {
+            AppToasts.error("Потеряно соединение с интернетом")
+            return
+        }
 
         try {
             const res = await AppAuthRequests.SignUp(credentials);

@@ -7,7 +7,7 @@ renderDOM('root', ScReact.createComponent(App, {}));
 
 if ('serviceWorker' in navigator) {
     // Весь код регистрации у нас асинхронный.
-    navigator.serviceWorker.register('./sw.js')
+    navigator.serviceWorker.register('./sw.ts')
         .then(() => navigator.serviceWorker.ready.then((worker) => {
             console.log("worker.sync")
             worker.sync.register('syncdata');
