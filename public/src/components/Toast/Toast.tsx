@@ -3,50 +3,18 @@ import {Img} from "../Image/Image";
 import "./Toast.sass"
 import {TOAST_TYPE} from "../../modules/toasts";
 
-const TOAST_DELAY = 3000
-
 export type ToastProps = {
     type: string,
     message: string,
     key1: string,
     offset: number,
+    open: boolean,
     onHide: (id:string) => void
 }
 
-export type ToastState = {
-    open: boolean,
-    timer: NodeJS.Timeout
-}
-
-
-export class Toast extends ScReact.Component<ToastProps, ToastState> {
-    state = {
-        open: true,
-        timer: undefined
-    }
-
-    componentDidMount() {
-        this.setState(state => ({
-            ...state,
-            timer: setTimeout(() => {
-                this.closeToast()
-            }, TOAST_DELAY)
-        }))
-    }
-
-    componentWillUnmount() {
-        clearTimeout(this.state.timer)
-    }
-
+export class Toast extends ScReact.Component<ToastProps, any> {
     closeToast = () => {
-        this.setState(state => ({
-            ...state,
-            open: false
-        }))
-
-        setTimeout(() => {
-            this.props.onHide(this.props.key1)
-        }, 300)
+        this.props.onHide(this.props.key1)
     }
 
     formatType ():string {
@@ -71,7 +39,7 @@ export class Toast extends ScReact.Component<ToastProps, ToastState> {
 
     render() {
         return (
-            <div className={"toast success " + (this.state.open ? "" : "hide")} style={`bottom: ${this.props.offset}px`}>
+            <div className={"toast success " + (this.props.open ? "" : "hide")} style={`bottom: ${this.props.offset}px`}>
                 <div className="toast-content">
                     <Img src={this.getIcon()} className="toast-icon"/>
                     <div className="content">

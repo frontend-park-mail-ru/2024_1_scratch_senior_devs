@@ -11,10 +11,7 @@ const isProduction = process.env.NODE_ENV == 'production';
 const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : 'style-loader';
 
 const config : webpack.Configuration = {
-    entry: {
-        "main": path.resolve(__dirname, 'public', 'index.ts'),
-        "sw": path.resolve(__dirname, 'public', 'sw.js')
-    },
+    entry: [path.resolve(__dirname, 'public', 'index.ts'),path.resolve(__dirname, 'public', 'sw.js')],
     output: {
         path: path.resolve(__dirname, 'dist')
     },
