@@ -21,6 +21,17 @@
 			&::placeholder
 				color: rgba(255, 255, 255, 0.8)
 
+			&:focus
+				+ .label
+					transform: translate(0, -24px)
+					font-size: 12px
+
+			&:not(:placeholder-shown)
+				&:not(:focus)
+					+ .label
+						transform: translate(0, -24px)
+						font-size: 12px
+
 		&.success
 			.underline
 				background: $success-color
@@ -34,6 +45,15 @@
 
 				&:before
 					transform: scaleX(0)
+
+		.label
+			position: absolute
+			font-size: 16px
+			color: #fff
+			left: 40px
+			transition: 0.3s ease
+			top: 14px
+			z-index: -1
 
 		&:not(.success,.error)
 			input:focus
@@ -73,7 +93,7 @@
 			width: 24px
 			height: 24px
 			top: 12px
-			right: 12px
+			right: 16px
 			cursor: pointer
 			filter: invert(85%)
 			transition: 0.5s ease
@@ -103,7 +123,7 @@
 						transform: scale(1)
 
 	.errors-container
-		height: 40px
+		height: 50px
 		color: $error-color
 		font-size: 12px
 		padding: 0 10px

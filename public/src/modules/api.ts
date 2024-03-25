@@ -1,5 +1,9 @@
 import {createUUID, decode} from "./utils";
-import {Note} from "./stores/NotesStore";
+import {
+    UserLoginCredentialsType,
+    UserRegisterCredentialsType,
+    UserUpdatePasswordCredentialsType
+} from "./stores/UserStore";
 
 export const isDebug = process.env.NODE_ENV === "development";
 
@@ -92,33 +96,18 @@ const Ajax = {
 class AuthRequests {
     private baseUrl = "/auth";
 
-    public Login = async (username: string, password: string, code:string) => {
-        const response = await Ajax.Post(this.baseUrl + "/login", {
+    public Login = async ({username, password, code}:UserLoginCredentialsType) => {
+
+        return await Ajax.Post(this.baseUrl + "/login", {
             body: {
                 username,
                 password,
                 code
             }
         });
-
-        return response
-
-        // console.log(response.status)
-        //
-        // if (response.status == 200) {
-        //     return {
-        //         id: response.body.id,
-        //         username: response.body.username,
-        //         create_time: response.body.create_time,
-        //         image_path: response.body.image_path,
-        //         jwt: response.headers.authorization
-        //     }
-        // }
-        //
-        // throw Error(response.body.message);
     };
 
-    SignUp = async (username: string, password: string) => {
+    SignUp = async ({username, password}:UserRegisterCredentialsType) => {
         const response = await Ajax.Post(this.baseUrl + "/signup", {
             body: {
                 username,
@@ -229,8 +218,7 @@ class ProfileRequests {
         return body.image_path
     }
 
-    UpdatePassword = async(oldPassword:string, newPassword:string, jwt:string)=> {
-        console.log("UpdatePassword")
+    UpdatePassword = async({oldPassword, newPassword}:UserUpdatePasswordCredentialsType, jwt:string)=> {
         const response = await Ajax.Post("/profile/update/", {
             headers: {
                 "Authorization": jwt

@@ -19,6 +19,22 @@ export type UserStoreState = {
     updatePasswordFormOpen:boolean
 }
 
+export type UserLoginCredentialsType = {
+    username: string,
+    password: string,
+    code: string
+}
+
+export type UserRegisterCredentialsType = {
+    username: string,
+    password: string
+}
+
+export type UserUpdatePasswordCredentialsType = {
+    oldPassword: string,
+    newPassword: string
+}
+
 class UserStore extends BaseStore<UserStoreState>{
     state = {
         JWT: null,
@@ -35,12 +51,18 @@ class UserStore extends BaseStore<UserStoreState>{
         updatePasswordFormOpen: false
     }
 
+    /**
+     * Конструктор класса
+     */
     constructor() {
         super();
         this.state.JWT = window.localStorage.getItem('Authorization');
         this.registerEvents();
     }
 
+    /**
+     * Регистрация событий
+     */
     private registerEvents(){
         AppDispatcher.register(async (action) => {
             switch (action.type){
@@ -69,7 +91,7 @@ class UserStore extends BaseStore<UserStoreState>{
                     this.closeChangePasswordForm();
                     break;
                 case UserActions.TOGGLE_TWO_FACTOR_AUTHORIZATION:
-                    await this.toggleTwoFactorAuthorization(action.payload);
+                    await this.toggleTwoFactorAuthorization();
                     break;
                 case UserActions.CLOSE_QR_WINDOW:
                     this.closeQRWindow()
@@ -78,14 +100,19 @@ class UserStore extends BaseStore<UserStoreState>{
         });
     }
 
-    private async login(credentials){
+    /**
+     * Вход в аккаунт
+     * @param {UserLoginCredentialsType} credentials
+     * @private
+     */
+    private async login(credentials:UserLoginCredentialsType){
         this.SetState(state => ({
             ...state,
             errorLoginForm: undefined
         }))
 
         try {
-            const res= await AppAuthRequests.Login(credentials.username, credentials.password, credentials.otp);
+            const res = await AppAuthRequests.Login(credentials);
 
             if (res.status == 200) {
                 this.SetState(state => ({
@@ -99,10 +126,8 @@ class UserStore extends BaseStore<UserStoreState>{
                 }))
 
                 localStorage.setItem('Authorization', this.state.JWT)
-                console.log("login successfull");
                 AppRouter.go("/notes");
             } else if (res.status == 202) {
-                console.log("asdfasdfasdfas")
                 this.SetState(state => ({
                     ...state,
                     otpDialogOpen: true
@@ -124,9 +149,14 @@ class UserStore extends BaseStore<UserStoreState>{
         }
     }
 
+    /**
+     * Выход из аккаунта
+     */
     public async logout() {
         try {
             await AppAuthRequests.Logout(this.state.JWT);
+
+            // Обнуление состояния пользователя
             this.SetState(state => ({
                 ...state,
                 isAuth: false,
@@ -134,22 +164,27 @@ class UserStore extends BaseStore<UserStoreState>{
                 avatarUrl: "",
                 otpEnabled: false
             }))
-            console.log("logout successful");
+
             AppRouter.go("/")
+
         } catch (err) {
             console.log(err);
         }
     }
 
-    private async register(credentials) {
+    /**
+     * Регистрация нового аккаунта
+     * @param {UserRegisterCredentialsType} credentials
+     * @private
+     */
+    private async register(credentials:UserRegisterCredentialsType) {
         this.SetState(state => ({
             ...state,
             errorRegisterForm: undefined
         }))
 
         try {
-            const res = await AppAuthRequests.SignUp(credentials.username, credentials.password);
-
+            const res = await AppAuthRequests.SignUp(credentials);
             this.SetState(s => {
                 return {
                     ...s,
@@ -160,12 +195,10 @@ class UserStore extends BaseStore<UserStoreState>{
                 }
             })
             localStorage.setItem('Authorization', this.state.JWT)
-            console.log("signup successfull");
             AppRouter.go("/notes")
         } catch (err) {
             console.log(err);
 
-            console.log("username already taken");
             this.SetState(state => ({
                 ...state,
                 errorRegisterForm: "Этот логин уже занят"
@@ -173,6 +206,10 @@ class UserStore extends BaseStore<UserStoreState>{
         }
     }
 
+    /**
+     * Аутентификация пользователя
+     * @private
+     */
     private async checkUser(){
         try {
             const res = await AppAuthRequests.CheckUser(this.state.JWT)
@@ -185,7 +222,6 @@ class UserStore extends BaseStore<UserStoreState>{
                 otpEnabled: res.otp
             }))
         } catch (err) {
-            console.log("не зареган");
             console.log(err);
 
             this.SetState(state => ({
@@ -195,6 +231,11 @@ class UserStore extends BaseStore<UserStoreState>{
         }
     }
 
+    /**
+     * Обновление аватарки пользователя
+     * @param {File} file
+     * @private
+     */
     private async updateAvatar(file:File) {
         const avatarUrl = await AppProfileRequests.UpdateAvatar(file, this.state.JWT)
 
@@ -206,9 +247,14 @@ class UserStore extends BaseStore<UserStoreState>{
         })
     }
 
-    private async updatePassword({oldPassword, newPassword}) {
+    /**
+     * Обновление пароля пользователя
+     * @param {UserUpdatePasswordCredentialsType} credentials
+     * @private
+     */
+    private async updatePassword(credentials:UserUpdatePasswordCredentialsType) {
         try {
-            await AppProfileRequests.UpdatePassword(oldPassword, newPassword, this.state.JWT)
+            await AppProfileRequests.UpdatePassword(credentials, this.state.JWT)
 
             AppToasts.success("Пароль успешно изменен")
 
@@ -241,7 +287,7 @@ class UserStore extends BaseStore<UserStoreState>{
         }))
     }
 
-    private async toggleTwoFactorAuthorization(value:boolean) {
+    private async toggleTwoFactorAuthorization() {
         const image = await AppAuthRequests.GetQR(this.state.JWT)
 
         this.SetState(state => ({

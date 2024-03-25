@@ -66,7 +66,7 @@ export class LoginForm extends  ScReact.Component<any, any> {
                 {
                     username: this.state.login,
                     password: this.state.password,
-                    otp: this.state.otpValue.join("")
+                    code: this.state.otpValue.join("")
                 }
             )
         }
