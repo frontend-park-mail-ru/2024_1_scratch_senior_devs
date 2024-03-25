@@ -144,9 +144,6 @@ export class LoginForm extends  ScReact.Component<any, any> {
     }
 
     render(): VDomNode {
-        console.log(this.state.otpValue.join(""))
-        console.log(this.state.otpValue.join("").length)
-
         return (
             <form className="login-form">
                 <h3>Вход</h3>
