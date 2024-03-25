@@ -102,14 +102,17 @@ class UserStore extends BaseStore<UserStoreState>{
 
     /**
      * Вход в аккаунт
-     * @param {UserLoginCredentialsType} credentials
-     * @private
      */
     private async login(credentials:UserLoginCredentialsType){
         this.SetState(state => ({
             ...state,
             errorLoginForm: undefined
         }))
+
+        if (!window.navigator.onLine) {
+            AppToasts.error("Потеряно соединение с интернетом")
+            return
+        }
 
         try {
             const res = await AppAuthRequests.Login(credentials);
@@ -140,8 +143,6 @@ class UserStore extends BaseStore<UserStoreState>{
             }
 
         } catch (err) {
-            console.log(err);
-
             this.SetState(state => ({
                 ...state,
                 errorLoginForm: "Неправильный логин, пароль или код"
@@ -174,8 +175,6 @@ class UserStore extends BaseStore<UserStoreState>{
 
     /**
      * Регистрация нового аккаунта
-     * @param {UserRegisterCredentialsType} credentials
-     * @private
      */
     private async register(credentials:UserRegisterCredentialsType) {
         this.SetState(state => ({
@@ -208,7 +207,6 @@ class UserStore extends BaseStore<UserStoreState>{
 
     /**
      * Аутентификация пользователя
-     * @private
      */
     private async checkUser(){
         try {
@@ -233,8 +231,6 @@ class UserStore extends BaseStore<UserStoreState>{
 
     /**
      * Обновление аватарки пользователя
-     * @param {File} file
-     * @private
      */
     private async updateAvatar(file:File) {
         const avatarUrl = await AppProfileRequests.UpdateAvatar(file, this.state.JWT)
@@ -249,8 +245,6 @@ class UserStore extends BaseStore<UserStoreState>{
 
     /**
      * Обновление пароля пользователя
-     * @param {UserUpdatePasswordCredentialsType} credentials
-     * @private
      */
     private async updatePassword(credentials:UserUpdatePasswordCredentialsType) {
         try {

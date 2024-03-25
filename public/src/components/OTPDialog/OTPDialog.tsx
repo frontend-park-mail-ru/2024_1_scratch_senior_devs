@@ -48,19 +48,21 @@ export class OTPDialog extends ScReact.Component<any, any>{
     }
 
     render() {
+        const inputs = this.props.value.map((_, index:number) => (
+            <input
+                type="text"
+                ref={(val) => {this.state.inputRefs[index] = val}}
+                key1={index} value={this.props.value[index]}
+                oninput={(e) => this.handleOnChange(e, index)}
+                onkeydown={(e) => this.handleOnKeyDown(e, index)}
+            />
+        ))
+
         return (
             <div className={"otp-dialog-container " + (this.props.open ? "open " : "") + (this.props.error ? " error" : "")}>
                 <span>Введите OTP код</span>
                 <div className="input-field">
-                    {this.props.value.map((_, index:number) => (
-                        <input
-                            type="text"
-                            ref={(val) => {this.state.inputRefs[index] = val}}
-                            key1={index} value={this.props.value[index]}
-                            oninput={(e) => this.handleOnChange(e, index)}
-                            onkeydown={(e) => this.handleOnKeyDown(e, index)}
-                        />
-                    ))}
+                    {inputs}
                 </div>
             </div>
         )
