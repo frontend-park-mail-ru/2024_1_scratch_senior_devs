@@ -1,75 +1,109 @@
 @import "/public/src/utils/variables.sass"
 
-.input-container
+.input-wrapper
 	width: 100%
-	position: relative
 
-	input
-		width: 100%
-		padding: 12px 12px 12px 40px
-		border: 1px solid $input-border-color
-		outline: none
-		border-radius: 99px
-		transition: 0.3s
-		background: rgba(255, 255, 255, 0.1)
-		color: $text-main-color
+	.input-container
+		position: relative
+		z-index: 1
 
-		&::placeholder
-			color: rgba(255, 255, 255, 0.8)
+		input
+			width: 100%
+			padding: 12px 12px 12px 40px
+			outline: none
+			transition: 0.3s
+			background: transparent
+			color: $text-main-color
+			z-index: 1111
+			border: none
+			border-bottom: 2px solid $input-border-color
 
-		&:focus
-			border: 1px solid $primary-color
+			&::placeholder
+				color: rgba(255, 255, 255, 0.8)
 
-	&.success input
-		border: 1px solid $success-color
+		&.success
+			.underline
+				background: $success-color
 
-	&.error input
-		border: 1px solid $error-color
+				&:before
+					transform: scaleX(0)
+
+		&.error
+			.underline
+				background: $error-color
+
+				&:before
+					transform: scaleX(0)
+
+		&:not(.success,.error)
+			input:focus
+				~ .underline
+					&:before
+						transform: scaleX(1)
+
+		.underline
+			position: absolute
+			bottom: 0
+			height: 2px
+			width: 100%
+			background: transparent
+			z-index: 1000
+			transition: 0.3s ease
+
+			&:before
+				content: ""
+				position: absolute
+				height: 100%
+				width: 100%
+				background: $primary-color
+				transform: scaleX(0)
+				transition: transform 0.3s ease
+				z-index: -1
+
+		.icon
+			position: absolute
+			top: 16px
+			left: 8px
+			width: 16px
+			height: 16px
+			filter: invert(85%)
+
+		.password-toggle-btn
+			position: absolute
+			width: 24px
+			height: 24px
+			top: 12px
+			right: 12px
+			cursor: pointer
+			filter: invert(85%)
+			transition: 0.5s ease
+
+			&:hover
+				filter: invert(75%)
+
+		input
+			&[type=password]
+				~ .password-toggle-btn-container
+					.show-btn
+						opacity: 1
+						transform: scale(1)
+
+					.hide-btn
+						opacity: 0
+						transform: scale(0)
+
+			&[type=text]
+				~ .password-toggle-btn-container
+					.show-btn
+						opacity: 0
+						transform: scale(0)
+
+					.hide-btn
+						opacity: 1
+						transform: scale(1)
 
 	.errors-container
-		height: 45px
+		height: 40px
 		color: $error-color
-		font-size: 13px
+		font-size: 12px
 		padding: 0 10px
-
-	.password-toggle-btn
-		position: absolute
-		width: 24px
-		height: 24px
-		top: 12px
-		right: 16px
-		cursor: pointer
-		filter: invert(85%)
-		transition: 0.5s ease
-
-		&:hover
-			filter: invert(75%)
-
-	input
-		&[type=password]
-			~ .password-toggle-btn-container
-				.show-btn
-					opacity: 1
-					transform: scale(1)
-
-				.hide-btn
-					opacity: 0
-					transform: scale(0)
-
-		&[type=text]
-			~ .password-toggle-btn-container
-				.show-btn
-					opacity: 0
-					transform: scale(0)
-
-				.hide-btn
-					opacity: 1
-					transform: scale(1)
-
-	.icon
-		position: absolute
-		top: 16px
-		left: 16px
-		width: 16px
-		height: 16px
-		filter: invert(85%)

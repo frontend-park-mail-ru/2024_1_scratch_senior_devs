@@ -41,22 +41,26 @@ export class Input extends ScReact.Component<any, InputState>{
 
     render() {
         return (
-            <div className={"input-container " + (this.props.validationResult ? "success" : "") + (this.props.error ? "error" : "")}>
+            <div className={"input-wrapper " + (this.props.validationResult ? "success" : "") + (this.props.error ? "error" : "")}>
 
-                <input type={this.state.type} placeholder={this.state.placeholder} value={this.props.value} oninput={this.handleChange}/>
+                <div className={"input-container " + (this.props.validationResult ? "success" : "") + (this.props.error ? "error" : "")}>
+                    <input type={this.state.type} placeholder={this.state.placeholder} value={this.props.value} oninput={this.handleChange}/>
+                    <div className="underline"></div>
+
+                    {this.state.isPassword ?
+                        <div className="password-toggle-btn-container" onclick={this.toggleInputType}>
+                            <img className="password-toggle-btn show-btn" src="/src/assets/eye-slash.svg" alt=""/>
+                            <img className="password-toggle-btn hide-btn" src="/src/assets/eye.svg" alt=""/>
+                        </div> : ""
+                    }
+
+                    {this.state.hasIcon ? <img className="icon" src={this.state.icon} alt=""/> : ""}
+
+                </div>
 
                 <div className="errors-container">
                     {this.props.error != "" ? this.props.error : ""}
                 </div>
-
-                {this.state.isPassword ?
-                    <div className="password-toggle-btn-container" onclick={this.toggleInputType}>
-                        <img className="password-toggle-btn show-btn" src="/src/assets/eye-slash.svg" alt=""/>
-                        <img className="password-toggle-btn hide-btn" src="/src/assets/eye.svg" alt=""/>
-                    </div> : ""
-                }
-
-                {this.state.hasIcon ? <img className="icon" src={this.state.icon} alt=""/>: ""}
 
             </div>
         )
