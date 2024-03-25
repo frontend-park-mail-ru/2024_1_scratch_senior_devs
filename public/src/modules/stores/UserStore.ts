@@ -109,10 +109,6 @@ class UserStore extends BaseStore<UserStoreState>{
             errorLoginForm: undefined
         }))
 
-
-        AppToasts.error("Потеряно соединение с интернетом")
-        return
-
         if (!window.navigator.onLine) {
             AppToasts.error("Потеряно соединение с интернетом")
             return
