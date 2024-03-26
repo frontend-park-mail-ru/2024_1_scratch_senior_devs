@@ -2,7 +2,8 @@ const CACHE_NAME = 'app-cache'
 
 const assetUrls = [
     "src/assets/error.svg",
-    "src/assets/close.svg"
+    "src/assets/close.svg",
+    "src/assets/success.svg",
 ]
 
 self.addEventListener('install', async () => {
