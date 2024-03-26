@@ -3,7 +3,6 @@ import {VDomNode} from "@veglem/screact/dist/vdom";
 import {Toast} from "../components/Toast/Toast";
 import {createUUID} from "./utils";
 
-
 export const TOAST_TYPE = {
     SUCCESS: "success",
     ERROR: "error",
@@ -23,7 +22,6 @@ type ToastState = {
 }
 
 const TOAST_DEFAULT_OFFSET_BOTTOM = 25
-
 const TOAST_SHOW_DELAY = 3000
 const TOAST_HIDE_ANIMATION_DELAY = 300
 const MAX_TOASTS = 3
@@ -60,7 +58,7 @@ export class Toasts extends ScReact.Component<any, ToastState> {
             type: type,
             message: message,
             id: createUUID(),
-            offset:TOAST_DEFAULT_OFFSET_BOTTOM
+            offset: TOAST_DEFAULT_OFFSET_BOTTOM
         }
 
         this.setState(state => ({

@@ -8,7 +8,7 @@ renderDOM('root', ScReact.createComponent(App, {}));
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js')
         .then(() => navigator.serviceWorker.ready.then((worker) => {
-            console.log("worker.sync")
+            // @ts-ignore
             worker.sync.register('syncdata');
         }))
         .catch((err) => console.log(err));
