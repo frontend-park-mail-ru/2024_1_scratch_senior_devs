@@ -111,6 +111,11 @@ class UserStore extends BaseStore<UserStoreState>{
 
         if (!window.navigator.onLine) {
             AppToasts.error("Потеряно соединение с интернетом")
+            this.SetState(state => ({
+                ...state,
+                errorLoginForm: ""
+            }))
+
             return
         }
 

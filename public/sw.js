@@ -1,32 +1,47 @@
-const CACHE = 'cache-and-update-v1';
+const CACHE_NAME = 'app-cache'
 
-// При установке воркера мы должны закешировать часть данных (статику).
-self.addEventListener('install', (event) => {
-    event.waitUntil(
-        caches.open(CACHE).then((cache) =>
-            cache.addAll(['/img/background']))
-    );
+const assetUrls = [
+    "src/assets/error.svg",
+    "src/assets/close.svg"
+]
+
+self.addEventListener('install', async () => {
+    const cache = await caches.open(CACHE_NAME)
+    await cache.addAll(assetUrls)
+})
+
+self.addEventListener('activate', async () => {
+    const cacheNames = await caches.keys()
+    await Promise.all(
+        cacheNames
+            .filter(name => name !== CACHE_NAME)
+            .map(name => caches.delete(name))
+    )
 });
 
-// при событии fetch, мы используем кэш, и только потом обновляем его данным с сервера
-self.addEventListener('fetch', function(event) {
-    // Мы используем `respondWith()`, чтобы мгновенно ответить без ожидания ответа с сервера.
-    event.respondWith(fromCache(event.request));
-    // `waitUntil()` нужен, чтобы предотвратить прекращение работы worker'a до того как кэш обновиться.
-    event.waitUntil(update(event.request));
-});
-
-function fromCache(request) {
-    return caches.open(CACHE).then((cache) =>
-        cache.match(request).then((matching) =>
-            matching
-        ));
+const tryNetwork = (request) => {
+    return new Promise((fulfill, reject) => {
+        fetch(request).then((response) => {
+            fulfill(response);
+            if (request.method === 'GET') {
+                update(request, response.clone());
+            }
+        }, reject);
+    });
 }
 
-function update(request) {
-    return caches.open(CACHE).then((cache) =>
-        fetch(request).then((response) =>
-            cache.put(request, response)
-        )
+const fromCache = async (request) => {
+    const cache = await caches.open(CACHE_NAME)
+    return cache.match(request)
+}
+
+const update = async (request, response) => {
+    const cache = await caches.open(CACHE_NAME)
+    await cache.put(request, response)
+}
+
+self.addEventListener('fetch', (event) => {
+    event.respondWith(
+        tryNetwork(event.request).catch(() => fromCache(event.request)),
     );
-}
+});
