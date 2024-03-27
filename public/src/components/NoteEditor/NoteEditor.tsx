@@ -11,7 +11,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
         open: false,
         selectedNote: undefined,
         saving: undefined,
-        content: undefined
+        content: undefined,
     }
 
     componentDidMount() {
@@ -39,17 +39,17 @@ export class NoteEditor extends ScReact.Component<any, any> {
             AppDispatcher.dispatch(NotesActions.SAVE_NOTE, data)
         }
 
-        this.setState(state => ({
-            ...state,
-            selectedNote: {
-                id: state.selectedNote.id,
-                data: {
-                    title: data.title,
-                    content: data.content
-                },
-                update_time: state.selectedNote.update_time
-            }
-        }))
+        // this.setState(state => ({
+        //     ...state,
+        //     selectedNote: {
+        //         id: state.selectedNote.id,
+        //         data: {
+        //             title: data.title,
+        //             content: data.content
+        //         },
+        //         update_time: state.selectedNote.update_time
+        //     }
+        // }))
     }
 
     closeEditor = () => {

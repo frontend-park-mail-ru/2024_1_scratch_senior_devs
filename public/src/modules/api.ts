@@ -121,17 +121,19 @@ class AuthRequests {
                 username: response.body.username,
                 create_time: response.body.create_time,
                 image_path: response.body.image_path,
-                jwt: response.headers.authorization
+                jwt: response.headers.authorization,
+                csrf: response.headers["x-csrf-token"]
             };
         }
 
         throw Error(response.body.message);
     };
 
-    Logout = async (jwt: string) => {
+    Logout = async (jwt: string, csrf:string) => {
         const response = await Ajax.Delete(this.baseUrl + "/logout", {
             headers: {
-                "Authorization": jwt
+                "Authorization": jwt,
+                "x-csrf-token": csrf
             }
         });
 
@@ -175,6 +177,20 @@ class AuthRequests {
 
         return URL.createObjectURL(blob)
     }
+
+    DisableOTF = async (jwt: string, csrf:string) => {
+        const response = await Ajax.Delete(this.baseUrl + "/disable_2fa", {
+            headers: {
+                "Authorization": jwt,
+                "x-csrf-token": csrf
+            }
+        });
+
+        return {
+            status: response.status,
+            csrf: response.headers["x-csrf-token"]
+        }
+    }
 }
 
 class ProfileRequests {
@@ -196,7 +212,7 @@ class ProfileRequests {
         }
     }
 
-    UpdateAvatar = async(photo:File, jwt:string) => {
+    UpdateAvatar = async(photo:File, jwt:string, csrf:string) => {
         const form_data = new FormData()
 
         form_data.append('avatar', photo)
@@ -206,22 +222,33 @@ class ProfileRequests {
             mode: "cors",
             credentials: "include",
             headers: {
-                "Authorization": jwt
+                "Authorization": jwt,
+                "x-csrf-token": csrf
             },
             body: form_data
         }
 
         const response = await fetch(baseUrl + "/profile/update_avatar/", options);
 
+        console.log("fffffff")
+        console.log(response.headers)
+        // TOOD: не прилетает csrf в ответе
+        console.log(response.headers["x-csrf-token"])
+
         const body = await response.json()
 
-        return body.image_path
+        return {
+            status: response.status,
+            avatarUrl: body.image_path,
+            csrf: response.headers["x-csrf-token"]
+        }
     }
 
-    UpdatePassword = async({oldPassword, newPassword}:UserUpdatePasswordCredentialsType, jwt:string)=> {
+    UpdatePassword = async({oldPassword, newPassword}:UserUpdatePasswordCredentialsType, jwt:string, csrf:string)=> {
         const response = await Ajax.Post("/profile/update/", {
             headers: {
-                "Authorization": jwt
+                "Authorization": jwt,
+                "x-csrf-token": csrf
             },
             body: {
                 description: "string",
@@ -232,11 +259,10 @@ class ProfileRequests {
             }
         });
 
-        if (response.status == 200) {
-            return
+        return {
+            status: response.status,
+            csrf: response.headers["x-csrf-token"]
         }
-
-        throw Error("Неверный пароль");
     }
 }
 
@@ -280,34 +306,44 @@ class NoteRequests {
         throw Error(response.body.message);
     };
 
-    Delete = async (id: number, jwt: string) => {
+    Delete = async (id: number, jwt: string, csrf:string) => {
         const response = await Ajax.Delete(this.baseUrl + "/" + id + "/delete", {
             headers: {
-                "Authorization": jwt
+                "Authorization": jwt,
+                "x-csrf-token": csrf
             },
         });
 
-        return response.status
+        return {
+            status: response.status,
+            csrf: response.headers["x-csrf-token"]
+        }
     }
 
-    Update = async(note, jwt: string)=> {
+    Update = async(note, jwt: string, csrf:string)=> {
         const response = await Ajax.Post(this.baseUrl + "/" + note.id + "/edit", {
             headers: {
-                "Authorization": jwt
+                "Authorization": jwt,
+                "x-csrf-token": csrf
             },
             body: {
                 data: note
             }
         });
 
-        response.body.data = decode(response.body.data);
-        return response.body
+
+        return {
+            status: response.status,
+            csrf: response.headers["x-csrf-token"]
+        }
     }
 
-    Add = async (jwt:string) => {
+    Add = async (jwt:string, csrf:string) => {
+        console.log(csrf)
         const response = await Ajax.Post(this.baseUrl + "/add", {
             headers: {
-                "Authorization": jwt
+                "Authorization": jwt,
+                "x-csrf-token": csrf
             },
             body: {
                 data: {
@@ -320,7 +356,7 @@ class NoteRequests {
         console.log(response.status)
         console.log(response.body)
         response.body.data = decode(response.body.data);
-        return response.body
+        return response
     }
 }
 

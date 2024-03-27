@@ -6,6 +6,7 @@ import {AppToasts} from "../toasts";
 
 export type UserStoreState = {
     JWT: string | null | undefined,
+    csrf: string | null | undefined,
     otpEnabled: boolean,
     otpDialogOpen: boolean,
     qr: string,
@@ -38,6 +39,7 @@ export type UserUpdatePasswordCredentialsType = {
 class UserStore extends BaseStore<UserStoreState>{
     state = {
         JWT: null,
+        csrf: null,
         otpEnabled: undefined,
         otpDialogOpen: false,
         qr: undefined,
@@ -57,6 +59,7 @@ class UserStore extends BaseStore<UserStoreState>{
     constructor() {
         super();
         this.state.JWT = window.localStorage.getItem('Authorization');
+        this.state.csrf = window.localStorage.getItem('x-csrf-token');
         this.registerEvents();
     }
 
@@ -91,10 +94,13 @@ class UserStore extends BaseStore<UserStoreState>{
                     this.closeChangePasswordForm();
                     break;
                 case UserActions.TOGGLE_TWO_FACTOR_AUTHORIZATION:
-                    await this.toggleTwoFactorAuthorization();
+                    await this.toggleTwoFactorAuthorization(action.payload);
                     break;
                 case UserActions.CLOSE_QR_WINDOW:
                     this.closeQRWindow()
+                    break;
+                case UserActions.UPDATE_CSRF:
+                    this.updateCSRF(action.payload)
                     break;
             }
         });
@@ -126,6 +132,7 @@ class UserStore extends BaseStore<UserStoreState>{
                 this.SetState(state => ({
                     ...state,
                     JWT: res.headers.authorization,
+                    csrf: res.headers["x-csrf-token"],
                     username: res.body.username,
                     avatarUrl: res.body.image_path,
                     otpEnabled: res.body.second_factor,
@@ -134,6 +141,7 @@ class UserStore extends BaseStore<UserStoreState>{
                 }))
 
                 localStorage.setItem('Authorization', this.state.JWT)
+                localStorage.setItem('x-csrf-token', this.state.csrf)
                 AppRouter.go("/notes");
             } else if (res.status == 202) {
                 this.SetState(state => ({
@@ -166,7 +174,7 @@ class UserStore extends BaseStore<UserStoreState>{
         }
 
         try {
-            await AppAuthRequests.Logout(this.state.JWT);
+            await AppAuthRequests.Logout(this.state.JWT, this.state.csrf);
 
             // Обнуление состояния пользователя
             this.SetState(state => ({
@@ -174,8 +182,10 @@ class UserStore extends BaseStore<UserStoreState>{
                 isAuth: false,
                 username: "",
                 avatarUrl: "",
-                otpEnabled: false
+                otpEnabled: undefined
             }))
+
+            window.localStorage.clear();
 
             AppRouter.go("/")
 
@@ -206,7 +216,8 @@ class UserStore extends BaseStore<UserStoreState>{
                     isAuth: true,
                     username: res.username,
                     avatarUrl: res.image_path,
-                    JWT: res.jwt
+                    JWT: res.jwt,
+                    csrf: res.csrf
                 }
             })
             localStorage.setItem('Authorization', this.state.JWT)
@@ -236,8 +247,6 @@ class UserStore extends BaseStore<UserStoreState>{
                 otpEnabled: res.otp
             }))
         } catch (err) {
-            console.log(err);
-
             this.SetState(state => ({
                 ...state,
                 isAuth: false
@@ -249,14 +258,29 @@ class UserStore extends BaseStore<UserStoreState>{
      * Обновление аватарки пользователя
      */
     private async updateAvatar(file:File) {
-        const avatarUrl = await AppProfileRequests.UpdateAvatar(file, this.state.JWT)
+        try {
+            const {status, csrf, avatarUrl} = await AppProfileRequests.UpdateAvatar(file, this.state.JWT, this.state.csrf)
 
-        this.SetState(state => {
-            return {
-                ...state,
-                avatarUrl: avatarUrl
+            console.log("updateAvatar")
+            console.log(csrf)
+            if (status == 200) {
+                AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf)
+
+                this.SetState(state => {
+                    return {
+                        ...state,
+                        avatarUrl: avatarUrl
+                    }
+                })
+
+                return
             }
-        })
+
+            AppToasts.error("Что-то пошло не так")
+
+        } catch {
+            AppToasts.error("Что-то пошло не так")
+        }
     }
 
     /**
@@ -264,11 +288,19 @@ class UserStore extends BaseStore<UserStoreState>{
      */
     private async updatePassword(credentials:UserUpdatePasswordCredentialsType) {
         try {
-            await AppProfileRequests.UpdatePassword(credentials, this.state.JWT)
+            const {status, csrf} = await AppProfileRequests.UpdatePassword(credentials, this.state.JWT, this.state.csrf)
 
-            AppToasts.success("Пароль успешно изменен")
+            if (status == 200) {
+                AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf)
 
-            this.closeChangePasswordForm()
+                AppToasts.success("Пароль успешно изменен")
+
+                this.closeChangePasswordForm()
+
+                return
+            }
+
+            throw Error("Неверный пароль");
         }
         catch (err) {
             if (err.message == "Неверный пароль") {
@@ -297,7 +329,20 @@ class UserStore extends BaseStore<UserStoreState>{
         }))
     }
 
-    private async toggleTwoFactorAuthorization() {
+    private async toggleTwoFactorAuthorization(enabled:boolean) {
+        if (enabled) {
+            await this.enableTwoFactorAuthorization()
+        } else {
+            await this.disableTwoFactorAuthorization()
+        }
+
+        this.SetState(state => ({
+            ...state,
+            otpEnabled: enabled
+        }))
+    }
+
+    private async enableTwoFactorAuthorization() {
         const image = await AppAuthRequests.GetQR(this.state.JWT)
 
         this.SetState(state => ({
@@ -307,10 +352,27 @@ class UserStore extends BaseStore<UserStoreState>{
         }))
     }
 
+    private async disableTwoFactorAuthorization() {
+        const {status, csrf} = await AppAuthRequests.DisableOTF(this.state.JWT, this.state.csrf)
+
+        if (status === 204) {
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf)
+        }
+    }
+
     private closeQRWindow() {
         this.SetState(state => ({
             ...state,
             qrOpen: false
+        }))
+    }
+
+    private updateCSRF(token:string) {
+        localStorage.setItem('x-csrf-token', token)
+
+        this.SetState(state => ({
+            ...state,
+            csrf: token
         }))
     }
 }
@@ -327,5 +389,6 @@ export const UserActions = {
     OPEN_CHANGE_PASSWORD_FORM: "OPEN_CHANGE_PASSWORD_FORM",
     CLOSE_CHANGE_PASSWORD_FORM: "CLOSE_CHANGE_PASSWORD_FORM",
     TOGGLE_TWO_FACTOR_AUTHORIZATION: "TOGGLE_TWO_FACTOR_AUTHORIZATION",
-    CLOSE_QR_WINDOW: "CLOSE_QR_WINDOW"
+    CLOSE_QR_WINDOW: "CLOSE_QR_WINDOW",
+    UPDATE_CSRF: "UPDATE_CSRF"
 }

@@ -1,6 +1,6 @@
 import {BaseStore} from "./BaseStore";
 import {AppNoteRequests} from "../api";
-import {AppUserStore} from "./UserStore";
+import {AppUserStore, UserActions} from "./UserStore";
 import {AppDispatcher} from "../dispatcher";
 import {AppToasts} from "../toasts";
 
@@ -155,7 +155,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     async deleteNote() {
-        const status = await AppNoteRequests.Delete(this.state.selectedNote.id, AppUserStore.state.JWT)
+        console.log("deleteNote")
+        const {status, csrf} = await AppNoteRequests.Delete(this.state.selectedNote.id, AppUserStore.state.JWT, AppUserStore.state.csrf)
 
         if (status == 204) {
             this.SetState(state => ({
@@ -164,27 +165,31 @@ class NotesStore extends BaseStore<NotesStoreState> {
             }))
 
             this.closeNote()
+
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf)
+
         }
     }
 
     async saveNote(data) {
         if (this.state.selectedNote.id == data.id) {
 
-            this.SetState(state => ({
-                ...state,
-                saving: true
-            }))
+            // this.SetState(state => ({
+            //     ...state,
+            //     saving: true
+            // }))
 
-            const note = await AppNoteRequests.Update(data, AppUserStore.state.JWT)
-            console.log(note)
+            const {status, csrf} = await AppNoteRequests.Update(data, AppUserStore.state.JWT, AppUserStore.state.csrf)
 
-            AppToasts.success("Заметка успешно сохранена")
+            if (status === 200) {
+                AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf)
+                AppToasts.success("Заметка успешно сохранена")
+            }
 
-            this.SetState(state => ({
-                ...state,
-                saving: false
-            }))
-
+            // this.SetState(state => ({
+            //     ...state,
+            //     saving: false
+            // }))
 
             // TODO: Смена стейта вызывает анфокус заметки ;(
             // this.SetState(state => ({
@@ -204,9 +209,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     async createEmptyNote() {
-        // TODO
+        const response = await AppNoteRequests.Add(AppUserStore.state.JWT, AppUserStore.state.csrf)
 
-        const note = await AppNoteRequests.Add(AppUserStore.state.JWT)
+        AppDispatcher.dispatch(UserActions.UPDATE_CSRF, response.headers["x-csrf-token"])
 
         // const note = {
         //     data: {
@@ -219,7 +224,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
         this.SetState(state => ({
             ...state,
-            notes: [note, ...state.notes]
+            notes: [response.body, ...state.notes]
         }))
 
         console.log(this.state.notes)

@@ -74,11 +74,7 @@ export class Profile extends ScReact.Component<any, any> {
     }
 
     toggleTwoFactorAuthorization = (value:boolean) => {
-        // TODO: отключение двухфакторки
-        console.log("toggleTwoFactorAuthorization")
-        if (value) {
-            AppDispatcher.dispatch(UserActions.TOGGLE_TWO_FACTOR_AUTHORIZATION, value)
-        }
+        AppDispatcher.dispatch(UserActions.TOGGLE_TWO_FACTOR_AUTHORIZATION, value)
     }
 
     closeQR = () => {
