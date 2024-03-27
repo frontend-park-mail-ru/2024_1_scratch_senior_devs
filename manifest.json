@@ -1,0 +1,23 @@
+{
+  "theme_color":"#8936FF",
+  "background_color":"#2EC6FE",
+  "icons":[
+    {
+      "sizes":"64x64",
+      "src":"src/assets/favicon64.png",
+      "type":"image/png"
+    },
+    {
+      "sizes":"512x512",
+      "src":"src/assets/favicon512.png",
+      "type":"image/png"
+    }
+  ],
+  "orientation":"any",
+  "display":"standalone",
+  "dir":"auto",
+  "lang":"ru",
+  "name":"YouNote",
+  "short_name":"YouNote",
+  "start_url":"."
+}

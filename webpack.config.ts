@@ -3,6 +3,7 @@ import webpack from "webpack";
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 
 import 'webpack-dev-server'
 
@@ -13,7 +14,7 @@ const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : 'style-loader
 const config : webpack.Configuration = {
     entry: {
         "main": path.resolve(__dirname, 'public', 'index.ts'),
-        "sw":path.resolve(__dirname, 'public', './sw.js')
+        "sw": path.resolve(__dirname, 'public', 'sw.js')
     },
     output: {
         path: path.resolve(__dirname, 'dist')
@@ -28,7 +29,11 @@ const config : webpack.Configuration = {
         new HtmlWebpackPlugin({
             template: './public/index.html',
         }),
-
+        new CopyPlugin({
+            patterns: [
+                { from: "manifest.json", to: "" },
+            ],
+        }),
         // Add your plugins here
         // Learn more about plugins from https://webpack.js.org/configuration/plugins/
     ],
