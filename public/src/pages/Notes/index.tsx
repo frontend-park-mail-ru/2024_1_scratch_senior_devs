@@ -9,6 +9,7 @@ import {Modal} from "../../components/Modal/Modal";
 import {Button} from "../../components/Button/Button";
 import {Img} from "../../components/Image/Image";
 import {DeleteNoteDialog} from "../../components/DeleteNoteDialog/DeleteNoteDialog";
+import {Dropdown} from "../../components/Dropdown/Dropdown";
 
 export class NotesPage extends ScReact.Component<any, any> {
     state = {
@@ -36,8 +37,6 @@ export class NotesPage extends ScReact.Component<any, any> {
     }
 
     updateState = (store:NotesStoreState) => {
-        console.log("updateState")
-        console.log(this.state.notes)
         this.setState(state => {
             if (state.notes.length > 0 && state.notes.length < AppNotesStore.state.notes.length) {
                 this.createObserver()
@@ -61,9 +60,6 @@ export class NotesPage extends ScReact.Component<any, any> {
         } else if (e.target.matches(".note-container *")) {
             id = e.target.parentNode.id;
         }
-
-        console.log("handleSelectNote")
-        console.log(id)
 
         id && AppDispatcher.dispatch(NotesActions.SELECT_NOTE, id)
     }

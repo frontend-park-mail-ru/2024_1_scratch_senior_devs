@@ -4,6 +4,7 @@ import {Img} from "../Image/Image";
 import {AppNotesStore, NotesActions, NotesStoreState} from "../../modules/stores/NotesStore";
 import {AppDispatcher} from "../../modules/dispatcher";
 import {debounce} from "../../modules/utils";
+import {Dropdown} from "../Dropdown/Dropdown";
 
 
 export class NoteEditor extends ScReact.Component<any, any> {
@@ -12,11 +13,29 @@ export class NoteEditor extends ScReact.Component<any, any> {
         selectedNote: undefined,
         saving: undefined,
         content: undefined,
+        dropdownOpen: false
     }
 
     componentDidMount() {
         AppNotesStore.SubscribeToStore(this.updateState)
         document.querySelector(".note-editor").addEventListener("input", debounce(this.handleKeypress, 1000))
+        document.querySelector(".note-editor").addEventListener("keydown", (e) => this.handleKeyDown(e))
+    }
+
+    handleKeyDown = (e) => {
+        if (e.key === "/") {
+            this.setState(state => ({
+                ...state,
+                dropdownOpen: true
+            }))
+        }
+    }
+
+    closeDropdown = () => {
+        this.setState(state => ({
+            ...state,
+            dropdownOpen: false
+        }))
     }
 
     handleKeypress = () => {
@@ -59,9 +78,6 @@ export class NoteEditor extends ScReact.Component<any, any> {
     }
 
     updateState = (store:NotesStoreState) => {
-        console.log("updateState")
-        console.log("2342342342342asdf")
-        console.log(this.state.selectedNote)
         this.setState(state => {
             return {
                 ...state,
@@ -70,7 +86,6 @@ export class NoteEditor extends ScReact.Component<any, any> {
                 saving: store.saving
             }
         })
-        console.log(this.state.selectedNote)
     }
 
     deleteNote = () => {
@@ -86,8 +101,8 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
                     </div>
                     <div className="right-container">
-                        <Img src="/src/assets/trash.svg" className="icon" onClick={this.deleteNote}/>
-                        <Img src="/src/assets/close.svg" className="icon" onClick={this.closeEditor}/>
+                        <Img src="trash.svg" className="icon" onClick={this.deleteNote}/>
+                        <Img src="close.svg" className="icon" onClick={this.closeEditor}/>
                     </div>
                 </div>
 
@@ -103,6 +118,9 @@ export class NoteEditor extends ScReact.Component<any, any> {
                     <div className="note-save-indicator">
                         {this.state.saving === false ? <h3>Сохранено</h3> : ""}
                     </div>
+
+                    <Dropdown open={this.state.dropdownOpen} onClose={this.closeDropdown} />
+
                 </div>
             </div>
         )
