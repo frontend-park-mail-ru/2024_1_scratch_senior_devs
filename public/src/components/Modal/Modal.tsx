@@ -24,7 +24,7 @@ export class Modal extends ScReact.Component<any, any> {
                 <div className="modal-content">
                     {/*{ScReact.createComponent(this.props.content, {open: this.props.open, key: "asdfasdfadsfa"})}*/}
                     {this.props.content}
-                    <Img src="/src/assets/close.svg" className="close-modal-btn" onClick={this.props.handleClose}/>
+                    <Img src="close.svg" className="close-modal-btn" onClick={this.props.handleClose}/>
                 </div>
             </div>
         )

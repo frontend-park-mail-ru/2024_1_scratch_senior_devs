@@ -119,7 +119,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
                         {this.state.saving === false ? <h3>Сохранено</h3> : ""}
                     </div>
 
-                    <Dropdown open={this.state.dropdownOpen} onClose={this.closeDropdown} />
+                    {/*<Dropdown open={this.state.dropdownOpen} onClose={this.closeDropdown} />*/}
 
                 </div>
             </div>

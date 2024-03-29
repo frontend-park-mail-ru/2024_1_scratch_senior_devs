@@ -9,7 +9,6 @@ import {Modal} from "../../components/Modal/Modal";
 import {Button} from "../../components/Button/Button";
 import {Img} from "../../components/Image/Image";
 import {DeleteNoteDialog} from "../../components/DeleteNoteDialog/DeleteNoteDialog";
-import {Dropdown} from "../../components/Dropdown/Dropdown";
 
 export class NotesPage extends ScReact.Component<any, any> {
     state = {
@@ -98,8 +97,13 @@ export class NotesPage extends ScReact.Component<any, any> {
                 <aside>
                     <Modal open={this.state.deleteNoteModal} content={<DeleteNoteDialog />} handleClose={() => AppDispatcher.dispatch(NotesActions.CLOSE_DELETE_NOTE_DIALOG)} />
                     <div className="top-panel">
-                        <Button label="Новая заметка" onClick={this.createEmptyNote}/>
                         <SearchBar onChange={this.searchNotes}/>
+                        <div className="add-note-btn-container" onclick={this.createEmptyNote}>
+                            <Button label="Новая заметка" className="add-note-btn" />
+                            <div className="add-note-icon-wrapper">
+                                <Img src="plus.svg" className="add-note-icon" />
+                            </div>
+                        </div>
                     </div>
                     <div className="notes-container" onclick={this.handleSelectNote}>
                         {notes}

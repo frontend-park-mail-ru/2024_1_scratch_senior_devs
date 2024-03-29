@@ -27,27 +27,17 @@ export class Toast extends ScReact.Component<ToastProps, any> {
         return "Инфо"
     }
 
-    getIcon ():string {
-        if (this.props.type == TOAST_TYPE.SUCCESS) {
-            return "/src/assets/success.svg"
-        } else if (this.props.type == TOAST_TYPE.ERROR) {
-            return "/src/assets/error.svg"
-        }
-
-        return "/src/assets/info.svg"
-    }
-
     render() {
         return (
             <div className={"toast success " + (this.props.open ? "" : "hide")} style={`bottom: ${this.props.offset}px`}>
                 <div className="toast-content">
-                    <Img src={this.getIcon()} className="toast-icon"/>
+                    <Img src={this.props.type + ".svg"} className="toast-icon"/>
                     <div className="content">
                         <span className="title">{this.formatType()}</span>
                         <span className="message">{this.props.message}</span>
                     </div>
                 </div>
-                <Img src="/src/assets/close.svg" className="toast-close-btn" onClick={this.closeToast}/>
+                <Img src="close.svg" className="toast-close-btn" onClick={this.closeToast}/>
                 <div className="progress"></div>
             </div>
         )

@@ -44,12 +44,12 @@ export class ProfileAvatar extends ScReact.Component<any, any> {
     render() {
         return (
             <div className="user-avatar-container">
-                <Img src={imagesUlr + this.props.avatarUrl} className={"user-avatar " + (this.state.inUpload ? "loading" : "")}/>
+                <img src={imagesUlr + this.props.avatarUrl} className={"user-avatar " + (this.state.inUpload ? "loading" : "")}/>
 
                 <form className="upload-preview">
                     <input type="file" accept=".jpg,.png" id="upload-image-input" hidden="true" onchange={this.handlePhotoUpload}/>
                     <label htmlFor="upload-image-input"></label>
-                    <Img src="src/assets/photo.svg" className="upload-preview-icon"/>
+                    <Img src="photo.svg" className="upload-preview-icon"/>
                 </form>
 
                 <AvatarUploadLoader active={this.state.inUpload} />
