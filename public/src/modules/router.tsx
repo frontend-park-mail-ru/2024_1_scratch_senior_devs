@@ -109,9 +109,9 @@ export class Router extends ScReact.Component<any, routerState> {
 
     render(): VDomNode {
         return (
-            <div>
+            <div id={"root"} className={this.state.currPage.name === "NotesPage" ? "locked" : ""}>
                 <Toasts />
-                <Background  currPage={this.state.currPage}/>
+                <Background  currPage={this.state.currPage.name}/>
                 <Header currPage={this.state.currPage}/>
                 {ScReact.createComponent(this.state.currPage, {...this.state.PageProps, key: this.state.currPage.name}) }
             </div>
