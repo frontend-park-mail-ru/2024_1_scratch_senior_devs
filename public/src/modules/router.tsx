@@ -108,10 +108,11 @@ export class Router extends ScReact.Component<any, routerState> {
     }
 
     render(): VDomNode {
-        console.log(this.state.currPage.name)
-        console.log(this.state.currPage.name === "NotesPage")
+        console.log(this.state.currPage)
+        console.log(this.state.currPage === NotesPage)
+
         return (
-            <div id={"root"} className={this.state.currPage.name === "NotesPage" ? "locked" : ""}>
+            <div id={"root"} className={this.state.currPage === NotesPage ? "locked" : ""}>
                 <Toasts />
                 <Background  currPage={this.state.currPage.name}/>
                 <Header currPage={this.state.currPage}/>
