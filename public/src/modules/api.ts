@@ -232,6 +232,7 @@ class ProfileRequests {
 
         console.log("fffffff")
         console.log(response.headers)
+        console.log(response.body)
         // TOOD: не прилетает csrf в ответе
         console.log(response.headers["x-csrf-token"])
 

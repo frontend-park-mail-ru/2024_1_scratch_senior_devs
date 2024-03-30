@@ -4,6 +4,7 @@ import {Img} from "../Image/Image";
 import {AppNotesStore, NotesActions, NotesStoreState} from "../../modules/stores/NotesStore";
 import {AppDispatcher} from "../../modules/dispatcher";
 import {debounce} from "../../modules/utils";
+import {SwipeArea} from "../SwipeArea/SwipeArea";
 
 
 export class NoteEditor extends ScReact.Component<any, any> {
@@ -11,52 +12,13 @@ export class NoteEditor extends ScReact.Component<any, any> {
         selectedNote: undefined,
         saving: undefined,
         content: undefined,
-        dropdownOpen: false,
-        x: null,
-        y: null
+        dropdownOpen: false
     }
 
     componentDidMount() {
         AppNotesStore.SubscribeToStore(this.updateState)
         document.querySelector(".note-editor").addEventListener("input", debounce(this.handleKeypress, 1000))
         document.querySelector(".note-editor").addEventListener("keydown", (e) => this.handleKeyDown(e))
-        document.querySelector(".note-editor").addEventListener("touchstart", this.handleTouchStart, false)
-        document.querySelector(".note-editor").addEventListener("touchmove", this.handleTouchMove, false)
-    }
-
-    handleTouchStart = (e) => {
-        const firstTouch = e.touches[0]
-        this.setState(state => ({
-            ...state,
-            x: firstTouch.clientX,
-            y: firstTouch.clientY
-        }))
-    }
-
-    handleTouchMove = (e) => {
-        if (!this.state.x || !this.state.y || !this.props.open) {
-            return false
-        }
-
-        const x2 = e.touches[0].clientX
-        const y2 = e.touches[0].clientY
-        const xDiff = x2 - this.state.x
-        const yDiff = y2 - this.state.y
-
-        if (Math.abs(xDiff) > Math.abs(yDiff)) {
-            if (xDiff > 100) {
-                this.closeEditor()
-                console.log("Right")
-            } else {
-                console.log("Left")
-            }
-        } else {
-            if (yDiff > 0) {
-                console.log("Top")
-            } else {
-                console.log("Bottom")
-            }
-        }
     }
 
     handleKeyDown = (e) => {
@@ -133,6 +95,8 @@ export class NoteEditor extends ScReact.Component<any, any> {
     render() {
         return (
             <div className={"note-editor " + (this.props.open ? "active" : "") }>
+
+                <SwipeArea enable={this.props.open} right={this.closeEditor} />
 
                 <div className="top-panel">
                     <div className="left-container">
