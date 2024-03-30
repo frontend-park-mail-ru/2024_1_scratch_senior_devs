@@ -45,6 +45,7 @@ export class NotesPage extends ScReact.Component<any, any> {
             return {
                 ...state,
                 selectedNote: store.selectedNote,
+                editorOpen: store.selectedNote != undefined,
                 notes: store.notes,
                 deleteNoteModal: store.modalOpen
             }
