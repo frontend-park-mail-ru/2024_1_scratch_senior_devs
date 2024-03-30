@@ -8,8 +8,8 @@ export class SwipeArea extends ScReact.Component<any, any> {
     }
 
     componentDidMount() {
-        document.querySelector(".note-editor").addEventListener("touchstart", this.handleTouchStart, false)
-        document.querySelector(".note-editor").addEventListener("touchmove", this.handleTouchMove, false)
+        document.querySelector(this.props.target).addEventListener("touchstart", this.handleTouchStart, false)
+        document.querySelector(this.props.target).addEventListener("touchmove", this.handleTouchMove, false)
     }
 
     handleTouchStart = (e) => {

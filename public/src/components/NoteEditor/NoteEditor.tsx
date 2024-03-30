@@ -94,9 +94,9 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
     render() {
         return (
-            <div className={"note-editor " + (this.props.open ? "active" : "") }>
+            <div className={"note-editor " + (this.props.open ? "active" : "")} >
 
-                <SwipeArea enable={this.props.open} right={this.closeEditor} />
+                <SwipeArea enable={this.props.open} right={this.closeEditor} target=".note-editor"/>
 
                 <div className="top-panel">
                     <div className="left-container">
