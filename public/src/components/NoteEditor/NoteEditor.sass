@@ -47,26 +47,26 @@
 		justify-content: space-between
 
 		.left-container
-			display: flex
-			gap: 5px
 
-			.item
-				padding: 4px
-				transition: 0.3s
+
+			.close-editor-label-container
+				display: none
+				align-items: center
+				justify-content: center
+				gap: 4px
 				cursor: pointer
-				border-radius: 4px
 
-				.icon
-					width: 18px
-					height: 18px
-					transition: 0.3s
-					filter: invert(80%)
+				@media screen and (max-width: $lg)
+					display: flex
 
-				&:hover
-					background: #333437
+				.back-icon
+					width: 9px
+					height: 9px
 
-					.icon
-						filter: invert(75%)
+				.back-label
+					font-size: 18px
+					color: $text-main-color--darker
+
 
 		.right-container
 			display: flex
@@ -82,6 +82,13 @@
 
 				&:hover
 					opacity: 1
+
+			.close-editor-icon
+				display: flex
+
+				@media screen and (max-width: $lg)
+					display: none
+
 
 	.bottom-panel
 		display: flex

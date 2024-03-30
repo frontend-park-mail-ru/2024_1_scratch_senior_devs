@@ -5,10 +5,12 @@ import "./index.sass"
 
 renderDOM('root', ScReact.createComponent(App, {}));
 
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js')
-        .then(() => navigator.serviceWorker.ready.then((worker) => {
-            // @ts-ignore
-            worker.sync.register('syncdata');
-        }))
+if (process.env.NODE_ENV === "production") {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js')
+            .then(() => navigator.serviceWorker.ready.then((worker) => {
+                // @ts-ignore
+                worker.sync.register('syncdata');
+            }))
+    }
 }
