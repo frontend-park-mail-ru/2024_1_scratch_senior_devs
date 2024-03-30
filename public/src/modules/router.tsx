@@ -54,7 +54,6 @@ export class Router extends ScReact.Component<any, routerState> {
         if (this.state.currPage === NotesPage) {
             document.body.classList.add("locked")
         } else {
-            alert("remove locked")
             document.body.classList.remove("locked")
         }
     }
