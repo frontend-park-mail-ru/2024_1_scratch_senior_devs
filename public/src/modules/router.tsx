@@ -12,6 +12,7 @@ import NotesPageSkeleton from "../pages/Notes/Skeleton";
 import AuthPageSkeleton from "../pages/Auth/Skeleton";
 import {AuthPageLoader} from "../pages/Auth/loader";
 import {NotesLoader} from "../pages/Notes/loader";
+import {Note} from "../components/Note/note";
 
 type routerState = {
     currPage: {new(): Component<any, any> }
@@ -47,6 +48,14 @@ export class Router extends ScReact.Component<any, routerState> {
             this.go(window.location.pathname);
         })
         this.go(path);
+    }
+
+    componentDidUpdate() {
+        if (this.state.currPage === NotesPage) {
+            document.body.classList.add("locked")
+        } else {
+            document.body.classList.remove("locked")
+        }
     }
 
     private initPages = () => {
