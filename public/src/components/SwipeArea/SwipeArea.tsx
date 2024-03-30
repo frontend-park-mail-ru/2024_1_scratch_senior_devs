@@ -1,5 +1,4 @@
 import {ScReact} from "@veglem/screact";
-import "./SwipeArea.sass"
 
 export class SwipeArea extends ScReact.Component<any, any> {
     state = {
@@ -10,6 +9,11 @@ export class SwipeArea extends ScReact.Component<any, any> {
     componentDidMount() {
         document.querySelector(this.props.target).addEventListener("touchstart", this.handleTouchStart, false)
         document.querySelector(this.props.target).addEventListener("touchmove", this.handleTouchMove, false)
+    }
+
+    componentWillUnmount() {
+        document.querySelector(this.props.target).removeEventListener("touchstart", this.handleTouchStart, false)
+        document.querySelector(this.props.target).removeEventListener("touchmove", this.handleTouchMove, false)
     }
 
     handleTouchStart = (e) => {
@@ -48,7 +52,7 @@ export class SwipeArea extends ScReact.Component<any, any> {
 
     render() {
         return (
-            <div className="swipe-area">
+            <div>
 
             </div>
         )
