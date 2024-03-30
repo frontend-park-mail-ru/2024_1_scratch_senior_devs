@@ -230,18 +230,12 @@ class ProfileRequests {
 
         const response = await fetch(baseUrl + "/profile/update_avatar/", options);
 
-        console.log("fffffff")
-        console.log(response.headers)
-        console.log(response.body)
-        // TOOD: не прилетает csrf в ответе
-        console.log(response.headers["x-csrf-token"])
-
         const body = await response.json()
 
         return {
             status: response.status,
             avatarUrl: body.image_path,
-            csrf: response.headers["x-csrf-token"]
+            csrf: response.headers.get("x-csrf-token")
         }
     }
 
@@ -259,6 +253,9 @@ class ProfileRequests {
                 }
             }
         });
+
+        console.log("UpdatePassword")
+        console.log(response.headers)
 
         return {
             status: response.status,

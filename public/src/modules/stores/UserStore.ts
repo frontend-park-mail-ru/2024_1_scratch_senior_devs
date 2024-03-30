@@ -261,8 +261,6 @@ class UserStore extends BaseStore<UserStoreState>{
         try {
             const {status, csrf, avatarUrl} = await AppProfileRequests.UpdateAvatar(file, this.state.JWT, this.state.csrf)
 
-            console.log("updateAvatar")
-            console.log(csrf)
             if (status == 200) {
                 AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf)
 

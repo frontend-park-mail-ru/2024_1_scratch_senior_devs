@@ -1,6 +1,5 @@
 import {ScReact} from "@veglem/screact";
 import {Button} from "../Button/Button";
-import {Img} from "../Image/Image";
 import {AppDispatcher} from "../../modules/dispatcher";
 import {NotesActions} from "../../modules/stores/NotesStore";
 import "./DeleteNoteDialog.sass"
