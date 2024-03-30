@@ -111,7 +111,7 @@ export class Router extends ScReact.Component<any, routerState> {
         return (
             <div>
                 <Toasts />
-                <Background />
+                <Background  currPage={this.state.currPage}/>
                 <Header currPage={this.state.currPage}/>
                 {ScReact.createComponent(this.state.currPage, {...this.state.PageProps, key: this.state.currPage.name}) }
             </div>
