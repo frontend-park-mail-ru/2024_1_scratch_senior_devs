@@ -8,7 +8,6 @@ import {debounce} from "../../modules/utils";
 
 export class NoteEditor extends ScReact.Component<any, any> {
     state = {
-        open: false,
         selectedNote: undefined,
         saving: undefined,
         content: undefined,
@@ -35,7 +34,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
     }
 
     handleTouchMove = (e) => {
-        if (!this.state.x || !this.state.y || !this.state.open) {
+        if (!this.state.x || !this.state.y || !this.props.open) {
             return false
         }
 
@@ -112,7 +111,9 @@ export class NoteEditor extends ScReact.Component<any, any> {
     closeEditor = () => {
         this.saveNote()
 
-        AppDispatcher.dispatch(NotesActions.CLOSE_NOTE)
+        this.props.setClose()
+
+        setTimeout(() => AppDispatcher.dispatch(NotesActions.CLOSE_NOTE), 300)
     }
 
     updateState = (store:NotesStoreState) => {
@@ -120,7 +121,6 @@ export class NoteEditor extends ScReact.Component<any, any> {
             return {
                 ...state,
                 selectedNote: store.selectedNote,
-                open: store.selectedNote !== undefined,
                 saving: store.saving
             }
         })
@@ -132,7 +132,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
     render() {
         return (
-            <div className={"note-editor " + (this.state.open ? "active" : "") }>
+            <div className={"note-editor " + (this.props.open ? "active" : "") }>
 
                 <div className="top-panel">
                     <div className="left-container">
