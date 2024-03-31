@@ -9,6 +9,7 @@ import {Modal} from "../../components/Modal/Modal";
 import {Button} from "../../components/Button/Button";
 import {Img} from "../../components/Image/Image";
 import {DeleteNoteDialog} from "../../components/DeleteNoteDialog/DeleteNoteDialog";
+import {Tippy} from "../../components/Tippy/Tippy";
 
 export class NotesPage extends ScReact.Component<any, any> {
     state = {
@@ -108,7 +109,7 @@ export class NotesPage extends ScReact.Component<any, any> {
         ))
 
         return (
-            <div className={"notes-page-wrapper " + (this.state.editorOpen ? "active" : "")}>
+            <div className={"notes-page-wrapper " + (this.state.editorOpen ? "active" : "")} >
                 <aside>
                     <Modal open={this.state.deleteNoteModal} content={<DeleteNoteDialog />} handleClose={() => AppDispatcher.dispatch(NotesActions.CLOSE_DELETE_NOTE_DIALOG)} />
                     <div className="top-panel">
@@ -124,7 +125,7 @@ export class NotesPage extends ScReact.Component<any, any> {
                         {notes}
                     </div>
                 </aside>
-               <NoteEditor open={this.state.editorOpen} setClose={this.closeEditor}/>
+                <NoteEditor open={this.state.editorOpen} setClose={this.closeEditor} />
             </div>
         )
     }

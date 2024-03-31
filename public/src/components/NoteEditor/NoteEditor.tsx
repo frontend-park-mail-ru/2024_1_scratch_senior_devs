@@ -5,6 +5,8 @@ import {AppNotesStore, NotesActions, NotesStoreState} from "../../modules/stores
 import {AppDispatcher} from "../../modules/dispatcher";
 import {debounce} from "../../modules/utils";
 import {SwipeArea} from "../SwipeArea/SwipeArea";
+import {Dropdown} from "../Dropdown/Dropdown";
+import {Tippy} from "../Tippy/Tippy";
 
 
 export class NoteEditor extends ScReact.Component<any, any> {
@@ -12,13 +14,14 @@ export class NoteEditor extends ScReact.Component<any, any> {
         selectedNote: undefined,
         saving: undefined,
         content: undefined,
-        dropdownOpen: false
+        dropdownOpen: false,
+        tippyOpen: false
     }
 
     componentDidMount() {
         AppNotesStore.SubscribeToStore(this.updateState)
-        document.querySelector(".note-editor").addEventListener("input", debounce(this.handleKeypress, 1000))
-        document.querySelector(".note-editor").addEventListener("keydown", (e) => this.handleKeyDown(e))
+        this.editorRef.addEventListener("input", debounce(this.handleKeypress, 1000))
+        this.editorRef.addEventListener("keydown", (e) => this.handleKeyDown(e))
     }
 
     handleKeyDown = (e) => {
@@ -27,6 +30,11 @@ export class NoteEditor extends ScReact.Component<any, any> {
                 ...state,
                 dropdownOpen: true
             }))
+        }  else if (e.key === "b") {
+            this.setState(state => ({
+                ...state,
+                tippyOpen: true
+            }))
         }
     }
 
@@ -34,6 +42,13 @@ export class NoteEditor extends ScReact.Component<any, any> {
         this.setState(state => ({
             ...state,
             dropdownOpen: false
+        }))
+    }
+
+    closeTippy = () => {
+        this.setState(state => ({
+            ...state,
+            tippyOpen: false
         }))
     }
 
@@ -94,7 +109,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
     render() {
         return (
-            <div className={"note-editor " + (this.props.open ? "active" : "")} >
+            <div className={"note-editor " + (this.props.open ? "active" : "")} ref={ref => {this.editorRef = ref}}>
 
                 <SwipeArea enable={this.props.open} right={this.closeEditor} target=".note-editor"/>
 
@@ -124,8 +139,8 @@ export class NoteEditor extends ScReact.Component<any, any> {
                         {this.state.saving === false ? <h3>Сохранено</h3> : ""}
                     </div>
 
-                    {/*<Dropdown open={this.state.dropdownOpen} onClose={this.closeDropdown} />*/}
-
+                    <Dropdown open={this.state.dropdownOpen} onClose={this.closeDropdown} />
+                    <Tippy open={this.state.tippyOpen} onClose={this.closeTippy} />
                 </div>
             </div>
         )

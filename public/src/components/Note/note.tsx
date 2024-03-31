@@ -9,7 +9,7 @@ type NoteState = {
     update_time: string
 }
 
-const MAX_NOTE_CONTENT_PREVIEW_LENGTH = 50
+const MAX_NOTE_CONTENT_PREVIEW_LENGTH = 25
 
 export class Note extends ScReact.Component<any, NoteState> {
     state = {

@@ -8,6 +8,20 @@ export class Dropdown extends ScReact.Component<any, any> {
         ref: undefined
     }
 
+    componentDidMount() {
+        document.addEventListener('click', this.handleClickOutside, true)
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('click', this.handleClickOutside, true)
+    }
+
+    handleClickOutside = (e) => {
+        if (this.props.open && !this.state.ref.contains(e.target)) {
+            this.props.onClose()
+        }
+    }
+
     handleOnHover = (id:string) => {
         console.log("handleOnHover " + id)
 
@@ -47,6 +61,12 @@ export class Dropdown extends ScReact.Component<any, any> {
                 id: "img",
                 icon: "image.svg",
                 title: "Картинка",
+                desc: "Загрузите фото с вашего компьютера"
+            },
+            {
+                id: "document",
+                icon: "document.svg",
+                title: "Файл",
                 desc: "Загрузите файл с вашего компьютера"
             },
             {
