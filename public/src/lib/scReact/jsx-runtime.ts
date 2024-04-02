@@ -30,7 +30,7 @@ export const jsx = (tag: any, { children, ...props}) => {
             const childs = children[i];
             children.splice(i, 1, ...childs);
         }
-        if (typeof children[i] === 'string') {
+        if (typeof children[i] === "string") {
             children[i] = ScReact.createText(children[i]);
         }
     }

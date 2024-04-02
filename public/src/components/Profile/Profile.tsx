@@ -20,12 +20,12 @@ export class Profile extends ScReact.Component<any, any> {
 
     componentDidMount() {
         AppUserStore.SubscribeToStore(this.updateState)
-        document.addEventListener('click', this.handleClickOutside, true)
+        document.addEventListener("click", this.handleClickOutside, true)
     }
 
     componentWillUnmount() {
         AppUserStore.UnSubscribeToStore(this.updateState)
-        document.removeEventListener('click', this.handleClickOutside, true)
+        document.removeEventListener("click", this.handleClickOutside, true)
     }
 
     updateState = (store:UserStoreState) => {

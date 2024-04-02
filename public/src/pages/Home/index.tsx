@@ -5,6 +5,8 @@ import {AppRouter} from "../../modules/router";
 import {AppUserStore} from "../../modules/stores/UserStore";
 import {ShiningButton} from "../../components/ShiningButton/ShinigButton";
 import {Card} from "../../components/Card/Card";
+import {Carousel} from "../../components/Carousel/Carousel";
+import {NoteEditor} from "../../components/NoteEditor/NoteEditor";
 
 export class HomePage extends ScReact.Component<any, any> {
     componentDidMount() {
@@ -43,6 +45,11 @@ export class HomePage extends ScReact.Component<any, any> {
                         <h1 className="title">YouNote - современный сервис для ведения заметок</h1>
                         <ShiningButton label="Попробовать" onClick={this.handleButtonClick}/>
                     </div>
+
+                    {/*<Carousel />*/}
+
+                    <NoteEditor></NoteEditor>
+
                 </section>
                 <section className="second">
                     <h2>Функции и возможности</h2>

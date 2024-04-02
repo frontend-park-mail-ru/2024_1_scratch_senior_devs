@@ -1,4 +1,4 @@
-const CACHE_NAME = 'app-cache'
+const CACHE_NAME = "app-cache"
 
 const assetUrls = [
     "/",
@@ -13,7 +13,7 @@ self.addEventListener('install', async () => {
     await cache.addAll(assetUrls)
 })
 
-self.addEventListener('activate', async () => {
+self.addEventListener("activate", async () => {
     const cacheNames = await caches.keys()
     await Promise.all(
         cacheNames
@@ -26,7 +26,7 @@ const tryNetwork = (request) => {
     return new Promise((fulfill, reject) => {
         fetch(request).then((response) => {
             fulfill(response);
-            if (request.method === 'GET') {
+            if (request.method === "GET") {
                 update(request, response.clone());
             }
         }, reject);
@@ -43,7 +43,7 @@ const update = async (request, response) => {
     await cache.put(request, response)
 }
 
-self.addEventListener('fetch', (event) => {
+self.addEventListener("fetch", (event) => {
     event.respondWith(
         tryNetwork(event.request).catch(() => fromCache(event.request)),
     );

@@ -146,12 +146,17 @@ class NotesStore extends BaseStore<NotesStoreState> {
             count: this.state.count
         }
 
+        console.log("fetchNotes")
+        console.log(params)
+
         const notes = await AppNoteRequests.GetAll(AppUserStore.state.JWT, params)
 
         this.SetState(state => ({
             ...state,
             notes: reset ? notes : state.notes.concat(notes)
         }))
+
+        console.log(notes)
     }
 
     async deleteNote() {
@@ -224,7 +229,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
         this.SetState(state => ({
             ...state,
-            notes: [response.body, ...state.notes]
+            notes: [...state.notes, response.body]
         }))
 
         console.log(this.state.notes)
