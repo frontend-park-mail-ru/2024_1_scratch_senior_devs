@@ -1,5 +1,5 @@
 import {AppDispatcher} from "../../../modules/dispatcher";
-import {NoteStoreActions} from "../../../modules/store/NoteStore";
+import {NoteStoreActions} from "../../../modules/stores/NoteStore";
 
 export const moveCursorUpAndDown = (blockId: number) => {
     setTimeout(()=> {

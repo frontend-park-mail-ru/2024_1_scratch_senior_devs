@@ -1,4 +1,4 @@
-import {AppNoteStore} from "../modules/store/NoteStore";
+import {AppNoteStore} from "../modules/stores/NoteStore";
 
 export const setCursorAtNodePosition = (node, index) => {
     let range = document.createRange();

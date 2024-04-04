@@ -227,10 +227,15 @@ class NotesStore extends BaseStore<NotesStoreState> {
         // }
         //
 
+        // const notes = this.state.notes
+        //
+        // notes.push(response.body)
+
         this.SetState(state => ({
             ...state,
             offset: state.offset + 1,
-            notes: [...state.notes, response.body]
+            notes: [...state.notes, response.body],
+            // TODO: notes: [response.body, ...state.notes]
         }))
 
         console.log(this.state.notes)

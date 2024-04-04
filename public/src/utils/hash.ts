@@ -1,6 +1,6 @@
 import {BlockNode} from "../components/Block/Block";
 import {PieceNode} from "../components/Piece/Piece";
-import {AppNoteStore} from "../modules/store/NoteStore";
+import {AppNoteStore} from "../modules/stores/NoteStore";
 import {GetOrderedListCounter} from "./orderedListCounter";
 
 export const getStrHash = (str: string) => {

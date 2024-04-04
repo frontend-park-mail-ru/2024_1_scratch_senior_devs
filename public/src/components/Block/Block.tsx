@@ -107,6 +107,7 @@ export class Block extends Component<BlockProps, BlockState> {
                                     !("ul" in AppNoteStore.state.note.blocks[this.props.blockId].attributes)) &&
                                     (e.target as HTMLElement).textContent == "/") {
                                     const elem = e.target as HTMLElement;
+                                    console.log("OPEN_DROPDOWN")
                                     AppDispatcher.dispatch(NoteStoreActions.OPEN_DROPDOWN, {
                                         blockY: elem.getBoundingClientRect().y,
                                         blockId: this.props.blockId

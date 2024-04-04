@@ -1,4 +1,4 @@
-import {AppNoteStore} from "../modules/store/NoteStore";
+import {AppNoteStore} from "../modules/stores/NoteStore";
 
 export const GetOrderedListCounter = (currBlockId: number): number => {
     const blocks = AppNoteStore.state.note.blocks;

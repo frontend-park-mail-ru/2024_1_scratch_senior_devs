@@ -2,7 +2,7 @@ import {ScReact} from "@veglem/screact";
 import "./Dropdown.sass"
 import {Img} from "../Image/Image";
 import {AppDispatcher} from "../../modules/dispatcher";
-import {AppNoteStore, NoteStoreActions} from "../../modules/store/NoteStore";
+import {NoteStoreActions} from "../../modules/stores/NoteStore";
 
 export class Dropdown extends ScReact.Component<any, any> {
     state = {

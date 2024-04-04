@@ -7,6 +7,8 @@ import {debounce} from "../../modules/utils";
 import {SwipeArea} from "../SwipeArea/SwipeArea";
 import {Dropdown} from "../Dropdown/Dropdown";
 import {Tippy} from "../Tippy/Tippy";
+import {Editor} from "../Editor/Editor";
+import {AppNoteStore} from '../../modules/stores/NoteStore';
 
 
 export class NoteEditor extends ScReact.Component<any, any> {
@@ -22,8 +24,106 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
     componentDidMount() {
         AppNotesStore.SubscribeToStore(this.updateState)
-        this.editorRef.addEventListener("input", debounce(this.handleKeypress, 1000))
-        this.editorRef.addEventListener("keydown", (e) => this.handleKeyDown(e))
+        AppNoteStore.SetNote({
+            "title": "Hello You-note",
+            "blocks": [
+                {
+                    "id": "1",
+                    "type": "h1",
+                    "content": [
+                        {
+                            "id": "2",
+                            "content": "Hello",
+                            "attributes": {
+                                "style": "color: red"
+                            }
+                        },
+                        {
+                            "id": "3",
+                            "content": " World!"
+                        },
+                        {
+                            "id": "8",
+                            "content": " World!",
+                            "attributes": {
+                                "style": "background-color: red"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "4",
+                    "type": "img",
+                    "attributes": {
+                        "src": "src/assets/logo.png",
+                        "width": "100"
+                    }
+                },
+                {
+                    "id": "10",
+                    "type": "div",
+                    "attributes": {
+                        "ol": true
+                    },
+                    "content": [
+                        {
+                            "id": "2",
+                            "content": "Hello",
+                            "attributes": {
+                                "style": "color: red"
+                            }
+                        },
+                        {
+                            "id": "3",
+                            "content": " World!"
+                        }
+                    ]
+                },
+                {
+                    "id": "10",
+                    "type": "div",
+                    "attributes": {
+                        "ul": true
+                    },
+                    "content": [
+                        {
+                            "id": "2",
+                            "content": "Hello",
+                            "attributes": {
+                                "style": "color: red"
+                            }
+                        },
+                        {
+                            "id": "3",
+                            "content": " World!"
+                        }
+                    ]
+                },
+                {
+                    "id": "10",
+                    "type": "div",
+                    "attributes": {
+                        "ol": true
+                    },
+                    "content": [
+                        {
+                            "id": "2",
+                            "content": "Hello",
+                            "attributes": {
+                                "style": "color: red"
+                            }
+                        },
+                        {
+                            "id": "3",
+                            "content": " World!"
+                        }
+                    ]
+                }
+            ]
+        })
+
+        // this.editorRef.addEventListener("input", debounce(this.handleKeypress, 1000))
+        // this.editorRef.addEventListener("keydown", (e) => this.handleKeyDown(e))
     }
 
     handleKeyDown = (e) => {
@@ -61,18 +161,21 @@ export class NoteEditor extends ScReact.Component<any, any> {
     }
 
     saveNote = () => {
-        const titleElem = document.querySelector(".note-title") as HTMLElement
-        const contentElem = document.querySelector(".note-content > span") as HTMLElement
+        // const titleElem = document.querySelector(".note-title") as HTMLElement
+        // const contentElem = document.querySelector(".note-content > span") as HTMLElement
 
-        const data = {
-            id: this.state.selectedNote.id,
-            title: titleElem.innerText,
-            content: contentElem.innerText
-        }
+        // TODO
+        console.log(AppNoteStore.state.note)
 
-        if (data.title !== this.state.selectedNote.data.title || data.content !== this.state.selectedNote.data.content) {
-            AppDispatcher.dispatch(NotesActions.SAVE_NOTE, data)
-        }
+        // const data = {
+        //     id: this.state.selectedNote.id,
+        //     title: titleElem.innerText,
+        //     content: contentElem.innerText
+        // }
+
+        // if (data.title !== this.state.selectedNote.data.title || data.content !== this.state.selectedNote.data.content) {
+        //     AppDispatcher.dispatch(NotesActions.SAVE_NOTE, data)
+        // }
 
         // this.setState(state => ({
         //     ...state,
@@ -129,12 +232,9 @@ export class NoteEditor extends ScReact.Component<any, any> {
                 </div>
 
                 <div className="bottom-panel">
-                    <div className="note-title-container" contentEditable="true">
-                        <h3 className="note-title">{this.state.selectedNote?.data.title}</h3>
-                    </div>
-
-                    <div className="note-content" contentEditable="true">
-                        <span>{this.state.selectedNote?.data.content}</span>
+                    
+                    <div className="note-content">
+                        <Editor />
                     </div>
 
                     <div className="note-save-indicator">

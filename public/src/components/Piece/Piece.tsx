@@ -1,7 +1,7 @@
 import {Component} from "@veglem/screact/dist/component";
 import {VDOMAttributes, VDomNode} from "@veglem/screact/dist/vdom";
 import {ScReact} from "@veglem/screact";
-import {AppNoteStore} from "../../modules/store/NoteStore";
+import {AppNoteStore} from "../../modules/stores/NoteStore";
 
 export interface PieceNode {
     id: string,

@@ -211,11 +211,11 @@ class NoteStore extends BaseStore<NoteStoreState> {
     private openDropdown = (blockY: number, blockId: number) => {
         if (blockY > 250) {
             this.SetState(s => {
-                return {...s, dropdownPos: {left: 0, top: blockY - 240, isOpen: true, blockId: blockId}}
+                return {...s, dropdownPos: {left: 550, top: blockY - 240, isOpen: true, blockId: blockId}}
             })
         } else {
             this.SetState(s => {
-                return {...s, dropdownPos: {left: 0, top: blockY + 31, isOpen: true, blockId: blockId}}
+                return {...s, dropdownPos: {left: 550, top: blockY + 31, isOpen: true, blockId: blockId}}
             })
         }
     }
