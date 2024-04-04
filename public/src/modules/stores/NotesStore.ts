@@ -229,10 +229,15 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
         this.SetState(state => ({
             ...state,
+            offset: state.offset + 1,
             notes: [...state.notes, response.body]
         }))
 
         console.log(this.state.notes)
+
+        await this.selectNote(response.body.id)
+
+        document.getElementById(String(response.body.id)).scrollIntoView()
     }
 }
 
