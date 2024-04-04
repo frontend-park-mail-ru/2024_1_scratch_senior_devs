@@ -4,6 +4,8 @@ import "./LinkInput.sass"
 
 export class LinkInput extends ScReact.Component<any, any> {
 
+    private ref: HTMLElement
+
     componentDidMount() {
         document.addEventListener('click', this.handleClickOutside, true)
     }

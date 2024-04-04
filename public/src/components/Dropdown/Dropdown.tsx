@@ -1,6 +1,8 @@
 import {ScReact} from "@veglem/screact";
 import "./Dropdown.sass"
 import {Img} from "../Image/Image";
+import {AppDispatcher} from "../../modules/dispatcher";
+import {AppNoteStore, NoteStoreActions} from "../../modules/store/NoteStore";
 
 export class Dropdown extends ScReact.Component<any, any> {
     state = {
@@ -33,6 +35,24 @@ export class Dropdown extends ScReact.Component<any, any> {
 
     handleOnClick = (id:string) => {
         console.log("handleOnClick " + id)
+        let tag = id;
+        let attr = null;
+        if (id === "bullet-list") {
+            attr = {}
+            attr.ul = true;
+            tag = "div";
+        } else if (id === "numbered-list") {
+            attr = {}
+            attr.ol = true;
+            tag = "div";
+        }
+
+
+        AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK_TYPE, {
+            blockId: this.props.blockId,
+            tag: tag,
+            attributes: attr
+        })
 
         this.props.onClose()
     }
@@ -96,7 +116,7 @@ export class Dropdown extends ScReact.Component<any, any> {
         ]
 
         return (
-            <div className={"dropdown " + (this.props.open ? "" : "close")} ref={(val) => this.state.ref = val}>
+            <div className={"dropdown " + (this.props.open ? "" : "close")} style={this.props.style} ref={(val) => this.state.ref = val}>
                 <div className="listbox">
                     {data.map(item => (
                         <div className={"list-item " + (this.state.selected == item.id ? "selected" : "")} onmouseenter={() => this.handleOnHover(item.id)} onclick={() => this.handleOnClick(item.id)}>

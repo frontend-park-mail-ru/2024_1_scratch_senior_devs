@@ -18,6 +18,8 @@ export class NoteEditor extends ScReact.Component<any, any> {
         tippyOpen: false
     }
 
+    private editorRef: HTMLElement;
+
     componentDidMount() {
         AppNotesStore.SubscribeToStore(this.updateState)
         this.editorRef.addEventListener("input", debounce(this.handleKeypress, 1000))

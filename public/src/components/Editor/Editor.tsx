@@ -1,0 +1,107 @@
+import {Component} from "@veglem/screact/dist/component";
+import {VDomNode} from "@veglem/screact/dist/vdom";
+import {Block, BlockNode, BlockProps} from "../Block/Block";
+import {AppNoteStore, NoteStoreActions} from "../../modules/stores/NoteStore";
+import {getBlockHash} from "../../utils/hash";
+import {debounce} from "../../utils/debauncer";
+import {AppDispatcher} from "../../modules/dispatcher";
+import "./editor.sass"
+import {Dropdown} from "../Dropdown/Dropdown";
+
+export interface Note {
+    title: string,
+    blocks: Array<BlockNode>
+}
+
+type EditorState = {
+    blocks: number
+}
+
+export class Editor extends Component<any, EditorState> {
+    state = {
+        blocks: 0
+    }
+
+    componentDidMount() {
+        AppNoteStore.SubscribeToStore((state) => {
+            this.setState(s => {
+                return {...s, blocks: state.note.blocks.length}
+            })
+        })
+        this.setState(s => {
+            return {...s, blocks: AppNoteStore.state.note.blocks.length}
+        })
+        document.onselectionchange = (e) => {
+            if (document.getSelection().isCollapsed === false) {
+                const r = /piece-(\d+)-(\d+)/;
+                const matchesAnchor = r.exec(document.getSelection().anchorNode.parentElement.id.toString())
+                const matchesFocus = r.exec(document.getSelection().focusNode.parentElement.id.toString())
+                if (matchesAnchor != null && matchesFocus != null) {
+                    debounce(() => {
+                        console.log(`anchor - ${matchesAnchor[1]} - ${matchesAnchor[2]} | focus - ${matchesFocus[1]} - ${matchesFocus[2]}`)
+                    }, 1000)()
+                }
+            }
+        }
+    }
+
+    private renderBlocks = () => {
+        const result = Array<VDomNode>();
+        for (let i = 0; i < this.state.blocks; ++i) {
+            result.push(<div className={"drag-area"}
+                             ondrop={(e) => {
+                                 console.log(e.dataTransfer.getData('blockId'), i)
+                                 e.target.style.border = "none"
+                                AppDispatcher.dispatch(NoteStoreActions.MOVE_BLOCK, {
+                                    blockId: Number(e.dataTransfer.getData('blockId')),
+                                    posToMove: i
+                                })
+                             }}
+                             ondragover={(e)=>{
+                                 e.preventDefault();
+                             }}
+                             ondragenter={(e) => {e.target.style.border = "1px solid blue"}}
+                             ondragleave={(e)=>{e.target.style.border = "none"}}
+            ></div>)
+            result.push(
+                <Block
+                    key1={AppNoteStore.state.note.blocks[i].id}
+                    blockId={i}
+                    blockHash={getBlockHash(AppNoteStore.state.note.blocks[i])}
+                    isChosen={AppNoteStore.state.cursorPosition != null && AppNoteStore.state.cursorPosition.blockId == i}
+                ></Block>)
+        }
+        result.push(<div className={"drag-area"}
+                         ondrop={(e) => {
+                             console.log(e.dataTransfer.getData('blockId'), this.state.blocks)
+                             e.target.style.border = "none"
+                             AppDispatcher.dispatch(NoteStoreActions.MOVE_BLOCK, {
+                                 blockId: Number(e.dataTransfer.getData('blockId')),
+                                 posToMove: this.state.blocks
+                             })
+                         }}
+                         ondragover={(e) => {
+                             e.preventDefault();
+                         }}
+                         ondragenter={(e) => {e.target.style.border = "1px solid blue"}}
+                         ondragleave={(e)=>{e.target.style.border = "none"}}
+        ></div>)
+        return result;
+    }
+
+    render(): VDomNode {
+        console.log(`left: ${AppNoteStore.state.dropdownPos.left}; top: ${AppNoteStore.state.dropdownPos.top};`);
+        return (
+            <div>
+                <h3>{AppNoteStore.state.note.title}</h3>
+                <div>
+                    {this.renderBlocks()}
+                </div>
+                <Dropdown blockId={AppNoteStore.state.dropdownPos.blockId}
+                          style={`left: ${AppNoteStore.state.dropdownPos.left}px; top: ${AppNoteStore.state.dropdownPos.top}px;`}
+                          onClose={() => {}}
+                          open={AppNoteStore.state.dropdownPos.isOpen}></Dropdown>
+            </div>
+        )
+    }
+}
