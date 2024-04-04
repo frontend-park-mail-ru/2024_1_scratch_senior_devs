@@ -3,11 +3,11 @@ import "./ColorPicker.sass"
 
 export class ColorPicker extends ScReact.Component<any, any> {
     componentDidMount() {
-        document.addEventListener('click', this.handleClickOutside, true)
+        document.addEventListener("click", this.handleClickOutside, true)
     }
 
     componentWillUnmount() {
-        document.removeEventListener('click', this.handleClickOutside, true)
+        document.removeEventListener("click", this.handleClickOutside, true)
     }
 
     handleClickOutside = (e) => {

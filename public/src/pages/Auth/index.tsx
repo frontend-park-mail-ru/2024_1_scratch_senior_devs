@@ -14,7 +14,7 @@ export class AuthPage extends ScReact.Component<any, any> {
     componentDidMount() {
         this.setState(state => ({
             ...state,
-            selectedForm: window.location.pathname.replace("/", '')
+            selectedForm: window.location.pathname.replace("/", "")
         }))
 
         document.title = this.state.selectedForm === "login" ? "Вход" : "Регистрация"

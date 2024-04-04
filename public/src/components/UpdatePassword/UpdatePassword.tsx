@@ -1,7 +1,6 @@
 import {ScReact} from "@veglem/screact";
 import {Input} from "../Input/Input";
 import {Button} from "../Button/Button";
-import {Img} from "../Image/Image";
 import "./UpdatePassword.sass"
 import {ValidatePassword} from "../../modules/validation";
 import {AppDispatcher} from "../../modules/dispatcher";

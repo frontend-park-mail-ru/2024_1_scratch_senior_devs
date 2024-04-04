@@ -58,8 +58,8 @@ class UserStore extends BaseStore<UserStoreState>{
      */
     constructor() {
         super();
-        this.state.JWT = window.localStorage.getItem('Authorization');
-        this.state.csrf = window.localStorage.getItem('x-csrf-token');
+        this.state.JWT = window.localStorage.getItem("Authorization");
+        this.state.csrf = window.localStorage.getItem("x-csrf-token");
         this.registerEvents();
     }
 
@@ -140,8 +140,8 @@ class UserStore extends BaseStore<UserStoreState>{
                     otpDialogOpen: false
                 }))
 
-                localStorage.setItem('Authorization', this.state.JWT)
-                localStorage.setItem('x-csrf-token', this.state.csrf)
+                localStorage.setItem("Authorization", this.state.JWT)
+                localStorage.setItem("x-csrf-token", this.state.csrf)
                 AppRouter.go("/notes");
             } else if (res.status == 202) {
                 this.SetState(state => ({
@@ -220,7 +220,7 @@ class UserStore extends BaseStore<UserStoreState>{
                     csrf: res.csrf
                 }
             })
-            localStorage.setItem('Authorization', this.state.JWT)
+            localStorage.setItem("Authorization", this.state.JWT)
             AppRouter.go("/notes")
         } catch (err) {
             console.log(err);
@@ -366,7 +366,7 @@ class UserStore extends BaseStore<UserStoreState>{
     }
 
     private updateCSRF(token:string) {
-        localStorage.setItem('x-csrf-token', token)
+        localStorage.setItem("x-csrf-token", token)
 
         this.SetState(state => ({
             ...state,

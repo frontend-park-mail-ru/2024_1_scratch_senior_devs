@@ -7,11 +7,11 @@ export class LinkInput extends ScReact.Component<any, any> {
     private ref: HTMLElement
 
     componentDidMount() {
-        document.addEventListener('click', this.handleClickOutside, true)
+        document.addEventListener("click", this.handleClickOutside, true)
     }
 
     componentWillUnmount() {
-        document.removeEventListener('click', this.handleClickOutside, true)
+        document.removeEventListener("click", this.handleClickOutside, true)
     }
 
     handleClickOutside = (e) => {

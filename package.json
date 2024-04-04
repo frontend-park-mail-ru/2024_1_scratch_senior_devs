@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "lint": "eslint --fix --ext .ts,.js,.tsx ./public",
     "build": "webpack --mode=production --node-env=production",
     "build:dev": "webpack --mode=development",
     "build:prod": "webpack --mode=production --node-env=production",

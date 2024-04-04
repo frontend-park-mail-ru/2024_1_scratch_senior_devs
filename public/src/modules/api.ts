@@ -215,7 +215,7 @@ class ProfileRequests {
     UpdateAvatar = async(photo:File, jwt:string, csrf:string) => {
         const form_data = new FormData()
 
-        form_data.append('avatar', photo)
+        form_data.append("avatar", photo)
 
         const options: RequestInit = {
             method: RequestMethods.POST,
