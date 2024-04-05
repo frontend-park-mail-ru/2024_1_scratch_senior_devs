@@ -3,6 +3,7 @@ import {AppNoteRequests} from "../api";
 import {AppUserStore, UserActions} from "./UserStore";
 import {AppDispatcher} from "../dispatcher";
 import {AppToasts} from "../toasts";
+import {NoteStoreActions} from './NoteStore';
 
 export type Note = {
     id: number,
@@ -72,6 +73,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 case NotesActions.CREATE_EMPTY_NOTE:
                     await this.createEmptyNote();
                     break;
+                case NotesActions.UPLOAD_IMAGE:
+                    await this.uploadImage(action.payload);
             }
         });
     }
@@ -248,6 +251,24 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
         document.getElementById(String(response.body.id)).scrollIntoView()
     }
+
+    async uploadImage({noteId, blockId, file}) {
+        console.log("uploadImage")
+        const {status, csrf} = await AppNoteRequests.UploadImage(noteId, blockId, file, AppUserStore.state.JWT, AppUserStore.state.csrf)
+
+        console.log(status)
+        if (status == 200) {
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf)
+
+            // TODO
+            const block = {}
+
+            AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
+                blockId: blockId,
+                newBlock: block
+            })
+        }
+    }
 }
 
 export const NotesActions = {
@@ -260,7 +281,8 @@ export const NotesActions = {
     CLOSE_DELETE_NOTE_DIALOG: "CLOSE_DELETE_NOTE_DIALOG",
     DELETE_NOTE: "DELETE_NOTE",
     SAVE_NOTE: "SAVE_NOTE",
-    CREATE_EMPTY_NOTE: "CREATE_EMPTY_NOTE"
+    CREATE_EMPTY_NOTE: "CREATE_EMPTY_NOTE",
+    UPLOAD_IMAGE: "UPLOAD_IMAGE"
 }
 
 export const AppNotesStore = new NotesStore();

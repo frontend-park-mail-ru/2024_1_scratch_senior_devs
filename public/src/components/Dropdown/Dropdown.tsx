@@ -2,7 +2,8 @@ import {ScReact} from "@veglem/screact";
 import "./Dropdown.sass"
 import {Img} from "../Image/Image";
 import {AppDispatcher} from "../../modules/dispatcher";
-import {AppNoteStore, NoteStoreActions} from "../../modules/stores/NoteStore";
+import {NoteStoreActions} from "../../modules/stores/NoteStore";
+import {AppNotesStore, NotesActions} from "../../modules/stores/NotesStore";
 
 export class Dropdown extends ScReact.Component<any, any> {
     state = {
@@ -47,6 +48,25 @@ export class Dropdown extends ScReact.Component<any, any> {
             attr = {}
             attr.ol = true;
             tag = "div";
+        } else if (id === "image") {
+            const fileInput = document.createElement("input");
+            fileInput.type = "file";
+            fileInput.accept=".jpg,.png"
+            this.state.ref.append(fileInput)
+            fileInput.onchange = (e) => {
+                console.log("onchange")
+                console.log(e)
+                fileInput.remove()
+                AppDispatcher.dispatch(NotesActions.UPLOAD_IMAGE, {
+                    file: e.target.files[0],
+                    noteId: AppNotesStore.state.selectedNote.id,
+                    blockId: this.props.blockId
+                })
+            }
+            fileInput.click();
+            attr = {}
+            attr.file = ""
+            content = undefined;
         } else if (id === "document") {
             tag = "div"
 
@@ -65,7 +85,6 @@ export class Dropdown extends ScReact.Component<any, any> {
             content = undefined;
             // fileInput.on
         }
-
 
         AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK_TYPE, {
             blockId: this.props.blockId,
@@ -98,7 +117,7 @@ export class Dropdown extends ScReact.Component<any, any> {
                 desc: "Заголовок третьего уровня"
             },
             {
-                id: "img",
+                id: "image",
                 icon: "image.svg",
                 title: "Картинка",
                 desc: "Загрузите фото с вашего компьютера"

@@ -48,21 +48,23 @@ export class Editor extends Component<any, EditorState> {
     private renderBlocks = () => {
         const result = Array<VDomNode>();
         for (let i = 0; i < this.state.blocks; ++i) {
-            result.push(<div className={"drag-area"}
-                             ondrop={(e) => {
-                                 console.log(e.dataTransfer.getData("blockId"), i)
-                                 e.target.style.display = "block"
-                                AppDispatcher.dispatch(NoteStoreActions.MOVE_BLOCK, {
-                                    blockId: Number(e.dataTransfer.getData("blockId")),
-                                    posToMove: i
-                                })
-                             }}
-                             ondragover={(e)=>{
-                                 e.preventDefault();
-                             }}
-                             ondragenter={(e) => {e.target.style.border = "1px solid blue"}}
-                             ondragleave={(e)=>{e.target.style.border = "none"}}
-            ></div>)
+            result.push(
+                <div className={"drag-area"}
+                     ondrop={(e) => {
+                         console.log(e.dataTransfer.getData("blockId"), i)
+                         e.target.classList.remove("active")
+                         AppDispatcher.dispatch(NoteStoreActions.MOVE_BLOCK, {
+                            blockId: Number(e.dataTransfer.getData("blockId")),
+                            posToMove: i
+                         })
+                     }}
+                     ondragover={(e)=>{
+                         e.preventDefault();
+                     }}
+                     ondragenter={(e) => {e.target.classList.add("active")}}
+                     ondragleave={(e)=>{e.target.classList.remove("active")}}
+                ></div>
+            )
             result.push(
                 <Block
                     key1={AppNoteStore.state.note.blocks[i].id}

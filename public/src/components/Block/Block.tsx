@@ -31,7 +31,8 @@ export type BlockProps = {
 export class Block extends Component<BlockProps, BlockState> {
     state = {
         piecesCount: 0,
-        dragBtnActive: false
+        dragBtnActive: false,
+        dragged: false
     }
 
     renderPrevSymbol = (): VDomNode[] => {

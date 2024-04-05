@@ -360,6 +360,42 @@ class NoteRequests {
         response.body.data = decode(response.body.data);
         return response
     }
+
+    UploadImage = async (id:string, file:File, jwt:string, csrf:string) => {
+        console.log("UploadImageRequest")
+        console.log(id)
+        console.log(file)
+
+        const form_data = new FormData()
+
+        form_data.append("id", id)
+        form_data.append("attach", file)
+
+        const options: RequestInit = {
+            method: RequestMethods.POST,
+            mode: "cors",
+            credentials: "include",
+            headers: {
+                "Authorization": jwt,
+                "x-csrf-token": csrf
+            },
+            body: form_data
+        }
+
+        const response = await fetch(baseUrl + this.baseUrl + "/" + id + "/add_attach/", options);
+
+        console.log(response.status)
+        console.log(response.body)
+
+        const body = await response.json()
+
+        console.log(body)
+
+        return {
+            status: response.status,
+            csrf: response.headers.get("x-csrf-token")
+        }
+    }
 }
 
 export const AppAuthRequests = new AuthRequests();
