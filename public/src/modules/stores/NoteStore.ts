@@ -91,7 +91,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
                     this.closeDropdown();
                     break;
                 case NoteStoreActions.CHANGE_BLOCK_TYPE:
-                    this.changeBlockType(action.payload.blockId, action.payload.tag, action.payload.attributes)
+                    this.changeBlockType(action.payload.blockId, action.payload.tag, action.payload.attributes, action.payload.content)
             }
         })
     }
@@ -107,20 +107,35 @@ class NoteStore extends BaseStore<NoteStoreState> {
             !pieces[0].content.startsWith("/")) {
             this.closeDropdown();
         }
-        this.SetState(s => {
-            const oldNote: Note = this.state.note;
-            const newBlockContent = new Array<PieceNode>()
-            pieces.forEach(piece => {
-                newBlockContent.push({
-                    id: oldNote.blocks[blockId].content[piece.pieceId].id,
-                    content: piece.content,
-                    attributes: oldNote.blocks[blockId].content[piece.pieceId].attributes
-                })
+        const oldNote: Note = this.state.note;
+        const newBlockContent = new Array<PieceNode>()
+        pieces.forEach(piece => {
+            newBlockContent.push({
+                id: oldNote.blocks[blockId].content[piece.pieceId].id,
+                content: piece.content,
+                attributes: oldNote.blocks[blockId].content[piece.pieceId].attributes
             })
-            oldNote.blocks[blockId].content = newBlockContent;
-            console.log(oldNote)
-            return {...s, note: oldNote, cursorPosition: {blockId: blockId, pos: posOffset}}
         })
+        oldNote.blocks[blockId].content = newBlockContent;
+        this.state.note = oldNote;
+        this.state.cursorPosition = {
+            blockId: blockId,
+            pos: posOffset
+        }
+        // this.SetState(s => {
+        //     const oldNote: Note = this.state.note;
+        //     const newBlockContent = new Array<PieceNode>()
+        //     pieces.forEach(piece => {
+        //         newBlockContent.push({
+        //             id: oldNote.blocks[blockId].content[piece.pieceId].id,
+        //             content: piece.content,
+        //             attributes: oldNote.blocks[blockId].content[piece.pieceId].attributes
+        //         })
+        //     })
+        //     oldNote.blocks[blockId].content = newBlockContent;
+        //     console.log(oldNote)
+        //     return {...s, note: oldNote, cursorPosition: {blockId: blockId, pos: posOffset}}
+        // })
     }
 
     private addNewPiece = (blockId: number, insertPosition: number, content: string) => {
@@ -211,11 +226,11 @@ class NoteStore extends BaseStore<NoteStoreState> {
     private openDropdown = (blockY: number, blockId: number) => {
         if (blockY > 250) {
             this.SetState(s => {
-                return {...s, dropdownPos: {left: 550, top: blockY - 240, isOpen: true, blockId: blockId}}
+                return {...s, dropdownPos: {left: 0, top: blockY - 240, isOpen: true, blockId: blockId}}
             })
         } else {
             this.SetState(s => {
-                return {...s, dropdownPos: {left: 550, top: blockY + 31, isOpen: true, blockId: blockId}}
+                return {...s, dropdownPos: {left: 0, top: blockY + 31, isOpen: true, blockId: blockId}}
             })
         }
     }
@@ -224,12 +239,13 @@ class NoteStore extends BaseStore<NoteStoreState> {
         this.state.dropdownPos.isOpen = false;
     }
 
-    private changeBlockType = (blockId: number, tag: string, attributes?: object) => {
+    private changeBlockType = (blockId: number, tag: string, attributes?: object, content?: PieceNode[]) => {
         this.closeDropdown();
         this.SetState(s => {
             const oldNote = this.state.note;
             oldNote.blocks[blockId].type = tag;
             oldNote.blocks[blockId].attributes = attributes;
+            oldNote.blocks[blockId].content = content;
             return {...s, note: oldNote}
         })
     }

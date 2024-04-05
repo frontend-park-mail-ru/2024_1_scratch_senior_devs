@@ -2,7 +2,7 @@ import {ScReact} from "@veglem/screact";
 import "./Dropdown.sass"
 import {Img} from "../Image/Image";
 import {AppDispatcher} from "../../modules/dispatcher";
-import {NoteStoreActions} from "../../modules/stores/NoteStore";
+import {AppNoteStore, NoteStoreActions} from "../../modules/stores/NoteStore";
 
 export class Dropdown extends ScReact.Component<any, any> {
     state = {
@@ -11,11 +11,11 @@ export class Dropdown extends ScReact.Component<any, any> {
     }
 
     componentDidMount() {
-        document.addEventListener("click", this.handleClickOutside, true)
+        document.addEventListener('click', this.handleClickOutside, true)
     }
 
     componentWillUnmount() {
-        document.removeEventListener("click", this.handleClickOutside, true)
+        document.removeEventListener('click', this.handleClickOutside, true)
     }
 
     handleClickOutside = (e) => {
@@ -37,6 +37,7 @@ export class Dropdown extends ScReact.Component<any, any> {
         console.log("handleOnClick " + id)
         let tag = id;
         let attr = null;
+        let content = []
         if (id === "bullet-list") {
             attr = {}
             attr.ul = true;
@@ -45,13 +46,23 @@ export class Dropdown extends ScReact.Component<any, any> {
             attr = {}
             attr.ol = true;
             tag = "div";
+        } else if (id === "document") {
+            const fileInput = document.createElement('input');
+            fileInput.type = "file";
+            this.state.ref.append(fileInput)
+            fileInput.click();
+            attr = {}
+            attr.file = ""
+            content = undefined;
+            // fileInput.on
         }
 
 
         AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK_TYPE, {
             blockId: this.props.blockId,
             tag: tag,
-            attributes: attr
+            attributes: attr,
+            content: content
         })
 
         this.props.onClose()
