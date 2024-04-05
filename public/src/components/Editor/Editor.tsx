@@ -50,10 +50,10 @@ export class Editor extends Component<any, EditorState> {
         for (let i = 0; i < this.state.blocks; ++i) {
             result.push(<div className={"drag-area"}
                              ondrop={(e) => {
-                                 console.log(e.dataTransfer.getData('blockId'), i)
-                                 e.target.style.border = "none"
+                                 console.log(e.dataTransfer.getData("blockId"), i)
+                                 e.target.style.display = "block"
                                 AppDispatcher.dispatch(NoteStoreActions.MOVE_BLOCK, {
-                                    blockId: Number(e.dataTransfer.getData('blockId')),
+                                    blockId: Number(e.dataTransfer.getData("blockId")),
                                     posToMove: i
                                 })
                              }}
@@ -69,14 +69,15 @@ export class Editor extends Component<any, EditorState> {
                     blockId={i}
                     blockHash={getBlockHash(AppNoteStore.state.note.blocks[i])}
                     isChosen={AppNoteStore.state.cursorPosition != null && AppNoteStore.state.cursorPosition.blockId == i}
-                ></Block>)
+                ></Block>
+            )
         }
         result.push(<div className={"drag-area"}
                          ondrop={(e) => {
-                             console.log(e.dataTransfer.getData('blockId'), this.state.blocks)
+                             console.log(e.dataTransfer.getData("blockId"), this.state.blocks)
                              e.target.style.border = "none"
                              AppDispatcher.dispatch(NoteStoreActions.MOVE_BLOCK, {
-                                 blockId: Number(e.dataTransfer.getData('blockId')),
+                                 blockId: Number(e.dataTransfer.getData("blockId")),
                                  posToMove: this.state.blocks
                              })
                          }}
@@ -92,9 +93,11 @@ export class Editor extends Component<any, EditorState> {
     render(): VDomNode {
         console.log(`left: ${AppNoteStore.state.dropdownPos.left}; top: ${AppNoteStore.state.dropdownPos.top};`);
         return (
-            <div>
-                <h3>{AppNoteStore.state.note.title}</h3>
-                <div>
+            <div className="note-editor">
+                <div className="note-title-container">
+                    <h3 className="note-title">{AppNoteStore.state.note.title}</h3>
+                </div>
+                <div className="note-body-container">
                     {this.renderBlocks()}
                 </div>
                 <Dropdown blockId={AppNoteStore.state.dropdownPos.blockId}

@@ -85,7 +85,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
                     this.moveBlock(action.payload.blockId, action.payload.posToMove);
                     break;
                 case NoteStoreActions.OPEN_DROPDOWN:
-                    this.openDropdown(action.payload.blockY, action.payload.blockId);
+                    this.openDropdown(action.payload.blockPos, action.payload.blockId);
                     break;
                 case NoteStoreActions.CLOSE_DROPDOWN:
                     this.closeDropdown();
@@ -223,14 +223,14 @@ class NoteStore extends BaseStore<NoteStoreState> {
         })
     }
 
-    private openDropdown = (blockY: number, blockId: number) => {
-        if (blockY > 250) {
+    private openDropdown = (blockPos: DOMRect, blockId: number) => {
+        if (blockPos.y > 250) {
             this.SetState(s => {
-                return {...s, dropdownPos: {left: 0, top: blockY - 240, isOpen: true, blockId: blockId}}
+                return {...s, dropdownPos: {left: blockPos.x, top: blockPos.y - 240, isOpen: true, blockId: blockId}}
             })
         } else {
             this.SetState(s => {
-                return {...s, dropdownPos: {left: 0, top: blockY + 31, isOpen: true, blockId: blockId}}
+                return {...s, dropdownPos: {left: blockPos.x, top: blockPos.y + 31, isOpen: true, blockId: blockId}}
             })
         }
     }

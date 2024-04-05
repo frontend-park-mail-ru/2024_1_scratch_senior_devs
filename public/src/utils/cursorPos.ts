@@ -1,8 +1,8 @@
 import {AppNoteStore} from "../modules/stores/NoteStore";
 
 export const setCursorAtNodePosition = (node, index) => {
-    let range = document.createRange();
-    let selection = window.getSelection();
+    const range = document.createRange();
+    const selection = window.getSelection();
     let currentPos = 0;
     let found = false;
 
@@ -16,7 +16,7 @@ export const setCursorAtNodePosition = (node, index) => {
                 currentPos += node.length;
             }
         } else {
-            for (let child of node.childNodes) {
+            for (const child of node.childNodes) {
                 if (found) break;
                 searchNode(child);
             }

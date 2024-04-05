@@ -318,17 +318,21 @@ class NoteRequests {
         }
     }
 
-    Update = async(note, jwt: string, csrf:string)=> {
-        const response = await Ajax.Post(this.baseUrl + "/" + note.id + "/edit", {
+    Update = async({id, note}, jwt: string, csrf:string)=> {
+        console.log("Update")
+
+        const response = await Ajax.Post(this.baseUrl + "/" + id + "/edit", {
             headers: {
                 "Authorization": jwt,
                 "x-csrf-token": csrf
             },
             body: {
-                data: note
+                data: {
+                    title: note.title,
+                    content: note.blocks
+                }
             }
         });
-
 
         return {
             status: response.status,

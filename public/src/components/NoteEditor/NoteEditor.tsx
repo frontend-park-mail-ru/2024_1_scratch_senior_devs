@@ -3,12 +3,11 @@ import "./NoteEditor.sass"
 import {Img} from "../Image/Image";
 import {AppNotesStore, NotesActions, NotesStoreState} from "../../modules/stores/NotesStore";
 import {AppDispatcher} from "../../modules/dispatcher";
-import {debounce} from "../../modules/utils";
 import {SwipeArea} from "../SwipeArea/SwipeArea";
 import {Dropdown} from "../Dropdown/Dropdown";
 import {Tippy} from "../Tippy/Tippy";
 import {Editor} from "../Editor/Editor";
-import {AppNoteStore} from '../../modules/stores/NoteStore';
+import {AppNoteStore} from "../../modules/stores/NoteStore";
 
 
 export class NoteEditor extends ScReact.Component<any, any> {
@@ -24,6 +23,8 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
     componentDidMount() {
         AppNotesStore.SubscribeToStore(this.updateState)
+
+
         AppNoteStore.SetNote({
             "title": "Hello You-note",
             "blocks": [
@@ -165,7 +166,13 @@ export class NoteEditor extends ScReact.Component<any, any> {
         // const contentElem = document.querySelector(".note-content > span") as HTMLElement
 
         // TODO
+        console.log("saveNote")
+        console.log(this.state.selectedNote.id)
         console.log(AppNoteStore.state.note)
+        AppDispatcher.dispatch(NotesActions.SAVE_NOTE,  {
+            id: this.state.selectedNote.id,
+            note: AppNoteStore.state.note
+        })
 
         // const data = {
         //     id: this.state.selectedNote.id,
@@ -206,6 +213,13 @@ export class NoteEditor extends ScReact.Component<any, any> {
                 saving: store.saving
             }
         })
+
+        if (this.state.selectedNote) {
+            AppNoteStore.SetNote({
+                title: this.state.selectedNote.data.title,
+                blocks: this.state.selectedNote.data.content
+            })
+        }
     }
 
     deleteNote = () => {
@@ -214,9 +228,9 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
     render() {
         return (
-            <div className={"note-editor " + (this.props.open ? "active" : "")} ref={ref => {this.editorRef = ref}}>
+            <div className={"note-editor-wrapper " + (this.props.open ? "active" : "")} ref={ref => {this.editorRef = ref}}>
 
-                <SwipeArea enable={this.props.open} right={this.closeEditor} target=".note-editor"/>
+                <SwipeArea enable={this.props.open} right={this.closeEditor} target=".note-editor-wrapper"/>
 
                 <div className="top-panel">
                     <div className="left-container">

@@ -1,6 +1,6 @@
 @import "/public/src/utils/variables.sass"
 
-.note-editor
+.note-editor-wrapper
 	border-radius: 15px
 	background: rgba(27, 39, 53, 0.3)
 	display: none
@@ -99,19 +99,59 @@
 		[contenteditable]
 			outline: none
 
-		.note-title-container
-			width: 100%
-
-			.note-title
-				font-size: 24px
-				color: $text-main-color
-
-		.note-content
+		.note-editor
 			padding-right: 10px
 			overflow-y: auto
 			height: 100%
 			font-size: 18px
 			color: $text-main-color
+			display: flex
+			flex-direction: column
+			gap: 10px
+
+			.note-title-container
+				width: 100%
+				padding-left: 30px
+				font-size: 28px
+
+				.note-title
+					font-size: 28px
+					color: $text-main-color
+
+			.note-body-container
+				display: flex
+				flex-direction: column
+				gap: 10px
+
+				.drag-area
+					height: 3px
+					display: block
+
+					&.active
+						display: block
+
+				.block
+					width: 100%
+					position: relative
+					padding-left: 30px
+					min-height: 50px
+					line-height: 50px
+
+					.drag-btn
+						width: 16px
+						height: 16px
+						top: 50%
+						transform: translateY(-50%)
+						position: absolute
+						left: 0
+						transition: opacity .2s ease-in
+
+						&.hide
+							opacity: 0
+
+						&:hover
+							cursor: grab
+							opacity: 1
 
 			&::-webkit-scrollbar-track
 				box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.2)

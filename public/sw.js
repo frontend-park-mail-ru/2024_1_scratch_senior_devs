@@ -8,7 +8,7 @@ const assetUrls = [
     "/assets/"
 ]
 
-self.addEventListener('install', async () => {
+self.addEventListener("install", async () => {
     const cache = await caches.open(CACHE_NAME)
     await cache.addAll(assetUrls)
 })

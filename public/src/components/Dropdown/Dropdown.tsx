@@ -11,11 +11,11 @@ export class Dropdown extends ScReact.Component<any, any> {
     }
 
     componentDidMount() {
-        document.addEventListener('click', this.handleClickOutside, true)
+        document.addEventListener("click", this.handleClickOutside, true)
     }
 
     componentWillUnmount() {
-        document.removeEventListener('click', this.handleClickOutside, true)
+        document.removeEventListener("click", this.handleClickOutside, true)
     }
 
     handleClickOutside = (e) => {
@@ -35,6 +35,7 @@ export class Dropdown extends ScReact.Component<any, any> {
 
     handleOnClick = (id:string) => {
         console.log("handleOnClick " + id)
+
         let tag = id;
         let attr = null;
         let content = []
@@ -47,9 +48,17 @@ export class Dropdown extends ScReact.Component<any, any> {
             attr.ol = true;
             tag = "div";
         } else if (id === "document") {
-            const fileInput = document.createElement('input');
+            tag = "div"
+
+            const fileInput = document.createElement("input");
             fileInput.type = "file";
             this.state.ref.append(fileInput)
+            fileInput.onchange = (e) => {
+                console.log("onchange")
+                console.log(e)
+                fileInput.remove()
+                // TODO AppDispatcher(AppNoteStore.UPLOAD_FILE, {data: e.target.file, id: id})
+            }
             fileInput.click();
             attr = {}
             attr.file = ""

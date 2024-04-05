@@ -177,8 +177,12 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     async saveNote(data) {
-        if (this.state.selectedNote.id == data.id) {
+        console.log("saveNote")
 
+
+        // if (this.state.selectedNote.id == data.id) {
+
+            console.log("asdf")
             // this.SetState(state => ({
             //     ...state,
             //     saving: true
@@ -210,7 +214,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             //     ...state,
             //     notes: state.notes.map(n => n.id == note.id ? note : n)
             // }))
-        }
+
     }
 
     async createEmptyNote() {
