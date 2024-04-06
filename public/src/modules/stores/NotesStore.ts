@@ -3,7 +3,7 @@ import {AppNoteRequests} from "../api";
 import {AppUserStore, UserActions} from "./UserStore";
 import {AppDispatcher} from "../dispatcher";
 import {AppToasts} from "../toasts";
-import {NoteStoreActions} from './NoteStore';
+import {AppNoteStore, NoteStoreActions} from './NoteStore';
 
 export type Note = {
     id: number,
@@ -254,14 +254,20 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
     async uploadImage({noteId, blockId, file}) {
         console.log("uploadImage")
-        const {status, csrf} = await AppNoteRequests.UploadImage(noteId, blockId, file, AppUserStore.state.JWT, AppUserStore.state.csrf)
+        const {status, csrf, path, note_id, id} = await AppNoteRequests.UploadImage(noteId, blockId, file, AppUserStore.state.JWT, AppUserStore.state.csrf)
 
         console.log(status)
         if (status == 200) {
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf)
 
             // TODO
-            const block = {}
+
+            const block = AppNoteStore.state.note.blocks[blockId]
+
+            if (block.attributes != null &&
+                "file" in block.attributes) {
+                block.attributes.file = path;
+            }
 
             AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
                 blockId: blockId,

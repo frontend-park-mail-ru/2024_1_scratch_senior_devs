@@ -392,6 +392,9 @@ class NoteRequests {
         console.log(body)
 
         return {
+            id: body.id,
+            note_id: body.note_id,
+            path: body.path,
             status: response.status,
             csrf: response.headers.get("x-csrf-token")
         }
