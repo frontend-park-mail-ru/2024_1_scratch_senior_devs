@@ -254,7 +254,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
     async uploadImage({noteId, blockId, file}) {
         console.log("uploadImage")
-        const {status, csrf, path, note_id, id} = await AppNoteRequests.UploadImage(noteId, blockId, file, AppUserStore.state.JWT, AppUserStore.state.csrf)
+        const {status, csrf, path} = await AppNoteRequests.UploadImage(noteId, file, AppUserStore.state.JWT, AppUserStore.state.csrf)
 
         console.log(status)
         if (status == 200) {
@@ -264,9 +264,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             const block = AppNoteStore.state.note.blocks[blockId]
 
-            if (block.attributes != null &&
-                "file" in block.attributes) {
-                block.attributes.file = path;
+            if (block.attributes != null && "src" in block.attributes) {
+                block.attributes.src = path;
             }
 
             AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {

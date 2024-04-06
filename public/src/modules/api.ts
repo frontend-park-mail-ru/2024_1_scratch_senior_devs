@@ -365,6 +365,8 @@ class NoteRequests {
         console.log("UploadImageRequest")
         console.log(id)
         console.log(file)
+        console.log(jwt)
+        console.log(csrf)
 
         const form_data = new FormData()
 
