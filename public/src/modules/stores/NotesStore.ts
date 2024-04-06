@@ -264,8 +264,12 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             const block = AppNoteStore.state.note.blocks[blockId]
 
-            if (block.attributes != null && "src" in block.attributes) {
-                block.attributes.src = path;
+            console.log(block)
+            console.log(block.attributes)
+            console.log( "file" in block.attributes)
+            if (block.attributes != null && "file" in block.attributes) {
+                console.log("asdfasdfasdfasdfasd")
+                block.attributes.file = path;
             }
 
             AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
