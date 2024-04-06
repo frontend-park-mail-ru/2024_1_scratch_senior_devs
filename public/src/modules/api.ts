@@ -401,6 +401,37 @@ class NoteRequests {
             csrf: response.headers.get("x-csrf-token")
         }
     }
+
+    GetImage = async (id:string, jwt:string, csrf:string) => {
+        console.log("GetImageRequest")
+        console.log(id)
+
+        const options: RequestInit = {
+            method: RequestMethods.GET,
+            mode: "cors",
+            credentials: "include",
+            headers: {
+                "Authorization": jwt,
+                "x-csrf-token": csrf
+            }
+        }
+
+        const response = await fetch(baseUrl + "/attach/" + id, options);
+
+        console.log(response.status)
+        console.log(response.body)
+        console.log(typeof response.body)
+
+        const blob = await response.blob()
+
+        console.log(blob)
+
+        const url = URL.createObjectURL(blob)
+
+        console.log(url)
+
+        return url
+    }
 }
 
 export const AppAuthRequests = new AuthRequests();

@@ -260,6 +260,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
         if (status == 200) {
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf)
 
+
+            const url = await AppNoteRequests.GetImage(path.split(".")[0], AppUserStore.state.JWT, AppUserStore.state.csrf)
+
             // TODO
 
             const block = AppNoteStore.state.note.blocks[blockId]
@@ -269,7 +272,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             console.log( "src" in block.attributes)
             if (block.attributes != null) {
                 console.log("asdfasdfasdfasdfasd")
-                block.attributes["src"] = path;
+                block.attributes["src"] = url;
             }
 
             AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {

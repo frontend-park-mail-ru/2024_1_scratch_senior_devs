@@ -49,6 +49,7 @@ export class Dropdown extends ScReact.Component<any, any> {
             attr.ol = true;
             tag = "div";
         } else if (id === "image") {
+            tag = "img"
             const fileInput = document.createElement("input");
             fileInput.type = "file";
             fileInput.accept=".jpg,.png"
