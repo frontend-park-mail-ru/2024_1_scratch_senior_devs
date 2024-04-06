@@ -266,10 +266,10 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             console.log(block)
             console.log(block.attributes)
-            console.log( "file" in block.attributes)
-            if (block.attributes != null && "file" in block.attributes) {
+            console.log( "src" in block.attributes)
+            if (block.attributes != null) {
                 console.log("asdfasdfasdfasdfasd")
-                block.attributes.file = path;
+                block.attributes["src"] = path;
             }
 
             AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
