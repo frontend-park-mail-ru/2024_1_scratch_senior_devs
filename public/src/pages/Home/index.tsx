@@ -5,8 +5,6 @@ import {AppRouter} from "../../modules/router";
 import {AppUserStore} from "../../modules/stores/UserStore";
 import {ShiningButton} from "../../components/ShiningButton/ShinigButton";
 import {Card} from "../../components/Card/Card";
-import {Carousel} from "../../components/Carousel/Carousel";
-import {NoteEditor} from "../../components/NoteEditor/NoteEditor";
 
 export class HomePage extends ScReact.Component<any, any> {
     componentDidMount() {

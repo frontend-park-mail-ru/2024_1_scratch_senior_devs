@@ -8,7 +8,8 @@ import {ShineButton} from "../../components/ShineButton/ShineButton";
 export class AuthPage extends ScReact.Component<any, any> {
     state = {
         selectedForm: "login",
-        toggled: false
+        toggled: false,
+        inToggle: false
     }
 
     componentDidMount() {
@@ -21,10 +22,19 @@ export class AuthPage extends ScReact.Component<any, any> {
     }
 
     toggleForm = () => {
+        if (this.state.inToggle) {
+            return
+        }
+
         this.setState(state => ({
             selectedForm: state.selectedForm === "login" ? "register" : "login",
-            toggled: true
+            toggled: true,
+            inToggle: true
         }))
+
+        setTimeout(() => {
+            this.state.inToggle = false
+        }, 500)
 
         history.pushState(null, null, this.state.selectedForm);
         document.title = this.state.selectedForm === "login" ? "Вход" : "Регистрация"
