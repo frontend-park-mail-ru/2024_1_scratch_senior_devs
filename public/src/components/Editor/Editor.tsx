@@ -1,6 +1,6 @@
 import {Component} from "@veglem/screact/dist/component";
 import {VDomNode} from "@veglem/screact/dist/vdom";
-import {Block, BlockNode, BlockProps} from "../Block/Block";
+import {Block, BlockNode} from "../Block/Block";
 import {AppNoteStore, NoteStoreActions} from "../../modules/stores/NoteStore";
 import {getBlockHash} from "../../utils/hash";
 import {debounce} from "../../utils/debauncer";
@@ -89,21 +89,23 @@ export class Editor extends Component<any, EditorState> {
                 ></Block>
             )
         }
-        result.push(<div className={"drag-area"}
-                         ondrop={(e) => {
-                             console.log(e.dataTransfer.getData("blockId"), this.state.blocks)
-                             e.target.style.border = "none"
-                             AppDispatcher.dispatch(NoteStoreActions.MOVE_BLOCK, {
-                                 blockId: Number(e.dataTransfer.getData("blockId")),
-                                 posToMove: this.state.blocks
-                             })
-                         }}
-                         ondragover={(e) => {
-                             e.preventDefault();
-                         }}
-                         ondragenter={(e) => {e.target.style.border = "1px solid blue"}}
-                         ondragleave={(e)=>{e.target.style.border = "none"}}
-        ></div>)
+        result.push(
+            <div className={"drag-area"}
+                 ondrop={(e) => {
+                     console.log(e.dataTransfer.getData("blockId"), this.state.blocks)
+                     e.target.style.border = "none"
+                     AppDispatcher.dispatch(NoteStoreActions.MOVE_BLOCK, {
+                         blockId: Number(e.dataTransfer.getData("blockId")),
+                         posToMove: this.state.blocks
+                     })
+                 }}
+                 ondragover={(e) => {
+                     e.preventDefault();
+                 }}
+                 ondragenter={(e) => {e.target.style.border = "1px solid blue"}}
+                 ondragleave={(e)=>{e.target.style.border = "none"}}
+            ></div>
+        )
         return result;
     }
 

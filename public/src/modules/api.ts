@@ -404,16 +404,33 @@ class NoteRequests {
         return {
             id: body.id,
             note_id: body.note_id,
-            path: body.path,
+            attachId: body.path.split(".")[0],
             status: response.status,
             csrf: response.headers.get("x-csrf-token")
         }
     }
 
     GetImage = async (id:string, jwt:string, csrf:string) => {
-        console.log("GetImageRequest")
-        console.log(id)
+        const options: RequestInit = {
+            method: RequestMethods.GET,
+            mode: "cors",
+            credentials: "include",
+            headers: {
+                "Authorization": jwt,
+                "x-csrf-token": csrf
+            }
+        }
 
+        const response = await fetch(baseUrl + "/attach/" + id, options);
+
+        const blob = await response.blob()
+
+        const url = URL.createObjectURL(blob)
+
+        return url
+    }
+
+    GetFile = async (id:string, fileName:string, jwt:string, csrf:string) => {
         const options: RequestInit = {
             method: RequestMethods.GET,
             mode: "cors",
@@ -436,7 +453,13 @@ class NoteRequests {
 
         const url = URL.createObjectURL(blob)
 
-        console.log(url)
+        const a = document.createElement("a");
+        document.body.appendChild(a);
+        a.href = url;
+        a.download = fileName;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
 
         return url
     }

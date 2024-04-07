@@ -8,20 +8,30 @@
 	opacity: 1
 	transition: opacity 0.3s ease
 	box-shadow: 0 0 3px rgba(0,0,0,0.2), 0 0 10px rgba(0,0,0,0.2)
-	z-index: 1
+	animation: showAnim 0.3s
+	display: block
+
+	@keyframes showAnim
+		0%
+			display: block
+			opacity: 0
+
+		99%
+			opacity: 1
 
 	&.close
 		opacity: 0
-		animation: closeAnim
-		z-index: -1
+		animation: closeAnim 0.3s
+		display: none
 
 		@keyframes closeAnim
 			0%
+				display: block
 				opacity: 1
 
 			99%
 				opacity: 0
-				z-index: -1
+				display: none
 
 	.listbox
 		width: 100%

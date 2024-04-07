@@ -40,20 +40,12 @@ export class Block extends Component<BlockProps, BlockState> {
     renderPrevSymbol = (): VDomNode[] => {
         const pieces: Array<VDomNode> = [];
         const block = AppNoteStore.state.note.blocks[this.props.blockId];
-        if (block.attributes != null && "file" in block.attributes && "fileName" in block.attributes && block.attributes["file"] != "") {
-            // if (href.startsWith("blob:")) {
-            //     href = href.slice(5);
-            // }
-
-
-            const href = block.attributes.file as string;
-            const fileName = block.attributes.fileName as string
-            const ext = fileName.split('.').pop()
+        if (block.attributes != null && "attach" in block.attributes) {
+            const attachId = block.attributes["attach"]
 
             pieces.push(
-                <Attach href={href} fileName={fileName} ext={ext} handleRemove={() => {
+                <Attach id={attachId} fileName={block.attributes["fileName"]} handleRemove={() => {
                     const block = AppNoteStore.state.note.blocks[this.props.blockId];
-
                     block.type = "div";
                     block.attributes = null;
                     block.content = []

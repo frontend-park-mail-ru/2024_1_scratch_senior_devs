@@ -80,6 +80,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 case NotesActions.UPLOAD_FILE:
                     await this.uploadFile(action.payload);
                     break;
+                case NotesActions.DOWNLOAD_FILE:
+                    await this.downloadFile(action.payload);
+                    break;
             }
         });
     }
@@ -270,24 +273,16 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
     async uploadImage({noteId, blockId, file}) {
         console.log("uploadImage")
-        const {status, csrf, path} = await AppNoteRequests.UploadImage(noteId, file, AppUserStore.state.JWT, AppUserStore.state.csrf)
+        const {status, csrf, attachId} = await AppNoteRequests.UploadImage(noteId, file, AppUserStore.state.JWT, AppUserStore.state.csrf)
 
         console.log(status)
         if (status == 200) {
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf)
 
-
-            const url = await AppNoteRequests.GetImage(path.split(".")[0], AppUserStore.state.JWT, AppUserStore.state.csrf)
-
-            // TODO
+            const url = await AppNoteRequests.GetImage(attachId, AppUserStore.state.JWT, AppUserStore.state.csrf)
 
             const block = AppNoteStore.state.note.blocks[blockId]
-
-            console.log(block)
-            console.log(block.attributes)
-            console.log( "src" in block.attributes)
             if (block.attributes != null) {
-                console.log("asdfasdfasdfasdfasd")
                 block.attributes["src"] = url;
             }
 
@@ -301,32 +296,30 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     async uploadFile({noteId, blockId, file, fileName}) {
-        const {status, csrf, path} = await AppNoteRequests.UploadImage(noteId, file, AppUserStore.state.JWT, AppUserStore.state.csrf)
+        console.log("uploadFile")
+        const {status, csrf, attachId} = await AppNoteRequests.UploadImage(noteId, file, AppUserStore.state.JWT, AppUserStore.state.csrf)
 
-        console.log(status)
+        if (status == 200) {
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 
-        AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+            const block = AppNoteStore.state.note.blocks[blockId]
 
-        const url = await AppNoteRequests.GetImage(path.split(".")[0], AppUserStore.state.JWT, AppUserStore.state.csrf)
+            if (block.attributes != null) {
+                block.attributes["attach"] = attachId
+                block.attributes["fileName"] = fileName
+            }
 
-        console.log(url)
+            block.content = undefined;
 
-        const block = AppNoteStore.state.note.blocks[blockId]
-
-        console.log(block)
-        console.log(block.attributes)
-        if (block.attributes != null) {
-            console.log("asdfasdfasdfasdfasd")
-            block.attributes["file"] = url;
-            block.attributes["fileName"] = fileName;
+            AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
+                blockId: blockId,
+                newBlock: block
+            })
         }
+    }
 
-        block.content = undefined;
-
-        AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
-            blockId: blockId,
-            newBlock: block
-        })
+    async downloadFile({id, name}) {
+        await AppNoteRequests.GetFile(id, name, AppUserStore.state.JWT, AppUserStore.state.csrf)
     }
 }
 
@@ -342,7 +335,8 @@ export const NotesActions = {
     SAVE_NOTE: "SAVE_NOTE",
     CREATE_EMPTY_NOTE: "CREATE_EMPTY_NOTE",
     UPLOAD_IMAGE: "UPLOAD_IMAGE",
-    UPLOAD_FILE: "UPLOAD_FILE"
+    UPLOAD_FILE: "UPLOAD_FILE",
+    DOWNLOAD_FILE: "DOWNLOAD_FILE"
 }
 
 export const AppNotesStore = new NotesStore();
