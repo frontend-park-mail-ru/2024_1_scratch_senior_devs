@@ -62,7 +62,8 @@ export class Dropdown extends ScReact.Component<any, any> {
             tag = "img"
             const fileInput = document.createElement("input");
             fileInput.type = "file";
-            fileInput.accept=".jpg,.png"
+            fileInput.accept = ".jpg,.png"
+            fileInput.hidden = true
             this.ref.append(fileInput)
             fileInput.onchange = (e: InputEvent) => {
                 console.log("onchange")
@@ -83,6 +84,7 @@ export class Dropdown extends ScReact.Component<any, any> {
 
             const fileInput = document.createElement("input");
             fileInput.type = "file";
+            fileInput.hidden = true
             this.ref.append(fileInput)
             fileInput.onchange = (e) => {
                 console.log("onchange")
@@ -100,7 +102,6 @@ export class Dropdown extends ScReact.Component<any, any> {
             attr.file = "";
             attr.fileName = "";
             content = undefined;
-            // fileInput.on
         }
 
         AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK_TYPE, {

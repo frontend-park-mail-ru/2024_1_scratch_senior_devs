@@ -423,6 +423,8 @@ class NoteRequests {
 
         const response = await fetch(baseUrl + "/attach/" + id, options);
 
+
+        // TODO: сделать скачку при открытии заметки, а не только при отправке
         const blob = await response.blob()
 
         const url = URL.createObjectURL(blob)
