@@ -19,15 +19,12 @@ type EditorState = {
 
 export class Editor extends Component<any, EditorState> {
     state = {
-        blocks: 0
+        blocks: 0,
+        dropdownOpen: false
     }
 
     componentDidMount() {
-        AppNoteStore.SubscribeToStore((state) => {
-            this.setState(s => {
-                return {...s, blocks: state.note.blocks.length}
-            })
-        })
+        AppNoteStore.SubscribeToStore(this.updateState)
         this.setState(s => {
             return {...s, blocks: AppNoteStore.state.note.blocks.length}
         })
@@ -43,6 +40,24 @@ export class Editor extends Component<any, EditorState> {
                 }
             }
         }
+    }
+
+    updateState = (store) => {
+        this.setState(state => ({
+            ...state,
+            dropdownOpen: store.dropdownPos.isOpen,
+            blocks: store.note.blocks.length
+        }))
+    }
+
+    closeEditor = () => {
+        console.log("closeEditor")
+        AppDispatcher.dispatch(NoteStoreActions.CLOSE_DROPDOWN)
+
+        this.setState(state => ({
+            ...state,
+            dropdownOpen: false
+        }))
     }
 
     private renderBlocks = () => {
@@ -104,8 +119,9 @@ export class Editor extends Component<any, EditorState> {
                 </div>
                 <Dropdown blockId={AppNoteStore.state.dropdownPos.blockId}
                           style={`left: ${AppNoteStore.state.dropdownPos.left}px; top: ${AppNoteStore.state.dropdownPos.top}px;`}
-                          onClose={() => {}}
-                          open={AppNoteStore.state.dropdownPos.isOpen}></Dropdown>
+                          onClose={this.closeEditor}
+                          open={this.state.dropdownOpen}
+                />
             </div>
         )
     }

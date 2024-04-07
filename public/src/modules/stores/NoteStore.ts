@@ -236,6 +236,13 @@ class NoteStore extends BaseStore<NoteStoreState> {
     }
 
     private closeDropdown = () => {
+        console.log("closeDropdown")
+        // this.SetState(state => {
+        //     return {
+        //         ...state,
+        //         dropdownPos: {...state.dropdownPos, isOpen: false}
+        //     }
+        // })
         this.state.dropdownPos.isOpen = false;
     }
 
