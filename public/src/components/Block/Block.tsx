@@ -48,13 +48,25 @@ export class Block extends Component<BlockProps, BlockState> {
 
 
             const href = block.attributes.file as string;
-            const fileName = block.attributes.fileName  as string
+            const fileName = block.attributes.fileName as string
             const ext = fileName.split('.').pop()
 
             pieces.push(
-                <Attach href={href} fileName={fileName} ext={ext} handleRemove={() => {console.log("handleRemove")}}/>
+                <Attach href={href} fileName={fileName} ext={ext} handleRemove={() => {
+                    const block = AppNoteStore.state.note.blocks[this.props.blockId];
+
+                    block.type = "div";
+                    block.attributes = null;
+                    block.content = []
+                    AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
+                        blockId: this.props.blockId,
+                        newBlock: block
+                    })
+                    moveCursorUpAndDown(this.props.blockId);
+                    return;
+                }}/>
             )
-            
+
             return pieces;
         }
         renderUlPrefix(block, pieces);
@@ -72,22 +84,35 @@ export class Block extends Component<BlockProps, BlockState> {
                     pieceHash={getPieceHash(AppNoteStore.state.note.blocks[this.props.blockId].content[i])}
                 ></Piece>)
             }
-            console.log(pieces)
             return pieces;
         } else {
             const pieces = Array<VDomNode>();
-            pieces.push(<br/>)
+            pieces.push(<span/>)
             return pieces as VDomNode[]
         }
     }
 
     private self: HTMLElement
 
+    private chosenClass: string = ""
+
     componentDidUpdate() {
+        // if (AppNoteStore.state.cursorPosition != null &&
+        //     this.props.blockId === AppNoteStore.state.cursorPosition.blockId) {
+        //     this.chosenClass = " block-chosen"
+        // } else {
+        //     this.chosenClass = ""
+        // }
         setCursorInBlock(this.self, this.props.blockId);
     }
 
     componentDidMount() {
+        // if (AppNoteStore.state.cursorPosition != null &&
+        //     this.props.blockId === AppNoteStore.state.cursorPosition.blockId) {
+        //     this.chosenClass = " block-chosen"
+        // } else {
+        //     this.chosenClass = ""
+        // }
         this.setState(s => {
             return {...s, piecesCount: AppNoteStore.state.note.blocks[this.props.blockId].content?.length}
         })
@@ -96,27 +121,48 @@ export class Block extends Component<BlockProps, BlockState> {
     private contener: HTMLElement
 
     render(): VDomNode {
+        console.log(AppNoteStore.state.cursorPosition)
         return (
             <div
-                className="block"
+                className={"block" + (AppNoteStore.state.cursorPosition?.blockId == this.props.blockId.toString() ? " block-chosen" : "")}
                 style={"width: 100%;"}
-                ref={(elem) => {this.contener = elem}}
-                ondragend={() => {this.contener.draggable = false}}
-                ondragstart={(e) => {e.dataTransfer.setData("blockId", this.props.blockId.toString())}}
+                ref={(elem) => {
+                    this.contener = elem
+                }}
+                ondragend={() => {
+                    this.contener.draggable = false
+                }}
+                ondragstart={(e) => {
+                    e.dataTransfer.setData("blockId", this.props.blockId.toString())
+                }}
+                onclick={() => {
+                    console.log("click")
+                    const cursorPosition = getCursorInBlock(this.self)
+                    AppDispatcher.dispatch(NoteStoreActions.MOVE_CURSOR, {
+                        blockId: this.props.blockId,
+                        pos: cursorPosition
+                    })
+                }}
             >
 
                 <img
                     src="src/assets/drag-btn.svg"
                     alt=""
                     className={"drag-btn " + (this.state.dragBtnActive ? "" : "hide")}
-                     key1={"move-btn"}
-                     onmousedown={() => {this.contener.draggable = true}} />
+                    key1={"move-btn"}
+                    onmousedown={() => {
+                        this.contener.draggable = true
+                    }}/>
 
 
                 <div
                     className="piece-container"
-                    onmouseover={() => {this.setState(state => ({...state, dragBtnActive: true}))}}
-                    onmouseleave={() => {this.setState(state => ({...state, dragBtnActive: false}))}}
+                    onmouseover={() => {
+                        this.setState(state => ({...state, dragBtnActive: true}))
+                    }}
+                    onmouseleave={() => {
+                        this.setState(state => ({...state, dragBtnActive: false}))
+                    }}
                 >
                     <span key1={"delim"}>
                         {this.renderPrevSymbol()}
@@ -145,7 +191,7 @@ export class Block extends Component<BlockProps, BlockState> {
                                         })
                                     }
                                     if (e.inputType == "insertText") {
-                                        const elem  = e.target as HTMLElement;
+                                        const elem = e.target as HTMLElement;
                                         if (elem.childNodes.length === 1 && elem.childNodes[0].nodeName === "#text") {
                                             const text = elem.childNodes[0].textContent;
                                             const s = document.createElement("span");
@@ -158,7 +204,7 @@ export class Block extends Component<BlockProps, BlockState> {
                                             return
                                         }
                                     }
-                                    const elemPieces = Array<{pieceId: string, content: string}>()
+                                    const elemPieces = Array<{ pieceId: string, content: string }>()
 
                                     const elem = e.target as HTMLElement;
 
@@ -197,7 +243,7 @@ export class Block extends Component<BlockProps, BlockState> {
                                     if (block.attributes != null &&
                                         "ul" in block.attributes &&
                                         block.attributes.ul == true) {
-                                        setTimeout(()=> {
+                                        setTimeout(() => {
                                             const newBlock = AppNoteStore.state.note.blocks[this.props.blockId + 1];
                                             newBlock.attributes = {}
                                             newBlock.attributes["ul"] = true;
@@ -205,8 +251,11 @@ export class Block extends Component<BlockProps, BlockState> {
                                                 blockId: this.props.blockId,
                                                 pos: 0
                                             })
-                                            AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {blockId: this.props.blockId + 1, newBlock: newBlock})
-                                            setTimeout(()=> {
+                                            AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
+                                                blockId: this.props.blockId + 1,
+                                                newBlock: newBlock
+                                            })
+                                            setTimeout(() => {
                                                 AppDispatcher.dispatch(NoteStoreActions.MOVE_CURSOR, {
                                                     blockId: this.props.blockId + 1,
                                                     pos: 0
@@ -217,7 +266,7 @@ export class Block extends Component<BlockProps, BlockState> {
                                     if (block.attributes != null &&
                                         "ol" in block.attributes &&
                                         block.attributes.ol == true) {
-                                        setTimeout(()=> {
+                                        setTimeout(() => {
                                             const newBlock = AppNoteStore.state.note.blocks[this.props.blockId + 1];
                                             newBlock.attributes = {}
                                             newBlock.attributes["ol"] = true;
@@ -225,8 +274,11 @@ export class Block extends Component<BlockProps, BlockState> {
                                                 blockId: this.props.blockId,
                                                 pos: 0
                                             })
-                                            AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {blockId: this.props.blockId + 1, newBlock: newBlock})
-                                            setTimeout(()=> {
+                                            AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
+                                                blockId: this.props.blockId + 1,
+                                                newBlock: newBlock
+                                            })
+                                            setTimeout(() => {
                                                 AppDispatcher.dispatch(NoteStoreActions.MOVE_CURSOR, {
                                                     blockId: this.props.blockId + 1,
                                                     pos: 0
@@ -234,8 +286,7 @@ export class Block extends Component<BlockProps, BlockState> {
                                             })
                                         })
                                     }
-                                }
-                                if ("key" in e && e.key === "Backspace" &&
+                                } else if ("key" in e && e.key === "Backspace" &&
                                     (AppNoteStore.state.note.blocks[this.props.blockId].content == null ||
                                         AppNoteStore.state.note.blocks[this.props.blockId].content.length === 0)) {
                                     e.preventDefault()
@@ -244,7 +295,10 @@ export class Block extends Component<BlockProps, BlockState> {
                                         block.type = "div";
                                         block.attributes = null;
                                         block.content = []
-                                        AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {blockId: this.props.blockId, newBlock: block})
+                                        AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
+                                            blockId: this.props.blockId,
+                                            newBlock: block
+                                        })
                                         moveCursorUpAndDown(this.props.blockId);
                                         return;
                                     }
@@ -252,7 +306,10 @@ export class Block extends Component<BlockProps, BlockState> {
                                         "ul" in block.attributes &&
                                         block.attributes.ul == true) {
                                         delete block.attributes.ul
-                                        AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {blockId: this.props.blockId, newBlock: block})
+                                        AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
+                                            blockId: this.props.blockId,
+                                            newBlock: block
+                                        })
                                         moveCursorUpAndDown(this.props.blockId);
                                         return;
                                     }
@@ -260,7 +317,10 @@ export class Block extends Component<BlockProps, BlockState> {
                                         "ol" in block.attributes &&
                                         block.attributes.ol == true) {
                                         delete block.attributes.ol
-                                        AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {blockId: this.props.blockId, newBlock: block})
+                                        AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
+                                            blockId: this.props.blockId,
+                                            newBlock: block
+                                        })
                                         moveCursorUpAndDown(this.props.blockId);
                                         return;
                                     }
@@ -268,14 +328,16 @@ export class Block extends Component<BlockProps, BlockState> {
                                         "file" in block.attributes) {
                                         delete block.attributes.file
                                         block.content = [];
-                                        AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {blockId: this.props.blockId, newBlock: block})
+                                        AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
+                                            blockId: this.props.blockId,
+                                            newBlock: block
+                                        })
                                         moveCursorUpAndDown(this.props.blockId);
                                         return;
                                     }
                                     AppDispatcher.dispatch(NoteStoreActions.REMOVE_BLOCK, {delPos: this.props.blockId})
                                     return;
-                                }
-                                if ("key" in e && e.key === "ArrowDown") {
+                                } else if ("key" in e && e.key === "ArrowDown") {
                                     e.preventDefault();
                                     let cursorPosition = 0;
                                     if (AppNoteStore.state.note.blocks[this.props.blockId].content != null) {
@@ -292,8 +354,7 @@ export class Block extends Component<BlockProps, BlockState> {
                                         blockId: this.props.blockId + 1,
                                         pos: cursorPosition
                                     })
-                                }
-                                if ("key" in e && e.key === "ArrowUp") {
+                                } else if ("key" in e && e.key === "ArrowUp") {
                                     e.preventDefault();
                                     const selection = window.getSelection();
                                     const range = selection.getRangeAt(0);
@@ -306,7 +367,10 @@ export class Block extends Component<BlockProps, BlockState> {
                                         blockId: this.props.blockId - 1,
                                         pos: cursorPosition
                                     })
+                                } else if (AppNoteStore.state.note.blocks[this.props.blockId].content == null) {
+                                    e.preventDefault();
                                 }
+
 
                             },
                             onpaste: (e) => {
@@ -319,7 +383,7 @@ export class Block extends Component<BlockProps, BlockState> {
 
                                 const cursorPosition = clonedRange.toString().length;
 
-                                const pieces: {content: string, pieceId: string}[] = [];
+                                const pieces: { content: string, pieceId: string }[] = [];
 
                                 if (AppNoteStore.state.note.blocks[this.props.blockId].content.length === 0) {
                                     pieces.push({
@@ -346,7 +410,7 @@ export class Block extends Component<BlockProps, BlockState> {
                                     } else if (cursorPosition - offset < piece.content.length) {
                                         pieces.push({
                                             pieceId: i.toString(),
-                                            content: piece.content.substring(0,cursorPosition - offset) +
+                                            content: piece.content.substring(0, cursorPosition - offset) +
                                                 e.clipboardData.getData("text") +
                                                 piece.content.substring(cursorPosition - offset)
                                         })

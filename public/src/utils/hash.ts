@@ -2,6 +2,7 @@ import {BlockNode} from "../components/Block/Block";
 import {PieceNode} from "../components/Piece/Piece";
 import {AppNoteStore} from "../modules/stores/NoteStore";
 import {GetOrderedListCounter} from "./orderedListCounter";
+import {App} from "../App";
 
 export const getStrHash = (str: string) => {
     let hash = 0, i: number, chr: number;
