@@ -246,10 +246,8 @@ export class NoteEditor extends ScReact.Component<any, any> {
                 </div>
 
                 <div className="bottom-panel">
-                    
-                    <div className="note-content">
-                        <Editor />
-                    </div>
+
+                    <Editor />
 
                     <div className="note-save-indicator">
                         {this.state.saving === false ? <h3>Сохранено</h3> : ""}

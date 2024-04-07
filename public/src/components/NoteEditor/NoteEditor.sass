@@ -5,10 +5,11 @@
 	background: rgba(27, 39, 53, 0.3)
 	display: none
 	flex-direction: column
-	padding: 20px
+	padding: 20px 20px 80px 20px
 	gap: 15px
 	width: 100%
 	flex-basis: 100%
+	overflow: hidden
 
 	@media screen and (max-width: $lg)
 		display: flex
@@ -100,7 +101,6 @@
 			outline: none
 
 		.note-editor
-			padding-right: 10px
 			overflow-y: auto
 			height: 100%
 			font-size: 18px
@@ -108,6 +108,7 @@
 			display: flex
 			flex-direction: column
 			gap: 10px
+			padding-right: 15px
 
 			.note-title-container
 				width: 100%
@@ -133,8 +134,10 @@
 					width: 100%
 					position: relative
 					padding-left: 30px
-					min-height: 50px
 					line-height: 50px
+
+					.piece-prefix
+						user-select: none
 
 					.drag-btn
 						width: 16px

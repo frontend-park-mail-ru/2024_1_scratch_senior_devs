@@ -185,7 +185,18 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
     async saveNote(data) {
         console.log("saveNote")
+        console.log(data)
 
+        let _ = {
+            "title": "Первая заметка",
+            "content": [
+                {
+                    "type": "span",
+                    "content": "Hello world",
+                    "id": "1"
+                }
+            ]
+        }
 
         // if (this.state.selectedNote.id == data.id) {
 

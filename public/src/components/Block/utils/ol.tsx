@@ -7,7 +7,7 @@ export const renderOlPrefix = (block: BlockNode, blockId: number, pieces: VDomNo
         "ol" in block.attributes &&
         block.attributes.ol == true) {
         const num = GetOrderedListCounter(blockId);
-        pieces.push(<span key1={"num"}>{num.toString()}. </span>);
+        pieces.push(<span key1={"num"} className="piece-prefix">{num.toString()}. </span>);
         return pieces;
     }
     return pieces;
