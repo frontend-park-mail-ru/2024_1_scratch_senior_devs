@@ -39,42 +39,37 @@ export class HomePage extends ScReact.Component<any, any> {
 
     render(): VDomNode {
         return (
-            <div className="home-wrapper">
-                <section className="first">
-                    <div className="container">
-                        <h1 className="title">YouNote - современный сервис для ведения заметок</h1>
+            <div className="home__wrapper">
+                <section className="hero">
+                    <div className="hero__body">
+                        <h1 className="hero__body-title">YouNote - современный сервис для ведения заметок</h1>
                         <ShiningButton label="Попробовать" onClick={this.handleButtonClick}/>
                     </div>
-
-                    {/*<Carousel />*/}
-
-                    <NoteEditor></NoteEditor>
-
                 </section>
-                <section className="second">
-                    <h2>Функции и возможности</h2>
-                        <div className="cards-container">
-                            <Card
-                                icon="./src/assets/notes.png"
-                                title="Многофункциональность"
-                                description="Сервис может использоваться для любых задач: планирование досуга, ведение конспектов, организация командной работы"
-                            />
-                            <Card
-                                icon="./src/assets/accessibility.png"
-                                title="Доступность"
-                                description="Можно получить доступ к своим записям, имея под рукой любое устройство с доступом к интернет"
-                            />
-                            <Card
-                                icon="./src/assets/success.png"
-                                title="Удобство"
-                                description="Простой, минималистичный и интуитивно понятный интерфейс дает возможность комфортного ведения заметок любым пользователем"
-                            />
-                            <Card
-                                icon="./src/assets/personalization.png"
-                                title="Персонализация"
-                                description="Можно получить доступ к своим записям, имея под рукой любое устройство с доступом к интернет"
-                            />
-                        </div>
+                <section className="about">
+                    <h2 className="about__title">Функции и возможности</h2>
+                    <div className="about__container">
+                        <Card
+                            icon="./src/assets/notes.png"
+                            title="Многофункциональность"
+                            description="Сервис может использоваться для любых задач: планирование досуга, ведение конспектов, организация командной работы"
+                        />
+                        <Card
+                            icon="./src/assets/accessibility.png"
+                            title="Доступность"
+                            description="Можно получить доступ к своим записям, имея под рукой любое устройство с доступом к интернет"
+                        />
+                        <Card
+                            icon="./src/assets/success.png"
+                            title="Удобство"
+                            description="Простой, минималистичный и интуитивно понятный интерфейс дает возможность комфортного ведения заметок любым пользователем"
+                        />
+                        <Card
+                            icon="./src/assets/personalization.png"
+                            title="Персонализация"
+                            description="Можно получить доступ к своим записям, имея под рукой любое устройство с доступом к интернет"
+                        />
+                    </div>
                 </section>
             </div>
         );

@@ -4,8 +4,6 @@ import {Img} from "../Image/Image";
 import {AppNotesStore, NotesActions, NotesStoreState} from "../../modules/stores/NotesStore";
 import {AppDispatcher} from "../../modules/dispatcher";
 import {SwipeArea} from "../SwipeArea/SwipeArea";
-import {Dropdown} from "../Dropdown/Dropdown";
-import {Tippy} from "../Tippy/Tippy";
 import {Editor} from "../Editor/Editor";
 import {AppNoteStore} from "../../modules/stores/NoteStore";
 
@@ -14,151 +12,11 @@ export class NoteEditor extends ScReact.Component<any, any> {
     state = {
         selectedNote: undefined,
         saving: undefined,
-        content: undefined,
-        dropdownOpen: false,
-        tippyOpen: false
+        content: undefined
     }
-
-    private editorRef: HTMLElement;
 
     componentDidMount() {
         AppNotesStore.SubscribeToStore(this.updateState)
-
-
-        AppNoteStore.SetNote({
-            "title": "Hello You-note",
-            "blocks": [
-                {
-                    "id": "1",
-                    "type": "h1",
-                    "content": [
-                        {
-                            "id": "2",
-                            "content": "Hello",
-                            "attributes": {
-                                "style": "color: red"
-                            }
-                        },
-                        {
-                            "id": "3",
-                            "content": " World!"
-                        },
-                        {
-                            "id": "8",
-                            "content": " World!",
-                            "attributes": {
-                                "style": "background-color: red"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "id": "4",
-                    "type": "img",
-                    "attributes": {
-                        "src": "src/assets/logo.png",
-                        "width": "100"
-                    }
-                },
-                {
-                    "id": "10",
-                    "type": "div",
-                    "attributes": {
-                        "ol": true
-                    },
-                    "content": [
-                        {
-                            "id": "2",
-                            "content": "Hello",
-                            "attributes": {
-                                "style": "color: red"
-                            }
-                        },
-                        {
-                            "id": "3",
-                            "content": " World!"
-                        }
-                    ]
-                },
-                {
-                    "id": "10",
-                    "type": "div",
-                    "attributes": {
-                        "ul": true
-                    },
-                    "content": [
-                        {
-                            "id": "2",
-                            "content": "Hello",
-                            "attributes": {
-                                "style": "color: red"
-                            }
-                        },
-                        {
-                            "id": "3",
-                            "content": " World!"
-                        }
-                    ]
-                },
-                {
-                    "id": "10",
-                    "type": "div",
-                    "attributes": {
-                        "ol": true
-                    },
-                    "content": [
-                        {
-                            "id": "2",
-                            "content": "Hello",
-                            "attributes": {
-                                "style": "color: red"
-                            }
-                        },
-                        {
-                            "id": "3",
-                            "content": " World!"
-                        }
-                    ]
-                }
-            ]
-        })
-
-        // this.editorRef.addEventListener("input", debounce(this.handleKeypress, 1000))
-        // this.editorRef.addEventListener("keydown", (e) => this.handleKeyDown(e))
-    }
-
-    handleKeyDown = (e) => {
-        if (e.key === "/") {
-            this.setState(state => ({
-                ...state,
-                dropdownOpen: true
-            }))
-        }  else if (e.key === "b") {
-            this.setState(state => ({
-                ...state,
-                tippyOpen: true
-            }))
-        }
-    }
-
-    closeDropdown = () => {
-        this.setState(state => ({
-            ...state,
-            dropdownOpen: false
-        }))
-    }
-
-    closeTippy = () => {
-        this.setState(state => ({
-            ...state,
-            tippyOpen: false
-        }))
-    }
-
-    handleKeypress = () => {
-        if (this.state.selectedNote) {
-            this.saveNote()
-        }
     }
 
     saveNote = () => {
@@ -228,7 +86,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
     render() {
         return (
-            <div className={"note-editor-wrapper " + (this.props.open ? "active" : "")} ref={ref => {this.editorRef = ref}}>
+            <div className={"note-editor-wrapper " + (this.props.open ? "active" : "")}>
 
                 <SwipeArea enable={this.props.open} right={this.closeEditor} target=".note-editor-wrapper"/>
 
@@ -252,9 +110,6 @@ export class NoteEditor extends ScReact.Component<any, any> {
                     <div className="note-save-indicator">
                         {this.state.saving === false ? <h3>Сохранено</h3> : ""}
                     </div>
-
-                    <Dropdown open={this.state.dropdownOpen} onClose={this.closeDropdown} />
-                    <Tippy open={this.state.tippyOpen} onClose={this.closeTippy} />
                 </div>
             </div>
         )
