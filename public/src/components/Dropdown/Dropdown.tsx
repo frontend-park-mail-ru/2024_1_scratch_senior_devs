@@ -2,14 +2,15 @@ import {ScReact} from "@veglem/screact";
 import "./Dropdown.sass"
 import {Img} from "../Image/Image";
 import {AppDispatcher} from "../../modules/dispatcher";
-import {NoteStoreActions} from "../../modules/stores/NoteStore";
+import {AppNoteStore, NoteStoreActions} from '../../modules/stores/NoteStore';
 import {AppNotesStore, NotesActions} from "../../modules/stores/NotesStore";
 
 export class Dropdown extends ScReact.Component<any, any> {
     state = {
-        selected: "h1",
-        ref: undefined
+        selected: null
     }
+
+    private ref
 
     componentDidMount() {
         document.addEventListener("click", this.handleClickOutside, true)
@@ -28,7 +29,7 @@ export class Dropdown extends ScReact.Component<any, any> {
     }
 
     handleClickOutside = (e) => {
-        if (this.props.open && !this.state.ref.contains(e.target)) {
+        if (this.props.open && !this.ref.contains(e.target)) {
             this.props.onClose()
         }
     }
@@ -47,7 +48,7 @@ export class Dropdown extends ScReact.Component<any, any> {
 
         let tag = id;
         let attr = null;
-        let content = []
+        let content = AppNoteStore.state.note.blocks[this.props.blockId].content
         if (id === "bullet-list") {
             attr = {}
             attr.ul = true;
@@ -61,7 +62,7 @@ export class Dropdown extends ScReact.Component<any, any> {
             const fileInput = document.createElement("input");
             fileInput.type = "file";
             fileInput.accept=".jpg,.png"
-            this.state.ref.append(fileInput)
+            this.ref.append(fileInput)
             fileInput.onchange = (e: InputEvent) => {
                 console.log("onchange")
                 console.log(e)
@@ -81,7 +82,7 @@ export class Dropdown extends ScReact.Component<any, any> {
 
             const fileInput = document.createElement("input");
             fileInput.type = "file";
-            this.state.ref.append(fileInput)
+            this.ref.append(fileInput)
             fileInput.onchange = (e) => {
                 console.log("onchange")
                 console.log(e)
@@ -170,7 +171,7 @@ export class Dropdown extends ScReact.Component<any, any> {
         ]
 
         return (
-            <div className={"dropdown " + (this.props.open ? "" : "close")} style={this.props.style} ref={(val) => this.state.ref = val}>
+            <div className={"dropdown " + (this.props.open ? "" : "close")} style={this.props.style} ref={ref => this.ref = ref}>
                 <div className="listbox">
                     {data.map(item => (
                         <div className={"list-item " + (this.state.selected == item.id ? "selected" : "")} onmouseenter={() => this.handleOnHover(item.id)} onclick={() => this.handleOnClick(item.id)}>
