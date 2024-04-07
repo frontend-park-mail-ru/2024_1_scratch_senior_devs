@@ -4,6 +4,7 @@ import {AppUserStore, UserActions} from "./UserStore";
 import {AppDispatcher} from "../dispatcher";
 import {AppToasts} from "../toasts";
 import {AppNoteStore, NoteStoreActions} from './NoteStore';
+import {moveCursorUpAndDown} from "../../components/Block/utils/cursorActions";
 
 export type Note = {
     id: number,

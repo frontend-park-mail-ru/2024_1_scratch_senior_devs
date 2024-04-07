@@ -4,6 +4,7 @@ import {Img} from "../Image/Image";
 import {AppDispatcher} from "../../modules/dispatcher";
 import {AppNoteStore, NoteStoreActions} from '../../modules/stores/NoteStore';
 import {AppNotesStore, NotesActions} from "../../modules/stores/NotesStore";
+import {moveCursorUpAndDown} from "../Block/utils/cursorActions";
 
 export class Dropdown extends ScReact.Component<any, any> {
     state = {
@@ -48,7 +49,7 @@ export class Dropdown extends ScReact.Component<any, any> {
 
         let tag = id;
         let attr = null;
-        let content = AppNoteStore.state.note.blocks[this.props.blockId].content
+        let content = []
         if (id === "bullet-list") {
             attr = {}
             attr.ul = true;
@@ -107,6 +108,13 @@ export class Dropdown extends ScReact.Component<any, any> {
             tag: tag,
             attributes: attr,
             content: content
+        })
+
+        // moveCursorUpAndDown(this.props.blockId)
+
+        AppDispatcher.dispatch(NoteStoreActions.MOVE_CURSOR, {
+            blockId: this.props.blockId,
+            pos: 0
         })
 
         this.props.onClose()
