@@ -2,7 +2,7 @@ import {ScReact} from "@veglem/screact";
 import "./Dropdown.sass"
 import {Img} from "../Image/Image";
 import {AppDispatcher} from "../../modules/dispatcher";
-import {AppNoteStore, NoteStoreActions} from "../../modules/stores/NoteStore";
+import {NoteStoreActions} from "../../modules/stores/NoteStore";
 import {AppNotesStore, NotesActions} from "../../modules/stores/NotesStore";
 
 export class Dropdown extends ScReact.Component<any, any> {
@@ -27,11 +27,7 @@ export class Dropdown extends ScReact.Component<any, any> {
         }
     }
 
-
     handleClickOutside = (e) => {
-        console.log("handleClickOutside")
-        console.log(AppNoteStore.state.dropdownPos.isOpen)
-        console.log(!this.state.ref.contains(e.target))
         if (this.props.open && !this.state.ref.contains(e.target)) {
             this.props.onClose()
         }

@@ -10,6 +10,8 @@ import {renderUlPrefix} from "./utils/ul";
 import {renderOlPrefix} from "./utils/ol";
 import {getCursorInBlock, setCursorInBlock} from "../../utils/cursorPos";
 import {moveCursorUpAndDown} from "./utils/cursorActions";
+import {Img} from '../Image/Image';
+import {Attach} from '../Attach/Attach';
 
 export interface BlockNode {
     id: string
@@ -39,15 +41,20 @@ export class Block extends Component<BlockProps, BlockState> {
         // const block = AppNoteStore.state.note.blocks[this.props.blockId]
         const pieces: Array<VDomNode> = [];
         const block = AppNoteStore.state.note.blocks[this.props.blockId];
-        if (block.attributes != null &&
-            "file" in block.attributes &&
-            "fileName" in block.attributes) {
-            let href: string = block.attributes.file as string;
+        if (block.attributes != null && "file" in block.attributes && "fileName" in block.attributes && block.attributes["file"] != "") {
             // if (href.startsWith("blob:")) {
             //     href = href.slice(5);
             // }
 
-            pieces.push(<a key1={"href"} href={href} download>{block.attributes.fileName}</a>)
+
+            const href = block.attributes.file as string;
+            const fileName = block.attributes.fileName  as string
+            const ext = fileName.split('.').pop()
+
+            pieces.push(
+                <Attach href={href} fileName={fileName} ext={ext} handleRemove={() => {console.log("handleRemove")}}/>
+            )
+            
             return pieces;
         }
         renderUlPrefix(block, pieces);

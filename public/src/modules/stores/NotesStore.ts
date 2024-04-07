@@ -302,6 +302,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
     async uploadFile({noteId, blockId, file, fileName}) {
         const {status, csrf, path} = await AppNoteRequests.UploadImage(noteId, file, AppUserStore.state.JWT, AppUserStore.state.csrf)
 
+        console.log(status)
+
         AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 
         const url = await AppNoteRequests.GetImage(path.split(".")[0], AppUserStore.state.JWT, AppUserStore.state.csrf)
