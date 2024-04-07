@@ -5,7 +5,7 @@ export const renderUlPrefix = (block: BlockNode, pieces: VDomNode[]) : VDomNode[
     if (block.attributes != null &&
         "ul" in block.attributes &&
         block.attributes.ul == true) {
-        pieces.push(<span>• </span>);
+        pieces.push(<span key1={"dot"}>• </span>);
         return pieces;
     }
     return pieces;

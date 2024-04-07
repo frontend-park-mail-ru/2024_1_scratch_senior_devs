@@ -59,14 +59,14 @@ export class Dropdown extends ScReact.Component<any, any> {
                 console.log(e)
                 fileInput.remove()
                 AppDispatcher.dispatch(NotesActions.UPLOAD_IMAGE, {
-                    file: e.target.files[0],
+                    file: (e.target as HTMLInputElement).files[0],
                     noteId: AppNotesStore.state.selectedNote.id,
                     blockId: this.props.blockId
                 })
             }
             fileInput.click();
             attr = {}
-            attr.file = ""
+            attr.src = ""
             content = undefined;
         } else if (id === "document") {
             tag = "div"
@@ -78,11 +78,17 @@ export class Dropdown extends ScReact.Component<any, any> {
                 console.log("onchange")
                 console.log(e)
                 fileInput.remove()
-                // TODO AppDispatcher(AppNoteStore.UPLOAD_FILE, {data: e.target.file, id: id})
+                AppDispatcher.dispatch(NotesActions.UPLOAD_FILE, {
+                    file: (e.target as HTMLInputElement).files[0],
+                    noteId: AppNotesStore.state.selectedNote.id,
+                    blockId: this.props.blockId,
+                    fileName: (e.target as HTMLInputElement).files[0].name
+                })
             }
             fileInput.click();
-            attr = {}
-            attr.file = ""
+            attr = {};
+            attr.file = "";
+            attr.fileName = "";
             content = undefined;
             // fileInput.on
         }

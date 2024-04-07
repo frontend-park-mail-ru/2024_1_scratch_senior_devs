@@ -10,6 +10,8 @@ export class Tippy extends ScReact.Component<any, any> {
         colorPicker: false,
         ref: undefined
     }
+    private toggleLinkInputRef: HTMLDivElement;
+    private toggleBtnRef: any;
 
     componentDidMount() {
         document.addEventListener("click", this.handleClickOutside, true)

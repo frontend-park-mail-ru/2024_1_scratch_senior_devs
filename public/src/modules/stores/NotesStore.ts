@@ -75,6 +75,10 @@ class NotesStore extends BaseStore<NotesStoreState> {
                     break;
                 case NotesActions.UPLOAD_IMAGE:
                     await this.uploadImage(action.payload);
+                    break;
+                case NotesActions.UPLOAD_FILE:
+                    await this.uploadFile(action.payload);
+                    break;
             }
         });
     }
@@ -275,11 +279,41 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 block.attributes["src"] = url;
             }
 
+            block.content = undefined;
+
             AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
                 blockId: blockId,
                 newBlock: block
             })
         }
+    }
+
+    async uploadFile({noteId, blockId, file, fileName}) {
+        const {status, csrf, path} = await AppNoteRequests.UploadImage(noteId, file, AppUserStore.state.JWT, AppUserStore.state.csrf)
+
+        AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+
+        const url = await AppNoteRequests.GetImage(path.split(".")[0], AppUserStore.state.JWT, AppUserStore.state.csrf)
+
+        console.log(url)
+        // TODO
+
+        const block = AppNoteStore.state.note.blocks[blockId]
+
+        console.log(block)
+        console.log(block.attributes)
+        if (block.attributes != null) {
+            console.log("asdfasdfasdfasdfasd")
+            block.attributes["file"] = url;
+            block.attributes["fileName"] = fileName;
+        }
+
+        block.content = undefined;
+
+        AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
+            blockId: blockId,
+            newBlock: block
+        })
     }
 }
 
@@ -294,7 +328,8 @@ export const NotesActions = {
     DELETE_NOTE: "DELETE_NOTE",
     SAVE_NOTE: "SAVE_NOTE",
     CREATE_EMPTY_NOTE: "CREATE_EMPTY_NOTE",
-    UPLOAD_IMAGE: "UPLOAD_IMAGE"
+    UPLOAD_IMAGE: "UPLOAD_IMAGE",
+    UPLOAD_FILE: "UPLOAD_FILE"
 }
 
 export const AppNotesStore = new NotesStore();

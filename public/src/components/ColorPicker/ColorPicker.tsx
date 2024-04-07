@@ -2,6 +2,7 @@ import {ScReact} from "@veglem/screact";
 import "./ColorPicker.sass"
 
 export class ColorPicker extends ScReact.Component<any, any> {
+    private ref: HTMLElement;
     componentDidMount() {
         document.addEventListener("click", this.handleClickOutside, true)
     }

@@ -40,8 +40,15 @@ export class Block extends Component<BlockProps, BlockState> {
         const pieces: Array<VDomNode> = [];
         const block = AppNoteStore.state.note.blocks[this.props.blockId];
         if (block.attributes != null &&
-            "file" in block.attributes) {
-            return [<a href={block.attributes.file} download>File</a>]
+            "file" in block.attributes &&
+            "fileName" in block.attributes) {
+            let href: string = block.attributes.file as string;
+            // if (href.startsWith("blob:")) {
+            //     href = href.slice(5);
+            // }
+
+            pieces.push(<a key1={"href"} href={href} download>{block.attributes.fileName}</a>)
+            return pieces;
         }
         renderUlPrefix(block, pieces);
         renderOlPrefix(block, this.props.blockId, pieces);
@@ -98,12 +105,15 @@ export class Block extends Component<BlockProps, BlockState> {
                      key1={"move-btn"}
                      onmousedown={() => {this.contener.draggable = true}} />
 
+
                 <div
                     className="piece-container"
                     onmouseover={() => {this.setState(state => ({...state, dragBtnActive: true}))}}
                     onmouseleave={() => {this.setState(state => ({...state, dragBtnActive: false}))}}
                 >
-                    {this.renderPrevSymbol()}
+                    <span key1={"delim"}>
+                        {this.renderPrevSymbol()}
+                    </span>
                     {ScReact.createElement(AppNoteStore.state.note.blocks[this.props.blockId].type, {
                             key: "peices",
                             ...AppNoteStore.state.note.blocks[this.props.blockId].attributes,
