@@ -5,7 +5,7 @@ import {AppNoteStore, NoteStoreActions} from "../../modules/stores/NoteStore";
 import {getBlockHash} from "../../utils/hash";
 import {debounce} from "../../utils/debauncer";
 import {AppDispatcher} from "../../modules/dispatcher";
-import "./editor.sass"
+import "./Editor.sass"
 import {Dropdown} from "../Dropdown/Dropdown";
 
 export interface Note {

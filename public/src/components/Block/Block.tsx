@@ -38,7 +38,6 @@ export class Block extends Component<BlockProps, BlockState> {
     }
 
     renderPrevSymbol = (): VDomNode[] => {
-        // const block = AppNoteStore.state.note.blocks[this.props.blockId]
         const pieces: Array<VDomNode> = [];
         const block = AppNoteStore.state.note.blocks[this.props.blockId];
         if (block.attributes != null && "file" in block.attributes && "fileName" in block.attributes && block.attributes["file"] != "") {
@@ -78,11 +77,13 @@ export class Block extends Component<BlockProps, BlockState> {
         if (AppNoteStore.state.note.blocks[this.props.blockId].content !== undefined) {
             const pieces = Array<VDomNode>();
             for (let i = 0; i < AppNoteStore.state.note.blocks[this.props.blockId].content.length; ++i) {
-                pieces.push(<Piece
+                pieces.push(
+                    <Piece
                     blockId={this.props.blockId}
                     pieceId={i}
                     pieceHash={getPieceHash(AppNoteStore.state.note.blocks[this.props.blockId].content[i])}
-                ></Piece>)
+                ></Piece>
+                )
             }
             return pieces;
         } else {

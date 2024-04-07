@@ -309,7 +309,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
         const url = await AppNoteRequests.GetImage(path.split(".")[0], AppUserStore.state.JWT, AppUserStore.state.csrf)
 
         console.log(url)
-        // TODO
 
         const block = AppNoteStore.state.note.blocks[blockId]
 

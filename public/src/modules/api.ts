@@ -341,7 +341,6 @@ class NoteRequests {
     }
 
     Add = async (jwt:string, csrf:string) => {
-        console.log(csrf)
         const response = await Ajax.Post(this.baseUrl + "/add", {
             headers: {
                 "Authorization": jwt,
@@ -349,14 +348,23 @@ class NoteRequests {
             },
             body: {
                 data: {
-                    content: createUUID(),
+                    content: [
+                        {
+                            "id": "1",
+                            "type": "div",
+                            "content": [
+                                {
+                                    "id": "2",
+                                    "content": "Привет!"
+                                }
+                            ]
+                        }
+                    ],
                     title: "Новая заметка"
                 }
             }
         });
 
-        console.log(response.status)
-        console.log(response.body)
         response.body.data = decode(response.body.data);
         return response
     }
