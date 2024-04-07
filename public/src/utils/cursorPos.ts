@@ -38,7 +38,7 @@ export const setCursorInBlock = (elem: HTMLElement, blockId: number) => {
             }
             setCursorAtNodePosition(elem, AppNoteStore.state.cursorPosition.pos)
             if (AppNoteStore.state.cursorPosition.pos === 0) {
-                elem.focus();
+                elem.click();
             }
         } catch (e) {
             console.log(e)

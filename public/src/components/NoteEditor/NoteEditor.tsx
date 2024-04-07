@@ -17,6 +17,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
     componentDidMount() {
         AppNotesStore.SubscribeToStore(this.updateState)
+        AppNoteStore.AddSaver(this.saveNote)
     }
 
     saveNote = () => {

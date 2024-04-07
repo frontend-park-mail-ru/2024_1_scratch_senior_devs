@@ -114,7 +114,15 @@ export class Editor extends Component<any, EditorState> {
         return (
             <div className="note-editor">
                 <div className="note-title-container">
-                    <h3 className="note-title">{AppNoteStore.state.note.title}</h3>
+                    <h3
+                        className="note-title"
+                        contentEditable={true}
+                        oninput={(e)=>{
+                            AppDispatcher.dispatch(NoteStoreActions.CHANGE_TITLE, {
+                                title: e.target.textContent
+                            })
+                        }}
+                    >{AppNoteStore.state.note.title}</h3>
                 </div>
                 <div className="note-body-container">
                     {this.renderBlocks()}

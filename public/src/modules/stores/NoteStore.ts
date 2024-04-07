@@ -16,7 +16,8 @@ export const NoteStoreActions = {
     MOVE_BLOCK: "MOVE_BLOCK",
     OPEN_DROPDOWN: "OPEN_DROPDOWN",
     CLOSE_DROPDOWN: "CLOSE_DROPDOWN",
-    CHANGE_BLOCK_TYPE: "CHANGE_BLOCK_TYPE"
+    CHANGE_BLOCK_TYPE: "CHANGE_BLOCK_TYPE",
+    CHANGE_TITLE: "CHANGE_TITLE"
 }
 
 export type NoteStoreState = {
@@ -51,6 +52,8 @@ class NoteStore extends BaseStore<NoteStoreState> {
             blockId: 0
         }
     }
+
+    private severs: Array<() => any> = []
 
     constructor() {
         super();
@@ -92,8 +95,31 @@ class NoteStore extends BaseStore<NoteStoreState> {
                     break;
                 case NoteStoreActions.CHANGE_BLOCK_TYPE:
                     this.changeBlockType(action.payload.blockId, action.payload.tag, action.payload.attributes, action.payload.content)
+                    break;
+                case NoteStoreActions.CHANGE_TITLE:
+                    this.changeTitle(action.payload.title);
+                    break;
             }
         })
+    }
+
+    private timerId: NodeJS.Timeout = setTimeout(()=>{})
+
+    private saveNote = () => {
+        clearTimeout(this.timerId);
+        this.timerId = setTimeout(() => {
+            this.severs.forEach((saver) => {
+                saver();
+            })
+        }, 1000)
+    }
+
+    public AddSaver = (saver: () => any) => {
+        this.severs.push(saver);
+    }
+
+    public RemoveSavers = (saver: () => any) => {
+        this.severs = [];
     }
 
     public SetNote = (note: Note) => {
@@ -122,6 +148,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
             blockId: blockId,
             pos: posOffset
         }
+        this.saveNote();
         // this.SetState(s => {
         //     const oldNote: Note = this.state.note;
         //     const newBlockContent = new Array<PieceNode>()
@@ -148,6 +175,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
             })
             return {...s, note: oldNote, cursorPosition: {blockId: blockId, pos: content.length}}
         })
+        this.saveNote();
     }
 
     private addNewBlock = (insertPos: number) => {
@@ -163,6 +191,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
 
             return {...s, note: oldNote, cursorPosition: {blockId: insertPos, pos: 0}}
         })
+        this.saveNote();
     }
 
     private deleteBlock = (delPos: number) => {
@@ -179,6 +208,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
             }, 0)
             return {...s, note: oldNote, cursorPosition: {blockId: delPos - 1, pos: pos}}
         })
+        this.saveNote();
     }
 
     private moveCursor = (blockId: number, pos: number) => {
@@ -203,6 +233,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
             oldNote.blocks[blockId] = newBlock;
             return {...s, note: oldNote}
         })
+        this.saveNote();
     }
 
     private moveBlock = (blockId: number, posToMove: number) => {
@@ -221,6 +252,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
                 return {...s, note: oldNote}
             }
         })
+        this.saveNote();
     }
 
     private openDropdown = (blockPos: DOMRect, blockId: number) => {
@@ -255,6 +287,13 @@ class NoteStore extends BaseStore<NoteStoreState> {
             oldNote.blocks[blockId].content = content;
             return {...s, note: oldNote}
         })
+        this.saveNote();
+    }
+
+    private changeTitle = (title: string) => {
+        this.closeDropdown();
+        this.state.note.title = title;
+        this.saveNote();
     }
 }
 

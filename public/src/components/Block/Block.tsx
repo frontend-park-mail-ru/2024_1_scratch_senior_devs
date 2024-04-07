@@ -97,6 +97,10 @@ export class Block extends Component<BlockProps, BlockState> {
         //     this.chosenClass = ""
         // }
         setCursorInBlock(this.self, this.props.blockId);
+        if (AppNoteStore.state.cursorPosition != null &&
+            this.props.blockId === AppNoteStore.state.cursorPosition.blockId) {
+            this.self.focus();
+        }
     }
 
     componentDidMount() {

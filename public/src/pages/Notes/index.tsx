@@ -9,6 +9,7 @@ import {Modal} from "../../components/Modal/Modal";
 import {Button} from "../../components/Button/Button";
 import {Img} from "../../components/Image/Image";
 import {DeleteNoteDialog} from "../../components/DeleteNoteDialog/DeleteNoteDialog";
+import {AppNoteStore, NoteStoreState} from "../../modules/stores/NoteStore";
 
 export class NotesPage extends ScReact.Component<any, any> {
     state = {
@@ -22,6 +23,7 @@ export class NotesPage extends ScReact.Component<any, any> {
         document.title = "Заметки"
 
         AppNotesStore.SubscribeToStore(this.updateState)
+        AppNoteStore.AddSaver(this.updateNotesTitles);
 
         this.setState(state => ({
             ...state,
@@ -29,6 +31,25 @@ export class NotesPage extends ScReact.Component<any, any> {
         }))
 
         this.createObserver()
+    }
+
+    updateNotesTitles = () => {
+        setTimeout(()=> {
+            console.log(AppNoteStore.state.note)
+            const notes = AppNotesStore.state.notes;
+            notes.forEach((note, index) => {
+                if (note.id == this.state.selectedNote?.id) {
+                    console.log("Yeeees")
+                    notes[index].data.title = AppNoteStore.state.note.title
+                    console.log(notes)
+                }
+            })
+            this.setState(s=>({
+                    ...s,
+                    notes: notes
+
+            }))
+        }, 10)
     }
 
     componentWillUnmount() {
