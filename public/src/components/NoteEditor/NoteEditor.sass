@@ -148,6 +148,10 @@
 					position: relative
 					padding-left: 30px
 
+					&:hover
+						.drag-btn
+							opacity: 1
+
 					.piece-prefix
 						user-select: none
 
@@ -158,11 +162,8 @@
 						transform: translateY(-50%)
 						position: absolute
 						left: 0
+						opacity: 0
 						transition: opacity .2s ease-in
-
-						&.hide
-							opacity: 0
 
 						&:hover
 							cursor: grab
-							opacity: 1

@@ -90,12 +90,6 @@ export class Block extends Component<BlockProps, BlockState> {
     private chosenClass: string = ""
 
     componentDidUpdate() {
-        // if (AppNoteStore.state.cursorPosition != null &&
-        //     this.props.blockId === AppNoteStore.state.cursorPosition.blockId) {
-        //     this.chosenClass = " block-chosen"
-        // } else {
-        //     this.chosenClass = ""
-        // }
         setCursorInBlock(this.self, this.props.blockId);
         if (AppNoteStore.state.cursorPosition != null &&
             this.props.blockId === AppNoteStore.state.cursorPosition.blockId) {
@@ -104,12 +98,6 @@ export class Block extends Component<BlockProps, BlockState> {
     }
 
     componentDidMount() {
-        // if (AppNoteStore.state.cursorPosition != null &&
-        //     this.props.blockId === AppNoteStore.state.cursorPosition.blockId) {
-        //     this.chosenClass = " block-chosen"
-        // } else {
-        //     this.chosenClass = ""
-        // }
         this.setState(s => {
             return {...s, piecesCount: AppNoteStore.state.note.blocks[this.props.blockId].content?.length}
         })
@@ -145,22 +133,14 @@ export class Block extends Component<BlockProps, BlockState> {
                 <img
                     src="src/assets/drag-btn.svg"
                     alt=""
-                    className={"drag-btn " + (this.state.dragBtnActive ? "" : "hide")}
+                    className={"drag-btn"}
                     key1={"move-btn"}
                     onmousedown={() => {
                         this.contener.draggable = true
                     }}/>
 
 
-                <div
-                    className="piece-container"
-                    onmouseover={() => {
-                        this.setState(state => ({...state, dragBtnActive: true}))
-                    }}
-                    onmouseleave={() => {
-                        this.setState(state => ({...state, dragBtnActive: false}))
-                    }}
-                >
+                <div className="piece-container">
                     <span key1={"delim"}>
                         {this.renderPrevSymbol()}
                     </span>

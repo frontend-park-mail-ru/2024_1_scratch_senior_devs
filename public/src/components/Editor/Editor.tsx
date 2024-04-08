@@ -33,9 +33,11 @@ export class Editor extends Component<any, EditorState> {
                 const r = /piece-(\d+)-(\d+)/;
                 const matchesAnchor = r.exec(document.getSelection().anchorNode.parentElement.id.toString())
                 const matchesFocus = r.exec(document.getSelection().focusNode.parentElement.id.toString())
+                const offsetAnchor = document.getSelection().anchorOffset;
+                const offsetFocus = document.getSelection().focusOffset;
                 if (matchesAnchor != null && matchesFocus != null) {
                     debounce(() => {
-                        console.log(`anchor - ${matchesAnchor[1]} - ${matchesAnchor[2]} | focus - ${matchesFocus[1]} - ${matchesFocus[2]}`)
+                        console.log(`anchor - ${matchesAnchor[1]} - ${matchesAnchor[2]} | focus - ${matchesFocus[1]} - ${matchesFocus[2]}`, offsetAnchor, offsetFocus)
                     }, 1000)()
                 }
             }
