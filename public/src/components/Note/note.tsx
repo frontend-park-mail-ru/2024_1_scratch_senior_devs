@@ -33,7 +33,7 @@ export class Note extends ScReact.Component<any, NoteState> {
         return (
             <div className={"note-container " + (this.props.selected ? "selected" : "")} id={this.props.note.id}>
                 <h3>{this.props.note.data.title}</h3>
-                <p>{this.state.content}</p>
+                <p></p>
                 <span className="update-time">{this.state.update_time}</span>
             </div>
         )

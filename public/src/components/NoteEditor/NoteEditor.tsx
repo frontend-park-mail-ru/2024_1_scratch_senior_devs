@@ -21,43 +21,16 @@ export class NoteEditor extends ScReact.Component<any, any> {
     }
 
     saveNote = () => {
-        // const titleElem = document.querySelector(".note-title") as HTMLElement
-        // const contentElem = document.querySelector(".note-content > span") as HTMLElement
-
-        // TODO
-        console.log("saveNote")
-        console.log(this.state.selectedNote.id)
-        console.log(AppNoteStore.state.note)
-        AppDispatcher.dispatch(NotesActions.SAVE_NOTE,  {
-            id: this.state.selectedNote.id,
-            note: AppNoteStore.state.note
-        })
-
-        // const data = {
-        //     id: this.state.selectedNote.id,
-        //     title: titleElem.innerText,
-        //     content: contentElem.innerText
-        // }
-
-        // if (data.title !== this.state.selectedNote.data.title || data.content !== this.state.selectedNote.data.content) {
-        //     AppDispatcher.dispatch(NotesActions.SAVE_NOTE, data)
-        // }
-
-        // this.setState(state => ({
-        //     ...state,
-        //     selectedNote: {
-        //         id: state.selectedNote.id,
-        //         data: {
-        //             title: data.title,
-        //             content: data.content
-        //         },
-        //         update_time: state.selectedNote.update_time
-        //     }
-        // }))
+        if (this.state.selectedNote) {
+            AppDispatcher.dispatch(NotesActions.SAVE_NOTE,  {
+                id: this.state.selectedNote.id,
+                note: AppNoteStore.state.note
+            })
+        }
     }
 
     closeEditor = () => {
-        this.saveNote()
+        // this.saveNote()
 
         this.props.setClose()
 
@@ -65,6 +38,8 @@ export class NoteEditor extends ScReact.Component<any, any> {
     }
 
     updateState = (store:NotesStoreState) => {
+        console.log("updateState")
+        console.log(store.saving)
         this.setState(state => {
             return {
                 ...state,
@@ -99,6 +74,9 @@ export class NoteEditor extends ScReact.Component<any, any> {
                         </div>
                     </div>
                     <div className="right-container">
+                        <div className="note-save-indicator">
+                            <span>{!this.state.saving ? "Сохранено" : "Не сохранено"}</span>
+                        </div>
                         <Img src="trash.svg" className="icon delete-note-icon" onClick={this.deleteNote}/>
                         <Img src="close.svg" className="icon close-editor-icon" onClick={this.closeEditor}/>
                     </div>
@@ -106,11 +84,8 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
                 <div className="bottom-panel">
 
-                    <Editor />
+                    <Editor/>
 
-                    <div className="note-save-indicator">
-                        {this.state.saving === false ? <h3>Сохранено</h3> : ""}
-                    </div>
                 </div>
             </div>
         )

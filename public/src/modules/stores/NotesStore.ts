@@ -86,6 +86,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 case NotesActions.DOWNLOAD_FILE:
                     await this.downloadFile(action.payload);
                     break;
+                case NotesActions.START_SAVING:
+                    this.startSaving();
+                    break;
             }
         });
     }
@@ -186,63 +189,41 @@ class NotesStore extends BaseStore<NotesStoreState> {
             this.closeNote()
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf)
-
         }
+    }
+
+    startSaving() {
+        this.SetState(state => ({
+            ...state,
+            saving: true
+        }))
     }
 
     async saveNote(data) {
         console.log("saveNote")
-        console.log(data)
+        console.log(this.state.selectedNote)
 
-        // if (this.state.selectedNote.id == data.id) {
+        const {status, csrf} = await AppNoteRequests.Update(data, AppUserStore.state.JWT, AppUserStore.state.csrf)
 
-            // this.SetState(state => ({
-            //     ...state,
-            //     saving: true
-            // }))
+        if (status === 200) {
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf)
 
-            const {status, csrf} = await AppNoteRequests.Update(data, AppUserStore.state.JWT, AppUserStore.state.csrf)
-
-            if (status === 200) {
-                AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf)
-                AppToasts.success("Заметка успешно сохранена")
+            if (this.state.selectedNote) {
+                this.SetState(state => ({
+                    ...state,
+                    saving: false
+                }))
             }
 
-            // this.SetState(state => ({
-            //     ...state,
-            //     saving: false
-            // }))
 
-            // TODO: Смена стейта вызывает анфокус заметки ;(
-            // this.SetState(state => ({
-            //     ...state,
-            //     selectedNote: {
-            //         id: state.selectedNote.id,
-            //         data: note.data,
-            //         update_time: note.update_time
-            //     }
-            // }))
-
-            // this.SetState(state => ({
-            //     ...state,
-            //     notes: state.notes.map(n => n.id == note.id ? note : n)
-            // }))
-
+            // AppToasts.success("Заметка успешно сохранена")
+        }
     }
 
     async createNewNote() {
         const response = await AppNoteRequests.Add(AppUserStore.state.JWT, AppUserStore.state.csrf)
 
         AppDispatcher.dispatch(UserActions.UPDATE_CSRF, response.headers["x-csrf-token"])
-
-        // const note = {
-        //     data: {
-        //         content: "",
-        //         title: "Новая заметка"
-        //     },
-        //     update_time: new Date().toISOString()
-        // }
-        //
 
         // const notes = this.state.notes
         //
@@ -344,7 +325,8 @@ export const NotesActions = {
     UPLOAD_IMAGE: "UPLOAD_IMAGE",
     UPLOAD_FILE: "UPLOAD_FILE",
     DOWNLOAD_FILE: "DOWNLOAD_FILE",
-    FETCH_IMAGE: "FETCH_IMAGE"
+    FETCH_IMAGE: "FETCH_IMAGE",
+    START_SAVING: "START_SAVING"
 }
 
 export const AppNotesStore = new NotesStore();

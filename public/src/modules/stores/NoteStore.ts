@@ -4,6 +4,7 @@ import {AppDispatcher} from "../dispatcher";
 import {Block, BlockNode} from "../../components/Block/Block";
 import {create_UUID} from "../../utils/uuid";
 import {PieceNode} from "../../components/Piece/Piece";
+import {NotesActions} from './NotesStore';
 
 export const NoteStoreActions = {
     CHANGE_PIECE: "CHANGE_PIECE",
@@ -106,6 +107,8 @@ class NoteStore extends BaseStore<NoteStoreState> {
     private timerId: NodeJS.Timeout = setTimeout(()=>{})
 
     private saveNote = () => {
+        AppDispatcher.dispatch(NotesActions.START_SAVING)
+
         clearTimeout(this.timerId);
         this.timerId = setTimeout(() => {
             this.severs.forEach((saver) => {
