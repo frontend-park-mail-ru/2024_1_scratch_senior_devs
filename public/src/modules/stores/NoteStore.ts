@@ -1,7 +1,7 @@
 import {BaseStore} from "./BaseStore";
 import {Note} from "../../components/Editor/Editor";
 import {AppDispatcher} from "../dispatcher";
-import {Block, BlockNode} from "../../components/Block/Block";
+import {BlockNode} from "../../components/Block/Block";
 import {create_UUID} from "../../utils/uuid";
 import {PieceNode} from "../../components/Piece/Piece";
 import {NotesActions} from './NotesStore';

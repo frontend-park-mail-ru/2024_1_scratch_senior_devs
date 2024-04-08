@@ -208,13 +208,12 @@ class NotesStore extends BaseStore<NotesStoreState> {
         if (status === 200) {
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf)
 
-            if (this.state.selectedNote) {
+            if (data.toggleSaveLabel) {
                 this.SetState(state => ({
                     ...state,
                     saving: false
                 }))
             }
-
 
             // AppToasts.success("Заметка успешно сохранена")
         }

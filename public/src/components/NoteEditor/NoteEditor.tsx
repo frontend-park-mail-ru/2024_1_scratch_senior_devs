@@ -20,17 +20,18 @@ export class NoteEditor extends ScReact.Component<any, any> {
         AppNoteStore.AddSaver(this.saveNote)
     }
 
-    saveNote = () => {
+    saveNote = (toggleSaveLabel:boolean=true) => {
         if (this.state.selectedNote) {
             AppDispatcher.dispatch(NotesActions.SAVE_NOTE,  {
                 id: this.state.selectedNote.id,
-                note: AppNoteStore.state.note
+                note: AppNoteStore.state.note,
+                toggleSaveLabel: toggleSaveLabel
             })
         }
     }
 
     closeEditor = () => {
-        // this.saveNote()
+        this.saveNote(false)
 
         this.props.setClose()
 
