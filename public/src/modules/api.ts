@@ -369,7 +369,7 @@ class NoteRequests {
         return response
     }
 
-    UploadImage = async (id:string, file:File, jwt:string, csrf:string) => {
+    UploadFile = async (id:string, file:File, jwt:string, csrf:string) => {
         console.log("UploadImageRequest")
         console.log(id)
         console.log(file)
@@ -421,8 +421,10 @@ class NoteRequests {
             }
         }
 
+        console.log("GetImage")
         const response = await fetch(baseUrl + "/attach/" + id, options);
 
+        console.log(response.status)
 
         // TODO: сделать скачку при открытии заметки, а не только при отправке
         const blob = await response.blob()

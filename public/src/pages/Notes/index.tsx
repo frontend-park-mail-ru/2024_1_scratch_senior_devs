@@ -118,8 +118,8 @@ export class NotesPage extends ScReact.Component<any, any> {
         AppDispatcher.dispatch(NotesActions.SEARCH_NOTES, value)
     }
 
-    createEmptyNote = () => {
-        console.log("createEmptyNote")
+    createNewNote = () => {
+        console.log("createNewNote")
         AppDispatcher.dispatch(NotesActions.CREATE_EMPTY_NOTE)
     }
 
@@ -134,7 +134,7 @@ export class NotesPage extends ScReact.Component<any, any> {
                     <Modal open={this.state.deleteNoteModal} content={<DeleteNoteDialog />} handleClose={() => AppDispatcher.dispatch(NotesActions.CLOSE_DELETE_NOTE_DIALOG)} />
                     <div className="top-panel">
                         <SearchBar onChange={this.searchNotes}/>
-                        <div className="add-note-btn-container" onclick={this.createEmptyNote}>
+                        <div className="add-note-btn-container" onclick={this.createNewNote}>
                             <Button label="Новая заметка" className="add-note-btn" />
                             <div className="add-note-icon-wrapper">
                                 <Img src="plus.svg" className="add-note-icon" />

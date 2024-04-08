@@ -81,7 +81,6 @@ export class Dropdown extends ScReact.Component<any, any> {
             content = undefined;
         } else if (id === "document") {
             tag = "div"
-
             const fileInput = document.createElement("input");
             fileInput.type = "file";
             fileInput.hidden = true

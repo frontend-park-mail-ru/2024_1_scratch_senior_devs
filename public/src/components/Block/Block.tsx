@@ -12,6 +12,7 @@ import {getCursorInBlock, setCursorInBlock} from "../../utils/cursorPos";
 import {moveCursorUpAndDown} from "./utils/cursorActions";
 import {Img} from '../Image/Image';
 import {Attach} from '../Attach/Attach';
+import {NotesActions} from '../../modules/stores/NotesStore';
 
 export interface BlockNode {
     id: string
@@ -71,10 +72,10 @@ export class Block extends Component<BlockProps, BlockState> {
             for (let i = 0; i < AppNoteStore.state.note.blocks[this.props.blockId].content.length; ++i) {
                 pieces.push(
                     <Piece
-                    blockId={this.props.blockId}
-                    pieceId={i}
-                    pieceHash={getPieceHash(AppNoteStore.state.note.blocks[this.props.blockId].content[i])}
-                ></Piece>
+                        blockId={this.props.blockId}
+                        pieceId={i}
+                        pieceHash={getPieceHash(AppNoteStore.state.note.blocks[this.props.blockId].content[i])}
+                    ></Piece>
                 )
             }
             return pieces;
@@ -101,6 +102,14 @@ export class Block extends Component<BlockProps, BlockState> {
         this.setState(s => {
             return {...s, piecesCount: AppNoteStore.state.note.blocks[this.props.blockId].content?.length}
         })
+
+        if (AppNoteStore.state.note.blocks[this.props.blockId].type == "img") {
+            console.log(AppNoteStore.state.note.blocks[this.props.blockId].id)
+            AppDispatcher.dispatch(NotesActions.FETCH_IMAGE, {
+                blockId: this.props.blockId,
+                imageId: AppNoteStore.state.note.blocks[this.props.blockId].attributes["id"]
+            })
+        }
     }
 
     private contener: HTMLElement
