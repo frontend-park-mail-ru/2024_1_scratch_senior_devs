@@ -3,6 +3,8 @@ import "./Tippy.sass"
 import {Img} from "../Image/Image";
 import {ColorPicker} from "../ColorPicker/ColorPicker";
 import {LinkInput} from "../LinkInput/LinkInput";
+import {AppDispatcher} from "../../modules/dispatcher";
+import {NoteStoreActions} from "../../modules/stores/NoteStore";
 
 export class Tippy extends ScReact.Component<any, any> {
     state = {
@@ -14,11 +16,11 @@ export class Tippy extends ScReact.Component<any, any> {
     private toggleBtnRef: any;
 
     componentDidMount() {
-        document.addEventListener("click", this.handleClickOutside, true)
+        // document.addEventListener("click", this.handleClickOutside, true)
     }
 
     componentWillUnmount() {
-        document.removeEventListener("click", this.handleClickOutside, true)
+        // document.removeEventListener("click", this.handleClickOutside, true)
     }
 
     handleClickOutside = (e) => {
@@ -63,7 +65,36 @@ export class Tippy extends ScReact.Component<any, any> {
     handleSelect = (item) => {
         console.log("handleSelect")
         console.log(item.type)
+        AppDispatcher.dispatch(NoteStoreActions.CHANGE_PIECE_ATTRIBUTES,
+            {
+                blockId: Number(this.options.blockId),
+                anchorId: Number(this.options.anchorId),
+                focusId: Number(this.options.focusId),
+                anchorPos: Number(this.options.anchorPos),
+                focusPos: Number(this.options.focusPos),
+                attribute: item.type,
+                value: "value" in item ? item.value : undefined
+            })
+        this.state.ref.style.display = "none";
         this.props.onClose()
+    }
+
+    setOptions = (blockId: number, anchorId: number, focusId: number, anchorPos: number, focusPos: number) => {
+        this.options = {
+            blockId,
+            anchorId,
+            focusId,
+            anchorPos,
+            focusPos
+        }
+    }
+
+    private options = {
+        blockId: 0,
+        anchorId: 0,
+        focusId: 0,
+        anchorPos: 0,
+        focusPos: 0
     }
 
     render() {
@@ -73,7 +104,7 @@ export class Tippy extends ScReact.Component<any, any> {
                 icon: "bold.svg"
             },
             {
-                type: "italics",
+                type: "italic",
                 icon: "italics.svg"
             },
             {
@@ -81,18 +112,20 @@ export class Tippy extends ScReact.Component<any, any> {
                 icon: "underline.svg"
             },
             {
-                type: "crossed",
+                type: "lineThrough",
                 icon: "crossed.svg"
             }
         ]
 
+        this.props.optionsSetter(this.setOptions);
+
         return (
-            <div className={"tippy-container " + (this.props.open ? "open" : "")} ref={(val) => this.state.ref = val}>
-                <div className="first-container" onclick={this.toggleLinkInput}  ref={ref => {this.toggleLinkInputRef = ref}}>
-                    <Img src="link.svg" className="link-icon" />
-                    <span className="link-label">Ссылка</span>
-                </div>
-                <LinkInput open={this.state.link} handleClose={this.closeLinkInput} toggleBtn={this.toggleLinkInputRef}/>
+            <div className={"tippy-container " + (this.props.open ? "open" : "")} ref={(val) => this.state.ref = val} id={"tippy"}>
+                {/*<div className="first-container" onclick={this.toggleLinkInput}  ref={ref => {this.toggleLinkInputRef = ref}}>*/}
+                {/*    <Img src="link.svg" className="link-icon" />*/}
+                {/*    <span className="link-label">Ссылка</span>*/}
+                {/*</div>*/}
+                {/*<LinkInput open={this.state.link} handleClose={this.closeLinkInput} toggleBtn={this.toggleLinkInputRef}/>*/}
                 <div className="second-container">
                     {data.map(item => (
                         <div className="item" onclick={() => this.handleSelect(item)}>
@@ -104,7 +137,12 @@ export class Tippy extends ScReact.Component<any, any> {
                     <Img className="font-icon" src="font.svg"/>
                     <Img className="chevron-icon" src="chevron-bottom.svg"/>
                 </div>
-                <ColorPicker open={this.state.colorPicker} handleClose={this.closeColorPicker} toggleBtn={this.toggleBtnRef}/>
+                <ColorPicker onSel={(elem, value) => {
+                    const val = {type: "", value: ""};
+                    val.type = elem;
+                    val.value = value;
+                    this.handleSelect(val);
+                }} open={this.state.colorPicker} handleClose={this.closeColorPicker} toggleBtn={this.toggleBtnRef}/>
             </div>
         )
     }

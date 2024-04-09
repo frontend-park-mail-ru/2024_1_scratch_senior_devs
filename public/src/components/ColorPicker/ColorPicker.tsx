@@ -4,11 +4,11 @@ import "./ColorPicker.sass"
 export class ColorPicker extends ScReact.Component<any, any> {
     private ref: HTMLElement;
     componentDidMount() {
-        document.addEventListener("click", this.handleClickOutside, true)
+        // document.addEventListener("click", this.handleClickOutside, true)
     }
 
     componentWillUnmount() {
-        document.removeEventListener("click", this.handleClickOutside, true)
+        // document.removeEventListener("click", this.handleClickOutside, true)
     }
 
     handleClickOutside = (e) => {
@@ -18,15 +18,17 @@ export class ColorPicker extends ScReact.Component<any, any> {
         }
     }
 
-    handleSelectText = (item) => {
+    handleSelectText = (item: { label: any; color: any; }) => {
         console.log("handleSelectText")
         console.log(item.label)
+        this.props.onSel("color", item.color);
         this.props.handleClose()
     }
 
-    handleSelectBackground = (item) => {
+    handleSelectBackground = (item: { label: any; color: any; }) => {
         console.log("handleSelectBackground")
         console.log(item.label)
+        this.props.onSel("backgroundColor", item.color);
         this.props.handleClose()
     }
 
@@ -49,7 +51,7 @@ export class ColorPicker extends ScReact.Component<any, any> {
             bg: [
                 {
                     label: "По умолчанию",
-                    color: "#000"
+                    color: "rgba(0,0,0,0)"
                 },
                 {
                     label: "Красный",
@@ -68,7 +70,10 @@ export class ColorPicker extends ScReact.Component<any, any> {
                     <span className="label">Текст</span>
                     <div className="items">
                         {data.text.map(item => (
-                            <div className="item" onclick={() => this.handleSelectText(item)}>
+                            <div className="item" onmousedown={() => {
+                                console.log("SELECT color")
+                                this.handleSelectText(item)
+                            }}>
                                 <div className="icon-container">
                                     <span style={`color: ${item.color}`}>A</span>
                                 </div>
@@ -81,7 +86,7 @@ export class ColorPicker extends ScReact.Component<any, any> {
                     <span className="label">Фон</span>
                     <div className="items">
                         {data.bg.map(item => (
-                            <div className="item" onclick={() => this.handleSelectBackground(item)}>
+                            <div className="item" onmousedown={() => this.handleSelectBackground(item)}>
                                 <div className="icon-container" style={`background: ${item.color}`}>
                                     <span>A</span>
                                 </div>

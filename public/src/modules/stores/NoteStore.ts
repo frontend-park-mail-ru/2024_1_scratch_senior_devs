@@ -17,13 +17,14 @@ export const NoteStoreActions = {
     OPEN_DROPDOWN: "OPEN_DROPDOWN",
     CLOSE_DROPDOWN: "CLOSE_DROPDOWN",
     CHANGE_BLOCK_TYPE: "CHANGE_BLOCK_TYPE",
-    CHANGE_TITLE: "CHANGE_TITLE"
+    CHANGE_TITLE: "CHANGE_TITLE",
+    CHANGE_PIECE_ATTRIBUTES: "CHANGE_PIECE_ATTRIBUTES"
 }
 
 export type NoteStoreState = {
     note: Note,
     cursorPosition?: CursorPosition
-    dropdownPos:DropdownPosition
+    dropdownPos: DropdownPosition
 }
 
 export type CursorPosition = {
@@ -62,7 +63,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
 
     private registerEvents = () => {
         AppDispatcher.register((action) => {
-            switch (action.type){
+            switch (action.type) {
                 case NoteStoreActions.CHANGE_PIECE:
                     this.changePiece(action.payload.blockId, action.payload.pieces, action.payload.posOffset);
                     break;
@@ -99,11 +100,15 @@ class NoteStore extends BaseStore<NoteStoreState> {
                 case NoteStoreActions.CHANGE_TITLE:
                     this.changeTitle(action.payload.title);
                     break;
+                case NoteStoreActions.CHANGE_PIECE_ATTRIBUTES:
+                    this.changePieceAttributes(action.payload.blockId, action.payload.anchorId, action.payload.focusId, action.payload.anchorPos, action.payload.focusPos, action.payload.attribute, action.payload.value);
+                    break;
             }
         })
     }
 
-    private timerId: NodeJS.Timeout = setTimeout(()=>{})
+    private timerId: NodeJS.Timeout = setTimeout(() => {
+    })
 
     private saveNote = () => {
         clearTimeout(this.timerId);
@@ -128,7 +133,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
         })
     }
 
-    private changePiece = (blockId: number, pieces: {pieceId: string, content: string}[], posOffset: number) => {
+    private changePiece = (blockId: number, pieces: { pieceId: string, content: string }[], posOffset: number) => {
         if (pieces.length > 0 &&
             !pieces[0].content.startsWith("/")) {
             this.closeDropdown();
@@ -202,7 +207,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
         this.SetState(s => {
             const oldNote: Note = this.state.note;
             oldNote.blocks.splice(delPos, 1)
-            const pos = this.state.note.blocks[delPos-1].content?.reduce((prev: number, curr: PieceNode, i: number) => {
+            const pos = this.state.note.blocks[delPos - 1].content?.reduce((prev: number, curr: PieceNode, i: number) => {
                 prev += curr.content.length
                 return prev
             }, 0)
@@ -241,7 +246,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
             return
         }
         this.SetState(s => {
-            const oldNote: Note =  this.state.note;
+            const oldNote: Note = this.state.note;
             if (blockId > posToMove) {
                 oldNote.blocks.splice(posToMove, 0, oldNote.blocks[blockId]);
                 oldNote.blocks.splice(blockId + 1, 1);
@@ -293,6 +298,163 @@ class NoteStore extends BaseStore<NoteStoreState> {
     private changeTitle = (title: string) => {
         this.closeDropdown();
         this.state.note.title = title;
+        this.saveNote();
+    }
+
+    private timerIdPiece: NodeJS.Timeout = setTimeout(() => {
+    })
+
+    private changePieceAttributes = (blockId: number, anchorId: number, focusId: number, anchorPos: number, focusPos: number, attribute: string, value?: string | number | boolean | undefined) => {
+        console.log("value", value)
+        const block = AppNoteStore.state.note.blocks[blockId];
+        let minPiece = 0;
+        let minPos = 0;
+        let maxPiece = 0;
+        let maxPos = 0;
+        if (anchorId > focusId) {
+            minPiece = focusId;
+            minPos = focusPos;
+            maxPiece = anchorId;
+            maxPos = anchorPos;
+        } else if (anchorId < focusId) {
+            minPiece = anchorId;
+            minPos = anchorPos;
+            maxPiece = focusId;
+            maxPos = focusPos;
+        } else {
+            minPiece = anchorId;
+            minPos = Math.min(anchorPos, focusPos);
+            maxPiece = focusId;
+            maxPos = Math.max(anchorPos, focusPos);
+        }
+
+        const pieces: PieceNode[] = [];
+
+        const beforePieces: PieceNode[] = [];
+        const modifyPieces: PieceNode[] = [];
+        const afterPieces: PieceNode[] = [];
+
+        block.content.forEach((val, index) => {
+            if (index < minPiece) {
+                beforePieces.push(val);
+            } else if (index > minPiece && index < maxPiece) {
+                modifyPieces.push(val);
+            } else if (index > maxPiece) {
+                afterPieces.push(val);
+            }
+        })
+
+        modifyPieces.forEach(val => {
+            if (val.attributes == null) {
+                val.attributes = {}
+                val.attributes[attribute] = value == null ? true : value;
+            } else {
+                val.attributes[attribute] = value == null ? (attribute in (val.attributes ?? {}) ? !val.attributes[attribute] : true) : value;
+            }
+        })
+
+        if (maxPiece == minPiece) {
+            const beforePiece: PieceNode = {
+                id: create_UUID(),
+                attributes: {
+                    ...block.content[minPiece].attributes
+                },
+                content: block.content[minPiece].content.substring(0, minPos)
+            }
+            const insertPiece: PieceNode = {
+                id: create_UUID(),
+                attributes: {
+                    ...block.content[minPiece].attributes,
+                    [attribute]: value == null ? (attribute in (block.content[minPiece].attributes ?? {}) ? !block.content[minPiece].attributes[attribute] : true) : value
+                },
+                content: block.content[minPiece].content.substring(minPos, maxPos)
+            }
+            const afterPiece: PieceNode = {
+                id: create_UUID(),
+                attributes: {
+                    ...block.content[maxPiece].attributes
+                },
+                content: block.content[maxPiece].content.substring(maxPos)
+            }
+            this.SetState(s => {
+                const oldNote = this.state.note;
+                const newBlockPieces: PieceNode[] = [];
+                newBlockPieces.push(...beforePieces);
+                if (beforePiece.content.length > 0) {
+                    newBlockPieces.push(beforePiece);
+                }
+                if (insertPiece.content.length > 0) {
+                    newBlockPieces.push(insertPiece);
+                }
+                if (afterPiece.content.length > 0) {
+                    newBlockPieces.push(afterPiece);
+                }
+                newBlockPieces.push(...afterPieces);
+                oldNote.blocks[blockId].content = newBlockPieces;
+                return {
+                    ...s,
+                    note: oldNote
+                }
+            })
+        } else {
+            const minBefore: PieceNode = {
+                id: create_UUID(),
+                attributes: {
+                    ...block.content[minPiece].attributes
+                },
+                content: block.content[minPiece].content.substring(0, minPos)
+            }
+            const minAfter: PieceNode = {
+                id: create_UUID(),
+                attributes: {
+                    ...block.content[minPiece].attributes,
+                    [attribute]: value == null ? (attribute in (block.content[minPiece].attributes ?? {}) ? !block.content[minPiece].attributes[attribute] : true) : value
+                },
+                content: block.content[minPiece].content.substring(minPos)
+            }
+            const maxBefore: PieceNode = {
+                id: create_UUID(),
+                attributes: {
+                    ...block.content[maxPiece].attributes,
+                    [attribute]: value == null ? (attribute in (block.content[maxPiece].attributes ?? {}) ? !block.content[maxPiece].attributes[attribute] : true) : value
+                },
+                content: block.content[maxPiece].content.substring(0, maxPos)
+            }
+            const maxAfter: PieceNode = {
+                id: create_UUID(),
+                attributes: {
+                    ...block.content[maxPiece].attributes
+                },
+                content: block.content[maxPiece].content.substring(maxPos)
+            }
+
+            console.log(maxBefore)
+
+            this.SetState(s => {
+                const oldNote = this.state.note;
+                const newBlockPieces: PieceNode[] = [];
+                newBlockPieces.push(...beforePieces);
+                if (minBefore.content.length > 0) {
+                    newBlockPieces.push(minBefore);
+                }
+                if (minAfter.content.length > 0) {
+                    newBlockPieces.push(minAfter);
+                }
+                newBlockPieces.push(...modifyPieces);
+                if (maxBefore.content.length > 0) {
+                    newBlockPieces.push(maxBefore);
+                }
+                if (maxAfter.content.length > 0) {
+                    newBlockPieces.push(maxAfter);
+                }
+                newBlockPieces.push(...afterPieces);
+                oldNote.blocks[blockId].content = newBlockPieces;
+                return {
+                    ...s,
+                    note: oldNote
+                }
+            })
+        }
         this.saveNote();
     }
 }

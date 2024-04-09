@@ -6,6 +6,7 @@ import {AppDispatcher} from "../../modules/dispatcher";
 import {SwipeArea} from "../SwipeArea/SwipeArea";
 import {Editor} from "../Editor/Editor";
 import {AppNoteStore} from "../../modules/stores/NoteStore";
+import {Tippy} from "../Tippy/Tippy";
 
 
 export class NoteEditor extends ScReact.Component<any, any> {

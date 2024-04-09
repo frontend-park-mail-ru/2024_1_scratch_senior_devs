@@ -130,12 +130,12 @@ export class Block extends Component<BlockProps, BlockState> {
                     e.dataTransfer.setData("blockId", this.props.blockId.toString())
                 }}
                 onclick={() => {
-                    console.log("click")
-                    const cursorPosition = getCursorInBlock(this.self)
-                    AppDispatcher.dispatch(NoteStoreActions.MOVE_CURSOR, {
-                        blockId: this.props.blockId,
-                        pos: cursorPosition
-                    })
+                    // console.log("click")
+                    // const cursorPosition = getCursorInBlock(this.self)
+                    // AppDispatcher.dispatch(NoteStoreActions.MOVE_CURSOR, {
+                    //     blockId: this.props.blockId,
+                    //     pos: cursorPosition
+                    // })
                 }}
             >
 
