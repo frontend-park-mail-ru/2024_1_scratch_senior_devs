@@ -22,7 +22,8 @@ export type NotesStoreState = {
     offset: number,
     count: number,
     modalOpen: boolean,
-    saving: boolean
+    saving: boolean,
+    fetching: boolean
 }
 
 class NotesStore extends BaseStore<NotesStoreState> {
@@ -34,7 +35,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
         offset: 0,
         count: 10,
         modalOpen: false,
-        saving: undefined
+        saving: undefined,
+        fetching: false
     }
 
     constructor() {
@@ -72,7 +74,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 case NotesActions.SAVE_NOTE:
                     await this.saveNote(action.payload);
                     break;
-                case NotesActions.CREATE_EMPTY_NOTE:
+                case NotesActions.CREATE_NEW_NOTE:
                     await this.createNewNote();
                     break;
                 case NotesActions.UPLOAD_IMAGE:
@@ -86,6 +88,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
                     break;
                 case NotesActions.DOWNLOAD_FILE:
                     await this.downloadFile(action.payload);
+                    break;
+                case NotesActions.START_FETCHING:
+                    this.startFetching();
                     break;
             }
         });
@@ -136,6 +141,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     async searchNotes (query) {
+        console.log("searchNotes")
         this.SetState(state => ({
             ...state,
             notes: [],
@@ -169,6 +175,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
         this.SetState(state => ({
             ...state,
+            fetching: false,
             notes: reset ? notes : state.notes.concat(notes)
         }))
 
@@ -259,7 +266,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
         console.log(this.state.notes)
 
-        // await this.selectNote(response.body.id)
+        await this.selectNote(response.body.id)
 
         document.getElementById(String(response.body.id)).scrollIntoView()
     }
@@ -338,6 +345,13 @@ class NotesStore extends BaseStore<NotesStoreState> {
         await AppNoteRequests.GetFile(id, name, AppUserStore.state.JWT, AppUserStore.state.csrf)
     }
 
+    startFetching() {
+        this.SetState(state => ({
+            ...state,
+            notes: [],
+            fetching: true
+        }))
+    }
 }
 
 export const NotesActions = {
@@ -350,11 +364,12 @@ export const NotesActions = {
     CLOSE_DELETE_NOTE_DIALOG: "CLOSE_DELETE_NOTE_DIALOG",
     DELETE_NOTE: "DELETE_NOTE",
     SAVE_NOTE: "SAVE_NOTE",
-    CREATE_EMPTY_NOTE: "CREATE_EMPTY_NOTE",
+    CREATE_NEW_NOTE: "CREATE_NEW_NOTE",
     UPLOAD_IMAGE: "UPLOAD_IMAGE",
     UPLOAD_FILE: "UPLOAD_FILE",
     DOWNLOAD_FILE: "DOWNLOAD_FILE",
-    FETCH_IMAGE: "FETCH_IMAGE"
+    FETCH_IMAGE: "FETCH_IMAGE",
+    START_FETCHING: "START_FETCHING"
 }
 
 export const AppNotesStore = new NotesStore();

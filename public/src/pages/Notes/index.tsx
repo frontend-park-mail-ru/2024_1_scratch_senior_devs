@@ -17,7 +17,8 @@ export class NotesPage extends ScReact.Component<any, any> {
         notes: [],
         selectedNote: undefined,
         deleteNoteModal: false,
-        editorOpen: false
+        editorOpen: false,
+        fetching: false
     }
 
     componentDidMount() {
@@ -59,20 +60,18 @@ export class NotesPage extends ScReact.Component<any, any> {
     }
 
     updateState = (store:NotesStoreState) => {
-        console.log("updateState")
         this.setState(state => {
             if (state.notes.length > 0 && state.notes.length < AppNotesStore.state.notes.length) {
                 this.createObserver()
             }
-
-            console.log(store.notes)
 
             return {
                 ...state,
                 selectedNote: store.selectedNote,
                 editorOpen: store.selectedNote != undefined,
                 notes: store.notes,
-                deleteNoteModal: store.modalOpen
+                deleteNoteModal: store.modalOpen,
+                fetching: store.fetching
             }
         })
     }
@@ -123,14 +122,10 @@ export class NotesPage extends ScReact.Component<any, any> {
     }
 
     createNewNote = () => {
-        console.log("createNewNote")
-        AppDispatcher.dispatch(NotesActions.CREATE_EMPTY_NOTE)
+        AppDispatcher.dispatch(NotesActions.CREATE_NEW_NOTE)
     }
 
     render() {
-        console.log("render")
-        console.log(this.state.notes)
-
         return (
             <div className={"notes-page-wrapper " + (this.state.editorOpen ? "active" : "")} >
                 <aside>
@@ -145,10 +140,10 @@ export class NotesPage extends ScReact.Component<any, any> {
                         </div>
                     </div>
                     <div className="notes-container" onclick={this.handleSelectNote}>
+                        <Loader active={this.state.fetching} />
                         {this.state.notes.map(note => (
                             <Note key1={note.id} note={note} selected={this.state.selectedNote?.id == note.id} />
                         ))}
-
                     </div>
                 </aside>
                 <NoteEditor open={this.state.editorOpen} setClose={this.closeEditor} />
