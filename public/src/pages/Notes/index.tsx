@@ -10,6 +10,7 @@ import {Button} from "../../components/Button/Button";
 import {Img} from "../../components/Image/Image";
 import {DeleteNoteDialog} from "../../components/DeleteNoteDialog/DeleteNoteDialog";
 import {AppNoteStore} from "../../modules/stores/NoteStore";
+import {Loader} from '../../components/Loader/Loader';
 
 export class NotesPage extends ScReact.Component<any, any> {
     state = {
@@ -124,10 +125,6 @@ export class NotesPage extends ScReact.Component<any, any> {
     }
 
     render() {
-        const notes = this.state.notes.map(note => (
-            <Note key1={note.id} note={note} selected={this.state.selectedNote?.id == note.id} />
-        ))
-
         return (
             <div className={"notes-page-wrapper " + (this.state.editorOpen ? "active" : "")} >
                 <aside>
@@ -142,7 +139,10 @@ export class NotesPage extends ScReact.Component<any, any> {
                         </div>
                     </div>
                     <div className="notes-container" onclick={this.handleSelectNote}>
-                        {notes}
+                        {this.state.notes.map(note => (
+                            <Note key1={note.id} note={note} selected={this.state.selectedNote?.id == note.id} />
+                        ))}
+
                     </div>
                 </aside>
                 <NoteEditor open={this.state.editorOpen} setClose={this.closeEditor} />
