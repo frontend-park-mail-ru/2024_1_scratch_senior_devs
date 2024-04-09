@@ -24,23 +24,25 @@ export class Attach extends ScReact.Component<any, any> {
 
     render() {
         return (
-            <div className="attach-container" onclick={this.downloadAttach}>
-                <div className="file-extension-label">
-                    {this.props.fileName.split(".")[1]}
-                </div>
-                <span className="file-name">
+            <div className="attach-wrapper">
+                <div className="attach-container" onClick={this.downloadAttach}>
+                    <div className="file-extension-label">
+                        {this.props.fileName.split(".")[1]}
+                    </div>
+                    <span className="file-name">
                     {this.props.fileName}
                 </span>
-                <span className="close-attach-btn-container">
+                    <span className="close-attach-btn-container">
                     <Img
                         src="close.svg"
                         className="close-attach-btn"
                         ref={ref => this.closeBtnRef = ref}
                         onClick={(e) => {
-                        e.preventDefault();
-                        this.props.handleRemove()
-                    }}/>
+                            e.preventDefault();
+                            this.props.handleRemove()
+                        }}/>
                 </span>
+                </div>
             </div>
         )
     }

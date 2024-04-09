@@ -227,7 +227,7 @@ class UserStore extends BaseStore<UserStoreState>{
             //     this.updateCSRF(this.state.csrf)
             //     AppRouter.go("/notes")
             // }, 1000)
-
+            //
             this.SetState(s => {
                 return {
                     ...s,

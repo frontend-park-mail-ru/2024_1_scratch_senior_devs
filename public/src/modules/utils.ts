@@ -51,3 +51,16 @@ export function formatDate(date:string): string {
         hourCycle: "h23"
     }).format(new Date(date)).replace(",", "")
 }
+
+/**
+ * Скачивает файл
+ */
+export function downloadFile(url:string, fileName:string) {
+    const a = document.createElement("a");
+    document.body.appendChild(a);
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+}

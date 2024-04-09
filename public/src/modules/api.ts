@@ -1,10 +1,9 @@
-import {createUUID, decode} from "./utils";
+import {decode, downloadFile} from './utils';
 import {
     UserLoginCredentialsType,
     UserRegisterCredentialsType,
     UserUpdatePasswordCredentialsType
-} from "./stores/UserStore";
-import {Exception} from 'sass';
+} from './stores/UserStore';
 
 export const isDebug = process.env.NODE_ENV === "development";
 
@@ -371,12 +370,6 @@ class NoteRequests {
     }
 
     UploadFile = async (id:string, file:File, jwt:string, csrf:string) => {
-        console.log("UploadImageRequest")
-        console.log(id)
-        console.log(file)
-        console.log(jwt)
-        console.log(csrf)
-
         const form_data = new FormData()
 
         form_data.append("id", id)
@@ -394,33 +387,6 @@ class NoteRequests {
         }
 
         return await fetch(baseUrl + this.baseUrl + "/" + id + "/add_attach/", options)
-        //
-        // try {
-        //     const response = await fetch(baseUrl + this.baseUrl + "/" + id + "/add_attach/", options);
-        //     console.log(response.status)
-        //     console.log(response.body)
-        //
-        //     if (response.status == 200) {
-        //         const body = await response.json()
-        //
-        //         console.log(body)
-        //
-        //         return {
-        //             id: body.id,
-        //             note_id: body.note_id,
-        //             attachId: body.path.split(".")[0],
-        //             status: response.status,
-        //             csrf: response.headers.get("x-csrf-token")
-        //         }
-        //     }
-        //
-        //    throw new Error()
-        // } catch (e) {
-        //     console.log(e.status)
-        //     console.log("asdfasdfa")
-        //
-        //
-        // }
     }
 
     GetImage = async (id:string, jwt:string, csrf:string) => {
@@ -434,17 +400,11 @@ class NoteRequests {
             }
         }
 
-        console.log("GetImage")
         const response = await fetch(baseUrl + "/attach/" + id, options);
 
-        console.log(response.status)
-
-        // TODO: сделать скачку при открытии заметки, а не только при отправке
         const blob = await response.blob()
 
-        const url = URL.createObjectURL(blob)
-
-        return url
+        return URL.createObjectURL(blob)
     }
 
     GetFile = async (id:string, fileName:string, jwt:string, csrf:string) => {
@@ -459,24 +419,11 @@ class NoteRequests {
         }
 
         const response = await fetch(baseUrl + "/attach/" + id, options);
-
-        console.log(response.status)
-        console.log(response.body)
-        console.log(typeof response.body)
-
         const blob = await response.blob()
-
-        console.log(blob)
 
         const url = URL.createObjectURL(blob)
 
-        const a = document.createElement("a");
-        document.body.appendChild(a);
-        a.href = url;
-        a.download = fileName;
-        a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
+        downloadFile(url, fileName)
 
         return url
     }

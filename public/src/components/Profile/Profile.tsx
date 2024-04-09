@@ -66,7 +66,7 @@ export class Profile extends ScReact.Component<any, any> {
     }
 
     openModal = () => {
-        AppDispatcher.dispatch(UserActions.OPEN_CHANGE_PASSWORD_FORM)
+        this.state.open && AppDispatcher.dispatch(UserActions.OPEN_CHANGE_PASSWORD_FORM)
     }
 
     closeChangePasswordForm = () => {

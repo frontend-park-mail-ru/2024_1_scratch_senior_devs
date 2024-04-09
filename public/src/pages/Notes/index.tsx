@@ -34,6 +34,7 @@ export class NotesPage extends ScReact.Component<any, any> {
     }
 
     updateNotesTitles = () => {
+        console.log("updateNotesTitles")
         setTimeout(()=> {
             console.log(AppNoteStore.state.note)
             const notes = AppNotesStore.state.notes;
@@ -45,9 +46,8 @@ export class NotesPage extends ScReact.Component<any, any> {
                 }
             })
             this.setState(s=>({
-                    ...s,
-                    notes: notes
-
+                ...s,
+                notes: notes
             }))
         }, 10)
     }
