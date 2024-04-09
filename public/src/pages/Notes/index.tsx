@@ -9,7 +9,7 @@ import {Modal} from "../../components/Modal/Modal";
 import {Button} from "../../components/Button/Button";
 import {Img} from "../../components/Image/Image";
 import {DeleteNoteDialog} from "../../components/DeleteNoteDialog/DeleteNoteDialog";
-import {AppNoteStore, NoteStoreState} from "../../modules/stores/NoteStore";
+import {AppNoteStore} from "../../modules/stores/NoteStore";
 
 export class NotesPage extends ScReact.Component<any, any> {
     state = {

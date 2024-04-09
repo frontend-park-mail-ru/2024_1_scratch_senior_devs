@@ -210,18 +210,23 @@ class UserStore extends BaseStore<UserStoreState>{
 
         try {
             const res = await AppAuthRequests.SignUp(credentials);
-            this.SetState(s => {
-                return {
-                    ...s,
-                    isAuth: true,
-                    username: res.username,
-                    avatarUrl: res.image_path,
-                    JWT: res.jwt,
-                    csrf: res.csrf
-                }
-            })
-            localStorage.setItem("Authorization", this.state.JWT)
-            AppRouter.go("/notes")
+
+            setTimeout(() => {
+                this.SetState(s => {
+                    return {
+                        ...s,
+                        isAuth: true,
+                        username: res.username,
+                        avatarUrl: res.image_path,
+                        JWT: res.jwt,
+                        csrf: res.csrf
+                    }
+                })
+                localStorage.setItem("Authorization", this.state.JWT)
+                this.updateCSRF(this.state.csrf)
+                AppRouter.go("/notes")
+            }, 1000)
+
         } catch (err) {
             console.log(err);
 
