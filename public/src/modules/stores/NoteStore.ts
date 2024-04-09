@@ -4,6 +4,7 @@ import {AppDispatcher} from "../dispatcher";
 import {Block, BlockNode} from "../../components/Block/Block";
 import {create_UUID} from "../../utils/uuid";
 import {PieceNode} from "../../components/Piece/Piece";
+import {AppNotesStore, NotesActions} from './NotesStore';
 
 export const NoteStoreActions = {
     CHANGE_PIECE: "CHANGE_PIECE",
@@ -297,6 +298,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
 
     private changeTitle = (title: string) => {
         this.closeDropdown();
+
         this.state.note.title = title;
         this.saveNote();
     }

@@ -29,6 +29,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
     state = {
         notes: [],
         selectedNote: undefined,
+        selectedNoteTitle: undefined,
         query: "",
         offset: 0,
         count: 10,
@@ -263,15 +264,16 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     async uploadImage({noteId, blockId, file}) {
-        const {status, csrf, attachId} = await AppNoteRequests.UploadFile(noteId, file, AppUserStore.state.JWT, AppUserStore.state.csrf)
+        const response = await AppNoteRequests.UploadFile(noteId, file, AppUserStore.state.JWT, AppUserStore.state.csrf)
 
-        console.log(status)
-        if (status == 200) {
-            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf)
+        AppDispatcher.dispatch(UserActions.UPDATE_CSRF, response.headers.get("x-csrf-token"))
 
+        if (response.status == 200) {
+            const body = await response.json()
+            const attachId = body.path.split(".")[0]
             const url = await AppNoteRequests.GetImage(attachId, AppUserStore.state.JWT, AppUserStore.state.csrf)
-
             const block = AppNoteStore.state.note.blocks[blockId]
+
             if (block.attributes != null) {
                 block.attributes["id"] = attachId;
                 block.attributes["src"] = url;
@@ -283,6 +285,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 blockId: blockId,
                 newBlock: block
             })
+        } else {
+            AppToasts.error("Не удалось загрузить изображение " + file.name)
         }
     }
 
@@ -303,13 +307,15 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     async uploadFile({noteId, blockId, file, fileName}) {
-        console.log("uploadFile")
-        const {status, csrf, attachId} = await AppNoteRequests.UploadFile(noteId, file, AppUserStore.state.JWT, AppUserStore.state.csrf)
+        const response = await AppNoteRequests.UploadFile(noteId, file, AppUserStore.state.JWT, AppUserStore.state.csrf)
 
-        if (status == 200) {
-            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+        AppDispatcher.dispatch(UserActions.UPDATE_CSRF, response.headers.get("x-csrf-token"));
+
+        if (response.status == 200) {
 
             const block = AppNoteStore.state.note.blocks[blockId]
+            const body = await response.json()
+            const attachId = body.path.split(".")[0]
 
             if (block.attributes != null) {
                 block.attributes["attach"] = attachId
@@ -322,12 +328,15 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 blockId: blockId,
                 newBlock: block
             })
+        } else {
+            AppToasts.error("Не удалось прикрепить файл " + file.name)
         }
     }
 
     async downloadFile({id, name}) {
         await AppNoteRequests.GetFile(id, name, AppUserStore.state.JWT, AppUserStore.state.csrf)
     }
+
 }
 
 export const NotesActions = {

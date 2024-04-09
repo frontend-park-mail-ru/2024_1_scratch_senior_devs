@@ -4,6 +4,7 @@ import {
     UserRegisterCredentialsType,
     UserUpdatePasswordCredentialsType
 } from "./stores/UserStore";
+import {Exception} from 'sass';
 
 export const isDebug = process.env.NODE_ENV === "development";
 
@@ -392,22 +393,34 @@ class NoteRequests {
             body: form_data
         }
 
-        const response = await fetch(baseUrl + this.baseUrl + "/" + id + "/add_attach/", options);
-
-        console.log(response.status)
-        console.log(response.body)
-
-        const body = await response.json()
-
-        console.log(body)
-
-        return {
-            id: body.id,
-            note_id: body.note_id,
-            attachId: body.path.split(".")[0],
-            status: response.status,
-            csrf: response.headers.get("x-csrf-token")
-        }
+        return await fetch(baseUrl + this.baseUrl + "/" + id + "/add_attach/", options)
+        //
+        // try {
+        //     const response = await fetch(baseUrl + this.baseUrl + "/" + id + "/add_attach/", options);
+        //     console.log(response.status)
+        //     console.log(response.body)
+        //
+        //     if (response.status == 200) {
+        //         const body = await response.json()
+        //
+        //         console.log(body)
+        //
+        //         return {
+        //             id: body.id,
+        //             note_id: body.note_id,
+        //             attachId: body.path.split(".")[0],
+        //             status: response.status,
+        //             csrf: response.headers.get("x-csrf-token")
+        //         }
+        //     }
+        //
+        //    throw new Error()
+        // } catch (e) {
+        //     console.log(e.status)
+        //     console.log("asdfasdfa")
+        //
+        //
+        // }
     }
 
     GetImage = async (id:string, jwt:string, csrf:string) => {

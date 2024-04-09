@@ -51,11 +51,3 @@ export function formatDate(date:string): string {
         hourCycle: "h23"
     }).format(new Date(date)).replace(",", "")
 }
-
-export function debounce(func, ms) {
-    let timeout: NodeJS.Timeout;
-    return function() {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func.apply(this), ms);
-    };
-}

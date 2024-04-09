@@ -1,6 +1,7 @@
 import {ScReact} from "@veglem/screact";
 import "./note.sass"
 import {formatDate, truncate} from "../../modules/utils";
+import {AppNotesStore} from '../../modules/stores/NotesStore';
 
 type NoteState = {
     id: number,
@@ -27,6 +28,12 @@ export class Note extends ScReact.Component<any, NoteState> {
             content: truncate(this.props.note.data.content, MAX_NOTE_CONTENT_PREVIEW_LENGTH),
             update_time: formatDate(this.props.note.update_time)
         }))
+
+        AppNotesStore.SubscribeToStore(this.updateState)
+    }
+
+    updateState() {
+        console.log("asdfasdfasdfasdf")
     }
 
     render() {

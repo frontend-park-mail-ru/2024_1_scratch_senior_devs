@@ -3,7 +3,6 @@ import {VDomNode} from "@veglem/screact/dist/vdom";
 import {Block, BlockNode} from "../Block/Block";
 import {AppNoteStore, NoteStoreActions} from "../../modules/stores/NoteStore";
 import {getBlockHash} from "../../utils/hash";
-import {debounce} from "../../utils/debauncer";
 import {AppDispatcher} from "../../modules/dispatcher";
 import "./Editor.sass"
 import {Dropdown} from "../Dropdown/Dropdown";
