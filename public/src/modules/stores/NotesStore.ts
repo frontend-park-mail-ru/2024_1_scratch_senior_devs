@@ -138,6 +138,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
     async searchNotes (query) {
         this.SetState(state => ({
             ...state,
+            notes: [],
             offset: 0,
             query: query
         }))

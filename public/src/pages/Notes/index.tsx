@@ -59,10 +59,13 @@ export class NotesPage extends ScReact.Component<any, any> {
     }
 
     updateState = (store:NotesStoreState) => {
+        console.log("updateState")
         this.setState(state => {
             if (state.notes.length > 0 && state.notes.length < AppNotesStore.state.notes.length) {
                 this.createObserver()
             }
+
+            console.log(store.notes)
 
             return {
                 ...state,
@@ -125,6 +128,9 @@ export class NotesPage extends ScReact.Component<any, any> {
     }
 
     render() {
+        console.log("render")
+        console.log(this.state.notes)
+
         return (
             <div className={"notes-page-wrapper " + (this.state.editorOpen ? "active" : "")} >
                 <aside>
