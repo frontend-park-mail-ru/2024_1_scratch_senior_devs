@@ -99,10 +99,11 @@ export class Tippy extends ScReact.Component<any, any> {
 
     render() {
         const data = [
-            {
-                type: "bold",
-                icon: "bold.svg"
-            },
+            // TODO
+            // {
+            //     type: "bold",
+            //     icon: "bold.svg"
+            // },
             {
                 type: "italic",
                 icon: "italics.svg"
