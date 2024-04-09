@@ -395,7 +395,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
                     ...s,
                     note: oldNote
                 }
-            })
+            });
         } else {
             const minBefore: PieceNode = {
                 id: create_UUID(),
