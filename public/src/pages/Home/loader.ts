@@ -1,6 +1,5 @@
-import {AppUserStore, UserActions, UserStoreState} from '../../modules/stores/UserStore';
+import {AppUserStore, UserStoreState} from '../../modules/stores/UserStore';
 import {AppRouter} from '../../modules/router';
-import {AppDispatcher} from '../../modules/dispatcher';
 
 export const HomePageLoader = async () => {
     const p = new Promise((resolve, reject) => {

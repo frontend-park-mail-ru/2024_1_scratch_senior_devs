@@ -52,6 +52,7 @@ export class Router extends ScReact.Component<any, routerState> {
     }
 
     componentDidUpdate() {
+        // @ts-ignore
         if (this.state.currPage === NotesPage) {
             document.body.classList.add("locked")
         } else {
@@ -118,8 +119,11 @@ export class Router extends ScReact.Component<any, routerState> {
     }
 
     render(): VDomNode {
+        // @ts-ignore
+        const isNotesPage = this.state.currPage === NotesPage
+
         return (
-            <div id={"root"} className={this.state.currPage === NotesPage ? "locked" : ""}>
+            <div id={"root"} className={isNotesPage ? "locked" : ""}>
                 <Toasts />
                 <Background  currPage={this.state.currPage?.name}/>
                 <Header currPage={this.state.currPage}/>

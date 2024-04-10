@@ -36,6 +36,10 @@ export class Toasts extends ScReact.Component<any, ToastState> {
         AppToasts = this;
     }
 
+    info (message:string) {
+        this.setupToast(TOAST_TYPE.INFO, message)
+    }
+
     success (message:string) {
         this.setupToast(TOAST_TYPE.SUCCESS, message)
     }

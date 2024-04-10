@@ -1,6 +1,5 @@
-import {AppUserStore, UserActions, UserStoreState} from "../../modules/stores/UserStore";
+import {AppUserStore, UserStoreState} from "../../modules/stores/UserStore";
 import {AppNotesStore} from "../../modules/stores/NotesStore";
-import {AppDispatcher} from "../../modules/dispatcher";
 import {AppRouter} from "../../modules/router";
 
 export const NotesLoader = async () => {

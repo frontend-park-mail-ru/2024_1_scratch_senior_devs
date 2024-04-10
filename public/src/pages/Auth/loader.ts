@@ -1,5 +1,4 @@
-import {AppUserStore, UserActions, UserStoreState} from "../../modules/stores/UserStore";
-import {AppDispatcher} from "../../modules/dispatcher";
+import {AppUserStore, UserStoreState} from "../../modules/stores/UserStore";
 import {AppRouter} from "../../modules/router";
 
 export const AuthPageLoader = async () => {
