@@ -281,8 +281,9 @@ class UserStore extends BaseStore<UserStoreState>{
         try {
             const {status, csrf, avatarUrl} = await AppProfileRequests.UpdateAvatar(file, this.state.JWT, this.state.csrf)
 
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf)
+
             if (status == 200) {
-                AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf)
 
                 this.SetState(state => {
                     return {
@@ -308,8 +309,9 @@ class UserStore extends BaseStore<UserStoreState>{
         try {
             const {status, csrf} = await AppProfileRequests.UpdatePassword(credentials, this.state.JWT, this.state.csrf)
 
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf)
+
             if (status == 200) {
-                AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf)
 
                 AppToasts.success("Пароль успешно изменен")
 
