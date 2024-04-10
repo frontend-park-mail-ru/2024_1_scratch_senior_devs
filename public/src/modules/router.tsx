@@ -12,9 +12,8 @@ import NotesPageSkeleton from "../pages/Notes/Skeleton";
 import AuthPageSkeleton from "../pages/Auth/Skeleton";
 import {AuthPageLoader} from "../pages/Auth/loader";
 import {NotesLoader} from "../pages/Notes/loader";
-import {Note} from "../components/Note/note";
 import {HomePageLoader} from '../pages/Home/loader';
-import {AppNotesStore, NotesActions} from './stores/NotesStore';
+import { NotesActions} from './stores/NotesStore';
 import {AppDispatcher} from './dispatcher';
 
 type routerState = {

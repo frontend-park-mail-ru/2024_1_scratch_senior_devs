@@ -107,8 +107,10 @@ export class NotesPage extends ScReact.Component<any, any> {
             function (entries, observer) {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
-                        AppDispatcher.dispatch(NotesActions.LOAD_NOTES);
-                        observer.unobserve(entry.target);
+                        setTimeout(() => {
+                            AppDispatcher.dispatch(NotesActions.LOAD_NOTES);
+                            observer.unobserve(entry.target);
+                        }, 500)
                     }
                 });
             });
