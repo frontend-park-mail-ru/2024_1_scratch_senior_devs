@@ -23,6 +23,12 @@ export class Editor extends Component<any, EditorState> {
         dropdownOpen: false
     }
 
+    componentDidUpdate() {
+        if (this.state.blocks == 1 && AppNoteStore.state.note.blocks[0].content.length == 0 && AppNoteStore.state.cursorPosition?.blockId !== 0 && AppNoteStore.state.cursorPosition?.pos !== 0) {
+            AppDispatcher.dispatch(NoteStoreActions.MOVE_CURSOR, {blockId: 0, pos: 0});
+        }
+    }
+
     private timer: NodeJS.Timeout = setTimeout(() => {})
 
     private optionsSetter = (blockId: number, anchorId: number, focusId: number, anchorPos: number, focusPos: number) => {}

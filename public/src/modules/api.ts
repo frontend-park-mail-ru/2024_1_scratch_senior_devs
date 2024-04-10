@@ -353,11 +353,6 @@ class NoteRequests {
                             "id": "1",
                             "type": "div",
                             "content": [
-                                {
-                                    "type": "placeholder",
-                                    "id": "2",
-                                    "content": "Напишите что-нибудь"
-                                }
                             ]
                         }
                     ],
