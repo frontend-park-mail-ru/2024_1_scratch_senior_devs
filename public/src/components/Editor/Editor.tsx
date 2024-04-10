@@ -132,7 +132,8 @@ export class Editor extends Component<any, EditorState> {
                     blockId={i}
                     blockHash={getBlockHash(AppNoteStore.state.note.blocks[i])}
                     isChosen={AppNoteStore.state.cursorPosition != null && AppNoteStore.state.cursorPosition.blockId == i}
-                ></Block>
+                    onChange={this.props.onChangeContent}
+                />
             )
         }
         result.push(
@@ -164,6 +165,7 @@ export class Editor extends Component<any, EditorState> {
                         className="note-title"
                         contentEditable={true}
                         oninput={(e)=>{
+                            this.props.onChangeTitle()
                             AppDispatcher.dispatch(NoteStoreActions.CHANGE_TITLE, {
                                 title: e.target.textContent
                             })
@@ -178,9 +180,12 @@ export class Editor extends Component<any, EditorState> {
                           onClose={this.closeEditor}
                           open={this.state.dropdownOpen}
                 />
-                <Tippy open={false} onClose={()=>{}} optionsSetter={(func) => {
-                    this.optionsSetter = func;
-                }}></Tippy>
+                <Tippy open={false}
+                       onClose={()=>{}}
+                       optionsSetter={(func) => {
+                           this.optionsSetter = func;
+                       }}
+                />
             </div>
         )
     }

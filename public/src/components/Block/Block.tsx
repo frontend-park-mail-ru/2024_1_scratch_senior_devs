@@ -10,7 +10,6 @@ import {renderUlPrefix} from "./utils/ul";
 import {renderOlPrefix} from "./utils/ol";
 import {getCursorInBlock, setCursorInBlock} from "../../utils/cursorPos";
 import {moveCursorUpAndDown} from "./utils/cursorActions";
-import {Img} from '../Image/Image';
 import {Attach} from '../Attach/Attach';
 import {NotesActions} from '../../modules/stores/NotesStore';
 
@@ -28,7 +27,8 @@ export type BlockState = {
 export type BlockProps = {
     blockId: number
     blockHash: number
-    isChosen: boolean
+    isChosen: boolean,
+    onChange: () => void
 }
 
 export class Block extends Component<BlockProps, BlockState> {
@@ -180,7 +180,6 @@ export class Block extends Component<BlockProps, BlockState> {
                                         const elem = e.target as HTMLElement;
                                         if (elem.childNodes.length === 1 && elem.childNodes[0].nodeName === "#text") {
                                             const text = elem.childNodes[0].textContent;
-                                            const s = document.createElement("span");
                                             this.self.childNodes[0].remove();
                                             AppDispatcher.dispatch(NoteStoreActions.ADD_NEW_PIECE, {
                                                 blockId: this.props.blockId,
@@ -217,6 +216,8 @@ export class Block extends Component<BlockProps, BlockState> {
                                     if (elemPieces.length == 0) {
                                         moveCursorUpAndDown(this.props.blockId);
                                     }
+
+                                    this.props.onChange()
 
                                     console.log(elemPieces, cursorPosition)
                                 }

@@ -4,7 +4,6 @@ import {AppUserStore, UserActions} from "./UserStore";
 import {AppDispatcher} from "../dispatcher";
 import {AppToasts} from "../toasts";
 import {AppNoteStore, NoteStoreActions} from './NoteStore';
-import {moveCursorUpAndDown} from "../../components/Block/utils/cursorActions";
 
 export type Note = {
     id: number,
@@ -22,7 +21,6 @@ export type NotesStoreState = {
     offset: number,
     count: number,
     modalOpen: boolean,
-    saving: boolean,
     fetching: boolean
 }
 
@@ -35,7 +33,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
         offset: 0,
         count: 10,
         modalOpen: false,
-        saving: undefined,
         fetching: false
     }
 
@@ -201,42 +198,13 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
     async saveNote(data) {
         console.log("saveNote")
-        console.log(data)
 
-        // if (this.state.selectedNote.id == data.id) {
+        const {status, csrf} = await AppNoteRequests.Update(data, AppUserStore.state.JWT, AppUserStore.state.csrf)
 
-            // this.SetState(state => ({
-            //     ...state,
-            //     saving: true
-            // }))
-
-            const {status, csrf} = await AppNoteRequests.Update(data, AppUserStore.state.JWT, AppUserStore.state.csrf)
-
-            if (status === 200) {
-                AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf)
-                AppToasts.success("Заметка успешно сохранена")
-            }
-
-            // this.SetState(state => ({
-            //     ...state,
-            //     saving: false
-            // }))
-
-            // TODO: Смена стейта вызывает анфокус заметки ;(
-            // this.SetState(state => ({
-            //     ...state,
-            //     selectedNote: {
-            //         id: state.selectedNote.id,
-            //         data: note.data,
-            //         update_time: note.update_time
-            //     }
-            // }))
-
-            // this.SetState(state => ({
-            //     ...state,
-            //     notes: state.notes.map(n => n.id == note.id ? note : n)
-            // }))
-
+        if (status === 200) {
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf)
+            // AppToasts.success("Заметка успешно сохранена")
+        }
     }
 
     async createNewNote() {

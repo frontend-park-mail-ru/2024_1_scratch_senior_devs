@@ -6,15 +6,15 @@ import {AppDispatcher} from "../../modules/dispatcher";
 import {SwipeArea} from "../SwipeArea/SwipeArea";
 import {Editor} from "../Editor/Editor";
 import {AppNoteStore} from "../../modules/stores/NoteStore";
-import {Tippy} from "../Tippy/Tippy";
 
 
 export class NoteEditor extends ScReact.Component<any, any> {
     state = {
         selectedNote: undefined,
-        saving: undefined,
         content: undefined
     }
+
+    private savingLabelRef
 
     componentDidMount() {
         AppNotesStore.SubscribeToStore(this.updateState)
@@ -22,55 +22,32 @@ export class NoteEditor extends ScReact.Component<any, any> {
     }
 
     saveNote = () => {
-        // const titleElem = document.querySelector(".note-title") as HTMLElement
-        // const contentElem = document.querySelector(".note-content > span") as HTMLElement
+        if (this.state.selectedNote) {
+            AppDispatcher.dispatch(NotesActions.SAVE_NOTE,  {
+                id: this.state.selectedNote.id,
+                note: AppNoteStore.state.note
+            })
+        }
 
-        // TODO
-        console.log("saveNote")
-        console.log(this.state.selectedNote.id)
-        console.log(AppNoteStore.state.note)
-        AppDispatcher.dispatch(NotesActions.SAVE_NOTE,  {
-            id: this.state.selectedNote.id,
-            note: AppNoteStore.state.note
-        })
+        this.savingLabelRef.innerHTML = "Сохранено"
+    }
 
-        // const data = {
-        //     id: this.state.selectedNote.id,
-        //     title: titleElem.innerText,
-        //     content: contentElem.innerText
-        // }
-
-        // if (data.title !== this.state.selectedNote.data.title || data.content !== this.state.selectedNote.data.content) {
-        //     AppDispatcher.dispatch(NotesActions.SAVE_NOTE, data)
-        // }
-
-        // this.setState(state => ({
-        //     ...state,
-        //     selectedNote: {
-        //         id: state.selectedNote.id,
-        //         data: {
-        //             title: data.title,
-        //             content: data.content
-        //         },
-        //         update_time: state.selectedNote.update_time
-        //     }
-        // }))
+    onChangeNote = () => {
+        this.savingLabelRef.innerHTML = "Не сохранено"
     }
 
     closeEditor = () => {
         this.saveNote()
-
         this.props.setClose()
-
         setTimeout(() => AppDispatcher.dispatch(NotesActions.CLOSE_NOTE), 300)
     }
 
     updateState = (store:NotesStoreState) => {
+        console.log("updateState")
         this.setState(state => {
             return {
                 ...state,
-                selectedNote: store.selectedNote,
-                saving: store.saving
+                selectedNote: store.selectedNote
             }
         })
 
@@ -87,6 +64,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
     }
 
     render() {
+        console.log("render")
         return (
             <div className={"note-editor-wrapper " + (this.props.open ? "active" : "")}>
 
@@ -100,6 +78,9 @@ export class NoteEditor extends ScReact.Component<any, any> {
                         </div>
                     </div>
                     <div className="right-container">
+                        <div className="note-save-indicator">
+                            <span ref={ref => this.savingLabelRef = ref}>Сохранено</span>
+                        </div>
                         <Img src="trash.svg" className="icon delete-note-icon" onClick={this.deleteNote}/>
                         <Img src="close.svg" className="icon close-editor-icon" onClick={this.closeEditor}/>
                     </div>
@@ -107,11 +88,8 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
                 <div className="bottom-panel">
 
-                    <Editor />
+                    <Editor onChangeTitle={this.onChangeNote} onChangeContent={this.onChangeNote}/>
 
-                    <div className="note-save-indicator">
-                        {this.state.saving === false ? <h3>Сохранено</h3> : ""}
-                    </div>
                 </div>
             </div>
         )
