@@ -354,8 +354,9 @@ class NoteRequests {
                             "type": "div",
                             "content": [
                                 {
+                                    "type": "placeholder",
                                     "id": "2",
-                                    "content": "Привет!"
+                                    "content": "Напишите что-нибудь"
                                 }
                             ]
                         }
