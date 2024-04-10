@@ -179,6 +179,8 @@ export class Editor extends Component<any, EditorState> {
                             //     return
                             // }
 
+                            this.props.onChangeTitle(e.target.textContent)
+
                             AppDispatcher.dispatch(NoteStoreActions.CHANGE_TITLE, {
                                 title: e.target.textContent
                             })
