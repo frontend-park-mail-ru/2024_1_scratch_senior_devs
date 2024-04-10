@@ -1,14 +1,17 @@
+@import "/public/src/utils/variables.sass"
+
 .editablediv:focus:empty:after
-  content: "Напишите /"
+	content: "Введите ' / ' для команд"
+	color: $text-main-color--darker
 
 .block:hover
-  background-color: rgba(255, 255, 255, 0.03)
-  border-radius: 10px
+	background-color: rgba(255, 255, 255, 0.03)
+	border-radius: 10px
 //
 //.block:active
 //  background-color: #333437
 
 // DEBUG
 .block-chosen
-  background-color: rgba(255, 255, 255, 0.05)
-  border-radius: 10px
+	background-color: rgba(255, 255, 255, 0.05)
+	border-radius: 10px

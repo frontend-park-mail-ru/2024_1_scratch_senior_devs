@@ -11,6 +11,7 @@ import {Img} from "../../components/Image/Image";
 import {DeleteNoteDialog} from "../../components/DeleteNoteDialog/DeleteNoteDialog";
 import {AppNoteStore} from "../../modules/stores/NoteStore";
 import {Loader} from '../../components/Loader/Loader';
+import {formatDate} from '../../modules/utils';
 
 export class NotesPage extends ScReact.Component<any, any> {
     state = {
@@ -125,6 +126,18 @@ export class NotesPage extends ScReact.Component<any, any> {
         AppDispatcher.dispatch(NotesActions.CREATE_NEW_NOTE)
     }
 
+    private noteRefs = {}
+
+    saveSelectedNoteRef = (note, ref) => {
+        this.noteRefs[note.id] = ref
+    }
+
+    onChangeSelectedNoteTitle = (title) => {
+        const selectedNote = this.noteRefs[this.state.selectedNote.id]
+        const noteTitle = selectedNote.querySelector("h3")
+        noteTitle.innerHTML = title
+    }
+
     render() {
         return (
             <div className={"notes-page-wrapper " + (this.state.editorOpen ? "active" : "")} >
@@ -142,11 +155,18 @@ export class NotesPage extends ScReact.Component<any, any> {
                     <div className="notes-container" onclick={this.handleSelectNote}>
                         <Loader active={this.state.fetching} />
                         {this.state.notes.map(note => (
-                            <Note key1={note.id} note={note} selected={this.state.selectedNote?.id == note.id} />
+                            <div className={'note-container ' + (this.state.selectedNote?.id == note.id ? 'selected' : '')}
+                                 id={note.id}
+                                 ref={ref => this.saveSelectedNoteRef(note, ref)}
+                            >
+                                <h3>{note.data.title}</h3>
+                                <p></p>
+                                <span className="update-time">{formatDate(note.update_time)}</span>
+                            </div>
                         ))}
                     </div>
                 </aside>
-                <NoteEditor open={this.state.editorOpen} setClose={this.closeEditor} />
+                <NoteEditor open={this.state.editorOpen} setClose={this.closeEditor} onChangeTitle={this.onChangeSelectedNoteTitle}/>
             </div>
         )
     }

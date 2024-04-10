@@ -64,7 +64,6 @@ export class NoteEditor extends ScReact.Component<any, any> {
     }
 
     render() {
-        console.log("render")
         return (
             <div className={"note-editor-wrapper " + (this.props.open ? "active" : "")}>
 
@@ -88,7 +87,13 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
                 <div className="bottom-panel">
 
-                    <Editor onChangeTitle={this.onChangeNote} onChangeContent={this.onChangeNote}/>
+                    <Editor
+                        onChangeTitle={(value) => {
+                            this.props.onChangeTitle(value)
+                            this.onChangeNote()
+                        }}
+                        onChangeContent={this.onChangeNote}
+                    />
 
                 </div>
             </div>

@@ -13,7 +13,6 @@ export class Attach extends ScReact.Component<any, any> {
 
     downloadAttach = (e) => {
         console.log("downloadAttach")
-        console.log(this.props.id)
         if (!this.closeBtnRef.contains(e.target)){
             AppDispatcher.dispatch(NotesActions.DOWNLOAD_FILE, {
                 id: this.props.id,
@@ -25,14 +24,14 @@ export class Attach extends ScReact.Component<any, any> {
     render() {
         return (
             <div className="attach-wrapper">
-                <div className="attach-container" onClick={this.downloadAttach}>
+                <div className="attach-container" onclick={this.downloadAttach}>
                     <div className="file-extension-label">
                         {this.props.fileName.split(".")[1]}
                     </div>
                     <span className="file-name">
                     {this.props.fileName}
                 </span>
-                    <span className="close-attach-btn-container">
+                <span className="close-attach-btn-container">
                     <Img
                         src="close.svg"
                         className="close-attach-btn"
