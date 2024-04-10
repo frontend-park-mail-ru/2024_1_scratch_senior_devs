@@ -17,7 +17,8 @@ export type UserStoreState = {
     errorLoginForm: string | undefined,
     errorRegisterForm: string | undefined,
     errorUpdatePasswordForm: string | undefined,
-    updatePasswordFormOpen:boolean
+    updatePasswordFormOpen:boolean,
+    avatarUploadAnimation: boolean
 }
 
 export type UserLoginCredentialsType = {
@@ -50,7 +51,8 @@ class UserStore extends BaseStore<UserStoreState>{
         errorLoginForm: undefined,
         errorRegisterForm: undefined,
         errorUpdatePasswordForm: undefined,
-        updatePasswordFormOpen: false
+        updatePasswordFormOpen: false,
+        avatarUploadAnimation: false
     }
 
     /**
@@ -101,6 +103,9 @@ class UserStore extends BaseStore<UserStoreState>{
                     break;
                 case UserActions.UPDATE_CSRF:
                     this.updateCSRF(action.payload)
+                    break;
+                case UserActions.START_AVATAR_UPLOAD_ANIMATION:
+                    this.startUploadAnimation()
                     break;
             }
         });
@@ -285,12 +290,18 @@ class UserStore extends BaseStore<UserStoreState>{
 
             if (status == 200) {
 
-                this.SetState(state => {
-                    return {
+                this.SetState(state => ({
+                    ...state,
+                    avatarUploadAnimation: true,
+                    avatarUrl: avatarUrl
+                }))
+
+                setTimeout(() => {
+                    this.SetState(state => ({
                         ...state,
-                        avatarUrl: avatarUrl
-                    }
-                })
+                        avatarUploadAnimation: false
+                    }))
+                }, 3000)
 
                 return
             }
@@ -395,6 +406,13 @@ class UserStore extends BaseStore<UserStoreState>{
             csrf: token
         }))
     }
+
+    private startUploadAnimation() {
+        this.SetState(state => ({
+            ...state,
+            avatarUploadAnimation: true
+        }))
+    }
 }
 
 export const AppUserStore = new UserStore();
@@ -410,5 +428,6 @@ export const UserActions = {
     CLOSE_CHANGE_PASSWORD_FORM: "CLOSE_CHANGE_PASSWORD_FORM",
     TOGGLE_TWO_FACTOR_AUTHORIZATION: "TOGGLE_TWO_FACTOR_AUTHORIZATION",
     CLOSE_QR_WINDOW: "CLOSE_QR_WINDOW",
-    UPDATE_CSRF: "UPDATE_CSRF"
+    UPDATE_CSRF: "UPDATE_CSRF",
+    START_AVATAR_UPLOAD_ANIMATION: "START_AVATAR_UPLOAD_ANIMATION"
 }
