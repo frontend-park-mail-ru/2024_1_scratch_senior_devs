@@ -201,8 +201,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
         const {status, csrf} = await AppNoteRequests.Update(data, AppUserStore.state.JWT, AppUserStore.state.csrf)
 
+        AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf)
+
         if (status === 200) {
-            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf)
             // AppToasts.success("Заметка успешно сохранена")
         }
     }
