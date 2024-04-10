@@ -266,7 +266,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
         console.log(this.state.notes)
 
-        await this.selectNote(response.body.id)
+        // TODO
+        // await this.selectNote(response.body.id)
 
         document.getElementById(String(response.body.id)).scrollIntoView()
     }

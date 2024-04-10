@@ -36,7 +36,6 @@ export const NotesLoader = async () => {
         }
 
         AppUserStore.SubscribeToStore(callback);
-        AppDispatcher.dispatch(UserActions.CHECK_USER)
     })
 
     return await p;

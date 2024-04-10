@@ -13,6 +13,7 @@ import AuthPageSkeleton from "../pages/Auth/Skeleton";
 import {AuthPageLoader} from "../pages/Auth/loader";
 import {NotesLoader} from "../pages/Notes/loader";
 import {Note} from "../components/Note/note";
+import {HomePageLoader} from '../pages/Home/loader';
 
 type routerState = {
     currPage: {new(): Component<any, any> }
@@ -59,7 +60,7 @@ export class Router extends ScReact.Component<any, routerState> {
     }
 
     private initPages = () => {
-        this.pages["/"] = {page: HomePage, pageProps: {}}
+        this.pages["/"] = {page: HomePage, loader: HomePageLoader}
         this.pages["/login"] = {page: AuthPage, loader: AuthPageLoader, skeleton: AuthPageSkeleton}
         this.pages["/register"] = {page: AuthPage, loader: AuthPageLoader, skeleton: AuthPageSkeleton}
         this.pages["/notes"] = {page: NotesPage, loader: NotesLoader, skeleton: NotesPageSkeleton}
@@ -120,9 +121,9 @@ export class Router extends ScReact.Component<any, routerState> {
         return (
             <div id={"root"} className={this.state.currPage === NotesPage ? "locked" : ""}>
                 <Toasts />
-                <Background  currPage={this.state.currPage.name}/>
+                <Background  currPage={this.state.currPage?.name}/>
                 <Header currPage={this.state.currPage}/>
-                {ScReact.createComponent(this.state.currPage, {...this.state.PageProps, key: this.state.currPage.name}) }
+                {ScReact.createComponent(this.state.currPage, {...this.state.PageProps, key: this.state.currPage?.name}) }
             </div>
         );
     }

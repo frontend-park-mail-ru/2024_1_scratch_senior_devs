@@ -8,7 +8,7 @@ export const AuthPageLoader = async () => {
 
         if (isAuth !== undefined) {
             if (isAuth) {
-                AppRouter.go("/")
+                AppRouter.go("/notes")
                 reject()
             } else {
                 resolve(null)
@@ -21,7 +21,7 @@ export const AuthPageLoader = async () => {
             isAuth = state.isAuth;
             AppUserStore.UnSubscribeToStore(callback);
             if (isAuth) {
-                AppRouter.go("/")
+                AppRouter.go("/notes")
                 reject()
             } else {
                 resolve(null)
@@ -29,7 +29,6 @@ export const AuthPageLoader = async () => {
         }
 
         AppUserStore.SubscribeToStore(callback);
-        AppDispatcher.dispatch(UserActions.CHECK_USER)
     })
 
     return await p;
