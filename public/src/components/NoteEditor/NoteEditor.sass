@@ -25,6 +25,9 @@
 	@media screen and (max-width: $md)
 		padding: 75px 25px
 
+	@media screen and (max-width: $sm)
+		padding: 75px 0
+
 	&.active
 		display: flex
 		animation: fadeIn 1s
@@ -47,9 +50,10 @@
 		display: flex
 		justify-content: space-between
 
+		@media screen and (max-width: $sm)
+			padding: 0 20px
+
 		.left-container
-
-
 			.close-editor-label-container
 				display: none
 				align-items: center
@@ -92,7 +96,6 @@
 
 				@media screen and (max-width: $lg)
 					display: none
-
 
 	.bottom-panel
 		display: flex
@@ -137,36 +140,9 @@
 			.note-body-container
 				display: flex
 				flex-direction: column
-				gap: 10px
 
 				.drag-area
 					height: 5px
 
 					&.active
 						background: blue
-
-				.block
-					width: 100%
-					min-height: 27px
-					position: relative
-					padding-left: 30px
-
-					&:hover
-						.drag-btn
-							opacity: 1
-
-					.piece-prefix
-						user-select: none
-
-					.drag-btn
-						width: 16px
-						height: 16px
-						top: 50%
-						transform: translateY(-50%)
-						position: absolute
-						left: 0
-						opacity: 0
-						transition: opacity .2s ease-in
-
-						&:hover
-							cursor: grab

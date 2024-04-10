@@ -1,17 +1,53 @@
 @import "/public/src/utils/variables.sass"
 
-.editablediv:focus:empty:after
-	content: "Введите ' / ' для команд"
-	color: $text-main-color--darker
 
-.block:hover
-	background-color: rgba(255, 255, 255, 0.03)
-	border-radius: 10px
-//
+.block
+	width: 100%
+	min-height: 27px
+	position: relative
+	padding: 10px 10px 10px 30px
+
+	&.block-chosen
+		background-color: rgba(255, 255, 255, 0.05)
+		border-radius: 10px
+
+	&:hover
+		background-color: rgba(255, 255, 255, 0.03)
+		border-radius: 10px
+
+		.drag-btn
+			opacity: 1
+
+	.piece-container
+		.editablediv
+			&:focus:empty:after
+				content: "Введите ' / ' для команд"
+				color: $text-main-color--darker
+
+
+	.piece-prefix
+		user-select: none
+
+	.drag-btn
+		width: 16px
+		height: 16px
+		top: 50%
+		transform: translateY(-50%)
+		position: absolute
+		left: 5px
+		opacity: 0
+		transition: opacity .2s ease-in
+
+		@media screen and (max-width: $sm)
+			left: 7.5px
+
+		&:hover
+			cursor: grab
+
+	@media screen and (max-width: $sm)
+		padding-left: 30px
+
+
 //.block:active
 //  background-color: #333437
 
-// DEBUG
-.block-chosen
-	background-color: rgba(255, 255, 255, 0.05)
-	border-radius: 10px

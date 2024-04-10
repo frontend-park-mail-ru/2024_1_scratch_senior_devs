@@ -20,7 +20,8 @@ type EditorState = {
 export class Editor extends Component<any, EditorState> {
     state = {
         blocks: 0,
-        dropdownOpen: false
+        dropdownOpen: false,
+        title: ""
     }
 
     componentDidUpdate() {
@@ -171,14 +172,6 @@ export class Editor extends Component<any, EditorState> {
                         className="note-title"
                         contentEditable={true}
                         oninput={(e)=>{
-
-                            // Проверка на длинну заметки
-                            // console.log(e.target.textContent.length)
-                            // if (e.target.textContent.length > 10) {
-                            //
-                            //     return
-                            // }
-
                             this.props.onChangeTitle(e.target.textContent)
 
                             AppDispatcher.dispatch(NoteStoreActions.CHANGE_TITLE, {

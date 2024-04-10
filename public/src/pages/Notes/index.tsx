@@ -1,6 +1,5 @@
 import {ScReact} from "@veglem/screact";
 import "./style.sass"
-import {Note} from "../../components/Note/note";
 import {SearchBar} from "../../components/SearchBar/SearchBar";
 import {NoteEditor} from "../../components/NoteEditor/NoteEditor";
 import {AppNotesStore, NotesActions, NotesStoreState} from "../../modules/stores/NotesStore";
@@ -11,7 +10,7 @@ import {Img} from "../../components/Image/Image";
 import {DeleteNoteDialog} from "../../components/DeleteNoteDialog/DeleteNoteDialog";
 import {AppNoteStore} from "../../modules/stores/NoteStore";
 import {Loader} from '../../components/Loader/Loader';
-import {formatDate} from '../../modules/utils';
+import {formatDate, truncate} from '../../modules/utils';
 
 export class NotesPage extends ScReact.Component<any, any> {
     state = {
@@ -136,7 +135,7 @@ export class NotesPage extends ScReact.Component<any, any> {
         console.log("onChangeSelectedNoteTitle")
         const selectedNote = this.noteRefs[this.state.selectedNote.id]
         const noteTitle = selectedNote.querySelector("h3")
-        noteTitle.innerHTML = title
+        noteTitle.innerHTML = truncate(title, 20)
     }
 
     render() {
@@ -160,7 +159,7 @@ export class NotesPage extends ScReact.Component<any, any> {
                                  id={note.id}
                                  ref={ref => this.saveSelectedNoteRef(note, ref)}
                             >
-                                <h3>{note.data.title}</h3>
+                                <h3>{truncate(note.data.title, 20)}</h3>
                                 <p></p>
                                 <span className="update-time">{formatDate(note.update_time)}</span>
                             </div>
