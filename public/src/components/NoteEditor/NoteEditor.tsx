@@ -30,10 +30,12 @@ export class NoteEditor extends ScReact.Component<any, any> {
         }
 
         this.savingLabelRef.innerHTML = "Сохранено"
+        this.savingLabelRef.style.opacity = 1
     }
 
     onChangeNote = () => {
         this.savingLabelRef.innerHTML = ""
+        this.savingLabelRef.style.opacity = 0
     }
 
     closeEditor = () => {
