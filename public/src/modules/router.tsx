@@ -14,6 +14,8 @@ import {AuthPageLoader} from "../pages/Auth/loader";
 import {NotesLoader} from "../pages/Notes/loader";
 import {Note} from "../components/Note/note";
 import {HomePageLoader} from '../pages/Home/loader';
+import {AppNotesStore, NotesActions} from './stores/NotesStore';
+import {AppDispatcher} from './dispatcher';
 
 type routerState = {
     currPage: {new(): Component<any, any> }
@@ -46,8 +48,16 @@ export class Router extends ScReact.Component<any, routerState> {
     componentDidMount() {
         const path = window.location.pathname;
         window.addEventListener("popstate", () => {
+
+            if (window.location.pathname.includes("/notes")) {
+                const noteId = window.location.pathname.split('/').at(-1)
+                AppDispatcher.dispatch(NotesActions.SELECT_NOTE, noteId)
+                return
+            }
+
             this.go(window.location.pathname);
         })
+
         this.go(path);
     }
 

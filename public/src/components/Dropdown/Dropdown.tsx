@@ -2,9 +2,8 @@ import {ScReact} from "@veglem/screact";
 import "./Dropdown.sass"
 import {Img} from "../Image/Image";
 import {AppDispatcher} from "../../modules/dispatcher";
-import {AppNoteStore, NoteStoreActions} from '../../modules/stores/NoteStore';
+import {NoteStoreActions} from '../../modules/stores/NoteStore';
 import {AppNotesStore, NotesActions} from "../../modules/stores/NotesStore";
-import {moveCursorUpAndDown} from "../Block/utils/cursorActions";
 
 export class Dropdown extends ScReact.Component<any, any> {
     state = {

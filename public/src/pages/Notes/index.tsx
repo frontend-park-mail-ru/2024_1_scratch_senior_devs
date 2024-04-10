@@ -144,7 +144,7 @@ export class NotesPage extends ScReact.Component<any, any> {
                 <aside>
                     <Modal open={this.state.deleteNoteModal} content={<DeleteNoteDialog />} handleClose={() => AppDispatcher.dispatch(NotesActions.CLOSE_DELETE_NOTE_DIALOG)} />
                     <div className="top-panel">
-                        <SearchBar onChange={this.searchNotes}/>
+                        <SearchBar onChange={this.searchNotes} />
                         <div className="add-note-btn-container" onclick={this.createNewNote}>
                             <Button label="Новая заметка" className="add-note-btn" />
                             <div className="add-note-icon-wrapper">

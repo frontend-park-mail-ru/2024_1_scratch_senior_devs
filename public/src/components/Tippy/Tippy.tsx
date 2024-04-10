@@ -99,11 +99,11 @@ export class Tippy extends ScReact.Component<any, any> {
 
     render() {
         const data = [
-            // TODO
-            // {
-            //     type: "bold",
-            //     icon: "bold.svg"
-            // },
+            // TODO: жирный текст и гиперссылки не робят
+            {
+                type: "bold",
+                icon: "bold.svg"
+            },
             {
                 type: "italic",
                 icon: "italics.svg"
@@ -122,11 +122,12 @@ export class Tippy extends ScReact.Component<any, any> {
 
         return (
             <div className={"tippy-container " + (this.props.open ? "open" : "")} ref={(val) => this.state.ref = val} id={"tippy"}>
-                {/*<div className="first-container" onclick={this.toggleLinkInput}  ref={ref => {this.toggleLinkInputRef = ref}}>*/}
-                {/*    <Img src="link.svg" className="link-icon" />*/}
-                {/*    <span className="link-label">Ссылка</span>*/}
-                {/*</div>*/}
-                {/*<LinkInput open={this.state.link} handleClose={this.closeLinkInput} toggleBtn={this.toggleLinkInputRef}/>*/}
+
+                <div className="first-container" onclick={this.toggleLinkInput}  ref={ref => {this.toggleLinkInputRef = ref}}>
+                    <Img src="link.svg" className="link-icon" />
+                    <span className="link-label">Ссылка</span>
+                </div>
+                <LinkInput open={this.state.link} handleClose={this.closeLinkInput} toggleBtn={this.toggleLinkInputRef}/>
                 <div className="second-container">
                     {data.map(item => (
                         <div className="item" onclick={() => this.handleSelect(item)}>

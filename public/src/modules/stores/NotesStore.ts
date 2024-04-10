@@ -122,14 +122,19 @@ class NotesStore extends BaseStore<NotesStoreState> {
             ...state,
             selectedNote: undefined
         }))
+
+        history.pushState(null, "", "/notes");
     }
 
     async selectNote (id:number) {
         const note = await AppNoteRequests.Get(id, AppUserStore.state.JWT)
+
         this.SetState(state => ({
             ...state,
             selectedNote: note
         }))
+
+        history.pushState({id:id}, "", "/notes/" + id);
     }
 
     async init () {

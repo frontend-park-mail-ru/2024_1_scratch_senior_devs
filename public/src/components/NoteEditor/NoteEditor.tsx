@@ -33,7 +33,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
     }
 
     onChangeNote = () => {
-        this.savingLabelRef.innerHTML = "Не сохранено"
+        this.savingLabelRef.innerHTML = ""
     }
 
     closeEditor = () => {
@@ -78,7 +78,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
                     </div>
                     <div className="right-container">
                         <div className="note-save-indicator">
-                            <span ref={ref => this.savingLabelRef = ref}>Сохранено</span>
+                            <span ref={ref => this.savingLabelRef = ref}></span>
                         </div>
                         <Img src="trash.svg" className="icon delete-note-icon" onClick={this.deleteNote}/>
                         <Img src="close.svg" className="icon close-editor-icon" onClick={this.closeEditor}/>
