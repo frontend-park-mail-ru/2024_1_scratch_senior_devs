@@ -24,7 +24,7 @@ export class Editor extends Component<any, EditorState> {
     }
 
     componentDidUpdate() {
-        if (this.state.blocks == 1 && AppNoteStore.state.note.blocks[0].content.length == 0 && AppNoteStore.state.cursorPosition?.blockId !== 0 && AppNoteStore.state.cursorPosition?.pos !== 0) {
+        if (this.state.blocks == 1 && AppNoteStore.state.note.blocks[0].content?.length == 0 && AppNoteStore.state.cursorPosition?.blockId !== 0 && AppNoteStore.state.cursorPosition?.pos !== 0) {
             AppDispatcher.dispatch(NoteStoreActions.MOVE_CURSOR, {blockId: 0, pos: 0});
         }
     }
