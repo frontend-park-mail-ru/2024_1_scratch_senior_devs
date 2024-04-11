@@ -32,6 +32,15 @@ export class NotesPage extends ScReact.Component<any, any> {
             notes: this.props.notes
         }))
 
+        if (this.props.note) {
+            this.setState(state => ({
+                ...state,
+                editorOpen: true
+            }))
+
+            AppDispatcher.dispatch(NotesActions.SELECT_NOTE, this.props.note)
+        }
+
         this.createObserver()
     }
 
@@ -91,7 +100,7 @@ export class NotesPage extends ScReact.Component<any, any> {
                 editorOpen: true
             }))
 
-            AppDispatcher.dispatch(NotesActions.SELECT_NOTE, id)
+            AppDispatcher.dispatch(NotesActions.FETCH_NOTE, id)
         }
     }
 
@@ -100,6 +109,8 @@ export class NotesPage extends ScReact.Component<any, any> {
             ...state,
             editorOpen: false
         }))
+
+        history.replaceState(null, null, "/notes");
     }
 
     createObserver() {

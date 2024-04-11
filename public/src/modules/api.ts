@@ -289,7 +289,7 @@ class NoteRequests {
         throw Error(response.body.message);
     };
 
-    Get = async (id: number, jwt: string) => {
+    Get = async (id: string, jwt: string) => {
         const response = await Ajax.Get(this.baseUrl + "/" + id, {
             headers: {
                 "Authorization": jwt

@@ -33,7 +33,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
         offset: 0,
         count: 10,
         modalOpen: false,
-        fetching: false
+        fetching: false,
+        noteNotFound: false
     }
 
     constructor() {
@@ -45,7 +46,10 @@ class NotesStore extends BaseStore<NotesStoreState> {
         AppDispatcher.register(async (action) => {
             switch (action.type){
                 case NotesActions.SELECT_NOTE:
-                    await this.selectNote(action.payload);
+                    this.selectNote(action.payload);
+                    break;
+                case NotesActions.FETCH_NOTE:
+                    await this.fetchNote(action.payload);
                     break;
                 case NotesActions.CLOSE_NOTE:
                     this.closeNote();
@@ -122,19 +126,21 @@ class NotesStore extends BaseStore<NotesStoreState> {
             ...state,
             selectedNote: undefined
         }))
-
-        history.pushState(null, "", "/notes");
     }
 
-    async selectNote (id:number) {
+    async fetchNote (id:string) {
         const note = await AppNoteRequests.Get(id, AppUserStore.state.JWT)
 
+        this.selectNote(note)
+    }
+
+    selectNote (note:Note) {
         this.SetState(state => ({
             ...state,
             selectedNote: note
         }))
 
-        history.pushState({id:id}, "", "/notes/" + id);
+        history.replaceState(null, null, "/notes/" + note.id);
     }
 
     async init () {
@@ -227,23 +233,18 @@ class NotesStore extends BaseStore<NotesStoreState> {
         // }
         //
 
-        // const notes = this.state.notes
-        //
-        // notes.push(response.body)
-
         this.SetState(state => ({
             ...state,
             offset: state.offset + 1,
-            notes: [...state.notes, response.body],
-            // TODO: notes: [response.body, ...state.notes]
+            // notes: [...state.notes, response.body],
+            notes: [response.body, ...state.notes]
         }))
 
-        console.log(this.state.notes)
-
         // TODO
-        // await this.selectNote(response.body.id)
-
-        document.getElementById(String(response.body.id)).scrollIntoView()
+        setTimeout(() => {
+            document.getElementById(String(response.body.id)).scrollIntoView()
+            this.selectNote(response.body)
+        }, 500)
     }
 
     async uploadImage({noteId, blockId, file}) {
@@ -331,6 +332,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
 export const NotesActions = {
     SELECT_NOTE: "SELECT_NOTE",
+    FETCH_NOTE: "FETCH_NOTE",
     SEARCH_NOTES: "SEARCH_NOTES",
     LOAD_NOTES: "LOAD_NOTES",
     CLOSE_NOTE: "CLOSE_NOTE",

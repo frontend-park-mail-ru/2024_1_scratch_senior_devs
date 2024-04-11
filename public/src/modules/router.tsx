@@ -23,7 +23,7 @@ type routerState = {
 
 type RouterMapValue = {
     page: {new(): Component<any, any> },
-    loader: () => Promise<any>,
+    loader: (path?:string) => Promise<any>,
     skeleton: {new(): Component<any, any> }
 }
 
@@ -48,9 +48,9 @@ export class Router extends ScReact.Component<any, routerState> {
         const path = window.location.pathname;
         window.addEventListener("popstate", () => {
 
-            if (window.location.pathname.includes("/notes")) {
+            if (path.includes("/notes")) {
                 const noteId = window.location.pathname.split('/').at(-1)
-                AppDispatcher.dispatch(NotesActions.SELECT_NOTE, noteId)
+                AppDispatcher.dispatch(NotesActions.FETCH_NOTE, noteId)
                 return
             }
 
@@ -77,9 +77,13 @@ export class Router extends ScReact.Component<any, routerState> {
     }
 
     public go(path: string): void {
-        const page: RouterMapValue = this.pages[path];
+        let page: RouterMapValue = this.pages[path];
 
-        history.pushState({ path }, "", path);
+        if (path.includes("/notes")) {
+            page = this.pages["/notes"]
+        }
+
+        history.replaceState(null, "", path);
 
         if (page === undefined) {
             this.setState(s => ({
@@ -100,13 +104,12 @@ export class Router extends ScReact.Component<any, routerState> {
                 currPage: page.skeleton
             }));
 
-            page.loader().then((props) => {
+            page.loader(path).then((props) => {
                 this.setState(s => ({
                     ...s,
                     currPage: page.page,
                     PageProps: props
                 }));
-
             }).catch(() => {
 
                 // TODO
