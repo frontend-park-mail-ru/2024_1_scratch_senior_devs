@@ -240,11 +240,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
             notes: [response.body, ...state.notes]
         }))
 
-        // TODO
-        setTimeout(() => {
-            document.getElementById(String(response.body.id)).scrollIntoView()
-            this.selectNote(response.body)
-        }, 500)
+        document.getElementById(String(response.body.id)).scrollIntoView()
+
+        this.selectNote(response.body)
     }
 
     async uploadImage({noteId, blockId, file}) {

@@ -37,7 +37,9 @@ export class RegisterForm extends  ScReact.Component<any, any> {
         }
     }
 
-    handleSubmit = () => {
+    handleSubmit = (e) => {
+        e.preventDefault()
+
         this.checkLogin()
         this.checkPassword()
         this.checkRepeatPassword()
