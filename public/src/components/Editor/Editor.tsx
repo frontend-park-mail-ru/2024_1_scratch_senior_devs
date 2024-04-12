@@ -21,6 +21,7 @@ export class Editor extends Component<any, EditorState> {
     state = {
         blocks: 0,
         dropdownOpen: false,
+        tippyOpen: false,
         title: ""
     }
 
@@ -50,21 +51,23 @@ export class Editor extends Component<any, EditorState> {
                 if (matchesAnchor != null && matchesFocus != null) {
                     clearTimeout(this.timer);
                     this.timer = setTimeout(() => {
-
-                        const tippy = document.querySelector("#tippy") as HTMLElement;
                         const piece = document.querySelector(`#piece-${matchesFocus[1]}-${matchesFocus[2]}`) as HTMLElement;
                         const piece2 = document.querySelector(`#piece-${matchesAnchor[1]}-${matchesAnchor[2]}`) as HTMLElement;
-                        console.log(tippy, piece.getBoundingClientRect().y.toString());
-                        tippy.style.display = "flex";
+
+                        this.openTippy()
+                        const tippy = document.querySelector("#tippy") as HTMLElement;
                         tippy.style.top = (piece.getBoundingClientRect().y - tippy.getBoundingClientRect().height - 2).toString() + "px";
                         tippy.style.left = (Math.min(piece.getBoundingClientRect().x, piece2.getBoundingClientRect().x) - 30).toString() + "px";
+
                         this.optionsSetter(
                             Number(matchesFocus[1]),
                             Number(matchesAnchor[2]),
                             Number(matchesFocus[2]),
                             offsetAnchor,
-                            offsetFocus);
+                            offsetFocus
+                        );
                         console.log("MOOVE")
+
                         // AppDispatcher.dispatch(NoteStoreActions.CHANGE_PIECE_ATTRIBUTES,
                         //     {
                         //         blockId: Number(matchesFocus[1]),
@@ -75,21 +78,6 @@ export class Editor extends Component<any, EditorState> {
                         //         attribute: "underline"
                         //     })
                     }, 300)
-                } else {
-                    console.log("CLOSE");
-                    const tippy = document.querySelector("#tippy") as HTMLElement;
-                    try {
-                        tippy.style.display = "none";
-                    } catch (e) {
-
-                    }
-                }
-            } else {
-                const tippy = document.querySelector("#tippy") as HTMLElement;
-                try {
-                    tippy.style.display = "none";
-                } catch (e) {
-
                 }
             }
         }
@@ -110,6 +98,20 @@ export class Editor extends Component<any, EditorState> {
         this.setState(state => ({
             ...state,
             dropdownOpen: false
+        }))
+    }
+
+    openTippy = () => {
+        this.setState(state => ({
+            ...state,
+            tippyOpen: true
+        }))
+    }
+
+    closeTippy = () => {
+        this.setState(state => ({
+            ...state,
+            tippyOpen: false
         }))
     }
 
@@ -188,8 +190,8 @@ export class Editor extends Component<any, EditorState> {
                           onClose={this.closeEditor}
                           open={this.state.dropdownOpen}
                 />
-                <Tippy open={false}
-                       onClose={()=>{}}
+                <Tippy open={this.state.tippyOpen}
+                       onClose={this.closeTippy}
                        optionsSetter={(func) => {
                            this.optionsSetter = func;
                        }}

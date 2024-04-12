@@ -46,6 +46,11 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
     updateState = (store:NotesStoreState) => {
         console.log("updateState")
+
+        if (store.selectedNote != this.state.selectedNote) {
+            this.savingLabelRef.innerHTML = ""
+        }
+
         this.setState(state => {
             return {
                 ...state,

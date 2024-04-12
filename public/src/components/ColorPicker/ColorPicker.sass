@@ -1,10 +1,10 @@
 @import "/public/src/utils/variables.sass"
+@import "/public/src/utils/animations.sass"
 
 .color-picker-container
 	position: absolute
 	top: calc(100% + 10px)
 	right: -115px
-	display: flex
 	flex-direction: column
 	background: $background-main-color
 	border: 1px solid hsl(217.2 32.6% 25%)
@@ -15,11 +15,13 @@
 	gap: 5px
 	opacity: 0
 	transition: all 0.15s
-	z-index: -1
+	display: none
+	animation: closeAnim 0.3s
 
 	&.open
+		display: flex
 		opacity: 1
-		z-index: 1
+		animation: showAnim 0.3s
 
 	&::-webkit-scrollbar-track
 		box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.5)

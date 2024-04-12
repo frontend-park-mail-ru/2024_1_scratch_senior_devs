@@ -2,22 +2,6 @@ import {ScReact} from "@veglem/screact";
 import "./ColorPicker.sass"
 
 export class ColorPicker extends ScReact.Component<any, any> {
-    private ref: HTMLElement;
-    componentDidMount() {
-        // document.addEventListener("click", this.handleClickOutside, true)
-    }
-
-    componentWillUnmount() {
-        // document.removeEventListener("click", this.handleClickOutside, true)
-    }
-
-    handleClickOutside = (e) => {
-        // console.log(e.contains(document.querySelector("color-picker-container")))
-        if (this.props.open && !this.ref.contains(e.target) && this.props.toggleBtn && !this.props.toggleBtn.contains(e.target)) {
-            this.props.handleClose()
-        }
-    }
-
     handleSelectText = (item: { label: any; color: any; }) => {
         console.log("handleSelectText")
         console.log(item.label)
@@ -65,7 +49,7 @@ export class ColorPicker extends ScReact.Component<any, any> {
         }
 
         return (
-            <div className={"color-picker-container " + (this.props.open ? "open" : "")} ref={ref => {this.ref = ref}}>
+            <div className={"color-picker-container " + (this.props.open ? "open" : "")}>
                 <div className="text-color-picker-container">
                     <span className="label">Текст</span>
                     <div className="items">

@@ -1,4 +1,5 @@
 @import "/public/src/utils/variables.sass"
+@import "/public/src/utils/animations.sass"
 
 .link-input-container
 	position: absolute
@@ -7,16 +8,17 @@
 	border-radius: 5px
 	border: 1px solid hsl(217.2 32.6% 25%)
 	background: $background-main-color
-	display: flex
 	align-items: center
 	padding: 5px 8px
 	opacity: 0
 	transition: all 0.15s
-	z-index: -1
+	display: none
+	animation: closeAnim 0.3s
 
 	&.open
 		opacity: 1
-		z-index: 1
+		display: flex
+		animation: showAnim 0.3s
 
 	.link-input
 		outline: none

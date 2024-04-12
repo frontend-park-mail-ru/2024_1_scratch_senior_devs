@@ -1,4 +1,5 @@
 @import "/public/src/utils/variables.sass"
+@import "/public/src/utils/animations.sass"
 
 .dropdown
 	width: 300px
@@ -11,27 +12,10 @@
 	animation: showAnim 0.3s
 	display: block
 
-	@keyframes showAnim
-		0%
-			display: block
-			opacity: 0
-
-		99%
-			opacity: 1
-
 	&.close
 		opacity: 0
 		animation: closeAnim 0.3s
 		display: none
-
-		@keyframes closeAnim
-			0%
-				display: block
-				opacity: 1
-
-			99%
-				opacity: 0
-				display: none
 
 	.listbox
 		width: 100%

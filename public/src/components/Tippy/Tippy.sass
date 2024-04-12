@@ -1,4 +1,5 @@
 @import "/public/src/utils/variables.sass"
+@import "/public/src/utils/animations.sass"
 
 .tippy-container
 	position: fixed
@@ -8,9 +9,12 @@
 	border: 1px solid hsl(217.2 32.6% 25%)
 	border-radius: 5px
 	display: none
+	animation: closeAnim 0.3s
 
 	&.open
 		display: flex
+		animation: showAnim 0.3s
+
 
 	.first-container
 		display: flex

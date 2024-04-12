@@ -3,28 +3,36 @@ import {Img} from "../Image/Image";
 import "./LinkInput.sass"
 
 export class LinkInput extends ScReact.Component<any, any> {
-
-    private ref: HTMLElement
-
-    componentDidMount() {
-        document.addEventListener("click", this.handleClickOutside, true)
+    state = {
+        value: ""
     }
 
-    componentWillUnmount() {
-        document.removeEventListener("click", this.handleClickOutside, true)
+    setValue = (e) => {
+        this.setState(state => ({
+            ...state,
+            value: e.target.value
+        }))
     }
 
-    handleClickOutside = (e) => {
-        if (this.props.open && !this.ref.contains(e.target) && this.props.toggleBtn && !this.props.toggleBtn.contains(e.target)) {
-            this.props.handleClose()
+    clearValue = () => {
+        this.setState(state => ({
+            ...state,
+            value: ""
+        }))
+    }
+
+    handleSubmit = () => {
+        if (this.state.value) {
+            this.props.onSubmit(this.state.value)
+            this.clearValue()
         }
     }
 
     render() {
         return (
-            <div className={"link-input-container " + (this.props.open ? "open" : "")} ref={ref => {this.ref = ref}}>
-                <input type="text" placeholder="Введите ссылку" className="link-input"/>
-                <button type="submit" className="link-btn" onclick={this.props.handleClose}>
+            <div className={"link-input-container " + (this.props.open ? "open" : "")}>
+                <input type="text" placeholder="Введите ссылку" className="link-input" oninput={this.setValue} value={this.state.value}/>
+                <button type="submit" className="link-btn" onclick={this.handleSubmit}>
                     <Img src="daw.svg" className="success-icon"/>
                 </button>
             </div>

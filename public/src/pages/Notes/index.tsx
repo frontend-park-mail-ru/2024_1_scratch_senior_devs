@@ -94,7 +94,7 @@ export class NotesPage extends ScReact.Component<any, any> {
             id = e.target.parentNode.id;
         }
 
-        if (id) {
+        if (id && this.state.selectedNote?.id !== id) {
             this.setState(state => ({
                 ...state,
                 editorOpen: true
