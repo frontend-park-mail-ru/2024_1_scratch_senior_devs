@@ -193,6 +193,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
     async deleteNote() {
         const {status, csrf} = await AppNoteRequests.Delete(this.state.selectedNote.id, AppUserStore.state.JWT, AppUserStore.state.csrf)
 
+        AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf)
+
         if (status == 204) {
             this.SetState(state => ({
                 ...state,
@@ -200,8 +202,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
             }))
 
             this.closeNote()
-
-            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf)
 
             AppToasts.info("Заметка успешно удалена")
         }
@@ -235,7 +235,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
         this.SetState(state => ({
             ...state,
-            offset: state.offset + 1,
+            offset: state.offset + 1, // ?
             // notes: [...state.notes, response.body],
             notes: [response.body, ...state.notes]
         }))
