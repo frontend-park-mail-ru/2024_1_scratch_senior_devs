@@ -101,6 +101,9 @@ export class Dropdown extends ScReact.Component<any, any> {
             attr.file = "";
             attr.fileName = "";
             content = undefined;
+        } else if (id === "youtube") {
+            console.log("Select youtube")
+            this.props.openYoutubeDialog()
         }
 
         AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK_TYPE, {
@@ -151,6 +154,12 @@ export class Dropdown extends ScReact.Component<any, any> {
                 icon: "document.svg",
                 title: "Файл",
                 desc: "Загрузите файл с вашего компьютера"
+            },
+            {
+                id: "youtube",
+                icon: "youtube.svg",
+                title: "Видео",
+                desc: "Вставьте ссылку на видео из ютуба"
             },
             // {
             //     id: "text",

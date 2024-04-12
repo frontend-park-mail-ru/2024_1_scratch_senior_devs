@@ -43,7 +43,7 @@ export class Input extends ScReact.Component<any, InputState>{
         return (
             <div className="input-wrapper">
 
-                <div className={"input-container " + (this.props.validationResult ? "success" : "") + (this.props.error  ? "error" : "")}>
+                <div className={"input-container " + (this.props.validationResult ? "success" : "") + (this.props.error  ? "error" : "") + (this.state.hasIcon  ? " has-icon" : "")}>
                     <input type={this.state.type} placeholder=" " value={this.props.value} oninput={this.handleChange}/>
                     <div className="label">{this.state.placeholder}</div>
                     <div className="underline"></div>

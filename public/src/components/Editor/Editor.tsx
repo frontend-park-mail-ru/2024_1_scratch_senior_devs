@@ -7,6 +7,10 @@ import {AppDispatcher} from "../../modules/dispatcher";
 import "./Editor.sass"
 import {Dropdown} from "../Dropdown/Dropdown";
 import {Tippy} from "../Tippy/Tippy";
+import {Modal} from '../Modal/Modal';
+import {DeleteNoteDialog} from '../DeleteNoteDialog/DeleteNoteDialog';
+import {NotesActions} from '../../modules/stores/NotesStore';
+import YoutubeDialogForm from '../YoutubeDialog/YoutubeDialog';
 
 export interface Note {
     title: string,
@@ -22,6 +26,7 @@ export class Editor extends Component<any, EditorState> {
         blocks: 0,
         dropdownOpen: false,
         tippyOpen: false,
+        youtubeDialogOpen: false,
         title: ""
     }
 
@@ -98,6 +103,20 @@ export class Editor extends Component<any, EditorState> {
         this.setState(state => ({
             ...state,
             dropdownOpen: false
+        }))
+    }
+
+    openYoutubeDialog = () => {
+        this.setState(state => ({
+            ...state,
+            youtubeDialogOpen: true
+        }))
+    }
+
+    closeYoutubeDialog = () => {
+        this.setState(state => ({
+            ...state,
+            youtubeDialogOpen: false
         }))
     }
 
@@ -185,10 +204,12 @@ export class Editor extends Component<any, EditorState> {
                 <div className="note-body-container">
                     {this.renderBlocks()}
                 </div>
+                <Modal open={this.state.youtubeDialogOpen} content={<YoutubeDialogForm />} handleClose={this.closeYoutubeDialog} />
                 <Dropdown blockId={AppNoteStore.state.dropdownPos.blockId}
                           style={`left: ${AppNoteStore.state.dropdownPos.left}px; top: ${AppNoteStore.state.dropdownPos.top}px;`}
                           onClose={this.closeEditor}
                           open={this.state.dropdownOpen}
+                          openYoutubeDialog={this.openYoutubeDialog}
                 />
                 <Tippy open={this.state.tippyOpen}
                        onClose={this.closeTippy}

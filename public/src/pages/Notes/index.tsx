@@ -166,11 +166,12 @@ export class NotesPage extends ScReact.Component<any, any> {
                         </div>
                     </div>
                     <div className="notes-container" onclick={this.handleSelectNote}>
-                        <Loader active={this.state.fetching} />
+                        <Loader active={this.state.fetching}/>
                         {this.state.notes.map(note => (
-                            <div className={'note-container ' + (this.state.selectedNote?.id == note.id ? 'selected' : '')}
-                                 id={note.id}
-                                 ref={ref => this.saveSelectedNoteRef(note, ref)}
+                            <div
+                                className={'note-container ' + (this.state.selectedNote?.id == note.id ? 'selected' : '')}
+                                id={note.id}
+                                ref={ref => this.saveSelectedNoteRef(note, ref)}
                             >
                                 <h3>{truncate(note.data.title, 20)}</h3>
                                 <p></p>
@@ -179,7 +180,10 @@ export class NotesPage extends ScReact.Component<any, any> {
                         ))}
                     </div>
                 </aside>
-                <NoteEditor open={this.state.editorOpen} setClose={this.closeEditor} onChangeTitle={this.onChangeSelectedNoteTitle}/>
+                <NoteEditor open={this.state.editorOpen}
+                            setClose={this.closeEditor}
+                            onChangeTitle={this.onChangeSelectedNoteTitle}
+                />
             </div>
         )
     }
