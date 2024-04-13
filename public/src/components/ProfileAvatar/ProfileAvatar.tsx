@@ -6,6 +6,7 @@ import {AppDispatcher} from "../../modules/dispatcher";
 import {AppUserStore, UserActions, UserStoreState} from '../../modules/stores/UserStore';
 import "./ProfileAvatar.sass"
 import {AvatarUploadLoader} from "../AvatarUplodaLoader/AvatarUploadLoader";
+import {crop} from '../../modules/utils';
 
 const MEGABYTE_SIZE = 1024 * 1024
 const MAX_AVATAR_SIZE = 5 * MEGABYTE_SIZE
@@ -58,6 +59,7 @@ export class ProfileAvatar extends ScReact.Component<any, ProfileAvatarState> {
         }
 
         const file = e.target.files[0]
+        console.log(file.type)
 
         if (file.size > MAX_AVATAR_SIZE) {
             AppToasts.error("Фото слишком большое")
@@ -65,7 +67,24 @@ export class ProfileAvatar extends ScReact.Component<any, ProfileAvatarState> {
             return
         }
 
-        AppDispatcher.dispatch(UserActions.UPDATE_AVATAR, file)
+        const reader = new FileReader();
+
+        reader.addEventListener(
+            "load",
+            () => {
+                crop(reader.result as string).then(canvas => {
+                    canvas.toBlob((blob) => {
+                        const croppedFile = new File([blob], file.name, { type: file.type })
+                        AppDispatcher.dispatch(UserActions.UPDATE_AVATAR, croppedFile)
+                    }, file.type)
+                });
+            },
+            false,
+        );
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
 
         e.target.value = null
     }
