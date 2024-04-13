@@ -4,6 +4,7 @@ import {AppUserStore, UserActions} from "./UserStore";
 import {AppDispatcher} from "../dispatcher";
 import {AppToasts} from "../toasts";
 import {AppNoteStore, NoteStoreActions} from './NoteStore';
+import {Block, BlockNode} from "../../components/Block/Block";
 
 export type Note = {
     id: number,
@@ -269,6 +270,14 @@ class NotesStore extends BaseStore<NotesStoreState> {
             })
         } else {
             AppToasts.error("Не удалось загрузить изображение " + file.name)
+            const block: BlockNode = AppNoteStore.state.note.blocks[blockId];
+            block.content = [];
+            block.attributes = null;
+            block.type = "div";
+            AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
+                blockId: blockId,
+                newBlock: block
+            })
         }
     }
 
@@ -312,6 +321,14 @@ class NotesStore extends BaseStore<NotesStoreState> {
             })
         } else {
             AppToasts.error("Не удалось прикрепить файл " + file.name)
+            const block: BlockNode = AppNoteStore.state.note.blocks[blockId];
+            block.content = [];
+            block.attributes = null;
+            block.type = "div";
+            AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
+                blockId: blockId,
+                newBlock: block
+            })
         }
     }
 

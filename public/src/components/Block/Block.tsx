@@ -131,11 +131,11 @@ export class Block extends Component<BlockProps, BlockState> {
                 }}
                 onclick={() => {
                     // console.log("click")
-                    // const cursorPosition = getCursorInBlock(this.self)
-                    // AppDispatcher.dispatch(NoteStoreActions.MOVE_CURSOR, {
-                    //     blockId: this.props.blockId,
-                    //     pos: cursorPosition
-                    // })
+                    const cursorPosition = getCursorInBlock(this.self)
+                    AppDispatcher.dispatch(NoteStoreActions.MOVE_CURSOR, {
+                        blockId: this.props.blockId,
+                        pos: cursorPosition
+                    })
                 }}
             >
 
@@ -228,6 +228,20 @@ export class Block extends Component<BlockProps, BlockState> {
                                     AppDispatcher.dispatch(NoteStoreActions.ADD_BLOCK, {insertPos: this.props.blockId + 1});
                                     const block = AppNoteStore.state.note.blocks[this.props.blockId];
                                     if (block.attributes != null &&
+                                        (("ul" in block.attributes &&
+                                            block.attributes.ul == true) ||
+                                        ("ol" in block.attributes &&
+                                            block.attributes.ol == true)) &&
+                                        block.content.length === 0) {
+                                        block.attributes = null;
+                                        AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
+                                            blockId: this.props.blockId,
+                                            newBlock: block
+                                        });
+                                        moveCursorUpAndDown(this.props.blockId);
+                                        return;
+                                    }
+                                    if (block.attributes != null &&
                                         "ul" in block.attributes &&
                                         block.attributes.ul == true) {
                                         setTimeout(() => {
@@ -312,8 +326,10 @@ export class Block extends Component<BlockProps, BlockState> {
                                         return;
                                     }
                                     if (block.attributes != null &&
-                                        "file" in block.attributes) {
-                                        delete block.attributes.file
+                                        "fileName" in block.attributes) {
+                                        delete block.attributes.fileName
+                                        block.attributes = null
+                                        block.type = "div"
                                         block.content = [];
                                         AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
                                             blockId: this.props.blockId,

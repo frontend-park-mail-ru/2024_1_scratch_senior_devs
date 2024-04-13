@@ -4,7 +4,7 @@ import {NoteStoreActions} from "../../../modules/stores/NoteStore";
 export const moveCursorUpAndDown = (blockId: number) => {
     setTimeout(()=> {
         AppDispatcher.dispatch(NoteStoreActions.MOVE_CURSOR, {
-            blockId: blockId - 1,
+            blockId: blockId !== 0 ? blockId - 1 : 1,
             pos: 0
         })
         setTimeout(() => {

@@ -202,17 +202,17 @@ class NoteStore extends BaseStore<NoteStoreState> {
 
     private deleteBlock = (delPos: number) => {
         this.closeDropdown();
-        if (delPos == 0) {
+        if (this.state.note.blocks.length == 1) {
             return
         }
         this.SetState(s => {
             const oldNote: Note = this.state.note;
             oldNote.blocks.splice(delPos, 1)
-            const pos = this.state.note.blocks[delPos - 1].content?.reduce((prev: number, curr: PieceNode, i: number) => {
+            const pos = this.state.note.blocks[(delPos == 0 ? 0 : (delPos - 1))].content?.reduce((prev: number, curr: PieceNode, i: number) => {
                 prev += curr.content.length
                 return prev
             }, 0)
-            return {...s, note: oldNote, cursorPosition: {blockId: delPos - 1, pos: pos}}
+            return {...s, note: oldNote, cursorPosition: {blockId: (delPos == 0 ? 0 : (delPos - 1)), pos: pos}}
         })
         this.saveNote();
     }
