@@ -68,9 +68,6 @@ class NoteStore extends BaseStore<NoteStoreState> {
                 case NoteStoreActions.CHANGE_PIECE:
                     this.changePiece(action.payload.blockId, action.payload.pieces, action.payload.posOffset);
                     break;
-                case NoteStoreActions.REMOVE_PIECE:
-                    // this.removePiece(action.payload.blockId, action.payload.pieceId);
-                    break;
                 case NoteStoreActions.ADD_NEW_PIECE:
                     this.addNewPiece(action.payload.blockId, action.payload.insertPosition, action.payload.content);
                     break;
@@ -154,21 +151,9 @@ class NoteStore extends BaseStore<NoteStoreState> {
             blockId: blockId,
             pos: posOffset
         }
+        this.addEmptyBlockToEnd();
         this.saveNote();
-        // this.SetState(s => {
-        //     const oldNote: Note = this.state.note;
-        //     const newBlockContent = new Array<PieceNode>()
-        //     pieces.forEach(piece => {
-        //         newBlockContent.push({
-        //             id: oldNote.blocks[blockId].content[piece.pieceId].id,
-        //             content: piece.content,
-        //             attributes: oldNote.blocks[blockId].content[piece.pieceId].attributes
-        //         })
-        //     })
-        //     oldNote.blocks[blockId].content = newBlockContent;
-        //     console.log(oldNote)
-        //     return {...s, note: oldNote, cursorPosition: {blockId: blockId, pos: posOffset}}
-        // })
+
     }
 
     private addNewPiece = (blockId: number, insertPosition: number, content: string) => {
@@ -214,6 +199,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
             }, 0)
             return {...s, note: oldNote, cursorPosition: {blockId: (delPos == 0 ? 0 : (delPos - 1)), pos: pos}}
         })
+        this.addEmptyBlockToEnd();
         this.saveNote();
     }
 
@@ -239,6 +225,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
             oldNote.blocks[blockId] = newBlock;
             return {...s, note: oldNote}
         })
+        this.addEmptyBlockToEnd();
         this.saveNote();
     }
 
@@ -258,6 +245,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
                 return {...s, note: oldNote}
             }
         })
+        this.addEmptyBlockToEnd();
         this.saveNote();
     }
 
@@ -293,6 +281,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
             oldNote.blocks[blockId].content = content;
             return {...s, note: oldNote}
         })
+        this.addEmptyBlockToEnd();
         this.saveNote();
     }
 
@@ -458,6 +447,22 @@ class NoteStore extends BaseStore<NoteStoreState> {
             })
         }
         this.saveNote();
+    }
+
+    private addEmptyBlockToEnd = () => {
+        if (AppNoteStore.state.note.blocks[AppNoteStore.state.note.blocks.length - 1].content?.length !== 0 ||
+            AppNoteStore.state.note.blocks[AppNoteStore.state.note.blocks.length - 1].content == null) {
+            const block: BlockNode = {
+                id: create_UUID(),
+                attributes: null,
+                type: "div",
+                content: []
+            }
+            AppNoteStore.SetState(s => {
+                s.note.blocks.push(block);
+                return {...s}
+            })
+        }
     }
 }
 

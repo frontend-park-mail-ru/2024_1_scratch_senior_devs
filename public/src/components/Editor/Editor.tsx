@@ -177,8 +177,16 @@ export class Editor extends Component<any, EditorState> {
                  ondragover={(e) => {
                      e.preventDefault();
                  }}
-                 ondragenter={(e) => {e.target.style.border = "1px solid blue"}}
-                 ondragleave={(e)=>{e.target.style.border = "none"}}
+                 ondragenter={(e) => {
+                     e.target.style.border = "1px solid blue";
+                     e.target.style.height = "8px";
+                 }
+            }
+                 ondragleave={(e)=>{
+                     e.target.style.border = "none";
+                     e.target.style.height = "4px";
+                 }
+            }
             ></div>
         )
         return result;

@@ -12,6 +12,7 @@ import {getCursorInBlock, setCursorInBlock} from "../../utils/cursorPos";
 import {moveCursorUpAndDown} from "./utils/cursorActions";
 import {Attach} from '../Attach/Attach';
 import {NotesActions} from '../../modules/stores/NotesStore';
+import {App} from "../../App";
 
 export interface BlockNode {
     id: string
@@ -130,12 +131,15 @@ export class Block extends Component<BlockProps, BlockState> {
                     e.dataTransfer.setData("blockId", this.props.blockId.toString())
                 }}
                 onclick={() => {
-                    // console.log("click")
-                    const cursorPosition = getCursorInBlock(this.self)
-                    AppDispatcher.dispatch(NoteStoreActions.MOVE_CURSOR, {
-                        blockId: this.props.blockId,
-                        pos: cursorPosition
-                    })
+                    if (AppNoteStore.state.note.blocks[this.props.blockId].type === "img" ||
+                        (AppNoteStore.state.note.blocks[this.props.blockId].attributes != null &&
+                           "fileName" in AppNoteStore.state.note.blocks[this.props.blockId].attributes)) {
+                        const cursorPosition = getCursorInBlock(this.self)
+                        AppDispatcher.dispatch(NoteStoreActions.MOVE_CURSOR, {
+                            blockId: this.props.blockId,
+                            pos: cursorPosition
+                        })
+                    }
                 }}
             >
 
@@ -225,13 +229,12 @@ export class Block extends Component<BlockProps, BlockState> {
                             onkeydown: (e: Event) => {
                                 if ("key" in e && e.key === "Enter") {
                                     e.preventDefault();
-                                    AppDispatcher.dispatch(NoteStoreActions.ADD_BLOCK, {insertPos: this.props.blockId + 1});
                                     const block = AppNoteStore.state.note.blocks[this.props.blockId];
                                     if (block.attributes != null &&
                                         (("ul" in block.attributes &&
-                                            block.attributes.ul == true) ||
-                                        ("ol" in block.attributes &&
-                                            block.attributes.ol == true)) &&
+                                                block.attributes.ul == true) ||
+                                            ("ol" in block.attributes &&
+                                                block.attributes.ol == true)) &&
                                         block.content.length === 0) {
                                         block.attributes = null;
                                         AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
@@ -241,6 +244,7 @@ export class Block extends Component<BlockProps, BlockState> {
                                         moveCursorUpAndDown(this.props.blockId);
                                         return;
                                     }
+                                    AppDispatcher.dispatch(NoteStoreActions.ADD_BLOCK, {insertPos: this.props.blockId + 1});
                                     if (block.attributes != null &&
                                         "ul" in block.attributes &&
                                         block.attributes.ul == true) {
