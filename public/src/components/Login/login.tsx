@@ -1,37 +1,37 @@
-import {ScReact} from "@veglem/screact";
-import {VDomNode} from "@veglem/screact/dist/vdom";
-import {Input} from "../Input/Input";
-import {Button} from "../Button/Button";
-import {ValidateLogin, ValidatePassword} from "../../modules/validation";
-import {AppDispatcher} from "../../modules/dispatcher";
-import {AppUserStore, UserActions, UserStoreState} from "../../modules/stores/UserStore";
-import {Link} from "../Link/Link";
-import {OTPDialog} from "../OTPDialog/OTPDialog";
+import {ScReact} from '@veglem/screact';
+import {VDomNode} from '@veglem/screact/dist/vdom';
+import {Input} from '../Input/Input';
+import {Button} from '../Button/Button';
+import {ValidateLogin, ValidatePassword} from '../../modules/validation';
+import {AppDispatcher} from '../../modules/dispatcher';
+import {AppUserStore, UserActions, UserStoreState} from '../../modules/stores/UserStore';
+import {Link} from '../Link/Link';
+import {OTPDialog} from '../OTPDialog/OTPDialog';
 
-const OTP_CODE_LENGTH = 6
+const OTP_CODE_LENGTH = 6;
 
 export class LoginForm extends  ScReact.Component<any, any> {
     state = {
         error: false,
 
-        errorLogin: "",
+        errorLogin: '',
         loginValidationResult: false,
-        login: "",
+        login: '',
 
-        errorPassword: "",
+        errorPassword: '',
         passwordValidationResult: false,
-        password: "",
+        password: '',
 
         otpDialogOpen: false,
-        otpValue: new Array(OTP_CODE_LENGTH).fill("")
-    }
+        otpValue: new Array(OTP_CODE_LENGTH).fill('')
+    };
 
     componentDidMount() {
-        AppUserStore.SubscribeToStore(this.updateState)
+        AppUserStore.SubscribeToStore(this.updateState);
     }
 
     componentWillUnmount() {
-        AppUserStore.UnSubscribeToStore(this.updateState)
+        AppUserStore.UnSubscribeToStore(this.updateState);
     }
 
     updateState = (store:UserStoreState) => {
@@ -39,28 +39,28 @@ export class LoginForm extends  ScReact.Component<any, any> {
             ...state,
             error: store.errorLoginForm !== undefined,
             otpDialogOpen: store.otpDialogOpen
-        }))
+        }));
 
         if (this.state.error) {
-            this.setLoginError(store.errorLoginForm)
-            this.setLoginValidated(false)
-            this.setPasswordError(store.errorLoginForm)
-            this.setPasswordValidated(false)
+            this.setLoginError(store.errorLoginForm);
+            this.setLoginValidated(false);
+            this.setPasswordError(store.errorLoginForm);
+            this.setPasswordValidated(false);
         }
-    }
+    };
 
     setOtpValue = (value:string[]) => {
         this.setState(state => ({
             ...state,
             otpValue: value
-        }))
-    }
+        }));
+    };
 
     handleSubmit = (e) => {
-        e.preventDefault()
+        e.preventDefault();
 
-        this.checkLogin()
-        this.checkPassword()
+        this.checkLogin();
+        this.checkPassword();
 
         if (this.state.loginValidationResult && this.state.passwordValidationResult) {
             AppDispatcher.dispatch(
@@ -68,82 +68,82 @@ export class LoginForm extends  ScReact.Component<any, any> {
                 {
                     username: this.state.login,
                     password: this.state.password,
-                    code: this.state.otpValue.join("")
+                    code: this.state.otpValue.join('')
                 }
-            )
+            );
         }
-    }
+    };
 
     setLoginValidated = (value:boolean)=> {
         this.setState(state => ({
             ...state,
             loginValidationResult: value
-        }))
-    }
+        }));
+    };
 
     setLogin = (value:string) => {
         this.setState(s => {
             return {
                 ...s,
                 login: value
-            }
-        })
+            };
+        });
 
-        this.checkLogin()
-    }
+        this.checkLogin();
+    };
 
     checkLogin = () => {
-        const {message, result} = ValidateLogin(this.state.login)
-        this.setLoginValidated(result)
+        const {message, result} = ValidateLogin(this.state.login);
+        this.setLoginValidated(result);
 
         if (!result) {
-            this.setLoginError(message)
+            this.setLoginError(message);
         } else {
-            this.setLoginError("")
+            this.setLoginError('');
         }
-    }
+    };
 
     setLoginError = (value:string) => {
         this.setState(state => ({
             ...state,
             errorLogin: value
-        }))
-    }
+        }));
+    };
 
     setPassword = (value:string) => {
         this.setState(state => ({
             ...state,
             password: value
-        }))
+        }));
 
-        this.checkPassword()
-    }
+        this.checkPassword();
+    };
 
     checkPassword = () => {
-        const {message, result} = ValidatePassword(this.state.password)
+        const {message, result} = ValidatePassword(this.state.password);
 
-        this.setPasswordValidated(result)
+        this.setPasswordValidated(result);
 
         if (!result) {
-            this.setPasswordError(message)
+            this.setPasswordError(message);
         } else {
-            this.setPasswordError("")
+            this.setPasswordError('');
         }
-    }
+    };
 
     setPasswordError = (value:string) => {
         this.setState(state => ({
             ...state,
             errorPassword: value
-        }))
-    }
+        }));
+    };
 
     setPasswordValidated = (value:boolean)=> {
         this.setState(state => ({
             ...state,
             passwordValidationResult: value
-        }))
-    }
+        }));
+    };
 
     render(): VDomNode {
         return (
@@ -169,7 +169,7 @@ export class LoginForm extends  ScReact.Component<any, any> {
                 />
                 <OTPDialog open={this.state.otpDialogOpen} value={this.state.otpValue} setValue={this.setOtpValue} error={this.state.error}/>
                 <Link label="Еще нет аккаунта?" onClick={this.props.toggleForm} />
-                <Button label="Войти" onClick={this.handleSubmit} disabled={this.state.otpDialogOpen ? this.state.otpValue.join("").length !== OTP_CODE_LENGTH : false}/>
+                <Button label="Войти" onClick={this.handleSubmit} disabled={this.state.otpDialogOpen ? this.state.otpValue.join('').length !== OTP_CODE_LENGTH : false}/>
             </form>
         );
     }

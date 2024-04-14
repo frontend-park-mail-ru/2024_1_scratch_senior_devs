@@ -1,11 +1,11 @@
-import {ScReact} from "@veglem/screact";
-import "./ShiningButton.sass"
+import {ScReact} from '@veglem/screact';
+import './ShiningButton.sass';
 
 export class ShiningButton extends ScReact.Component<any, any> {
     handleClick = (e) => {
-        e.preventDefault()
+        e.preventDefault();
         this.props.onClick && this.props.onClick(e);
-    }
+    };
 
     render() {
         return (
@@ -15,6 +15,6 @@ export class ShiningButton extends ScReact.Component<any, any> {
                     <span>{this.props.label}</span>
                 </div>
             </div>
-        )
+        );
     }
 }

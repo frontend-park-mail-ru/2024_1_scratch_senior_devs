@@ -10,21 +10,21 @@ type TextNode = {
 }
 
 const BuildTree = (node: Node) : Elem => {
-    if (node.nodeName === "#text") {
-        return {content: node.textContent}
+    if (node.nodeName === '#text') {
+        return {content: node.textContent};
     } else {
         const children = Array<Elem>();
         node.childNodes.forEach(child => {
             children.push(BuildTree(child));
-        })
+        });
         const element = node as HTMLElement;
-        const styles: Record<string, string> = {}
+        const styles: Record<string, string> = {};
         for (const style in element.style) {
             styles[style] = element.style[style];
         }
-        return {content: children, styles: styles}
+        return {content: children, styles: styles};
     }
-}
+};
 
 // const FlatTree = (root: Elem) : Elem[] => {
 //

@@ -1,5 +1,5 @@
-import {ScReact} from "@veglem/screact";
-import "./QRModal.sass"
+import {ScReact} from '@veglem/screact';
+import './QRModal.sass';
 
 export class QRModal extends ScReact.Component<any, any> {
     render() {
@@ -8,6 +8,6 @@ export class QRModal extends ScReact.Component<any, any> {
                 <h3>Ваш QR-код</h3>
                 <img src={this.props.image} alt=""/>
             </div>
-        )
+        );
     }
 }

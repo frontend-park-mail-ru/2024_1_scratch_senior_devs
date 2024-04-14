@@ -1,14 +1,14 @@
-import {ScReact} from "@veglem/screact";
-import "./style.sass"
-import {SearchBar} from "../../components/SearchBar/SearchBar";
-import {NoteEditor} from "../../components/NoteEditor/NoteEditor";
-import {AppNotesStore, NotesActions, NotesStoreState} from "../../modules/stores/NotesStore";
-import {AppDispatcher} from "../../modules/dispatcher";
-import {Modal} from "../../components/Modal/Modal";
-import {Button} from "../../components/Button/Button";
-import {Img} from "../../components/Image/Image";
-import {DeleteNoteDialog} from "../../components/DeleteNoteDialog/DeleteNoteDialog";
-import {AppNoteStore} from "../../modules/stores/NoteStore";
+import {ScReact} from '@veglem/screact';
+import './style.sass';
+import {SearchBar} from '../../components/SearchBar/SearchBar';
+import {NoteEditor} from '../../components/NoteEditor/NoteEditor';
+import {AppNotesStore, NotesActions, NotesStoreState} from '../../modules/stores/NotesStore';
+import {AppDispatcher} from '../../modules/dispatcher';
+import {Modal} from '../../components/Modal/Modal';
+import {Button} from '../../components/Button/Button';
+import {Img} from '../../components/Image/Image';
+import {DeleteNoteDialog} from '../../components/DeleteNoteDialog/DeleteNoteDialog';
+import {AppNoteStore} from '../../modules/stores/NoteStore';
 import {Loader} from '../../components/Loader/Loader';
 import {formatDate, truncate} from '../../modules/utils';
 
@@ -19,59 +19,59 @@ export class NotesPage extends ScReact.Component<any, any> {
         deleteNoteModal: false,
         editorOpen: false,
         fetching: false
-    }
+    };
 
     componentDidMount() {
-        document.title = "Заметки"
+        document.title = 'Заметки';
 
-        AppNotesStore.SubscribeToStore(this.updateState)
+        AppNotesStore.SubscribeToStore(this.updateState);
         AppNoteStore.AddSaver(this.updateNotesTitles);
 
         this.setState(state => ({
             ...state,
             notes: this.props.notes
-        }))
+        }));
 
         if (this.props.note) {
             this.setState(state => ({
                 ...state,
                 editorOpen: true
-            }))
+            }));
 
-            AppDispatcher.dispatch(NotesActions.SELECT_NOTE, this.props.note)
+            AppDispatcher.dispatch(NotesActions.SELECT_NOTE, this.props.note);
         }
 
-        this.createObserver()
+        this.createObserver();
     }
 
     updateNotesTitles = () => {
-        console.log("updateNotesTitles")
+        console.log('updateNotesTitles');
         setTimeout(()=> {
-            console.log(AppNoteStore.state.note)
+            console.log(AppNoteStore.state.note);
             const notes = AppNotesStore.state.notes;
             notes.forEach((note, index) => {
                 if (note.id == this.state.selectedNote?.id) {
-                    console.log("Yeeees")
-                    notes[index].data.title = AppNoteStore.state.note.title
-                    console.log(notes)
+                    console.log('Yeeees');
+                    notes[index].data.title = AppNoteStore.state.note.title;
+                    console.log(notes);
                 }
-            })
+            });
             this.setState(s=>({
                 ...s,
                 notes: notes
-            }))
-        }, 10)
-    }
+            }));
+        }, 10);
+    };
 
     componentWillUnmount() {
-        AppDispatcher.dispatch(NotesActions.EXIT)
-        AppNotesStore.UnSubscribeToStore(this.updateState)
+        AppDispatcher.dispatch(NotesActions.EXIT);
+        AppNotesStore.UnSubscribeToStore(this.updateState);
     }
 
     updateState = (store:NotesStoreState) => {
         this.setState(state => {
             if (state.notes.length > 0 && state.notes.length < AppNotesStore.state.notes.length) {
-                this.createObserver()
+                this.createObserver();
             }
 
             return {
@@ -81,16 +81,16 @@ export class NotesPage extends ScReact.Component<any, any> {
                 notes: store.notes,
                 deleteNoteModal: store.modalOpen,
                 fetching: store.fetching
-            }
-        })
-    }
+            };
+        });
+    };
 
     handleSelectNote = (e) => {
         let id = undefined;
 
-        if (e.target.matches(".note-container")) {
+        if (e.target.matches('.note-container')) {
             id = e.target.id;
-        } else if (e.target.matches(".note-container *")) {
+        } else if (e.target.matches('.note-container *')) {
             id = e.target.parentNode.id;
         }
 
@@ -98,20 +98,20 @@ export class NotesPage extends ScReact.Component<any, any> {
             this.setState(state => ({
                 ...state,
                 editorOpen: true
-            }))
+            }));
 
-            AppDispatcher.dispatch(NotesActions.FETCH_NOTE, id)
+            AppDispatcher.dispatch(NotesActions.FETCH_NOTE, id);
         }
-    }
+    };
 
     closeEditor = () => {
         this.setState(state => ({
             ...state,
             editorOpen: false
-        }))
+        }));
 
-        history.replaceState(null, null, "/notes");
-    }
+        history.replaceState(null, null, '/notes');
+    };
 
     createObserver() {
         const observer = new IntersectionObserver(
@@ -121,39 +121,39 @@ export class NotesPage extends ScReact.Component<any, any> {
                         setTimeout(() => {
                             AppDispatcher.dispatch(NotesActions.LOAD_NOTES);
                             observer.unobserve(entry.target);
-                        }, 500)
+                        }, 500);
                     }
                 });
             });
 
-        const lastNote = document.querySelector(".note-container:last-child")
+        const lastNote = document.querySelector('.note-container:last-child');
         lastNote && observer.observe(lastNote);
     }
 
     searchNotes = (value:string) => {
-        AppDispatcher.dispatch(NotesActions.SEARCH_NOTES, value)
-    }
+        AppDispatcher.dispatch(NotesActions.SEARCH_NOTES, value);
+    };
 
     createNewNote = () => {
-        AppDispatcher.dispatch(NotesActions.CREATE_NEW_NOTE)
-    }
+        AppDispatcher.dispatch(NotesActions.CREATE_NEW_NOTE);
+    };
 
-    private noteRefs = {}
+    private noteRefs = {};
 
     saveSelectedNoteRef = (note, ref) => {
-        this.noteRefs[note.id] = ref
-    }
+        this.noteRefs[note.id] = ref;
+    };
 
     onChangeSelectedNoteTitle = (title) => {
-        console.log("onChangeSelectedNoteTitle")
-        const selectedNote = this.noteRefs[this.state.selectedNote.id]
-        const noteTitle = selectedNote.querySelector("h3")
-        noteTitle.innerHTML = truncate(title, 20)
-    }
+        console.log('onChangeSelectedNoteTitle');
+        const selectedNote = this.noteRefs[this.state.selectedNote.id];
+        const noteTitle = selectedNote.querySelector('h3');
+        noteTitle.innerHTML = truncate(title, 20);
+    };
 
     render() {
         return (
-            <div className={"notes-page-wrapper " + (this.state.editorOpen ? "active" : "")} >
+            <div className={'notes-page-wrapper ' + (this.state.editorOpen ? 'active' : '')} >
                 <aside>
                     <Modal open={this.state.deleteNoteModal} content={<DeleteNoteDialog />} handleClose={() => AppDispatcher.dispatch(NotesActions.CLOSE_DELETE_NOTE_DIALOG)} />
                     <div className="top-panel">
@@ -185,6 +185,6 @@ export class NotesPage extends ScReact.Component<any, any> {
                             onChangeTitle={this.onChangeSelectedNoteTitle}
                 />
             </div>
-        )
+        );
     }
 }

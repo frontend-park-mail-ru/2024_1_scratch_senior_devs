@@ -1,4 +1,4 @@
-import {ScReact} from "@veglem/screact";
+import {ScReact} from '@veglem/screact';
 
 export class CarouselItem extends ScReact.Component<any, any> {
     render() {
@@ -7,6 +7,6 @@ export class CarouselItem extends ScReact.Component<any, any> {
                 <h3 className="carousel-item-title">{this.props.item.title}</h3>
                 <div className="carousel-item-description">{this.props.item.description}</div>
             </div>
-        )
+        );
     }
 }

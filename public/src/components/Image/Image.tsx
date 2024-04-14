@@ -1,4 +1,4 @@
-import {ScReact} from "@veglem/screact";
+import {ScReact} from '@veglem/screact';
 
 type ImageProps = {
     src?: string,
@@ -10,7 +10,7 @@ type ImageProps = {
 export class Img extends ScReact.Component<ImageProps, any> {
     render() {
         return (
-            <img src={"./src/assets/" + this.props.src} alt="" className={this.props.className ? this.props.className : ""} onclick={this.props.onClick}/>
-        )
+            <img src={'./src/assets/' + this.props.src} alt="" className={this.props.className ? this.props.className : ''} onclick={this.props.onClick}/>
+        );
     }
 }

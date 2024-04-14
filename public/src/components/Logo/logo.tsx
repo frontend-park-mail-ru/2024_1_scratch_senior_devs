@@ -1,12 +1,12 @@
-import {ScReact} from "@veglem/screact";
-import {VDomNode} from "@veglem/screact/dist/vdom";
-import {AppRouter} from "../../modules/router";
-import "./logo.sass"
+import {ScReact} from '@veglem/screact';
+import {VDomNode} from '@veglem/screact/dist/vdom';
+import {AppRouter} from '../../modules/router';
+import './logo.sass';
 import {Img} from '../Image/Image';
 
 export class Logo extends ScReact.Component<any, any> {
     handleClick() {
-        AppRouter.go("/")
+        AppRouter.go('/');
     }
 
     render(): VDomNode {

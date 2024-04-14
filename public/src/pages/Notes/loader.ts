@@ -1,6 +1,6 @@
-import {AppUserStore, UserStoreState} from "../../modules/stores/UserStore";
-import {AppNotesStore} from "../../modules/stores/NotesStore";
-import {AppRouter} from "../../modules/router";
+import {AppUserStore, UserStoreState} from '../../modules/stores/UserStore';
+import {AppNotesStore} from '../../modules/stores/NotesStore';
+import {AppRouter} from '../../modules/router';
 import {AppNoteRequests} from '../../modules/api';
 import {AppToasts} from '../../modules/toasts';
 
@@ -12,13 +12,13 @@ export const NotesLoader = async (path:string) => {
             if (isAuth) {
                 AppNotesStore.init().then((store) => {
                     resolve({notes: store.notes});
-                })
+                });
             } else {
-                AppRouter.go("/")
-                reject()
+                AppRouter.go('/');
+                reject();
             }
 
-            return
+            return;
         }
 
         const callback = (state: UserStoreState) => {
@@ -28,27 +28,27 @@ export const NotesLoader = async (path:string) => {
 
             if (isAuth) {
                 AppNotesStore.init().then((store) => {
-                    if (path?.includes("/notes/")) {
-                        const noteId = window.location.pathname.split('/').at(-1)
+                    if (path?.includes('/notes/')) {
+                        const noteId = window.location.pathname.split('/').at(-1);
                         AppNoteRequests.Get(noteId, AppUserStore.state.JWT).then(note => {
                             resolve({notes: store.notes, note: note});
                         }).catch(() => {
-                            AppToasts.error("Заметка не найдена")
-                            history.replaceState(null, "", "/notes");
-                            resolve({notes: store.notes})
-                        })
+                            AppToasts.error('Заметка не найдена');
+                            history.replaceState(null, '', '/notes');
+                            resolve({notes: store.notes});
+                        });
                     } else {
                         resolve({notes: store.notes});
                     }
-                })
+                });
             } else {
-                AppRouter.go("/")
-                reject()
+                AppRouter.go('/');
+                reject();
             }
-        }
+        };
 
         AppUserStore.SubscribeToStore(callback);
-    })
+    });
 
     return await p;
-}
+};

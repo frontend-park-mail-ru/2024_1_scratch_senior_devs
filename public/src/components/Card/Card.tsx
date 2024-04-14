@@ -1,5 +1,5 @@
-import {ScReact} from "@veglem/screact";
-import "./Card.sass"
+import {ScReact} from '@veglem/screact';
+import './Card.sass';
 
 export class Card extends ScReact.Component<any, any> {
     render() {
@@ -9,6 +9,6 @@ export class Card extends ScReact.Component<any, any> {
                 <h3>{this.props.title}</h3>
                 <span>{this.props.description}</span>
             </div>
-        )
+        );
     }
 }
