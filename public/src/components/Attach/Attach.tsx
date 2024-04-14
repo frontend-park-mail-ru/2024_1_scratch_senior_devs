@@ -30,7 +30,7 @@ export class Attach extends ScReact.Component<any, any> {
                         {this.props.fileName.split('.')[1]}
                     </div>
                     <span className="file-name">
-                    {truncate(this.props.fileName, 25)}
+                    {truncate(this.props.fileName, 18)}
                 </span>
                 <span className="close-attach-btn-container">
                     <Img
