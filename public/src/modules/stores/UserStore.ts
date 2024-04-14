@@ -1,38 +1,73 @@
-import {AppDispatcher} from "../dispatcher";
-import {AppAuthRequests, AppProfileRequests} from "../api";
-import {AppRouter} from "../router";
-import {BaseStore} from "./BaseStore";
-import {AppToasts} from "../toasts";
+import {AppDispatcher} from '../dispatcher';
+import {AppAuthRequests, AppProfileRequests} from '../api';
+import {AppRouter} from '../router';
+import {BaseStore} from './BaseStore';
+import {AppToasts} from '../toasts';
 
 export type UserStoreState = {
     JWT: string | null | undefined,
+    csrf: string | null | undefined,
+    otpEnabled: boolean,
+    otpDialogOpen: boolean,
+    qr: string,
+    qrOpen: boolean,
     username: string,
     avatarUrl: string,
     isAuth: boolean,
     errorLoginForm: string | undefined,
     errorRegisterForm: string | undefined,
     errorUpdatePasswordForm: string | undefined,
-    updatePasswordFormOpen:boolean
+    updatePasswordFormOpen:boolean,
+    avatarUploadAnimation: boolean
+}
+
+export type UserLoginCredentialsType = {
+    username: string,
+    password: string,
+    code: string
+}
+
+export type UserRegisterCredentialsType = {
+    username: string,
+    password: string
+}
+
+export type UserUpdatePasswordCredentialsType = {
+    oldPassword: string,
+    newPassword: string
 }
 
 class UserStore extends BaseStore<UserStoreState>{
     state = {
         JWT: null,
-        username: "",
-        avatarUrl: "",
+        csrf: null,
+        otpEnabled: undefined,
+        otpDialogOpen: false,
+        qr: undefined,
+        qrOpen: false,
+        username: '',
+        avatarUrl: '',
         isAuth: undefined,
         errorLoginForm: undefined,
         errorRegisterForm: undefined,
         errorUpdatePasswordForm: undefined,
         updatePasswordFormOpen: false,
-    }
+        avatarUploadAnimation: false
+    };
 
+    /**
+     * Конструктор класса
+     */
     constructor() {
         super();
         this.state.JWT = window.localStorage.getItem('Authorization');
+        this.state.csrf = window.localStorage.getItem('x-csrf-token');
         this.registerEvents();
     }
 
+    /**
+     * Регистрация событий
+     */
     private registerEvents(){
         AppDispatcher.register(async (action) => {
             switch (action.type){
@@ -60,143 +95,251 @@ class UserStore extends BaseStore<UserStoreState>{
                 case UserActions.CLOSE_CHANGE_PASSWORD_FORM:
                     this.closeChangePasswordForm();
                     break;
+                case UserActions.TOGGLE_TWO_FACTOR_AUTHORIZATION:
+                    await this.toggleTwoFactorAuthorization(action.payload);
+                    break;
+                case UserActions.CLOSE_QR_WINDOW:
+                    this.closeQRWindow();
+                    break;
+                case UserActions.UPDATE_CSRF:
+                    this.updateCSRF(action.payload);
+                    break;
+                case UserActions.START_AVATAR_UPLOAD_ANIMATION:
+                    this.startUploadAnimation();
+                    break;
             }
         });
     }
 
-    private async login(credentials){
+    /**
+     * Вход в аккаунт
+     */
+    private async login(credentials:UserLoginCredentialsType){
         this.SetState(state => ({
             ...state,
             errorLoginForm: undefined
-        }))
+        }));
 
-        try {
-            const res = await AppAuthRequests.Login(credentials.username, credentials.password);
-            this.SetState(s => {
-                return {
-                    ...s,
-                    JWT: res.jwt,
-                    username: res.username,
-                    isAuth: true,
-                    avatarUrl: res.image_path
-                }
-            })
-            localStorage.setItem('Authorization', this.state.JWT)
-            console.log("login successfull");
-            AppRouter.go("/notes");
-        } catch (err) {
-            console.log(err);
-
+        if (!window.navigator.onLine) {
+            AppToasts.error('Потеряно соединение с интернетом');
             this.SetState(state => ({
                 ...state,
-                errorLoginForm: "Неправильный логин или пароль"
-            }))
+                errorLoginForm: ''
+            }));
 
+            return;
+        }
+
+        try {
+            const res = await AppAuthRequests.Login(credentials);
+
+            if (res.status == 200) {
+                this.SetState(state => ({
+                    ...state,
+                    JWT: res.headers.authorization,
+                    csrf: res.headers['x-csrf-token'],
+                    username: res.body.username,
+                    avatarUrl: res.body.image_path,
+                    otpEnabled: res.body.second_factor,
+                    isAuth: true,
+                    otpDialogOpen: false
+                }));
+
+                localStorage.setItem('Authorization', this.state.JWT);
+                localStorage.setItem('x-csrf-token', this.state.csrf);
+                AppRouter.go('/notes');
+            } else if (res.status == 202) {
+                this.SetState(state => ({
+                    ...state,
+                    otpDialogOpen: true
+                }));
+            } else {
+                this.SetState(state => ({
+                    ...state,
+                    errorLoginForm: 'Неправильный логин, пароль или код'
+                }));
+            }
+
+        } catch (err) {
+            this.SetState(state => ({
+                ...state,
+                errorLoginForm: 'Неправильный логин, пароль или код'
+            }));
         }
     }
 
+    /**
+     * Выход из аккаунта
+     */
     public async logout() {
+
+        if (!window.navigator.onLine) {
+            AppToasts.error('Потеряно соединение с интернетом');
+            return;
+        }
+
         try {
-            await AppAuthRequests.Logout(this.state.JWT);
-            this.SetState(s => {
-                return {
-                    ...s,
-                    isAuth: false,
-                    username: "",
-                    avatarUrl: ""
-                }
-            })
-            console.log("logout successful");
-            AppRouter.go("/")
+            await AppAuthRequests.Logout(this.state.JWT, this.state.csrf);
+
+            // Обнуление состояния пользователя
+            this.SetState(state => ({
+                ...state,
+                isAuth: false,
+                username: '',
+                avatarUrl: '',
+                otpEnabled: undefined
+            }));
+
+            window.localStorage.clear();
+
+            AppRouter.go('/');
+
         } catch (err) {
             console.log(err);
         }
     }
 
-    private async register(credentials) {
+    /**
+     * Регистрация нового аккаунта
+     */
+    private async register(credentials:UserRegisterCredentialsType) {
         this.SetState(state => ({
             ...state,
             errorRegisterForm: undefined
-        }))
+        }));
+
+        if (!window.navigator.onLine) {
+            AppToasts.error('Потеряно соединение с интернетом');
+            return;
+        }
 
         try {
-            const res = await AppAuthRequests.SignUp(credentials.username, credentials.password);
+            const res = await AppAuthRequests.SignUp(credentials);
 
+            // TODO
             this.SetState(s => {
                 return {
                     ...s,
                     isAuth: true,
                     username: res.username,
                     avatarUrl: res.image_path,
-                    JWT: res.jwt
-                }
-            })
-            localStorage.setItem('Authorization', this.state.JWT)
-            console.log("signup successfull");
-            AppRouter.go("/notes")
+                    JWT: res.jwt,
+                    csrf: res.csrf
+                };
+            });
+            localStorage.setItem('Authorization', this.state.JWT);
+            this.updateCSRF(this.state.csrf);
+            AppRouter.go('/notes');
+
+
+            // this.SetState(s => {
+            //     return {
+            //         ...s,
+            //         isAuth: true,
+            //         username: res.username,
+            //         avatarUrl: res.image_path,
+            //         JWT: res.jwt,
+            //         csrf: res.csrf
+            //     }
+            // })
+            // localStorage.setItem("Authorization", this.state.JWT)
+            // this.updateCSRF(this.state.csrf)
+            // AppRouter.go("/notes")
+
         } catch (err) {
             console.log(err);
 
-            console.log("username already taken");
             this.SetState(state => ({
                 ...state,
-                errorRegisterForm: "Неправильный пароль"
-            }))
+                errorRegisterForm: 'Этот логин уже занят'
+            }));
         }
     }
 
+    /**
+     * Аутентификация пользователя
+     */
     private async checkUser(){
         try {
-            const res = await AppAuthRequests.CheckUser(this.state.JWT)
+            const res = await AppAuthRequests.CheckUser(this.state.JWT);
 
-            this.SetState(s => {
-                return {
-                    ...s,
-                    isAuth: true,
-                    username: res.username,
-                    avatarUrl: res.image_path
-                }
-            })
-        } catch (err) {
-            console.log("не зареган");
-            console.log(err);
-
-            this.SetState(s => {
-                return {
-                    ...s,
-                    isAuth: false
-                }
-            })
-        }
-    }
-
-    private async updateAvatar(file:File) {
-        const avatarUrl = await AppProfileRequests.UpdateAvatar(file, this.state.JWT)
-
-        this.SetState(state => {
-            return {
+            this.SetState(state => ({
                 ...state,
-                avatarUrl: avatarUrl
-            }
-        })
+                isAuth: true,
+                username: res.username,
+                avatarUrl: res.image_path,
+                otpEnabled: res.otp
+            }));
+        } catch (err) {
+            this.SetState(state => ({
+                ...state,
+                isAuth: false
+            }));
+        }
     }
 
-    private async updatePassword({oldPassword, newPassword}) {
+    /**
+     * Обновление аватарки пользователя
+     */
+    private async updateAvatar(file:File) {
         try {
-            await AppProfileRequests.UpdatePassword(oldPassword, newPassword, this.state.JWT)
+            const {status, csrf, avatarUrl} = await AppProfileRequests.UpdateAvatar(file, this.state.JWT, this.state.csrf);
 
-            AppToasts.success("Пароль успешно изменен")
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 
-            this.closeChangePasswordForm()
-        }
-        catch (err) {
-            if (err.message == "Неверный пароль") {
-                AppToasts.error("Неверный пароль")
+            if (status == 200) {
 
                 this.SetState(state => ({
                     ...state,
-                    errorUpdatePasswordForm: "Неправильный пароль"
-                }))
+                    avatarUploadAnimation: true,
+                    avatarUrl: avatarUrl
+                }));
+
+                setTimeout(() => {
+                    this.SetState(state => ({
+                        ...state,
+                        avatarUploadAnimation: false
+                    }));
+                }, 3000);
+
+                return;
+            }
+
+            AppToasts.error('Что-то пошло не так');
+
+        } catch {
+            AppToasts.error('Что-то пошло не так');
+        }
+    }
+
+    /**
+     * Обновление пароля пользователя
+     */
+    private async updatePassword(credentials:UserUpdatePasswordCredentialsType) {
+        try {
+            const {status, csrf} = await AppProfileRequests.UpdatePassword(credentials, this.state.JWT, this.state.csrf);
+
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+
+            if (status == 200) {
+
+                AppToasts.success('Пароль успешно изменен');
+
+                this.closeChangePasswordForm();
+
+                return;
+            }
+
+            throw Error('Неверный пароль');
+        }
+        catch (err) {
+            if (err.message == 'Неверный пароль') {
+                AppToasts.error('Неверный пароль');
+
+                this.SetState(state => ({
+                    ...state,
+                    errorUpdatePasswordForm: 'Неправильный пароль'
+                }));
             }
         }
     }
@@ -205,7 +348,7 @@ class UserStore extends BaseStore<UserStoreState>{
         this.SetState(state => ({
             ...state,
             updatePasswordFormOpen: true
-        }))
+        }));
     }
 
     private closeChangePasswordForm() {
@@ -213,19 +356,77 @@ class UserStore extends BaseStore<UserStoreState>{
             ...state,
             updatePasswordFormOpen: false,
             errorUpdatePasswordForm: undefined
-        }))
+        }));
+    }
+
+    private async toggleTwoFactorAuthorization(enabled:boolean) {
+        if (enabled) {
+            await this.enableTwoFactorAuthorization();
+        } else {
+            await this.disableTwoFactorAuthorization();
+        }
+
+        this.SetState(state => ({
+            ...state,
+            otpEnabled: enabled
+        }));
+    }
+
+    private async enableTwoFactorAuthorization() {
+        const image = await AppAuthRequests.GetQR(this.state.JWT);
+
+        this.SetState(state => ({
+            ...state,
+            qr: image,
+            qrOpen: true
+        }));
+    }
+
+    private async disableTwoFactorAuthorization() {
+        const {status, csrf} = await AppAuthRequests.DisableOTF(this.state.JWT, this.state.csrf);
+
+        if (status === 204) {
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+        }
+    }
+
+    private closeQRWindow() {
+        this.SetState(state => ({
+            ...state,
+            qrOpen: false
+        }));
+    }
+
+    private updateCSRF(token:string) {
+        localStorage.setItem('x-csrf-token', token);
+
+        this.SetState(state => ({
+            ...state,
+            csrf: token
+        }));
+    }
+
+    private startUploadAnimation() {
+        this.SetState(state => ({
+            ...state,
+            avatarUploadAnimation: true
+        }));
     }
 }
 
 export const AppUserStore = new UserStore();
 
 export const UserActions = {
-    LOGIN: "LOGIN",
-    LOGOUT: "LOGOUT",
-    REGISTER: "REGISTER",
-    CHECK_USER: "CHECK_USER",
-    UPDATE_AVATAR: "UPDATE_AVATAR",
-    UPDATE_PASSWORD: "UPDATE_PASSWORD",
-    OPEN_CHANGE_PASSWORD_FORM: "OPEN_CHANGE_PASSWORD_FORM",
-    CLOSE_CHANGE_PASSWORD_FORM: "CLOSE_CHANGE_PASSWORD_FORM",
-}
+    LOGIN: 'LOGIN',
+    LOGOUT: 'LOGOUT',
+    REGISTER: 'REGISTER',
+    CHECK_USER: 'CHECK_USER',
+    UPDATE_AVATAR: 'UPDATE_AVATAR',
+    UPDATE_PASSWORD: 'UPDATE_PASSWORD',
+    OPEN_CHANGE_PASSWORD_FORM: 'OPEN_CHANGE_PASSWORD_FORM',
+    CLOSE_CHANGE_PASSWORD_FORM: 'CLOSE_CHANGE_PASSWORD_FORM',
+    TOGGLE_TWO_FACTOR_AUTHORIZATION: 'TOGGLE_TWO_FACTOR_AUTHORIZATION',
+    CLOSE_QR_WINDOW: 'CLOSE_QR_WINDOW',
+    UPDATE_CSRF: 'UPDATE_CSRF',
+    START_AVATAR_UPLOAD_ANIMATION: 'START_AVATAR_UPLOAD_ANIMATION'
+};

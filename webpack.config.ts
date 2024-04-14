@@ -1,31 +1,39 @@
-import path from 'path';
+import path from "path";
 import webpack from "webpack";
-import HtmlWebpackPlugin from 'html-webpack-plugin';
+import HtmlWebpackPlugin from "html-webpack-plugin";
 
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 
-import 'webpack-dev-server'
+import "webpack-dev-server"
 
-const isProduction = process.env.NODE_ENV == 'production';
+const isProduction = process.env.NODE_ENV == "production";
 
-const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : 'style-loader';
+const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : "style-loader";
 
 const config : webpack.Configuration = {
-    entry: path.resolve(__dirname, 'public', 'index.ts'),
+    entry: {
+        "main": path.resolve(__dirname, "public", "index.ts"),
+        "sw": path.resolve(__dirname, "public", "sw.js")
+    },
     output: {
-        path: path.resolve(__dirname, 'dist')
+        path: path.resolve(__dirname, "dist")
     },
     devServer: {
         open: true,
-        host: 'localhost',
+        host: "localhost",
         port: 8010,
         historyApiFallback: true
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: './public/index.html',
+            template: "./public/index.html",
         }),
-
+        new CopyPlugin({
+            patterns: [
+                { from: "manifest.json", to: "" },
+            ],
+        }),
         // Add your plugins here
         // Learn more about plugins from https://webpack.js.org/configuration/plugins/
     ],
@@ -38,11 +46,11 @@ const config : webpack.Configuration = {
                     loader: "babel-loader",
                     options: {
                         presets: [
-                            ['@babel/preset-typescript', { targets: "defaults" }]
+                            ["@babel/preset-typescript", { targets: "defaults" }]
                         ],
                         plugins: [
                             [
-                                '@babel/plugin-transform-react-jsx',
+                                "@babel/plugin-transform-react-jsx",
                                 { runtime: "automatic", importSource: "/public/src/lib/scReact/" },
                             ]
                         ]
@@ -51,24 +59,24 @@ const config : webpack.Configuration = {
             },
             {
                 test: /\.css$/i,
-                use: [stylesHandler,'css-loader'],
+                use: [stylesHandler,"css-loader"],
             },
             {
                 test: /\.s[ac]ss$/i,
                 use: [
                     stylesHandler,
-                    'css-loader',
+                    "css-loader",
                     "postcss-loader",
-                    'sass-loader'
+                    "sass-loader"
                 ],
             },
             {
                 test: /\.(eot|svg|png|jpg|gif)$/i,
-                type: 'asset'
+                type: "asset"
             },
             {
                 test: /\.(woff|woff2|eot|ttf|otf)$/i,
-                type: 'asset/resource',
+                type: "asset/resource",
             },
 
             // Add your rules for custom modules here
@@ -76,19 +84,19 @@ const config : webpack.Configuration = {
         ],
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.jsx', '.js', '...'],
+        extensions: [".tsx", ".ts", ".jsx", ".js", "..."],
     },
 };
 
 module.exports = () => {
     if (isProduction) {
-        config.mode = 'production';
+        config.mode = "production";
         
         config.plugins.push(new MiniCssExtractPlugin());
 
         
     } else {
-        config.mode = 'development';
+        config.mode = "development";
     }
     return config;
 };

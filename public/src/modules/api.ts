@@ -1,17 +1,21 @@
-import {createUUID, decode} from "./utils";
-import {Note} from "./stores/NotesStore";
+import {decode, downloadFile} from './utils';
+import {
+    UserLoginCredentialsType,
+    UserRegisterCredentialsType,
+    UserUpdatePasswordCredentialsType
+} from './stores/UserStore';
 
-export const isDebug = process.env.NODE_ENV === "development";
+export const isDebug = process.env.NODE_ENV === 'development';
 
-const baseUrl = isDebug ? "http://localhost:8080/api" : "https://you-note.ru/api";
+const baseUrl = isDebug ? 'http://localhost:8080/api' : 'https://you-note.ru/api';
 
-export const imagesUlr = isDebug ? "http://localhost/images/" : "https://you-note.ru/images/"
+export const imagesUlr = isDebug ? 'http://localhost/images/' : 'https://you-note.ru/images/';
 
 enum RequestMethods {
-    POST = "POST",
-    GET = "GET",
-    DELETE = "DELETE",
-    PUT = "PUT",
+    POST = 'POST',
+    GET = 'GET',
+    DELETE = 'DELETE',
+    PUT = 'PUT',
 }
 
 type RequestParams = {
@@ -30,15 +34,15 @@ const Ajax = {
     Request: async (method: RequestMethods, url: string, params: RequestParams): Promise<Response> => {
         const options: RequestInit = {
             method: method,
-            mode: "cors",
-            credentials: "include",
+            mode: 'cors',
+            credentials: 'include',
             headers: {
                 ...params.headers,
-                "Content-Type": "application/json",
-                "Accept": "application/json",
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
             },
             body: JSON.stringify(params.body)
-        }
+        };
 
         const reqUrl = new URL(baseUrl + url);
         for (const paramKey in params.query) {
@@ -57,6 +61,7 @@ const Ajax = {
             try {
                 responseData.body = await response.json();
             } catch {
+                // responseData.body = await response.blob();
                 responseData.body = null;
             }
 
@@ -67,7 +72,7 @@ const Ajax = {
 
             return responseData;
         } catch (err) {
-            return {body: null, headers: {}, status: 503}
+            return {body: null, headers: {}, status: 503};
         }
     },
 
@@ -86,35 +91,24 @@ const Ajax = {
     Delete:  async (url: string, params: RequestParams): Promise<Response> => {
         return Ajax.Request(RequestMethods.DELETE, url, params);
     }
-}
+};
 
 class AuthRequests {
-    private baseUrl = "/auth";
+    private baseUrl = '/auth';
 
-    public Login = async (username: string, password: string) => {
+    public Login = async ({username, password, code}:UserLoginCredentialsType) => {
 
-        const response = await Ajax.Post(this.baseUrl + "/login", {
+        return await Ajax.Post(this.baseUrl + '/login', {
             body: {
                 username,
-                password
+                password,
+                code
             }
         });
-
-        if (response.status == 200) {
-            return {
-                id: response.body.id,
-                username: response.body.username,
-                create_time: response.body.create_time,
-                image_path: response.body.image_path,
-                jwt: response.headers.authorization
-            }
-        }
-
-        throw Error(response.body.message);
     };
 
-    SignUp = async (username: string, password: string) => {
-        const response = await Ajax.Post(this.baseUrl + "/signup", {
+    SignUp = async ({username, password}:UserRegisterCredentialsType) => {
+        const response = await Ajax.Post(this.baseUrl + '/signup', {
             body: {
                 username,
                 password
@@ -127,23 +121,25 @@ class AuthRequests {
                 username: response.body.username,
                 create_time: response.body.create_time,
                 image_path: response.body.image_path,
-                jwt: response.headers.authorization
+                jwt: response.headers.authorization,
+                csrf: response.headers['x-csrf-token']
             };
         }
 
         throw Error(response.body.message);
     };
 
-    Logout = async (jwt: string) => {
-        const response = await Ajax.Delete(this.baseUrl + "/logout", {
+    Logout = async (jwt: string, csrf:string) => {
+        const response = await Ajax.Delete(this.baseUrl + '/logout', {
             headers: {
-                "Authorization": jwt
+                'Authorization': jwt,
+                'x-csrf-token': csrf
             }
         });
 
         if (response.status === 204){
             return {
-                message: "ok"
+                message: 'ok'
             };
         }
 
@@ -152,68 +148,105 @@ class AuthRequests {
 
     CheckUser = async (jwt: string) => {
 
-        const response = await Ajax.Get(this.baseUrl + "/check_user", {
+        const response = await Ajax.Get(this.baseUrl + '/check_user', {
             headers: {
-                "Authorization": jwt
+                'Authorization': jwt
             }
         });
 
         if (response.status === 200) {
-            return AppProfileRequests.Get(jwt)
+            return AppProfileRequests.Get(jwt);
         } else {
-            throw Error("not authorized");
+            throw Error('not authorized');
         }
+    };
+
+    GetQR = async (jwt: string) => {
+        const options: RequestInit = {
+            method: RequestMethods.GET,
+            mode: 'cors',
+            credentials: 'include',
+            headers: {
+                'Authorization': jwt
+            }
+        };
+
+        const response = await fetch(baseUrl + this.baseUrl + '/get_qr', options);
+
+        const blob = await response.blob();
+
+        return URL.createObjectURL(blob);
+    };
+
+    DisableOTF = async (jwt: string, csrf:string) => {
+        const response = await Ajax.Delete(this.baseUrl + '/disable_2fa', {
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            }
+        });
+
+        return {
+            status: response.status,
+            csrf: response.headers['x-csrf-token']
+        };
     };
 }
 
 class ProfileRequests {
     Get = async (jwt:string)=> {
-        const response = await Ajax.Get("/profile" + "/get", {
+        const response = await Ajax.Get('/profile' + '/get', {
             headers: {
-                "Authorization": jwt
+                'Authorization': jwt
             }
         });
 
-        if (response.status == 200) {
+        if (response.status === 200) {
             return {
                 id: response.body.id,
                 username: response.body.username,
                 create_time: response.body.create_time,
                 image_path: response.body.image_path,
-            }
+                otp: response.body.second_factor
+            };
         }
-    }
+    };
 
-    UpdateAvatar = async(photo:File, jwt:string) => {
-        const form_data = new FormData()
+    UpdateAvatar = async(photo:File, jwt:string, csrf:string) => {
+        const form_data = new FormData();
 
-        form_data.append('avatar', photo)
+        form_data.append('avatar', photo);
 
         const options: RequestInit = {
             method: RequestMethods.POST,
-            mode: "cors",
-            credentials: "include",
+            mode: 'cors',
+            credentials: 'include',
             headers: {
-                "Authorization": jwt
+                'Authorization': jwt,
+                'x-csrf-token': csrf
             },
             body: form_data
-        }
+        };
 
-        const response = await fetch(baseUrl + "/profile/update_avatar/", options);
+        const response = await fetch(baseUrl + '/profile/update_avatar/', options);
 
-        const body = await response.json()
+        const body = await response.json();
 
-        return body.image_path
-    }
+        return {
+            status: response.status,
+            avatarUrl: body.image_path,
+            csrf: response.headers.get('x-csrf-token')
+        };
+    };
 
-    UpdatePassword = async(oldPassword:string, newPassword:string, jwt:string)=> {
-        console.log("UpdatePassword")
-        const response = await Ajax.Post("/profile/update/", {
+    UpdatePassword = async({oldPassword, newPassword}:UserUpdatePasswordCredentialsType, jwt:string, csrf:string)=> {
+        const response = await Ajax.Post('/profile/update/', {
             headers: {
-                "Authorization": jwt
+                'Authorization': jwt,
+                'x-csrf-token': csrf
             },
             body: {
-                description: "string",
+                description: 'string',
                 password: {
                     new: newPassword,
                     old: oldPassword
@@ -221,24 +254,26 @@ class ProfileRequests {
             }
         });
 
-        if (response.status == 200) {
-            return
-        }
+        console.log('UpdatePassword');
+        console.log(response.headers);
 
-        throw Error("Неверный пароль");
-    }
+        return {
+            status: response.status,
+            csrf: response.headers['x-csrf-token']
+        };
+    };
 }
 
 
 
 
 class NoteRequests {
-    private baseUrl = "/note";
+    private baseUrl = '/note';
 
     GetAll = async (jwt: string, params: Record<string, string | number> | null = null) => {
-        const response = await Ajax.Get(this.baseUrl + "/get_all", {
+        const response = await Ajax.Get(this.baseUrl + '/get_all', {
             headers: {
-                "Authorization": jwt
+                'Authorization': jwt
             },
             query: params
         });
@@ -254,10 +289,10 @@ class NoteRequests {
         throw Error(response.body.message);
     };
 
-    Get = async (id: number, jwt: string) => {
-        const response = await Ajax.Get(this.baseUrl + "/" + id, {
+    Get = async (id: string, jwt: string) => {
+        const response = await Ajax.Get(this.baseUrl + '/' + id, {
             headers: {
-                "Authorization": jwt
+                'Authorization': jwt
             },
         });
 
@@ -269,48 +304,125 @@ class NoteRequests {
         throw Error(response.body.message);
     };
 
-    Delete = async (id: number, jwt: string) => {
-        const response = await Ajax.Delete(this.baseUrl + "/" + id + "/delete", {
+    Delete = async (id: number, jwt: string, csrf:string) => {
+        const response = await Ajax.Delete(this.baseUrl + '/' + id + '/delete', {
             headers: {
-                "Authorization": jwt
+                'Authorization': jwt,
+                'x-csrf-token': csrf
             },
         });
 
-        return response.status
-    }
+        return {
+            status: response.status,
+            csrf: response.headers['x-csrf-token']
+        };
+    };
 
-    Update = async(note, jwt: string)=> {
-        const response = await Ajax.Post(this.baseUrl + "/" + note.id + "/edit", {
+    Update = async({id, note}, jwt: string, csrf:string)=> {
+        console.log('Update');
+
+        const response = await Ajax.Post(this.baseUrl + '/' + id + '/edit', {
             headers: {
-                "Authorization": jwt
-            },
-            body: {
-                data: note
-            }
-        });
-
-        response.body.data = decode(response.body.data);
-        return response.body
-    }
-
-    Add = async (jwt:string) => {
-        const response = await Ajax.Post(this.baseUrl + "/add", {
-            headers: {
-                "Authorization": jwt
+                'Authorization': jwt,
+                'x-csrf-token': csrf
             },
             body: {
                 data: {
-                    content: createUUID(),
-                    title: "Новая заметка"
+                    title: note.title,
+                    content: note.blocks
                 }
             }
         });
 
-        console.log(response.status)
-        console.log(response.body)
+        return {
+            status: response.status,
+            csrf: response.headers['x-csrf-token']
+        };
+    };
+
+    Add = async (jwt:string, csrf:string) => {
+        const response = await Ajax.Post(this.baseUrl + '/add', {
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            },
+            body: {
+                data: {
+                    content: [
+                        {
+                            'id': '1',
+                            'type': 'div',
+                            'content': [
+                            ]
+                        }
+                    ],
+                    title: 'Новая заметка'
+                }
+            }
+        });
+
         response.body.data = decode(response.body.data);
-        return response.body
-    }
+        return response;
+    };
+
+    UploadFile = async (id:string, file:File, jwt:string, csrf:string) => {
+        const form_data = new FormData();
+
+        form_data.append('id', id);
+        form_data.append('attach', file);
+
+        const options: RequestInit = {
+            method: RequestMethods.POST,
+            mode: 'cors',
+            credentials: 'include',
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            },
+            body: form_data
+        };
+
+        return await fetch(baseUrl + this.baseUrl + '/' + id + '/add_attach/', options);
+    };
+
+    GetImage = async (id:string, jwt:string, csrf:string) => {
+        const options: RequestInit = {
+            method: RequestMethods.GET,
+            mode: 'cors',
+            credentials: 'include',
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            }
+        };
+
+        const response = await fetch(baseUrl + '/attach/' + id, options);
+
+        const blob = await response.blob();
+
+        return URL.createObjectURL(blob);
+    };
+
+    GetFile = async (id:string, fileName:string, jwt:string, csrf:string) => {
+        const options: RequestInit = {
+            method: RequestMethods.GET,
+            mode: 'cors',
+            credentials: 'include',
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            }
+        };
+
+        const response = await fetch(baseUrl + '/attach/' + id, options);
+        const blob = await response.blob();
+
+        const url = URL.createObjectURL(blob);
+
+        downloadFile(url, fileName);
+
+        return url;
+    };
 }
 
 export const AppAuthRequests = new AuthRequests();

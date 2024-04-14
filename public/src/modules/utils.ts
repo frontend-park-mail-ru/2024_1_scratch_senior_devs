@@ -5,7 +5,7 @@
  * @returns {string}
  */
 export function truncate(str: string, n: number): string{
-    return (str.length > n) ? str.slice(0, n-1) + "..." : str;
+    return (str.length > n) ? str.slice(0, n-1) + '...' : str;
 }
 
 /**
@@ -36,26 +36,70 @@ export function timeout(ms: number): AbortSignal {
  * @returns {string}
  */
 export const createUUID = () => {
-    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         const r = Math.random() * 16 | 0,
-            v = c === "x" ? r : (r & 0x3 | 0x8);
+            v = c === 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
     });
 };
 
 export function formatDate(date:string): string {
-    return new Intl.DateTimeFormat("ru", {
-        month: "short", day: "numeric",
-        hour: "numeric",
-        minute: "numeric",
-        hourCycle: "h23"
-    }).format(new Date(date)).replace(",", "")
+    return new Intl.DateTimeFormat('ru', {
+        month: 'short', day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hourCycle: 'h23'
+    }).format(new Date(date)).replace(',', '');
 }
 
-export function debounce(func, ms) {
-    let timeout: NodeJS.Timeout;
-    return function() {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func.apply(this), ms);
-    };
+/**
+ * Скачивает файл
+ */
+export function downloadFile(url:string, fileName:string) {
+    const a = document.createElement('a');
+    document.body.appendChild(a);
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
 }
+
+
+/**
+ * Обрезает фото до разрешения 1:1
+ */
+export const crop = (url:string, aspectRatio=1):Promise<HTMLCanvasElement> => {
+    return new Promise(resolve => {
+        const inputImage = new Image();
+
+        inputImage.onload = () => {
+            const inputWidth = inputImage.naturalWidth;
+            const inputHeight = inputImage.naturalHeight;
+
+            const inputImageAspectRatio = inputWidth / inputHeight;
+
+            let outputWidth = inputWidth;
+            let outputHeight = inputHeight;
+            if (inputImageAspectRatio > aspectRatio) {
+                outputWidth = inputHeight * aspectRatio;
+            } else if (inputImageAspectRatio < aspectRatio) {
+                outputHeight = inputWidth / aspectRatio;
+            }
+
+            const outputX = (outputWidth - inputWidth) * 0.5;
+            const outputY = (outputHeight - inputHeight) * 0.5;
+
+            const outputImage = document.createElement('canvas');
+
+            outputImage.width = outputWidth;
+            outputImage.height = outputHeight;
+
+            const ctx = outputImage.getContext('2d');
+            ctx.drawImage(inputImage, outputX, outputY);
+            resolve(outputImage);
+        };
+
+        inputImage.src = url;
+    });
+};

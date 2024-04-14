@@ -1,12 +1,34 @@
-const DELAY = 0
+import {AppUserStore, UserStoreState} from '../../modules/stores/UserStore';
+import {AppRouter} from '../../modules/router';
 
-export const HomeLoader = async () => {
-    await delay(DELAY);
-    return {};
-}
+export const HomePageLoader = async () => {
+    const p = new Promise((resolve, reject) => {
+        let isAuth = AppUserStore.state.isAuth;
 
-function delay(ms) {
-    return new Promise((resolve, reject) => {
-        setTimeout(resolve, ms);
+        if (isAuth !== undefined) {
+            if (isAuth) {
+                AppRouter.go('/notes');
+                reject();
+            } else {
+                resolve(null);
+            }
+
+            return;
+        }
+
+        const callback = (state: UserStoreState) => {
+            isAuth = state.isAuth;
+            AppUserStore.UnSubscribeToStore(callback);
+            if (isAuth) {
+                AppRouter.go('/notes');
+                reject();
+            } else {
+                resolve(null);
+            }
+        };
+
+        AppUserStore.SubscribeToStore(callback);
     });
-}
+
+    return await p;
+};

@@ -1,17 +1,47 @@
 @import "/public/src/utils/variables.sass"
 
-.note-editor
-	min-width: 500px
+.note-editor-wrapper
 	border-radius: 15px
 	background: rgba(27, 39, 53, 0.3)
 	display: none
 	flex-direction: column
-	padding: 20px
+	padding: 20px 20px 80px 20px
 	gap: 15px
+	width: 100%
+	flex-basis: 100%
+	overflow: hidden
+
+	@media screen and (max-width: $lg)
+		display: flex
+		background: rgba(27, 39, 53, 1)
+		position: fixed
+		left: 100%
+		height: 100vh
+		padding: 75px 50px
+		transition: 0.3s ease-in-out
+		z-index: 1
+		border-radius: 0
+
+	@media screen and (max-width: $md)
+		padding: 75px 25px
+
+	@media screen and (max-width: $sm)
+		padding: 75px 0
 
 	&.active
 		display: flex
 		animation: fadeIn 1s
+
+		@keyframes fadeIn
+			from
+				opacity: 0
+
+			to
+				opacity: 1
+
+		@media screen and (max-width: $lg)
+			animation: none
+			left: 0
 
 		.close-editor-btn
 			display: block
@@ -20,33 +50,39 @@
 		display: flex
 		justify-content: space-between
 
+		@media screen and (max-width: $sm)
+			padding: 0 20px
+
 		.left-container
-			display: flex
-			gap: 5px
-
-			.item
-				padding: 4px
-				transition: 0.3s
+			.close-editor
+				display: none
+				align-items: center
+				justify-content: center
+				gap: 4px
 				cursor: pointer
-				border-radius: 4px
 
-				.icon
-					width: 18px
-					height: 18px
-					transition: 0.3s
-					filter: invert(80%)
+				@media screen and (max-width: $lg)
+					display: flex
 
-				&:hover
-					background: #333437
+				.close-editor__icon
+					width: 9px
+					height: 9px
 
-					.icon
-						filter: invert(75%)
+				.close-editor_label
+					font-size: 18px
+					color: $text-main-color--darker
+
 
 		.right-container
 			display: flex
 			gap: 12px
 
-			.icon
+			.note-save-indicator
+				span
+					color: $text-main-color--darker
+					transition: 0.3s
+
+			.right-container__icon
 				width: 24px
 				height: 24px
 				cursor: pointer
@@ -57,6 +93,12 @@
 				&:hover
 					opacity: 1
 
+			.right-container__icon-close
+				display: flex
+
+				@media screen and (max-width: $lg)
+					display: none
+
 	.bottom-panel
 		display: flex
 		flex-direction: column
@@ -66,17 +108,15 @@
 		[contenteditable]
 			outline: none
 
-		.note-title-container
-			width: 100%
-
-			.note-title
-				font-size: 28px
-				color: $text-main-color
-
-		.note-content
-			padding-right: 10px
+		.note-editor
 			overflow-y: auto
 			height: 100%
+			font-size: 18px
+			color: $text-main-color
+			display: flex
+			flex-direction: column
+			gap: 10px
+			padding-right: 15px
 
 			&::-webkit-scrollbar-track
 				box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.2)
@@ -90,6 +130,21 @@
 				box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1)
 				background: $scrollbar-main-color
 
-			span
-				font-size: 18px
-				color: $text-main-color
+			.note-title-container
+				width: 100%
+				padding-left: 30px
+				font-size: 28px
+
+				.note-title
+					font-size: 28px
+					color: $text-main-color
+
+			.note-body-container
+				display: flex
+				flex-direction: column
+
+				.drag-area
+					height: 5px
+
+					&.active
+						background: blue

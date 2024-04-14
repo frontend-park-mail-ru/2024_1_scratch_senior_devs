@@ -1,6 +1,6 @@
 @import "/public/src/utils/variables.sass"
 
-.note-container
+.note
 	display: flex
 	flex-direction: column
 	gap: 10px
@@ -13,18 +13,19 @@
 	position: relative
 
 	&:hover
-		transform: scale(1.05)
+		background: rgba(27, 39, 53, 0.8)
 
-	h3
+	.note__title
 		color: $text-main-color
 
-	p
+	.note__content
 		color: $text-main-color--darker
 
-	&.selected
-		box-shadow: 0 0 3px $primary-color, 0 0 10px $primary-color
+	@media screen and (min-width: $lg)
+		&.selected
+			box-shadow: 0 0 3px $primary-color, 0 0 10px $primary-color
 
-	.update-time
+	.note__update-time
 		position: absolute
 		right: 10px
 		bottom: 10px

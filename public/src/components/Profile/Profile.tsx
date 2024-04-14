@@ -1,129 +1,115 @@
-import {ScReact} from "@veglem/screact";
-import {Img} from "../Image/Image";
-import "./Profile.sass"
-import {Button} from "../Button/Button";
-import {AppUserStore, UserActions} from "../../modules/stores/UserStore";
-import {AppDispatcher} from "../../modules/dispatcher";
-import {UpdatePasswordForm} from "../UpdatePassword/UpdatePassword";
-import {AppToasts} from "../../modules/toasts";
-import {imagesUlr} from "../../modules/api";
+import {ScReact} from '@veglem/screact';
+import './Profile.sass';
+import {Button} from '../Button/Button';
+import {AppUserStore, UserActions, UserStoreState} from '../../modules/stores/UserStore';
+import {AppDispatcher} from '../../modules/dispatcher';
+import {UpdatePasswordForm} from '../UpdatePassword/UpdatePassword';
+import {Link} from '../Link/Link';
+import {Modal} from '../Modal/Modal';
+import {ToggleButton} from '../ToggleButton/ToggleButton';
+import {ProfileAvatar} from '../ProfileAvatar/ProfileAvatar';
+import {QRModal} from '../QRModal/QRModal';
 
-const MEGABYTE_SIZE = 1024 * 1024
-const MAX_AVATAR_SIZE = 2 * MEGABYTE_SIZE
 
 export class Profile extends ScReact.Component<any, any> {
     state = {
         open: false,
-        inUpload: false
-    }
+        updatePasswordFormOpen: false,
+        qrOpen: false
+    };
 
     componentDidMount() {
-        document.addEventListener('click', this.handleClickOutside, true)
+        AppUserStore.SubscribeToStore(this.updateState);
+        document.addEventListener('click', this.handleClickOutside, true);
     }
 
     componentWillUnmount() {
-        document.removeEventListener('click', this.handleClickOutside, true)
+        AppUserStore.UnSubscribeToStore(this.updateState);
+        document.removeEventListener('click', this.handleClickOutside, true);
     }
 
+    updateState = (store:UserStoreState) => {
+        this.setState(state => ({
+            ...state,
+            updatePasswordFormOpen: store.updatePasswordFormOpen,
+            qrOpen: store.qrOpen
+        }));
+    };
+
     handleClickOutside = (e) => {
-        if (!document.querySelector(".toast")?.contains(e.target) && !document.querySelector(".toggle-profile-button")?.contains(e.target) && !document.querySelector(".popup-content")?.contains(e.target) && !document.querySelector(".modal-wrapper")?.contains(e.target)) {
-            this.close()
+        if (!document.querySelector('.toast')?.contains(e.target) &&
+            !document.querySelector('.toggle-profile-button')?.contains(e.target) &&
+            !Array.from(document.querySelectorAll('.modal-content')).some(modal => modal.contains(e.target)) &&
+            !Array.from(document.querySelectorAll('.modal-wrapper')).some(modal => modal.contains(e.target)) &&
+            !document.querySelector('.popup-content')?.contains(e.target))
+        {
+            this.close();
         }
-    }
+    };
 
     close = () => {
         this.setState(state => ({
             ...state,
             open: false
-        }))
-    }
+        }));
+    };
 
     toggleOpen = () => {
         this.setState(state => ({
             ...state,
             open: !state.open
-        }))
-    }
+        }));
+    };
 
     handleLogout = async () => {
-        AppDispatcher.dispatch(UserActions.LOGOUT)
-    }
-
-    handlePhotoUpload = (e) => {
-        const file = e.target.files[0]
-
-        if (file.size > MAX_AVATAR_SIZE) {
-            AppToasts.error("Фото слишком большое")
-            console.log(e.target)
-            e.target.value = null
-            return
-        }
-
-        this.setState(state => ({
-            ...state,
-            inUpload: true
-        }))
-
-        AppDispatcher.dispatch(UserActions.UPDATE_AVATAR, file)
-
-        setTimeout(() => {
-            this.setState(state => ({
-                ...state,
-                inUpload: false
-            }))
-
-            e.target.value = null
-        }, 3000)
-    }
+        AppDispatcher.dispatch(UserActions.LOGOUT);
+    };
 
     openModal = () => {
-        AppDispatcher.dispatch(UserActions.OPEN_CHANGE_PASSWORD_FORM)
-    }
+        this.state.open && AppDispatcher.dispatch(UserActions.OPEN_CHANGE_PASSWORD_FORM);
+    };
+
+    closeChangePasswordForm = () => {
+        AppDispatcher.dispatch(UserActions.CLOSE_CHANGE_PASSWORD_FORM);
+    };
+
+    toggleTwoFactorAuthorization = (value:boolean) => {
+        AppDispatcher.dispatch(UserActions.TOGGLE_TWO_FACTOR_AUTHORIZATION, value);
+    };
+
+    closeQR = () => {
+        AppDispatcher.dispatch(UserActions.CLOSE_QR_WINDOW);
+    };
 
     render() {
         return (
-            <div className={"user-profile-wrapper " + (this.state.open ? "open" : "")}>
-                <div className="toggle-profile-button" onclick={this.toggleOpen}>
-                    <div className="slider one"></div>
-                    <div className="slider two"></div>
-                    <div className="slider three"></div>
+            <div className={'user-profiler ' + (this.state.open ? 'open' : '')}>
+                <div className="toggle-profile" onclick={this.toggleOpen}>
+                    <div className="toggle-profile__slider toggle-profile__slider-one"></div>
+                    <div className="toggle-profile__slider toggle-profile__slider-two"></div>
+                    <div className="toggle-profile__slider toggle-profile__slider-three"></div>
                 </div>
                 <div className="panel">
                     <div className="popup-content">
-                        <div className="user-avatar-container">
-                            <Img src={imagesUlr + this.props.avatarUrl} className={"user-avatar " + (this.state.inUpload ? "loading" : "")}/>
 
-                            <form className="upload-preview">
-                                <input type="file" accept=".jpg,.png" id="upload-image-input" hidden="true" onchange={this.handlePhotoUpload}/>
-                                <label htmlFor="upload-image-input"></label>
-                                <Img src="src/assets/photo.svg" className="upload-preview-icon"/>
-                            </form>
+                       <ProfileAvatar avatarUrl={this.props.avatarUrl}/>
 
-                            <div className={"progress-wrapper " + (this.state.inUpload ? "active" : "")}>
-                                <div className="inner"></div>
-                                <div className="checkmark">
-                                    <span></span>
-                                    <span></span>
-                                </div>
-                                <div className="circle">
-                                    <div className="bar left">
-                                        <div className="progress"></div>
-                                    </div>
-                                    <div className="bar right">
-                                        <div className="progress"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <span className="username">{AppUserStore.state.username}</span>
-                        <span className="change-password-btn" onclick={this.openModal}>Изменить пароль</span>
-                        <Button label="Выйти" className="logout-btn" onClick={this.handleLogout}/>
+                        <span className="popup-content__username">{AppUserStore.state.username}</span>
+
+                        <Link className="popup-content__link" label="Изменить пароль" onClick={this.openModal}/>
+
+                        <ToggleButton label="Двухфакторная аутентификация" value={this.props.otpEnabled} onToggle={this.toggleTwoFactorAuthorization}/>
+
+                        <Modal open={this.state.qrOpen} content={<QRModal image={this.props.qr}/>} handleClose={this.closeQR}/>
+
+                        <Button label="Выйти" className="popup-content__logout-btn" onClick={this.handleLogout}/>
+
                     </div>
                 </div>
 
-                <UpdatePasswordForm />
+                <Modal open={this.state.updatePasswordFormOpen} content={<UpdatePasswordForm/>} handleClose={this.closeChangePasswordForm}/>
 
             </div>
-        )
+        );
     }
 }
