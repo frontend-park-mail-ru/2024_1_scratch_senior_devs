@@ -11,8 +11,17 @@ type InputState = {
     hasIcon?: boolean
 }
 
+type InputProps = {
+    validationResult: boolean,
+    error: string,
+    value: string,
+    type?: string,
+    placeholder: string,
+    icon?: string,
+    onChange: (value:string) => void
+}
 
-export class Input extends ScReact.Component<any, InputState>{
+export class Input extends ScReact.Component<InputProps, InputState>{
     state:InputState = {
 
     };

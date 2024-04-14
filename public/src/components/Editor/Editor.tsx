@@ -8,8 +8,6 @@ import './Editor.sass';
 import {Dropdown} from '../Dropdown/Dropdown';
 import {Tippy} from '../Tippy/Tippy';
 import {Modal} from '../Modal/Modal';
-import {DeleteNoteDialog} from '../DeleteNoteDialog/DeleteNoteDialog';
-import {NotesActions} from '../../modules/stores/NotesStore';
 import YoutubeDialogForm from '../YoutubeDialog/YoutubeDialog';
 
 export interface Note {
@@ -91,6 +89,7 @@ export class Editor extends Component<any, EditorState> {
     updateState = (store) => {
         this.setState(state => ({
             ...state,
+            youtubeDialogOpen: store.youtubeDialogOpen,
             dropdownOpen: store.dropdownPos.isOpen,
             blocks: store.note.blocks.length
         }));
@@ -107,17 +106,11 @@ export class Editor extends Component<any, EditorState> {
     };
 
     openYoutubeDialog = () => {
-        this.setState(state => ({
-            ...state,
-            youtubeDialogOpen: true
-        }));
+        AppDispatcher.dispatch(NoteStoreActions.OPEN_YOUTUBE_DIALOG)
     };
 
     closeYoutubeDialog = () => {
-        this.setState(state => ({
-            ...state,
-            youtubeDialogOpen: false
-        }));
+        AppDispatcher.dispatch(NoteStoreActions.CLOSE_YOUTUBE_DIALOG)
     };
 
     openTippy = () => {
