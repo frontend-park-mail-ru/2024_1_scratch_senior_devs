@@ -26,6 +26,7 @@ export class YoutubeDialogForm extends ScReact.Component<any, any> {
         if (match != null && match.length > 0) {
             console.log(match[1])
             const block = AppNoteStore.state.note.blocks[AppNoteStore.state.dropdownPos.blockId]
+            block.type = "div"
             block.content = undefined;
             block.attributes = {};
             block.attributes['youtube'] = "https://www.youtube.com/embed/" + match[1];

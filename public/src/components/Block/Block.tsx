@@ -41,6 +41,9 @@ export class Block extends Component<BlockProps, BlockState> {
     renderPrevSymbol = (): VDomNode[] => {
         const pieces: Array<VDomNode> = [];
         const block = AppNoteStore.state.note.blocks[this.props.blockId];
+        if (block.attributes != null && 'youtube' in block.attributes) {
+            pieces.push(<iframe width="560" height="315"  src={block.attributes.youtube}></iframe>)
+        }
         if (block.attributes != null && 'attach' in block.attributes) {
             const attachId = block.attributes['attach'];
 
