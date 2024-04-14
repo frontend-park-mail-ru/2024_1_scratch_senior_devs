@@ -1,5 +1,5 @@
-import {ScReact} from "@veglem/screact";
-import "./style.sass"
+import {ScReact} from '@veglem/screact';
+import './style.sass';
 
 class AuthPageSkeleton extends ScReact.Component<any, any> {
     render() {
@@ -9,8 +9,8 @@ class AuthPageSkeleton extends ScReact.Component<any, any> {
                     <div className="auth-form-skeleton"></div>
                 </div>
             </div>
-        )
+        );
     }
 }
 
-export default AuthPageSkeleton
+export default AuthPageSkeleton;

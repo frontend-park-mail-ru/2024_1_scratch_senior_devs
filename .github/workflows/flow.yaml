@@ -4,9 +4,9 @@ on:
   push:
     branches:
       - home
-      - dev
       - vls-36
       - vls-58
+      - vls-58-1
 jobs:
   you-note-deploy:
     name: deploy YouNote

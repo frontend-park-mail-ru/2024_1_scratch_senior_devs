@@ -1,5 +1,5 @@
-import {ScReact} from "@veglem/screact";
-import "./style.sass"
+import {ScReact} from '@veglem/screact';
+import './style.sass';
 
 class NotesPageSkeleton extends ScReact.Component<any, any> {
     render() {
@@ -15,8 +15,8 @@ class NotesPageSkeleton extends ScReact.Component<any, any> {
                     </div>
                 </aside>
             </div>
-        )
+        );
     }
 }
 
-export default NotesPageSkeleton
+export default NotesPageSkeleton;

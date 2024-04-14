@@ -1,7 +1,6 @@
 @import "/public/src/utils/variables.sass"
-@import "/public/src/utils/breakpoints.sass"
 
-.home-wrapper
+.home__wrapper
 	width: 100%
 	display: flex
 	flex-direction: column
@@ -9,13 +8,13 @@
 	section
 		width: 100%
 
-	.first
+	.hero
 		display: grid
 		position: relative
 		grid-template-areas: "stack"
 		height: 100vh
 
-		.container
+		.hero-body
 			display: flex
 			flex-direction: column
 			width: 100%
@@ -29,7 +28,7 @@
 			animation-name: fadeIn
 			padding: 0 15px
 
-			.title
+			.hero-body__title
 				text-align: center
 				font-size: 36px
 				color: #fff
@@ -38,7 +37,7 @@
 				@media screen and (max-width: $md)
 					font-size: 28px
 
-	.second
+	.about
 		display: flex
 		justify-content: center
 		align-items: center
@@ -52,7 +51,7 @@
 		@media screen and (max-width: $md)
 			padding: 0 15px 25px
 
-		h2
+		.about__title
 			font-size: 36px
 			text-align: center
 			text-shadow: 0 0 1vw $primary-color, 0 0 2vw $primary-color,0 0 4vw $primary-color, 0 0 8vw $primary-color
@@ -60,7 +59,7 @@
 			@media screen and (max-width: $md)
 				font-size: 32px
 
-		.cards-container
+		.about__container
 			display: grid
 			grid-template-columns: repeat(auto-fit, minmax(275px, 0.15fr))
 			justify-content: center

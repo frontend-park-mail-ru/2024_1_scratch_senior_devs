@@ -1,7 +1,7 @@
 export class BaseStore<S> {
     protected state: S;
 
-    private callbacks: Set<(state: S) => void> = new Set
+    private callbacks: Set<(state: S) => void> = new Set;
 
     public SubscribeToStore(callback: (state: S) => void) {
         this.callbacks.add(callback);
@@ -15,6 +15,6 @@ export class BaseStore<S> {
         this.state = updater(this.state);
         this.callbacks.forEach((callback: (state: S) => void) => {
             callback(this.state);
-        })
+        });
     }
 }

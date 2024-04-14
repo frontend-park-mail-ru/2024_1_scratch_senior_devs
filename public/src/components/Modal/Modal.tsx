@@ -1,61 +1,33 @@
-import {ScReact} from "@veglem/screact";
-import "./Modal.sass"
-import {Img} from "../Image/Image";
-import {AppNotesStore, NotesActions, NotesStoreState} from "../../modules/stores/NotesStore";
-import {AppDispatcher} from "../../modules/dispatcher";
-import {Button} from "../Button/Button";
+import {ScReact} from '@veglem/screact';
+import './Modal.sass';
+import {Img} from '../Image/Image';
 
 export class Modal extends ScReact.Component<any, any> {
-    state = {
-        open: false
-    }
+    private overlayRef;
 
     componentDidMount() {
-        AppNotesStore.SubscribeToStore(this.updateState)
-        document.addEventListener('click', this.handleClickOutside, true)
-    }
-
-    handleClickOutside = (e) => {
-        if (e.target.classList.contains("overlay")) {
-            AppDispatcher.dispatch(NotesActions.CLOSE_DELETE_NOTE_DIALOG)
-        }
+        document.addEventListener('click', this.handleClickOutside, true);
     }
 
     componentWillUnmount() {
-        AppNotesStore.UnSubscribeToStore(this.updateState)
-        document.removeEventListener('click', this.handleClickOutside, true)
+        document.removeEventListener('click', this.handleClickOutside, true);
     }
 
-    updateState = (store:NotesStoreState) => {
-        this.setState(state => ({
-            ...state,
-            open: store.modalOpen
-        }))
-    }
-
-    closeModal = () => {
-        AppDispatcher.dispatch(NotesActions.CLOSE_DELETE_NOTE_DIALOG)
-    }
-
-    deleteNote = () => {
-        AppDispatcher.dispatch(NotesActions.DELETE_NOTE)
-        AppDispatcher.dispatch(NotesActions.CLOSE_DELETE_NOTE_DIALOG)
-    }
+    handleClickOutside = (e) => {
+        if (this.overlayRef.contains(e.target)) {
+            this.props.handleClose();
+        }
+    };
 
     render() {
         return (
-            <div className={"modal-wrapper " + (this.state.open ? "active" : "")}>
-                <div className="overlay"></div>
-                <div className="modal-content">
-                    <h2>Удалить заметку?</h2>
-                    <span>Заметка и данные в ней будут удалены без возможности восстановления</span>
-                    <div className="buttons-container">
-                        <Button label="Удалить" onClick={this.deleteNote}/>
-                        <Button label="Отменить" className="cancel-btn" onClick={this.closeModal}/>
-                    </div>
-                    <Img src="/src/assets/close.svg" className="close-modal-btn" onClick={this.closeModal}/>
+            <div className={'modal ' + (this.props.open ? 'active' : '')}>
+                <div className="modal__overlay" ref={ref => this.overlayRef = ref}></div>
+                <div className="modal__content">
+                    {this.props.content}
+                    <Img src="close.svg" className="modal__close-btn" onClick={this.props.handleClose}/>
                 </div>
             </div>
-        )
+        );
     }
 }

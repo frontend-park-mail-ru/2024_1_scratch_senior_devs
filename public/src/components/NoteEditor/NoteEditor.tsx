@@ -1,110 +1,110 @@
-import {ScReact} from "@veglem/screact";
-import "./NoteEditor.sass"
-import {Img} from "../Image/Image";
-import {AppNotesStore, NotesActions, NotesStoreState} from "../../modules/stores/NotesStore";
-import {AppDispatcher} from "../../modules/dispatcher";
-import {debounce} from "../../modules/utils";
+import {ScReact} from '@veglem/screact';
+import './NoteEditor.sass';
+import {Img} from '../Image/Image';
+import {AppNotesStore, NotesActions, NotesStoreState} from '../../modules/stores/NotesStore';
+import {AppDispatcher} from '../../modules/dispatcher';
+import {SwipeArea} from '../SwipeArea/SwipeArea';
+import {Editor} from '../Editor/Editor';
+import {AppNoteStore} from '../../modules/stores/NoteStore';
 
 
 export class NoteEditor extends ScReact.Component<any, any> {
     state = {
-        open: false,
         selectedNote: undefined,
-        saving: undefined,
         content: undefined
-    }
+    };
+
+    private savingLabelRef;
 
     componentDidMount() {
-        AppNotesStore.SubscribeToStore(this.updateState)
-        document.querySelector(".note-editor").addEventListener("input", debounce(this.handleKeypress, 1000))
-    }
-
-    handleKeypress = () => {
-        if (this.state.selectedNote) {
-            this.saveNote()
-        }
+        AppNotesStore.SubscribeToStore(this.updateState);
+        AppNoteStore.AddSaver(this.saveNote);
     }
 
     saveNote = () => {
-        const titleElem = document.querySelector(".note-title") as HTMLElement
-        const contentElem = document.querySelector(".note-content > span") as HTMLElement
-
-        const data = {
-            id: this.state.selectedNote.id,
-            title: titleElem.innerText,
-            content: contentElem.innerText
+        if (this.state.selectedNote) {
+            AppDispatcher.dispatch(NotesActions.SAVE_NOTE,  {
+                id: this.state.selectedNote.id,
+                note: AppNoteStore.state.note
+            });
         }
 
-        if (data.title !== this.state.selectedNote.data.title || data.content !== this.state.selectedNote.data.content) {
-            AppDispatcher.dispatch(NotesActions.SAVE_NOTE, data)
-        }
+        this.savingLabelRef.innerHTML = 'Сохранено';
+        this.savingLabelRef.style.opacity = 1;
+    };
 
-        this.setState(state => ({
-            ...state,
-            selectedNote: {
-                id: state.selectedNote.id,
-                data: {
-                    title: data.title,
-                    content: data.content
-                },
-                update_time: state.selectedNote.update_time
-            }
-        }))
-    }
+    onChangeNote = () => {
+        this.savingLabelRef.innerHTML = '';
+        this.savingLabelRef.style.opacity = 0;
+    };
 
     closeEditor = () => {
-        this.saveNote()
-
-        AppDispatcher.dispatch(NotesActions.CLOSE_NOTE)
-    }
+        this.saveNote();
+        this.props.setClose();
+        setTimeout(() => AppDispatcher.dispatch(NotesActions.CLOSE_NOTE), 300);
+    };
 
     updateState = (store:NotesStoreState) => {
-        console.log("updateState")
-        console.log("2342342342342asdf")
-        console.log(this.state.selectedNote)
+        console.log('updateState');
+
+        if (store.selectedNote != this.state.selectedNote) {
+            this.savingLabelRef.innerHTML = '';
+        }
+
         this.setState(state => {
             return {
                 ...state,
-                selectedNote: store.selectedNote,
-                open: store.selectedNote !== undefined,
-                saving: store.saving
-            }
-        })
-        console.log(this.state.selectedNote)
-    }
+                selectedNote: store.selectedNote
+            };
+        });
+
+        if (this.state.selectedNote) {
+            AppNoteStore.SetNote({
+                title: this.state.selectedNote.data.title,
+                blocks: this.state.selectedNote.data.content
+            });
+        }
+    };
 
     deleteNote = () => {
-        AppDispatcher.dispatch(NotesActions.OPEN_DELETE_NOTE_DIALOG)
-    }
+        AppDispatcher.dispatch(NotesActions.OPEN_DELETE_NOTE_DIALOG);
+    };
 
     render() {
         return (
-            <div className={"note-editor " + (this.state.open ? "active" : "") }>
+            <div className={'note-editor ' + (this.props.open ? 'active' : '')}>
+
+                <SwipeArea enable={this.props.open} right={this.closeEditor} target=".note-editor-wrapper"/>
 
                 <div className="top-panel">
                     <div className="left-container">
-
+                        <div className="close-editor" onclick={this.closeEditor}>
+                            <Img src="left-chevron.svg" className="close-editor__icon"/>
+                            <span className="close-editor_label">Заметки</span>
+                        </div>
                     </div>
                     <div className="right-container">
-                        <Img src="/src/assets/trash.svg" className="icon" onClick={this.deleteNote}/>
-                        <Img src="/src/assets/close.svg" className="icon" onClick={this.closeEditor}/>
+                        <div className="note-save-indicator">
+                            <span ref={ref => this.savingLabelRef = ref}></span>
+                        </div>
+                        <Img src="trash.svg" className="right-container__icon right-container__icon-delete" onClick={this.deleteNote}/>
+                        <Img src="close.svg" className="right-container__icon right-container__icon-close" onClick={this.closeEditor}/>
                     </div>
                 </div>
 
                 <div className="bottom-panel">
-                    <div className="note-title-container" contentEditable="true">
-                        <h3 className="note-title">{this.state.selectedNote?.data.title}</h3>
-                    </div>
 
-                    <div className="note-content" contentEditable="true">
-                        <span>{this.state.selectedNote?.data.content}</span>
-                    </div>
+                    <Editor
+                        onChangeTitle={(value) => {
+                            console.log('onChangeTitle');
+                            this.props.onChangeTitle(value);
+                            this.onChangeNote();
+                        }}
+                        onChangeContent={this.onChangeNote}
+                    />
 
-                    <div className="note-save-indicator">
-                        {this.state.saving === false ? <h3>Сохранено</h3> : ""}
-                    </div>
                 </div>
             </div>
-        )
+        );
     }
 }

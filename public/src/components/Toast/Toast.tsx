@@ -1,87 +1,45 @@
-import {ScReact} from "@veglem/screact";
-import {Img} from "../Image/Image";
-import "./Toast.sass"
-import {TOAST_TYPE} from "../../modules/toasts";
-
-const TOAST_DELAY = 3000
+import {ScReact} from '@veglem/screact';
+import {Img} from '../Image/Image';
+import './Toast.sass';
+import {TOAST_TYPE} from '../../modules/toasts';
 
 export type ToastProps = {
     type: string,
     message: string,
     key1: string,
     offset: number,
+    open: boolean,
     onHide: (id:string) => void
 }
 
-export type ToastState = {
-    open: boolean,
-    timer: NodeJS.Timeout
-}
-
-
-export class Toast extends ScReact.Component<ToastProps, ToastState> {
-    state = {
-        open: true,
-        timer: undefined
-    }
-
-    componentDidMount() {
-        this.setState(state => ({
-            ...state,
-            timer: setTimeout(() => {
-                this.closeToast()
-            }, TOAST_DELAY)
-        }))
-    }
-
-    componentWillUnmount() {
-        clearTimeout(this.state.timer)
-    }
-
+export class Toast extends ScReact.Component<ToastProps, any> {
     closeToast = () => {
-        this.setState(state => ({
-            ...state,
-            open: false
-        }))
-
-        setTimeout(() => {
-            this.props.onHide(this.props.key1)
-        }, 300)
-    }
+        this.props.onHide(this.props.key1);
+    };
 
     formatType ():string {
         if (this.props.type == TOAST_TYPE.SUCCESS) {
-            return "Успех"
+            return 'Успех';
         } else if (this.props.type == TOAST_TYPE.ERROR) {
-            return "Ошибка"
+            return 'Ошибка';
         }
 
-        return "Инфо"
-    }
-
-    getIcon ():string {
-        if (this.props.type == TOAST_TYPE.SUCCESS) {
-            return "/src/assets/success.svg"
-        } else if (this.props.type == TOAST_TYPE.ERROR) {
-            return "/src/assets/error.svg"
-        }
-
-        return "/src/assets/info.svg"
+        return 'Инфо';
     }
 
     render() {
         return (
-            <div className={"toast success " + (this.state.open ? "" : "hide")} style={`bottom: ${this.props.offset}px`}>
-                <div className="toast-content">
-                    <Img src={this.getIcon()} className="toast-icon"/>
+            <div className={'toast success ' + (this.props.open ? '' : 'hide')} style={`bottom: ${this.props.offset}px`}>
+                <div className="toast__content">
+                    <Img src={this.props.type + '.svg'} className="toast-icon"/>
                     <div className="content">
-                        <span className="title">{this.formatType()}</span>
-                        <span className="message">{this.props.message}</span>
+                        <span className="content__title">{this.formatType()}</span>
+                        <span className="content__message">{this.props.message}</span>
                     </div>
                 </div>
-                <Img src="/src/assets/close.svg" className="toast-close-btn" onClick={this.closeToast}/>
-                <div className="progress"></div>
+                <Img src="close.svg" className="toast__close-btn" onClick={this.closeToast}/>
+                <div className="toast__progress-bar"></div>
             </div>
-        )
+        );
     }
 }

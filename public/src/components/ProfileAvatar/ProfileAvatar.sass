@@ -1,0 +1,52 @@
+@import "/public/src/utils/variables.sass"
+
+.user-avatar
+	width: 100px
+	height: 100px
+	position: relative
+	border-radius: 50%
+
+	&:hover
+		.upload-preview
+			opacity: 1
+
+	.user-avatar
+		width: 100px
+		height: 100px
+		border-radius: 50%
+
+		&.loading
+			display: none
+
+	.upload-preview
+		position: absolute
+		top: 0
+		right: 0
+		width: 100%
+		height: 100%
+		border-radius: 50%
+		background: rgba(0,0,0,0.8)
+		opacity: 0
+		cursor: pointer
+		transition: 0.3s
+		display: flex
+		justify-content: center
+		align-items: center
+
+		.upload-preview__label
+			z-index: 100
+			width: 100%
+			height: 100%
+			position: absolute
+			top: 0
+			right: 0
+			border-radius: 50%
+			cursor: pointer
+
+		.upload-preview__icon
+			width: 32px
+			height: 32px
+			filter: invert(80%)
+
+
+
