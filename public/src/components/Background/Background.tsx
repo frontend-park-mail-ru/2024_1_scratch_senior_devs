@@ -1,6 +1,6 @@
-import {ScReact} from "@veglem/screact";
-import "./Background.sass"
-import {NotesPage} from "../../pages/Notes";
+import {ScReact} from '@veglem/screact';
+import './Background.sass';
+import {NotesPage} from '../../pages/Notes';
 
 export class Background extends ScReact.Component<any, any> {
     render() {
@@ -8,7 +8,7 @@ export class Background extends ScReact.Component<any, any> {
             return (
                 <div>
                 </div>
-            )
+            );
         }
 
         return (
@@ -18,6 +18,6 @@ export class Background extends ScReact.Component<any, any> {
                 <div id="stars2"></div>
                 <div id="stars3"></div>
             </div>
-        )
+        );
     }
 }

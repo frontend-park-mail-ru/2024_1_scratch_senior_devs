@@ -1,4 +1,4 @@
-import {AppNoteStore} from "../modules/stores/NoteStore";
+import {AppNoteStore} from '../modules/stores/NoteStore';
 
 export const setCursorAtNodePosition = (node, index) => {
     const range = document.createRange();
@@ -26,7 +26,7 @@ export const setCursorAtNodePosition = (node, index) => {
     searchNode(node);
     selection.removeAllRanges();
     selection.addRange(range);
-}
+};
 
 export const setCursorInBlock = (elem: HTMLElement, blockId: number) => {
     if (AppNoteStore.state.cursorPosition != null &&
@@ -34,17 +34,17 @@ export const setCursorInBlock = (elem: HTMLElement, blockId: number) => {
         try {
             if (AppNoteStore.state.note.blocks[blockId].content == undefined) {
                 elem.focus();
-                return
+                return;
             }
-            setCursorAtNodePosition(elem, AppNoteStore.state.cursorPosition.pos)
+            setCursorAtNodePosition(elem, AppNoteStore.state.cursorPosition.pos);
             if (AppNoteStore.state.cursorPosition.pos === 0) {
                 elem.click();
             }
         } catch (e) {
-            console.log(e)
+            console.log(e);
         }
     }
-}
+};
 
 export const getCursorInBlock = (elem: HTMLElement): number => {
     const selection = window.getSelection();
@@ -54,4 +54,4 @@ export const getCursorInBlock = (elem: HTMLElement): number => {
     clonedRange.setEnd(range.endContainer, range.endOffset);
 
     return  clonedRange.toString().length;
-}
+};

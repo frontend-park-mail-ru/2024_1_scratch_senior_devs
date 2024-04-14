@@ -1,7 +1,7 @@
-import {ScReact} from "@veglem/screact";
-import {Img} from "../Image/Image";
-import "./Toast.sass"
-import {TOAST_TYPE} from "../../modules/toasts";
+import {ScReact} from '@veglem/screact';
+import {Img} from '../Image/Image';
+import './Toast.sass';
+import {TOAST_TYPE} from '../../modules/toasts';
 
 export type ToastProps = {
     type: string,
@@ -14,24 +14,24 @@ export type ToastProps = {
 
 export class Toast extends ScReact.Component<ToastProps, any> {
     closeToast = () => {
-        this.props.onHide(this.props.key1)
-    }
+        this.props.onHide(this.props.key1);
+    };
 
     formatType ():string {
         if (this.props.type == TOAST_TYPE.SUCCESS) {
-            return "Успех"
+            return 'Успех';
         } else if (this.props.type == TOAST_TYPE.ERROR) {
-            return "Ошибка"
+            return 'Ошибка';
         }
 
-        return "Инфо"
+        return 'Инфо';
     }
 
     render() {
         return (
-            <div className={"toast success " + (this.props.open ? "" : "hide")} style={`bottom: ${this.props.offset}px`}>
+            <div className={'toast success ' + (this.props.open ? '' : 'hide')} style={`bottom: ${this.props.offset}px`}>
                 <div className="toast-content">
-                    <Img src={this.props.type + ".svg"} className="toast-icon"/>
+                    <Img src={this.props.type + '.svg'} className="toast-icon"/>
                     <div className="content">
                         <span className="title">{this.formatType()}</span>
                         <span className="message">{this.props.message}</span>
@@ -40,6 +40,6 @@ export class Toast extends ScReact.Component<ToastProps, any> {
                 <Img src="close.svg" className="toast-close-btn" onClick={this.closeToast}/>
                 <div className="progress"></div>
             </div>
-        )
+        );
     }
 }

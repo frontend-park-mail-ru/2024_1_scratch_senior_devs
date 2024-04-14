@@ -7,28 +7,28 @@ export const HomePageLoader = async () => {
 
         if (isAuth !== undefined) {
             if (isAuth) {
-                AppRouter.go("/notes")
-                reject()
+                AppRouter.go('/notes');
+                reject();
             } else {
-                resolve(null)
+                resolve(null);
             }
 
-            return
+            return;
         }
 
         const callback = (state: UserStoreState) => {
             isAuth = state.isAuth;
             AppUserStore.UnSubscribeToStore(callback);
             if (isAuth) {
-                AppRouter.go("/notes")
-                reject()
+                AppRouter.go('/notes');
+                reject();
             } else {
-                resolve(null)
+                resolve(null);
             }
-        }
+        };
 
         AppUserStore.SubscribeToStore(callback);
-    })
+    });
 
     return await p;
-}
+};

@@ -1,27 +1,27 @@
 import {ScReact} from '@veglem/screact';
 import {Input} from '../Input/Input';
 import {Button} from '../Button/Button';
-import "./YoutubeDialog.sass"
+import './YoutubeDialog.sass';
 
 export class YoutubeDialogForm extends ScReact.Component<any, any> {
     state = {
-        value: ""
-    }
+        value: ''
+    };
 
     setValue = (val) => {
         this.setState(state => ({
             ...state,
             value: val
-        }))
-    }
+        }));
+    };
 
     handleSubmit = (e) => {
-        e.preventDefault()
-        console.log("handleSubmit")
-        console.log(this.state.value)
+        e.preventDefault();
+        console.log('handleSubmit');
+        console.log(this.state.value);
 
         // TODO: проверка ссылки на валидоность
-    }
+    };
 
     render() {
         return (
@@ -30,8 +30,8 @@ export class YoutubeDialogForm extends ScReact.Component<any, any> {
                 <Input value={this.state.value} onChange={this.setValue} placeholder="Ссылка"/>
                 <Button label="Вставить" />
             </form>
-        )
+        );
     }
 }
 
-export default YoutubeDialogForm
+export default YoutubeDialogForm;

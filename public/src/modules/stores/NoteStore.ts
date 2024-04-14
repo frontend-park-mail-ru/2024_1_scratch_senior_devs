@@ -1,26 +1,25 @@
-import {BaseStore} from "./BaseStore";
-import {Note} from "../../components/Editor/Editor";
-import {AppDispatcher} from "../dispatcher";
-import {Block, BlockNode} from "../../components/Block/Block";
-import {create_UUID} from "../../utils/uuid";
-import {PieceNode} from "../../components/Piece/Piece";
-import {AppNotesStore, NotesActions} from './NotesStore';
+import {BaseStore} from './BaseStore';
+import {Note} from '../../components/Editor/Editor';
+import {AppDispatcher} from '../dispatcher';
+import {BlockNode} from '../../components/Block/Block';
+import {create_UUID} from '../../utils/uuid';
+import {PieceNode} from '../../components/Piece/Piece';
 
 export const NoteStoreActions = {
-    CHANGE_PIECE: "CHANGE_PIECE",
-    REMOVE_PIECE: "REMOVE_PIECE",
-    ADD_NEW_PIECE: "ADD_PIECE",
-    CHANGE_BLOCK: "CHANGE_BLOCK",
-    REMOVE_BLOCK: "REMOVE_BLOCK",
-    ADD_BLOCK: "ADD_BLOCK",
-    MOVE_CURSOR: "MOVE_CURSOR",
-    MOVE_BLOCK: "MOVE_BLOCK",
-    OPEN_DROPDOWN: "OPEN_DROPDOWN",
-    CLOSE_DROPDOWN: "CLOSE_DROPDOWN",
-    CHANGE_BLOCK_TYPE: "CHANGE_BLOCK_TYPE",
-    CHANGE_TITLE: "CHANGE_TITLE",
-    CHANGE_PIECE_ATTRIBUTES: "CHANGE_PIECE_ATTRIBUTES"
-}
+    CHANGE_PIECE: 'CHANGE_PIECE',
+    REMOVE_PIECE: 'REMOVE_PIECE',
+    ADD_NEW_PIECE: 'ADD_PIECE',
+    CHANGE_BLOCK: 'CHANGE_BLOCK',
+    REMOVE_BLOCK: 'REMOVE_BLOCK',
+    ADD_BLOCK: 'ADD_BLOCK',
+    MOVE_CURSOR: 'MOVE_CURSOR',
+    MOVE_BLOCK: 'MOVE_BLOCK',
+    OPEN_DROPDOWN: 'OPEN_DROPDOWN',
+    CLOSE_DROPDOWN: 'CLOSE_DROPDOWN',
+    CHANGE_BLOCK_TYPE: 'CHANGE_BLOCK_TYPE',
+    CHANGE_TITLE: 'CHANGE_TITLE',
+    CHANGE_PIECE_ATTRIBUTES: 'CHANGE_PIECE_ATTRIBUTES'
+};
 
 export type NoteStoreState = {
     note: Note,
@@ -43,7 +42,7 @@ export type DropdownPosition = {
 class NoteStore extends BaseStore<NoteStoreState> {
     state = {
         note: {
-            title: "",
+            title: '',
             blocks: Array<BlockNode>()
         },
         cursorPosition: null,
@@ -53,9 +52,9 @@ class NoteStore extends BaseStore<NoteStoreState> {
             isOpen: false,
             blockId: 0
         }
-    }
+    };
 
-    private severs: Array<() => any> = []
+    private severs: Array<() => any> = [];
 
     constructor() {
         super();
@@ -76,7 +75,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
                     break;
                 case NoteStoreActions.ADD_BLOCK:
                     this.addNewBlock(action.payload.insertPos);
-                    break
+                    break;
                 case NoteStoreActions.REMOVE_BLOCK:
                     this.deleteBlock(action.payload.delPos);
                     break;
@@ -96,7 +95,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
                     this.closeDropdown();
                     break;
                 case NoteStoreActions.CHANGE_BLOCK_TYPE:
-                    this.changeBlockType(action.payload.blockId, action.payload.tag, action.payload.attributes, action.payload.content)
+                    this.changeBlockType(action.payload.blockId, action.payload.tag, action.payload.attributes, action.payload.content);
                     break;
                 case NoteStoreActions.CHANGE_TITLE:
                     this.changeTitle(action.payload.title);
@@ -105,55 +104,55 @@ class NoteStore extends BaseStore<NoteStoreState> {
                     this.changePieceAttributes(action.payload.blockId, action.payload.anchorId, action.payload.focusId, action.payload.anchorPos, action.payload.focusPos, action.payload.attribute, action.payload.value);
                     break;
             }
-        })
-    }
+        });
+    };
 
     private timerId: NodeJS.Timeout = setTimeout(() => {
-    })
+    });
 
     private saveNote = () => {
         clearTimeout(this.timerId);
         this.timerId = setTimeout(() => {
             this.severs.forEach((saver) => {
                 saver();
-            })
-        }, 1000)
-    }
+            });
+        }, 1000);
+    };
 
     public AddSaver = (saver: () => any) => {
         this.severs.push(saver);
-    }
+    };
 
     public RemoveSavers = (saver: () => any) => {
         this.severs = [];
-    }
+    };
 
     public SetNote = (note: Note) => {
         this.SetState(s => {
             return {...s, note: note};
-        })
-    }
+        });
+    };
 
     private changePiece = (blockId: number, pieces: { pieceId: string, content: string }[], posOffset: number) => {
         if (pieces.length > 0 &&
-            !pieces[0].content.startsWith("/")) {
+            !pieces[0].content.startsWith('/')) {
             this.closeDropdown();
         }
         const oldNote: Note = this.state.note;
-        const newBlockContent = new Array<PieceNode>()
+        const newBlockContent = new Array<PieceNode>();
         pieces.forEach(piece => {
             newBlockContent.push({
                 id: oldNote.blocks[blockId].content[piece.pieceId].id,
                 content: piece.content,
                 attributes: oldNote.blocks[blockId].content[piece.pieceId].attributes
-            })
-        })
+            });
+        });
         oldNote.blocks[blockId].content = newBlockContent;
         this.state.note = oldNote;
         this.state.cursorPosition = {
             blockId: blockId,
             pos: posOffset
-        }
+        };
         this.saveNote();
         // this.SetState(s => {
         //     const oldNote: Note = this.state.note;
@@ -169,7 +168,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
         //     console.log(oldNote)
         //     return {...s, note: oldNote, cursorPosition: {blockId: blockId, pos: posOffset}}
         // })
-    }
+    };
 
     private addNewPiece = (blockId: number, insertPosition: number, content: string) => {
         this.SetState(s => {
@@ -178,11 +177,11 @@ class NoteStore extends BaseStore<NoteStoreState> {
                 content: content,
                 id: create_UUID(),
                 attributes: null,
-            })
-            return {...s, note: oldNote, cursorPosition: {blockId: blockId, pos: content.length}}
-        })
+            });
+            return {...s, note: oldNote, cursorPosition: {blockId: blockId, pos: content.length}};
+        });
         this.saveNote();
-    }
+    };
 
     private addNewBlock = (insertPos: number) => {
         this.closeDropdown();
@@ -192,89 +191,89 @@ class NoteStore extends BaseStore<NoteStoreState> {
                 content: [],
                 attributes: null,
                 id: create_UUID(),
-                type: "div"
-            })
+                type: 'div'
+            });
 
-            return {...s, note: oldNote, cursorPosition: {blockId: insertPos, pos: 0}}
-        })
+            return {...s, note: oldNote, cursorPosition: {blockId: insertPos, pos: 0}};
+        });
         this.saveNote();
-    }
+    };
 
     private deleteBlock = (delPos: number) => {
         this.closeDropdown();
         if (this.state.note.blocks.length == 1) {
-            return
+            return;
         }
         this.SetState(s => {
             const oldNote: Note = this.state.note;
-            oldNote.blocks.splice(delPos, 1)
+            oldNote.blocks.splice(delPos, 1);
             const pos = this.state.note.blocks[(delPos == 0 ? 0 : (delPos - 1))].content?.reduce((prev: number, curr: PieceNode, i: number) => {
-                prev += curr.content.length
-                return prev
-            }, 0)
-            return {...s, note: oldNote, cursorPosition: {blockId: (delPos == 0 ? 0 : (delPos - 1)), pos: pos}}
-        })
+                prev += curr.content.length;
+                return prev;
+            }, 0);
+            return {...s, note: oldNote, cursorPosition: {blockId: (delPos == 0 ? 0 : (delPos - 1)), pos: pos}};
+        });
         this.saveNote();
-    }
+    };
 
     private moveCursor = (blockId: number, pos: number) => {
         this.closeDropdown();
         if (blockId < 0 || blockId >= this.state.note.blocks.length) {
-            return
+            return;
         }
         this.SetState(s => {
             const maxPos = this.state.note.blocks[blockId].content?.reduce((prev: number, curr: PieceNode, i: number) => {
-                prev += curr.content.length
-                return prev
-            }, 0)
+                prev += curr.content.length;
+                return prev;
+            }, 0);
             const posToSet = Math.min(maxPos, pos);
-            return {...s, cursorPosition: {blockId: blockId, pos: posToSet}}
-        })
-    }
+            return {...s, cursorPosition: {blockId: blockId, pos: posToSet}};
+        });
+    };
 
     private changeBlock = (blockId: number, newBlock: BlockNode) => {
         this.closeDropdown();
         this.SetState(s => {
             const oldNote: Note = this.state.note;
             oldNote.blocks[blockId] = newBlock;
-            return {...s, note: oldNote}
-        })
+            return {...s, note: oldNote};
+        });
         this.saveNote();
-    }
+    };
 
     private moveBlock = (blockId: number, posToMove: number) => {
         if (blockId == posToMove) {
-            return
+            return;
         }
         this.SetState(s => {
             const oldNote: Note = this.state.note;
             if (blockId > posToMove) {
                 oldNote.blocks.splice(posToMove, 0, oldNote.blocks[blockId]);
                 oldNote.blocks.splice(blockId + 1, 1);
-                return {...s, note: oldNote}
+                return {...s, note: oldNote};
             } else {
                 oldNote.blocks.splice(posToMove, 0, oldNote.blocks[blockId]);
                 oldNote.blocks.splice(blockId, 1);
-                return {...s, note: oldNote}
+                return {...s, note: oldNote};
             }
-        })
+        });
         this.saveNote();
-    }
+    };
 
     private openDropdown = (blockPos: DOMRect, blockId: number) => {
         if (blockPos.y > 250) {
             this.SetState(s => {
-                return {...s, dropdownPos: {left: blockPos.x, top: blockPos.y - 240, isOpen: true, blockId: blockId}}
-            })
+                return {...s, dropdownPos: {left: blockPos.x, top: blockPos.y - 240, isOpen: true, blockId: blockId}};
+            });
         } else {
             this.SetState(s => {
-                return {...s, dropdownPos: {left: blockPos.x, top: blockPos.y + 31, isOpen: true, blockId: blockId}}
-            })
+                return {...s, dropdownPos: {left: blockPos.x, top: blockPos.y + 31, isOpen: true, blockId: blockId}};
+            });
         }
-    }
+    };
 
     private closeDropdown = () => {
-        console.log("closeDropdown")
+        console.log('closeDropdown');
         // this.SetState(state => {
         //     return {
         //         ...state,
@@ -282,7 +281,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
         //     }
         // })
         this.state.dropdownPos.isOpen = false;
-    }
+    };
 
     private changeBlockType = (blockId: number, tag: string, attributes?: object, content?: PieceNode[]) => {
         this.closeDropdown();
@@ -291,23 +290,23 @@ class NoteStore extends BaseStore<NoteStoreState> {
             oldNote.blocks[blockId].type = tag;
             oldNote.blocks[blockId].attributes = attributes;
             oldNote.blocks[blockId].content = content;
-            return {...s, note: oldNote}
-        })
+            return {...s, note: oldNote};
+        });
         this.saveNote();
-    }
+    };
 
     private changeTitle = (title: string) => {
         this.closeDropdown();
 
         this.state.note.title = title;
         this.saveNote();
-    }
+    };
 
     private timerIdPiece: NodeJS.Timeout = setTimeout(() => {
-    })
+    });
 
     private changePieceAttributes = (blockId: number, anchorId: number, focusId: number, anchorPos: number, focusPos: number, attribute: string, value?: string | number | boolean | undefined) => {
-        console.log("value", value)
+        console.log('value', value);
         const block = AppNoteStore.state.note.blocks[blockId];
         let minPiece = 0;
         let minPos = 0;
@@ -344,16 +343,16 @@ class NoteStore extends BaseStore<NoteStoreState> {
             } else if (index > maxPiece) {
                 afterPieces.push(val);
             }
-        })
+        });
 
         modifyPieces.forEach(val => {
             if (val.attributes == null) {
-                val.attributes = {}
+                val.attributes = {};
                 val.attributes[attribute] = value == null ? true : value;
             } else {
                 val.attributes[attribute] = value == null ? (attribute in (val.attributes ?? {}) ? !val.attributes[attribute] : true) : value;
             }
-        })
+        });
 
         if (maxPiece == minPiece) {
             const beforePiece: PieceNode = {
@@ -362,7 +361,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
                     ...block.content[minPiece].attributes
                 },
                 content: block.content[minPiece].content.substring(0, minPos)
-            }
+            };
             const insertPiece: PieceNode = {
                 id: create_UUID(),
                 attributes: {
@@ -370,14 +369,14 @@ class NoteStore extends BaseStore<NoteStoreState> {
                     [attribute]: value == null ? (attribute in (block.content[minPiece].attributes ?? {}) ? !block.content[minPiece].attributes[attribute] : true) : value
                 },
                 content: block.content[minPiece].content.substring(minPos, maxPos)
-            }
+            };
             const afterPiece: PieceNode = {
                 id: create_UUID(),
                 attributes: {
                     ...block.content[maxPiece].attributes
                 },
                 content: block.content[maxPiece].content.substring(maxPos)
-            }
+            };
             this.SetState(s => {
                 const oldNote = this.state.note;
                 const newBlockPieces: PieceNode[] = [];
@@ -396,7 +395,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
                 return {
                     ...s,
                     note: oldNote
-                }
+                };
             });
         } else {
             const minBefore: PieceNode = {
@@ -405,7 +404,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
                     ...block.content[minPiece].attributes
                 },
                 content: block.content[minPiece].content.substring(0, minPos)
-            }
+            };
             const minAfter: PieceNode = {
                 id: create_UUID(),
                 attributes: {
@@ -413,7 +412,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
                     [attribute]: value == null ? (attribute in (block.content[minPiece].attributes ?? {}) ? !block.content[minPiece].attributes[attribute] : true) : value
                 },
                 content: block.content[minPiece].content.substring(minPos)
-            }
+            };
             const maxBefore: PieceNode = {
                 id: create_UUID(),
                 attributes: {
@@ -421,16 +420,16 @@ class NoteStore extends BaseStore<NoteStoreState> {
                     [attribute]: value == null ? (attribute in (block.content[maxPiece].attributes ?? {}) ? !block.content[maxPiece].attributes[attribute] : true) : value
                 },
                 content: block.content[maxPiece].content.substring(0, maxPos)
-            }
+            };
             const maxAfter: PieceNode = {
                 id: create_UUID(),
                 attributes: {
                     ...block.content[maxPiece].attributes
                 },
                 content: block.content[maxPiece].content.substring(maxPos)
-            }
+            };
 
-            console.log(maxBefore)
+            console.log(maxBefore);
 
             this.SetState(s => {
                 const oldNote = this.state.note;
@@ -454,11 +453,11 @@ class NoteStore extends BaseStore<NoteStoreState> {
                 return {
                     ...s,
                     note: oldNote
-                }
-            })
+                };
+            });
         }
         this.saveNote();
-    }
+    };
 }
 
 

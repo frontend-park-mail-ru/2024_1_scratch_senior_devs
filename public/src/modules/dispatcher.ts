@@ -4,7 +4,7 @@ type Action = {
 }
 
 class Dispatcher {
-    private callbacks: Array<(action: Action) => void | Promise<void>> = []
+    private callbacks: Array<(action: Action) => void | Promise<void>> = [];
 
     register(callback: (action: Action) => void | Promise<void>) {
         this.callbacks.push(callback);
@@ -14,11 +14,11 @@ class Dispatcher {
         const action = {
             type: type,
             payload: payload
-        }
+        };
 
         this.callbacks.forEach((callback) => {
             callback(action);
-        })
+        });
     }
 }
 

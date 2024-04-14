@@ -1,10 +1,10 @@
-import {ScReact} from "@veglem/screact";
-import {VDomNode} from "@veglem/screact/dist/vdom";
+import {ScReact} from '@veglem/screact';
+import {VDomNode} from '@veglem/screact/dist/vdom';
 
 export class ErrorPage extends ScReact.Component<{err: any}, any> {
     props = {
-        err: "Error"
-    }
+        err: 'Error'
+    };
 
     render(): VDomNode {
         return (

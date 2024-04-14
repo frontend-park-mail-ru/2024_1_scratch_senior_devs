@@ -1,12 +1,12 @@
-import {Component} from "@veglem/screact/dist/component";
-import {VDomNode} from "@veglem/screact/dist/vdom";
-import {Block, BlockNode} from "../Block/Block";
-import {AppNoteStore, NoteStoreActions} from "../../modules/stores/NoteStore";
-import {getBlockHash} from "../../utils/hash";
-import {AppDispatcher} from "../../modules/dispatcher";
-import "./Editor.sass"
-import {Dropdown} from "../Dropdown/Dropdown";
-import {Tippy} from "../Tippy/Tippy";
+import {Component} from '@veglem/screact/dist/component';
+import {VDomNode} from '@veglem/screact/dist/vdom';
+import {Block, BlockNode} from '../Block/Block';
+import {AppNoteStore, NoteStoreActions} from '../../modules/stores/NoteStore';
+import {getBlockHash} from '../../utils/hash';
+import {AppDispatcher} from '../../modules/dispatcher';
+import './Editor.sass';
+import {Dropdown} from '../Dropdown/Dropdown';
+import {Tippy} from '../Tippy/Tippy';
 import {Modal} from '../Modal/Modal';
 import {DeleteNoteDialog} from '../DeleteNoteDialog/DeleteNoteDialog';
 import {NotesActions} from '../../modules/stores/NotesStore';
@@ -27,8 +27,8 @@ export class Editor extends Component<any, EditorState> {
         dropdownOpen: false,
         tippyOpen: false,
         youtubeDialogOpen: false,
-        title: ""
-    }
+        title: ''
+    };
 
     componentDidUpdate() {
         if (this.state.blocks == 1 && AppNoteStore.state.note.blocks[0].content?.length == 0 && AppNoteStore.state.cursorPosition?.blockId !== 0 && AppNoteStore.state.cursorPosition?.pos !== 0) {
@@ -36,21 +36,21 @@ export class Editor extends Component<any, EditorState> {
         }
     }
 
-    private timer: NodeJS.Timeout = setTimeout(() => {})
+    private timer: NodeJS.Timeout = setTimeout(() => {});
 
-    private optionsSetter = (blockId: number, anchorId: number, focusId: number, anchorPos: number, focusPos: number) => {}
+    private optionsSetter = (blockId: number, anchorId: number, focusId: number, anchorPos: number, focusPos: number) => {};
 
     componentDidMount() {
-        AppNoteStore.SubscribeToStore(this.updateState)
+        AppNoteStore.SubscribeToStore(this.updateState);
         this.setState(s => {
-            return {...s, blocks: AppNoteStore.state.note.blocks.length}
-        })
+            return {...s, blocks: AppNoteStore.state.note.blocks.length};
+        });
 
         document.onselectionchange = (e) => {
             if (document.getSelection().isCollapsed === false) {
                 const r = /piece-(\d+)-(\d+)/;
-                const matchesAnchor = r.exec(document.getSelection().anchorNode.parentElement.id.toString())
-                const matchesFocus = r.exec(document.getSelection().focusNode.parentElement.id.toString())
+                const matchesAnchor = r.exec(document.getSelection().anchorNode.parentElement.id.toString());
+                const matchesFocus = r.exec(document.getSelection().focusNode.parentElement.id.toString());
                 const offsetAnchor = document.getSelection().anchorOffset;
                 const offsetFocus = document.getSelection().focusOffset;
                 if (matchesAnchor != null && matchesFocus != null) {
@@ -59,10 +59,10 @@ export class Editor extends Component<any, EditorState> {
                         const piece = document.querySelector(`#piece-${matchesFocus[1]}-${matchesFocus[2]}`) as HTMLElement;
                         const piece2 = document.querySelector(`#piece-${matchesAnchor[1]}-${matchesAnchor[2]}`) as HTMLElement;
 
-                        this.openTippy()
-                        const tippy = document.querySelector("#tippy") as HTMLElement;
-                        tippy.style.top = (piece.getBoundingClientRect().y - tippy.getBoundingClientRect().height - 2).toString() + "px";
-                        tippy.style.left = (Math.min(piece.getBoundingClientRect().x, piece2.getBoundingClientRect().x) - 30).toString() + "px";
+                        this.openTippy();
+                        const tippy = document.querySelector('#tippy') as HTMLElement;
+                        tippy.style.top = (piece.getBoundingClientRect().y - tippy.getBoundingClientRect().height - 2).toString() + 'px';
+                        tippy.style.left = (Math.min(piece.getBoundingClientRect().x, piece2.getBoundingClientRect().x) - 30).toString() + 'px';
 
                         this.optionsSetter(
                             Number(matchesFocus[1]),
@@ -71,7 +71,7 @@ export class Editor extends Component<any, EditorState> {
                             offsetAnchor,
                             offsetFocus
                         );
-                        console.log("MOOVE")
+                        console.log('MOOVE');
 
                         // AppDispatcher.dispatch(NoteStoreActions.CHANGE_PIECE_ATTRIBUTES,
                         //     {
@@ -82,10 +82,10 @@ export class Editor extends Component<any, EditorState> {
                         //         focusPos: Number(offsetFocus),
                         //         attribute: "underline"
                         //     })
-                    }, 300)
+                    }, 300);
                 }
             }
-        }
+        };
     }
 
     updateState = (store) => {
@@ -93,67 +93,67 @@ export class Editor extends Component<any, EditorState> {
             ...state,
             dropdownOpen: store.dropdownPos.isOpen,
             blocks: store.note.blocks.length
-        }))
-    }
+        }));
+    };
 
     closeEditor = () => {
-        console.log("closeEditor")
-        AppDispatcher.dispatch(NoteStoreActions.CLOSE_DROPDOWN)
+        console.log('closeEditor');
+        AppDispatcher.dispatch(NoteStoreActions.CLOSE_DROPDOWN);
 
         this.setState(state => ({
             ...state,
             dropdownOpen: false
-        }))
-    }
+        }));
+    };
 
     openYoutubeDialog = () => {
         this.setState(state => ({
             ...state,
             youtubeDialogOpen: true
-        }))
-    }
+        }));
+    };
 
     closeYoutubeDialog = () => {
         this.setState(state => ({
             ...state,
             youtubeDialogOpen: false
-        }))
-    }
+        }));
+    };
 
     openTippy = () => {
         this.setState(state => ({
             ...state,
             tippyOpen: true
-        }))
-    }
+        }));
+    };
 
     closeTippy = () => {
         this.setState(state => ({
             ...state,
             tippyOpen: false
-        }))
-    }
+        }));
+    };
 
     private renderBlocks = () => {
         const result = Array<VDomNode>();
         for (let i = 0; i < this.state.blocks; ++i) {
             result.push(
-                <div className={"drag-area"}
+                <div className={'drag-area'}
                      ondrop={(e) => {
-                         console.log(e.dataTransfer.getData("blockId"), i)
-                         e.target.classList.remove("active")
+                         console.log(e.dataTransfer.getData('blockId'), i);
+                         e.target.classList.remove('active');
                          AppDispatcher.dispatch(NoteStoreActions.MOVE_BLOCK, {
-                            blockId: Number(e.dataTransfer.getData("blockId")),
+                            blockId: Number(e.dataTransfer.getData('blockId')),
                             posToMove: i
-                         })
+                         });
                      }}
                      ondragover={(e)=>{
                          e.preventDefault();
                      }}
-                     ondragenter={(e) => {e.target.classList.add("active")}}
-                     ondragleave={(e)=>{e.target.classList.remove("active")}}
+                     ondragenter={(e) => {e.target.classList.add('active');}}
+                     ondragleave={(e)=>{e.target.classList.remove('active');}}
                 ></div>
-            )
+            );
             result.push(
                 <Block
                     key1={AppNoteStore.state.note.blocks[i].id}
@@ -162,27 +162,27 @@ export class Editor extends Component<any, EditorState> {
                     isChosen={AppNoteStore.state.cursorPosition != null && AppNoteStore.state.cursorPosition.blockId == i}
                     onChange={this.props.onChangeContent}
                 />
-            )
+            );
         }
         result.push(
-            <div className={"drag-area"}
+            <div className={'drag-area'}
                  ondrop={(e) => {
-                     console.log(e.dataTransfer.getData("blockId"), this.state.blocks)
-                     e.target.style.border = "none"
+                     console.log(e.dataTransfer.getData('blockId'), this.state.blocks);
+                     e.target.style.border = 'none';
                      AppDispatcher.dispatch(NoteStoreActions.MOVE_BLOCK, {
-                         blockId: Number(e.dataTransfer.getData("blockId")),
+                         blockId: Number(e.dataTransfer.getData('blockId')),
                          posToMove: this.state.blocks
-                     })
+                     });
                  }}
                  ondragover={(e) => {
                      e.preventDefault();
                  }}
-                 ondragenter={(e) => {e.target.style.border = "1px solid blue"}}
-                 ondragleave={(e)=>{e.target.style.border = "none"}}
+                 ondragenter={(e) => {e.target.style.border = '1px solid blue';}}
+                 ondragleave={(e)=>{e.target.style.border = 'none';}}
             ></div>
-        )
+        );
         return result;
-    }
+    };
 
     render(): VDomNode {
         console.log(`left: ${AppNoteStore.state.dropdownPos.left}; top: ${AppNoteStore.state.dropdownPos.top};`);
@@ -193,11 +193,11 @@ export class Editor extends Component<any, EditorState> {
                         className="note-title"
                         contentEditable={true}
                         oninput={(e)=>{
-                            this.props.onChangeTitle(e.target.textContent)
+                            this.props.onChangeTitle(e.target.textContent);
 
                             AppDispatcher.dispatch(NoteStoreActions.CHANGE_TITLE, {
                                 title: e.target.textContent
-                            })
+                            });
                         }}
                     >{AppNoteStore.state.note.title}</h3>
                 </div>
@@ -218,6 +218,6 @@ export class Editor extends Component<any, EditorState> {
                        }}
                 />
             </div>
-        )
+        );
     }
 }

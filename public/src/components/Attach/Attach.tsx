@@ -1,32 +1,32 @@
 import {ScReact} from '@veglem/screact';
 import {Img} from '../Image/Image';
-import "./Attach.sass"
+import './Attach.sass';
 import {AppDispatcher} from '../../modules/dispatcher';
 import {NotesActions} from '../../modules/stores/NotesStore';
 
 export class Attach extends ScReact.Component<any, any> {
-    private closeBtnRef
+    private closeBtnRef;
 
     componentDidMount() {
         super.componentDidMount();
     }
 
     downloadAttach = (e) => {
-        console.log("downloadAttach")
+        console.log('downloadAttach');
         if (!this.closeBtnRef.contains(e.target)){
             AppDispatcher.dispatch(NotesActions.DOWNLOAD_FILE, {
                 id: this.props.id,
                 name: this.props.fileName
-            })
+            });
         }
-    }
+    };
 
     render() {
         return (
             <div className="attach-wrapper">
                 <div className="attach-container" onmousedown={this.downloadAttach}>
                     <div className="file-extension-label">
-                        {this.props.fileName.split(".")[1]}
+                        {this.props.fileName.split('.')[1]}
                     </div>
                     <span className="file-name">
                     {this.props.fileName}
@@ -38,11 +38,11 @@ export class Attach extends ScReact.Component<any, any> {
                         ref={ref => this.closeBtnRef = ref}
                         onClick={(e) => {
                             e.preventDefault();
-                            this.props.handleRemove()
+                            this.props.handleRemove();
                         }}/>
                 </span>
                 </div>
             </div>
-        )
+        );
     }
 }

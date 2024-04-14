@@ -1,15 +1,15 @@
-import {ScReact} from "@veglem/screact";
-import {VDomNode} from "@veglem/screact/dist/vdom";
-import "./style.sass"
-import {AppRouter} from "../../modules/router";
-import {AppUserStore} from "../../modules/stores/UserStore";
-import {ShiningButton} from "../../components/ShiningButton/ShinigButton";
-import {Card} from "../../components/Card/Card";
+import {ScReact} from '@veglem/screact';
+import {VDomNode} from '@veglem/screact/dist/vdom';
+import './style.sass';
+import {AppRouter} from '../../modules/router';
+import {AppUserStore} from '../../modules/stores/UserStore';
+import {ShiningButton} from '../../components/ShiningButton/ShinigButton';
+import {Card} from '../../components/Card/Card';
 
 export class HomePage extends ScReact.Component<any, any> {
     componentDidMount() {
-        document.title = "Главная"
-        this.createObserver()
+        document.title = 'Главная';
+        this.createObserver();
     }
 
     createObserver() {
@@ -17,13 +17,13 @@ export class HomePage extends ScReact.Component<any, any> {
             function (entries, observer) {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
-                        entry.target.classList.add("animate");
+                        entry.target.classList.add('animate');
                         observer.unobserve(entry.target);
                     }
                 });
             });
 
-        const targetElements = document.querySelectorAll(".second .cards-container .card");
+        const targetElements = document.querySelectorAll('.second .cards-container .card');
 
         targetElements.forEach((targetElement) => {
             observer.observe(targetElement);
@@ -31,9 +31,9 @@ export class HomePage extends ScReact.Component<any, any> {
     }
 
     handleButtonClick = () => {
-        const url = AppUserStore.state.isAuth ? "/notes" : "/login"
-        AppRouter.go(url)
-    }
+        const url = AppUserStore.state.isAuth ? '/notes' : '/login';
+        AppRouter.go(url);
+    };
 
     render(): VDomNode {
         return (
