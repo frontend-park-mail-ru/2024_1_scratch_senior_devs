@@ -6,6 +6,8 @@ import {AppToasts} from './modules/toasts';
 
 export class App extends ScReact.Component<any, any> {
     componentDidMount() {
+        console.log("App.ComponentDidMount");
+
         window.addEventListener('online', () =>
             AppToasts.info("Соединение восстановлено")
         );
