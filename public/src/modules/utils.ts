@@ -103,3 +103,26 @@ export const crop = (url:string, aspectRatio=1):Promise<HTMLCanvasElement> => {
         inputImage.src = url;
     });
 };
+
+/**
+ * Проверяет что ссылка на ютуб видео корректна
+ */
+export const isYoutubeLink = (url:string) => {
+    const check = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/
+    const match = check.exec(url)
+    return match != null && match.length > 0
+}
+
+/**
+ * Возвращает id видео по его ссылке
+ * Обрезает все ненужное
+ */
+export const parseYoutubeLink = (url:string) => {
+    if (isYoutubeLink(url)) {
+        const check = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/
+        const match = check.exec(url)
+        return match[1]
+    }
+
+    return null
+}

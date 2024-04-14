@@ -15,9 +15,9 @@ type InputProps = {
     validationResult: boolean,
     error: string,
     value: string,
-    type: string,
+    type?: string,
     placeholder: string,
-    icon: string,
+    icon?: string,
     onChange: (value:string) => void
 }
 

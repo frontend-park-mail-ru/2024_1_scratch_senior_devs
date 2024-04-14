@@ -4,6 +4,8 @@ import {Button} from '../Button/Button';
 import './YoutubeDialog.sass';
 import {AppNoteStore, NoteStoreActions} from "../../modules/stores/NoteStore";
 import {AppDispatcher} from "../../modules/dispatcher";
+import {isYoutubeLink, parseYoutubeLink} from '../../modules/utils';
+import {AppToasts} from '../../modules/toasts';
 
 export class YoutubeDialogForm extends ScReact.Component<any, any> {
     state = {
@@ -12,10 +14,10 @@ export class YoutubeDialogForm extends ScReact.Component<any, any> {
         errorMessage: ""
     };
 
-    setValue = (val) => {
+    setValue = (value:string) => {
         this.setState(state => ({
             ...state,
-            value: val
+            value: value
         }));
     };
 
@@ -27,16 +29,32 @@ export class YoutubeDialogForm extends ScReact.Component<any, any> {
         }));
     }
 
+    cleanError = () => {
+        this.setState(state => ({
+            ...state,
+            validationResult: true,
+            errorMessage: ""
+        }));
+    }
+
+    handleChange = (value:string) => {
+        this.setValue(value)
+
+        if (isYoutubeLink(value)) {
+            this.cleanError()
+        } else {
+            this.setError("Некорректная ссылка")
+        }
+    }
+
     handleSubmit = (e) => {
         e.preventDefault();
-        const check = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/
-        const match = check.exec(this.state.value)
-        if (match != null && match.length > 0) {
-            console.log(match[1])
-            this.insertVideo(match[1])
+        if (isYoutubeLink(this.state.value)) {
+            const link = parseYoutubeLink(this.state.value)
+            this.insertVideo(link)
         } else {
-            console.log("Not youtube")
-            this.setError("Not youtube")
+            this.setError("Некорректная ссылка")
+            AppToasts.error("Некорректная ссылка")
         }
     };
 
@@ -52,13 +70,22 @@ export class YoutubeDialogForm extends ScReact.Component<any, any> {
         });
 
         AppDispatcher.dispatch(NoteStoreActions.CLOSE_YOUTUBE_DIALOG)
+
+        setTimeout(() => {
+            this.setState(state => ({
+                ...state,
+                value: "",
+                validationResult: null,
+                errorMessage: ""
+            }));
+        }, 300)
     }
 
     render() {
         return (
             <form id="youtube-dialog-form" onsubmit={this.handleSubmit}>
                 <h3>Вставить видео из YouTube</h3>
-                <Input value={this.state.value} onChange={this.setValue} placeholder="Ссылка" error={this.state.errorMessage} validationResult={this.state.validationResult}/>
+                <Input value={this.state.value} onChange={this.handleChange} placeholder="Ссылка" error={this.state.errorMessage} validationResult={this.state.validationResult}/>
                 <Button label="Вставить" />
             </form>
         );
