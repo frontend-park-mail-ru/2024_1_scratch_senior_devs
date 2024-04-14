@@ -23,7 +23,7 @@ export class YoutubeDialogForm extends ScReact.Component<any, any> {
         console.log(this.state.value);
         const check = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/
         const match = check.exec(this.state.value)
-        if (match.length > 0) {
+        if (match != null && match.length > 0) {
             console.log(match[1])
             const block = AppNoteStore.state.note.blocks[AppNoteStore.state.dropdownPos.blockId]
             block.content = undefined;
