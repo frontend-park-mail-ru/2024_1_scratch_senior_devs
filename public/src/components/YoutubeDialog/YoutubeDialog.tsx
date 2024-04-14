@@ -4,7 +4,7 @@ import {Button} from '../Button/Button';
 import './YoutubeDialog.sass';
 import {AppNoteStore, NoteStoreActions} from "../../modules/stores/NoteStore";
 import {AppDispatcher} from "../../modules/dispatcher";
-import {isYoutubeLink, parseYoutubeLink} from '../../modules/utils';
+import {parseYoutubeLink} from '../../modules/utils';
 import {AppToasts} from '../../modules/toasts';
 
 export class YoutubeDialogForm extends ScReact.Component<any, any> {
@@ -40,7 +40,7 @@ export class YoutubeDialogForm extends ScReact.Component<any, any> {
     handleChange = (value:string) => {
         this.setValue(value)
 
-        if (isYoutubeLink(value)) {
+        if (parseYoutubeLink(value)) {
             this.cleanError()
         } else {
             this.setError("Некорректная ссылка")
@@ -49,9 +49,9 @@ export class YoutubeDialogForm extends ScReact.Component<any, any> {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        if (isYoutubeLink(this.state.value)) {
-            const link = parseYoutubeLink(this.state.value)
-            this.insertVideo(link)
+        const video_id = parseYoutubeLink(this.state.value)
+        if (video_id) {
+            this.insertVideo(video_id)
         } else {
             this.setError("Некорректная ссылка")
             AppToasts.error("Некорректная ссылка")

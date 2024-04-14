@@ -104,23 +104,15 @@ export const crop = (url:string, aspectRatio=1):Promise<HTMLCanvasElement> => {
     });
 };
 
-/**
- * Проверяет что ссылка на ютуб видео корректна
- */
-export const isYoutubeLink = (url:string) => {
-    const check = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/
-    const match = check.exec(url)
-    return match != null && match.length > 0
-}
 
 /**
  * Возвращает id видео по его ссылке
- * Обрезает все ненужное
+ * Возвращает null в случае, если ссылка некорректна
  */
 export const parseYoutubeLink = (url:string) => {
-    if (isYoutubeLink(url)) {
-        const check = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/
-        const match = check.exec(url)
+    const check = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/
+    const match = check.exec(url)
+    if (match != null && match.length > 0) {
         return match[1]
     }
 
