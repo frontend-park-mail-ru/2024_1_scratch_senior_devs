@@ -4,6 +4,7 @@ import {AppDispatcher} from '../dispatcher';
 import {BlockNode} from '../../components/Block/Block';
 import {create_UUID} from '../../utils/uuid';
 import {PieceNode} from '../../components/Piece/Piece';
+import {AppNotesStore} from './NotesStore';
 
 export const NoteStoreActions = {
     CHANGE_PIECE: 'CHANGE_PIECE',
@@ -18,7 +19,9 @@ export const NoteStoreActions = {
     CLOSE_DROPDOWN: 'CLOSE_DROPDOWN',
     CHANGE_BLOCK_TYPE: 'CHANGE_BLOCK_TYPE',
     CHANGE_TITLE: 'CHANGE_TITLE',
-    CHANGE_PIECE_ATTRIBUTES: 'CHANGE_PIECE_ATTRIBUTES'
+    CHANGE_PIECE_ATTRIBUTES: 'CHANGE_PIECE_ATTRIBUTES',
+    CLOSE_YOUTUBE_DIALOG: "CLOSE_YOUTUBE_DIALOG",
+    OPEN_YOUTUBE_DIALOG: "OPEN_YOUTUBE_DIALOG"
 };
 
 export type NoteStoreState = {
@@ -45,6 +48,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
             title: '',
             blocks: Array<BlockNode>()
         },
+        youtubeDialogOpen: false,
         cursorPosition: null,
         dropdownPos: {
             left: 0,
@@ -103,6 +107,12 @@ class NoteStore extends BaseStore<NoteStoreState> {
                 case NoteStoreActions.CHANGE_PIECE_ATTRIBUTES:
                     this.changePieceAttributes(action.payload.blockId, action.payload.anchorId, action.payload.focusId, action.payload.anchorPos, action.payload.focusPos, action.payload.attribute, action.payload.value);
                     break;
+                case NoteStoreActions.CLOSE_YOUTUBE_DIALOG:
+                    this.closeYoutubeDialog();
+                    break;
+                case NoteStoreActions.OPEN_YOUTUBE_DIALOG:
+                    this.openYoutubeDialog()
+                    break
             }
         });
     };
@@ -465,6 +475,20 @@ class NoteStore extends BaseStore<NoteStoreState> {
                 return {...s};
             });
         }
+    };
+
+    private closeYoutubeDialog = () => {
+        this.SetState(state => ({
+            ...state,
+            youtubeDialogOpen: false
+        }));
+    };
+
+    private openYoutubeDialog = () => {
+        this.SetState(state => ({
+            ...state,
+            youtubeDialogOpen: true
+        }));
     };
 }
 

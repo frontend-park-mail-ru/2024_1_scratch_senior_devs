@@ -161,6 +161,8 @@ class UserStore extends BaseStore<UserStoreState>{
             }
 
         } catch (err) {
+            console.log("err")
+            console.log(err)
             this.SetState(state => ({
                 ...state,
                 errorLoginForm: 'Неправильный логин, пароль или код'
