@@ -2,6 +2,8 @@ import {ScReact} from '@veglem/screact';
 import {Input} from '../Input/Input';
 import {Button} from '../Button/Button';
 import './YoutubeDialog.sass';
+import {AppNoteStore, NoteStoreActions} from "../../modules/stores/NoteStore";
+import {AppDispatcher} from "../../modules/dispatcher";
 
 export class YoutubeDialogForm extends ScReact.Component<any, any> {
     state = {
@@ -19,6 +21,21 @@ export class YoutubeDialogForm extends ScReact.Component<any, any> {
         e.preventDefault();
         console.log('handleSubmit');
         console.log(this.state.value);
+        const check = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/
+        const match = check.exec(this.state.value)
+        if (match.length > 0) {
+            console.log(match[1])
+            const block = AppNoteStore.state.note.blocks[AppNoteStore.state.dropdownPos.blockId]
+            block.content = undefined;
+            block.attributes = {};
+            block.attributes['youtube'] = "https://www.youtube.com/embed/" + match[1];
+            AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
+                blockId: AppNoteStore.state.dropdownPos.blockId,
+                newBlock: block
+            });
+        } else {
+            console.log("Not youtube")
+        }
 
         // TODO: проверка ссылки на валидоность
     };
