@@ -20,7 +20,7 @@ export class Carousel extends ScReact.Component<any, any> {
 
         return (
             <div className="carousel">
-                <div className="inner">
+                <div className="carousel__inner">
                     {items.map(item => (
                         <CarouselItem item={item} />
                     ))}

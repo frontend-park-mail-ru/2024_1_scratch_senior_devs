@@ -26,9 +26,9 @@ export class ToggleButton extends ScReact.Component<any, any> {
 
     render() {
         return (
-            <div className="toggle-button-container">
-                <label className="toggle-label" onclick={this.toggle}>{this.props.label}</label>
-                <div className={'toggle ' + (this.state.select ? 'active' : '')} onclick={this.toggle}></div>
+            <div className="toggle">
+                <label className="toggle__label" onclick={this.toggle}>{this.props.label}</label>
+                <div className={'toggle__btn ' + (this.state.select ? 'toggle__btn-active' : '')} onclick={this.toggle}></div>
             </div>
         );
     }

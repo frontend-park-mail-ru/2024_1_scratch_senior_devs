@@ -188,9 +188,8 @@ export class Editor extends Component<any, EditorState> {
         console.log(`left: ${AppNoteStore.state.dropdownPos.left}; top: ${AppNoteStore.state.dropdownPos.top};`);
         return (
             <div className="note-editor">
-                <div className="note-title-container">
+                <div className="note-editor__title">
                     <h3
-                        className="note-title"
                         contentEditable={true}
                         oninput={(e)=>{
                             this.props.onChangeTitle(e.target.textContent);
@@ -201,7 +200,7 @@ export class Editor extends Component<any, EditorState> {
                         }}
                     >{AppNoteStore.state.note.title}</h3>
                 </div>
-                <div className="note-body-container">
+                <div className="note-editor__body">
                     {this.renderBlocks()}
                 </div>
                 <Modal open={this.state.youtubeDialogOpen} content={<YoutubeDialogForm />} handleClose={this.closeYoutubeDialog} />

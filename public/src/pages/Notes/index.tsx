@@ -153,15 +153,15 @@ export class NotesPage extends ScReact.Component<any, any> {
 
     render() {
         return (
-            <div className={'notes-page-wrapper ' + (this.state.editorOpen ? 'active' : '')} >
+            <div className={'notes-page ' + (this.state.editorOpen ? 'active' : '')} >
                 <aside>
                     <Modal open={this.state.deleteNoteModal} content={<DeleteNoteDialog />} handleClose={() => AppDispatcher.dispatch(NotesActions.CLOSE_DELETE_NOTE_DIALOG)} />
                     <div className="top-panel">
                         <SearchBar onChange={this.searchNotes} />
-                        <div className="add-note-btn-container" onclick={this.createNewNote}>
-                            <Button label="Новая заметка" className="add-note-btn" />
-                            <div className="add-note-icon-wrapper">
-                                <Img src="plus.svg" className="add-note-icon" />
+                        <div className="add-note" onclick={this.createNewNote}>
+                            <Button label="Новая заметка" className="add-note__btn" />
+                            <div className="add-note__icon-container">
+                                <Img src="plus.svg" className="add-note__icon-container__icon" />
                             </div>
                         </div>
                     </div>
@@ -169,13 +169,13 @@ export class NotesPage extends ScReact.Component<any, any> {
                         <Loader active={this.state.fetching}/>
                         {this.state.notes.map(note => (
                             <div
-                                className={'note-container ' + (this.state.selectedNote?.id == note.id ? 'selected' : '')}
+                                className={'notes-container__note-container notes-container__note-container-' + (this.state.selectedNote?.id == note.id ? 'selected' : '')}
                                 id={note.id}
                                 ref={ref => this.saveSelectedNoteRef(note, ref)}
                             >
                                 <h3>{truncate(note.data.title, 20)}</h3>
                                 <p></p>
-                                <span className="update-time">{formatDate(note.update_time)}</span>
+                                <span className="notes-container__update-time-label">{formatDate(note.update_time)}</span>
                             </div>
                         ))}
                     </div>

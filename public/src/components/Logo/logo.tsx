@@ -11,8 +11,8 @@ export class Logo extends ScReact.Component<any, any> {
 
     render(): VDomNode {
         return (
-            <div className="logo-wrapper" onclick={this.handleClick}>
-                <Img src="logo.svg" className="logo"/>
+            <div className="logo" onclick={this.handleClick}>
+                <Img src="logo.svg" className="logo__image"/>
             </div>
         );
     }

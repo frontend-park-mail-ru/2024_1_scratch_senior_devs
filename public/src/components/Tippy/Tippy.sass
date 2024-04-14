@@ -1,7 +1,7 @@
 @import "/public/src/utils/variables.sass"
 @import "/public/src/utils/animations.sass"
 
-.tippy-container
+.tippy
 	position: fixed
 	top: 0
 	left: 0
@@ -29,12 +29,12 @@
 		&:hover
 			background-color: hsl(217.2 32.6% 17.5%)
 
-		.link-icon
+		.first-container__link-icon
 			width: 16px
 			height: 16px
 			filter: invert(70%)
 
-		.link-label
+		.first-container__link-label
 			font-size: 16px
 			color: $text-main-color--darker
 
@@ -44,7 +44,7 @@
 		border-right: 1px solid hsl(217.2 32.6% 25%)
 		user-select: none
 
-		.item
+		.second-container__item
 			display: flex
 			justify-content: center
 			align-items: center
@@ -77,12 +77,12 @@
 		&:hover
 			background-color: hsl(217.2 32.6% 17.5%)
 
-		.font-icon
+		.third-container__font-icon
 			filter: invert(70%)
 			width: 16px
 			height: 16px
 
-		.chevron-icon
+		.third-container__chevron-icon
 			filter: invert(70%)
 			width: 16px
 			height: 16px

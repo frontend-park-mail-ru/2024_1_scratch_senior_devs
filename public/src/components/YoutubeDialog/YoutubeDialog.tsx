@@ -25,10 +25,10 @@ export class YoutubeDialogForm extends ScReact.Component<any, any> {
 
     render() {
         return (
-            <form id="youtube-dialog-form" onsubmit={this.handleSubmit}>
-                <h3>Вставить видео из YouTube</h3>
-                <Input value={this.state.value} onChange={this.setValue} placeholder="Ссылка"/>
-                <Button label="Вставить" />
+            <form className="youtube-dialog" onsubmit={this.handleSubmit}>
+                <h3 className="youtube-dialog__title">Вставить видео из YouTube</h3>
+                <Input value={this.state.value} onChange={this.setValue} placeholder="Ссылка" className="youtube-dialog__input"/>
+                <Button label="Вставить" className="youtube-dialog__button youtube-dialog__button-submit"/>
             </form>
         );
     }
