@@ -103,3 +103,18 @@ export const crop = (url:string, aspectRatio=1):Promise<HTMLCanvasElement> => {
         inputImage.src = url;
     });
 };
+
+
+/**
+ * Возвращает id видео по его ссылке
+ * Возвращает null в случае, если ссылка некорректна
+ */
+export const parseYoutubeLink = (url:string) => {
+    const check = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/
+    const match = check.exec(url)
+    if (match != null && match.length > 0) {
+        return match[1]
+    }
+
+    return null
+}
