@@ -205,16 +205,15 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 
-            if (status == 204) {
-                this.SetState(state => ({
-                    ...state,
-                    notes: state.notes.filter(item => item.id !== this.state.selectedNote.id)
-                }));
+            this.SetState(state => ({
+                ...state,
+                notes: state.notes.filter(item => item.id !== this.state.selectedNote.id)
+            }));
 
-                this.closeNote();
+            this.closeNote();
 
-                AppToasts.info('Заметка успешно удалена');
-            }
+            AppToasts.info('Заметка успешно удалена');
+
         } catch {
             AppToasts.error("Что-то пошло не так");
         }

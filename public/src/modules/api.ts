@@ -325,7 +325,7 @@ class NoteRequests {
             },
         });
 
-        if (response.status == 403) {
+        if (response.status == 204) {
             return {
                 status: response.status,
                 csrf: response.headers['x-csrf-token']
@@ -378,7 +378,7 @@ class NoteRequests {
             }
         });
 
-        if (response.status == 200) {
+        if (response.status == 201) {
             response.body.data = decode(response.body.data);
             return response;
         }
