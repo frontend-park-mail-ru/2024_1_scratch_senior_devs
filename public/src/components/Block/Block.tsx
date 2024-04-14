@@ -41,6 +41,9 @@ export class Block extends Component<BlockProps, BlockState> {
     renderPrevSymbol = (): VDomNode[] => {
         const pieces: Array<VDomNode> = [];
         const block = AppNoteStore.state.note.blocks[this.props.blockId];
+        if (block.attributes != null && 'youtube' in block.attributes) {
+            pieces.push(<iframe width="560" height="315" className="youtube-player" src={block.attributes.youtube} sandbox="allow-same-origin allow-scripts"></iframe>)
+        }
         if (block.attributes != null && 'attach' in block.attributes) {
             const attachId = block.attributes['attach'];
 
@@ -130,12 +133,15 @@ export class Block extends Component<BlockProps, BlockState> {
                     e.dataTransfer.setData('blockId', this.props.blockId.toString());
                 }}
                 onclick={() => {
-                    // console.log("click")
-                    const cursorPosition = getCursorInBlock(this.self);
-                    AppDispatcher.dispatch(NoteStoreActions.MOVE_CURSOR, {
-                        blockId: this.props.blockId,
-                        pos: cursorPosition
-                    });
+                    if (AppNoteStore.state.note.blocks[this.props.blockId].type === "img" ||
+                        (AppNoteStore.state.note.blocks[this.props.blockId].attributes != null &&
+                           "fileName" in AppNoteStore.state.note.blocks[this.props.blockId].attributes)) {
+                        const cursorPosition = getCursorInBlock(this.self)
+                        AppDispatcher.dispatch(NoteStoreActions.MOVE_CURSOR, {
+                            blockId: this.props.blockId,
+                            pos: cursorPosition
+                        })
+                    }
                 }}
             >
 
@@ -223,7 +229,7 @@ export class Block extends Component<BlockProps, BlockState> {
                                 }
                             },
                             onkeydown: (e: Event) => {
-                                if ('key' in e && e.key === 'Enter') {
+                                if ("key" in e && e.key === "Enter") {
                                     e.preventDefault();
                                     AppDispatcher.dispatch(NoteStoreActions.ADD_BLOCK, {insertPos: this.props.blockId + 1});
                                     const block = AppNoteStore.state.note.blocks[this.props.blockId];
@@ -241,6 +247,7 @@ export class Block extends Component<BlockProps, BlockState> {
                                         moveCursorUpAndDown(this.props.blockId);
                                         return;
                                     }
+                                    AppDispatcher.dispatch(NoteStoreActions.ADD_BLOCK, {insertPos: this.props.blockId + 1});
                                     if (block.attributes != null &&
                                         'ul' in block.attributes &&
                                         block.attributes.ul == true) {

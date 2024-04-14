@@ -4,6 +4,7 @@ import {AppDispatcher} from '../dispatcher';
 import {BlockNode} from '../../components/Block/Block';
 import {create_UUID} from '../../utils/uuid';
 import {PieceNode} from '../../components/Piece/Piece';
+import {AppNotesStore} from './NotesStore';
 
 export const NoteStoreActions = {
     CHANGE_PIECE: 'CHANGE_PIECE',
@@ -18,7 +19,9 @@ export const NoteStoreActions = {
     CLOSE_DROPDOWN: 'CLOSE_DROPDOWN',
     CHANGE_BLOCK_TYPE: 'CHANGE_BLOCK_TYPE',
     CHANGE_TITLE: 'CHANGE_TITLE',
-    CHANGE_PIECE_ATTRIBUTES: 'CHANGE_PIECE_ATTRIBUTES'
+    CHANGE_PIECE_ATTRIBUTES: 'CHANGE_PIECE_ATTRIBUTES',
+    CLOSE_YOUTUBE_DIALOG: "CLOSE_YOUTUBE_DIALOG",
+    OPEN_YOUTUBE_DIALOG: "OPEN_YOUTUBE_DIALOG"
 };
 
 export type NoteStoreState = {
@@ -45,6 +48,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
             title: '',
             blocks: Array<BlockNode>()
         },
+        youtubeDialogOpen: false,
         cursorPosition: null,
         dropdownPos: {
             left: 0,
@@ -103,6 +107,12 @@ class NoteStore extends BaseStore<NoteStoreState> {
                 case NoteStoreActions.CHANGE_PIECE_ATTRIBUTES:
                     this.changePieceAttributes(action.payload.blockId, action.payload.anchorId, action.payload.focusId, action.payload.anchorPos, action.payload.focusPos, action.payload.attribute, action.payload.value);
                     break;
+                case NoteStoreActions.CLOSE_YOUTUBE_DIALOG:
+                    this.closeYoutubeDialog();
+                    break;
+                case NoteStoreActions.OPEN_YOUTUBE_DIALOG:
+                    this.openYoutubeDialog()
+                    break
             }
         });
     };
@@ -153,21 +163,9 @@ class NoteStore extends BaseStore<NoteStoreState> {
             blockId: blockId,
             pos: posOffset
         };
+        this.addEmptyBlockToEnd();
         this.saveNote();
-        // this.SetState(s => {
-        //     const oldNote: Note = this.state.note;
-        //     const newBlockContent = new Array<PieceNode>()
-        //     pieces.forEach(piece => {
-        //         newBlockContent.push({
-        //             id: oldNote.blocks[blockId].content[piece.pieceId].id,
-        //             content: piece.content,
-        //             attributes: oldNote.blocks[blockId].content[piece.pieceId].attributes
-        //         })
-        //     })
-        //     oldNote.blocks[blockId].content = newBlockContent;
-        //     console.log(oldNote)
-        //     return {...s, note: oldNote, cursorPosition: {blockId: blockId, pos: posOffset}}
-        // })
+
     };
 
     private addNewPiece = (blockId: number, insertPosition: number, content: string) => {
@@ -213,6 +211,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
             }, 0);
             return {...s, note: oldNote, cursorPosition: {blockId: (delPos == 0 ? 0 : (delPos - 1)), pos: pos}};
         });
+        this.addEmptyBlockToEnd();
         this.saveNote();
     };
 
@@ -238,6 +237,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
             oldNote.blocks[blockId] = newBlock;
             return {...s, note: oldNote};
         });
+        this.addEmptyBlockToEnd();
         this.saveNote();
     };
 
@@ -257,6 +257,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
                 return {...s, note: oldNote};
             }
         });
+        this.addEmptyBlockToEnd();
         this.saveNote();
     };
 
@@ -292,6 +293,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
             oldNote.blocks[blockId].content = content;
             return {...s, note: oldNote};
         });
+        this.addEmptyBlockToEnd();
         this.saveNote();
     };
 
@@ -457,6 +459,36 @@ class NoteStore extends BaseStore<NoteStoreState> {
             });
         }
         this.saveNote();
+    };
+
+    private addEmptyBlockToEnd = () => {
+        if (AppNoteStore.state.note.blocks[AppNoteStore.state.note.blocks.length - 1].content?.length !== 0 ||
+            AppNoteStore.state.note.blocks[AppNoteStore.state.note.blocks.length - 1].content == null) {
+            const block: BlockNode = {
+                id: create_UUID(),
+                attributes: null,
+                type: 'div',
+                content: []
+            };
+            AppNoteStore.SetState(s => {
+                s.note.blocks.push(block);
+                return {...s};
+            });
+        }
+    };
+
+    private closeYoutubeDialog = () => {
+        this.SetState(state => ({
+            ...state,
+            youtubeDialogOpen: false
+        }));
+    };
+
+    private openYoutubeDialog = () => {
+        this.SetState(state => ({
+            ...state,
+            youtubeDialogOpen: true
+        }));
     };
 }
 
