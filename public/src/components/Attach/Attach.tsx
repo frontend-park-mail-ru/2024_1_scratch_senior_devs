@@ -3,6 +3,7 @@ import {Img} from '../Image/Image';
 import './Attach.sass';
 import {AppDispatcher} from '../../modules/dispatcher';
 import {NotesActions} from '../../modules/stores/NotesStore';
+import {truncate} from '../../modules/utils';
 
 export class Attach extends ScReact.Component<any, any> {
     private closeBtnRef;
@@ -29,7 +30,7 @@ export class Attach extends ScReact.Component<any, any> {
                         {this.props.fileName.split('.')[1]}
                     </div>
                     <span className="file-name">
-                    {this.props.fileName}
+                    {truncate(this.props.fileName, 25)}
                 </span>
                 <span className="close-attach-btn-container">
                     <Img
