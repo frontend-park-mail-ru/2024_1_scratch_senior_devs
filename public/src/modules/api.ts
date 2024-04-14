@@ -4,6 +4,8 @@ import {
     UserRegisterCredentialsType,
     UserUpdatePasswordCredentialsType
 } from './stores/UserStore';
+import {AppToasts} from './toasts';
+import {Exception} from 'sass';
 
 export const isDebug = process.env.NODE_ENV === 'development';
 
@@ -32,6 +34,10 @@ type Response = {
 
 const Ajax = {
     Request: async (method: RequestMethods, url: string, params: RequestParams): Promise<Response> => {
+        if (!window.navigator.onLine) {
+            throw new Error("Offline");
+        }
+
         const options: RequestInit = {
             method: method,
             mode: 'cors',
@@ -147,7 +153,6 @@ class AuthRequests {
     };
 
     CheckUser = async (jwt: string) => {
-
         const response = await Ajax.Get(this.baseUrl + '/check_user', {
             headers: {
                 'Authorization': jwt
@@ -162,6 +167,10 @@ class AuthRequests {
     };
 
     GetQR = async (jwt: string) => {
+        if (!window.navigator.onLine) {
+            throw new Error("Offline");
+        }
+
         const options: RequestInit = {
             method: RequestMethods.GET,
             mode: 'cors',
@@ -213,6 +222,10 @@ class ProfileRequests {
     };
 
     UpdateAvatar = async(photo:File, jwt:string, csrf:string) => {
+        if (!window.navigator.onLine) {
+            throw new Error("Offline");
+        }
+
         const form_data = new FormData();
 
         form_data.append('avatar', photo);
@@ -312,10 +325,14 @@ class NoteRequests {
             },
         });
 
-        return {
-            status: response.status,
-            csrf: response.headers['x-csrf-token']
-        };
+        if (response.status == 403) {
+            return {
+                status: response.status,
+                csrf: response.headers['x-csrf-token']
+            };
+        }
+
+        throw new Error(response.body.message)
     };
 
     Update = async({id, note}, jwt: string, csrf:string)=> {
@@ -361,8 +378,12 @@ class NoteRequests {
             }
         });
 
-        response.body.data = decode(response.body.data);
-        return response;
+        if (response.status == 200) {
+            response.body.data = decode(response.body.data);
+            return response;
+        }
+
+        throw new Error();
     };
 
     UploadFile = async (id:string, file:File, jwt:string, csrf:string) => {

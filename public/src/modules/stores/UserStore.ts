@@ -340,6 +340,8 @@ class UserStore extends BaseStore<UserStoreState>{
                     ...state,
                     errorUpdatePasswordForm: 'Неправильный пароль'
                 }));
+            } else {
+                AppToasts.error("Что-то пошло не так");
             }
         }
     }
@@ -360,16 +362,20 @@ class UserStore extends BaseStore<UserStoreState>{
     }
 
     private async toggleTwoFactorAuthorization(enabled:boolean) {
-        if (enabled) {
-            await this.enableTwoFactorAuthorization();
-        } else {
-            await this.disableTwoFactorAuthorization();
-        }
+        try {
+            if (enabled) {
+                await this.enableTwoFactorAuthorization();
+            } else {
+                await this.disableTwoFactorAuthorization();
+            }
 
-        this.SetState(state => ({
-            ...state,
-            otpEnabled: enabled
-        }));
+            this.SetState(state => ({
+                ...state,
+                otpEnabled: enabled
+            }));
+        } catch {
+            AppToasts.error("Что-то пошло не так");
+        }
     }
 
     private async enableTwoFactorAuthorization() {

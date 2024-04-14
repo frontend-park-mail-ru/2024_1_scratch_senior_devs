@@ -130,9 +130,13 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     async fetchNote (id:string) {
-        const note = await AppNoteRequests.Get(id, AppUserStore.state.JWT);
+        try {
+            const note = await AppNoteRequests.Get(id, AppUserStore.state.JWT);
 
-        this.selectNote(note);
+            this.selectNote(note);
+        } catch {
+            AppToasts.error("Что-то пошло не так");
+        }
     }
 
     selectNote (note:Note) {
@@ -171,113 +175,128 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     async fetchNotes (reset: boolean=false) {
-        const params:Record<string,any> = {
-            title: this.state.query,
-            offset: this.state.offset,
-            count: this.state.count
-        };
+        try {
+            const params:Record<string,any> = {
+                title: this.state.query,
+                offset: this.state.offset,
+                count: this.state.count
+            };
 
-        console.log('fetchNotes');
-        console.log(params);
+            console.log('fetchNotes');
+            console.log(params);
 
-        const notes = await AppNoteRequests.GetAll(AppUserStore.state.JWT, params);
+            const notes = await AppNoteRequests.GetAll(AppUserStore.state.JWT, params);
 
-        this.SetState(state => ({
-            ...state,
-            fetching: false,
-            notes: reset ? notes : state.notes.concat(notes)
-        }));
+            this.SetState(state => ({
+                ...state,
+                fetching: false,
+                notes: reset ? notes : state.notes.concat(notes)
+            }));
 
-        console.log(notes);
+            console.log(notes);
+        } catch {
+            AppToasts.error("Что-то пошло не так");
+        }
     }
 
     async deleteNote() {
-        const {status, csrf} = await AppNoteRequests.Delete(this.state.selectedNote.id, AppUserStore.state.JWT, AppUserStore.state.csrf);
+        try {
+            const {status, csrf} = await AppNoteRequests.Delete(this.state.selectedNote.id, AppUserStore.state.JWT, AppUserStore.state.csrf);
 
-        AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 
-        if (status == 204) {
-            this.SetState(state => ({
-                ...state,
-                notes: state.notes.filter(item => item.id !== this.state.selectedNote.id)
-            }));
+            if (status == 204) {
+                this.SetState(state => ({
+                    ...state,
+                    notes: state.notes.filter(item => item.id !== this.state.selectedNote.id)
+                }));
 
-            this.closeNote();
+                this.closeNote();
 
-            AppToasts.info('Заметка успешно удалена');
+                AppToasts.info('Заметка успешно удалена');
+            }
+        } catch {
+            AppToasts.error("Что-то пошло не так");
         }
     }
 
     async saveNote(data) {
         console.log('saveNote');
+        try {
+            const {status, csrf} = await AppNoteRequests.Update(data, AppUserStore.state.JWT, AppUserStore.state.csrf);
 
-        const {status, csrf} = await AppNoteRequests.Update(data, AppUserStore.state.JWT, AppUserStore.state.csrf);
-
-        AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
-
-        if (status === 200) {
-            // AppToasts.success("Заметка успешно сохранена")
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+        } catch {
+            AppToasts.error("Что-то пошло не так");
         }
     }
 
     async createNewNote() {
-        const response = await AppNoteRequests.Add(AppUserStore.state.JWT, AppUserStore.state.csrf);
+        try {
+            const response = await AppNoteRequests.Add(AppUserStore.state.JWT, AppUserStore.state.csrf);
 
-        AppDispatcher.dispatch(UserActions.UPDATE_CSRF, response.headers['x-csrf-token']);
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, response.headers['x-csrf-token']);
 
-        // const note = {
-        //     data: {
-        //         content: "",
-        //         title: "Новая заметка"
-        //     },
-        //     update_time: new Date().toISOString()
-        // }
-        //
+            // const note = {
+            //     data: {
+            //         content: "",
+            //         title: "Новая заметка"
+            //     },
+            //     update_time: new Date().toISOString()
+            // }
+            //
 
-        this.SetState(state => ({
-            ...state,
-            offset: state.offset + 1, // ?
-            // notes: [...state.notes, response.body],
-            notes: [response.body, ...state.notes]
-        }));
+            this.SetState(state => ({
+                ...state,
+                offset: state.offset + 1, // ?
+                // notes: [...state.notes, response.body],
+                notes: [response.body, ...state.notes]
+            }));
 
-        document.getElementById(String(response.body.id)).scrollIntoView();
+            document.getElementById(String(response.body.id)).scrollIntoView();
 
-        this.selectNote(response.body);
+            this.selectNote(response.body);
+        } catch {
+            AppToasts.error("Что-то пошло не так");
+        }
     }
 
     async uploadImage({noteId, blockId, file}) {
-        const response = await AppNoteRequests.UploadFile(noteId, file, AppUserStore.state.JWT, AppUserStore.state.csrf);
+        try {
+            const response = await AppNoteRequests.UploadFile(noteId, file, AppUserStore.state.JWT, AppUserStore.state.csrf);
 
-        AppDispatcher.dispatch(UserActions.UPDATE_CSRF, response.headers.get('x-csrf-token'));
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, response.headers.get('x-csrf-token'));
 
-        if (response.status == 200) {
-            const body = await response.json();
-            const attachId = body.path.split('.')[0];
-            const url = await AppNoteRequests.GetImage(attachId, AppUserStore.state.JWT, AppUserStore.state.csrf);
-            const block = AppNoteStore.state.note.blocks[blockId];
+            if (response.status == 200) {
+                const body = await response.json();
+                const attachId = body.path.split('.')[0];
+                const url = await AppNoteRequests.GetImage(attachId, AppUserStore.state.JWT, AppUserStore.state.csrf);
+                const block = AppNoteStore.state.note.blocks[blockId];
 
-            if (block.attributes != null) {
-                block.attributes['id'] = attachId;
-                block.attributes['src'] = url;
+                if (block.attributes != null) {
+                    block.attributes['id'] = attachId;
+                    block.attributes['src'] = url;
+                }
+
+                block.content = undefined;
+
+                AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
+                    blockId: blockId,
+                    newBlock: block
+                });
+            } else {
+                AppToasts.error('Не удалось загрузить изображение ' + file.name);
+                const block: BlockNode = AppNoteStore.state.note.blocks[blockId];
+                block.content = [];
+                block.attributes = null;
+                block.type = 'div';
+                AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
+                    blockId: blockId,
+                    newBlock: block
+                });
             }
-
-            block.content = undefined;
-
-            AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
-                blockId: blockId,
-                newBlock: block
-            });
-        } else {
-            AppToasts.error('Не удалось загрузить изображение ' + file.name);
-            const block: BlockNode = AppNoteStore.state.note.blocks[blockId];
-            block.content = [];
-            block.attributes = null;
-            block.type = 'div';
-            AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
-                blockId: blockId,
-                newBlock: block
-            });
+        } catch {
+            AppToasts.error("Что-то пошло не так");
         }
     }
 
@@ -298,37 +317,40 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     async uploadFile({noteId, blockId, file, fileName}) {
-        const response = await AppNoteRequests.UploadFile(noteId, file, AppUserStore.state.JWT, AppUserStore.state.csrf);
+        try {
+            const response = await AppNoteRequests.UploadFile(noteId, file, AppUserStore.state.JWT, AppUserStore.state.csrf);
 
-        AppDispatcher.dispatch(UserActions.UPDATE_CSRF, response.headers.get('x-csrf-token'));
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, response.headers.get('x-csrf-token'));
 
-        if (response.status == 200) {
+            if (response.status == 200) {
+                const block = AppNoteStore.state.note.blocks[blockId];
+                const body = await response.json();
+                const attachId = body.path.split('.')[0];
 
-            const block = AppNoteStore.state.note.blocks[blockId];
-            const body = await response.json();
-            const attachId = body.path.split('.')[0];
+                if (block.attributes != null) {
+                    block.attributes['attach'] = attachId;
+                    block.attributes['fileName'] = fileName;
+                }
 
-            if (block.attributes != null) {
-                block.attributes['attach'] = attachId;
-                block.attributes['fileName'] = fileName;
+                block.content = undefined;
+
+                AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
+                    blockId: blockId,
+                    newBlock: block
+                });
+            } else {
+                AppToasts.error('Не удалось прикрепить файл ' + file.name);
+                const block: BlockNode = AppNoteStore.state.note.blocks[blockId];
+                block.content = [];
+                block.attributes = null;
+                block.type = 'div';
+                AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
+                    blockId: blockId,
+                    newBlock: block
+                });
             }
-
-            block.content = undefined;
-
-            AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
-                blockId: blockId,
-                newBlock: block
-            });
-        } else {
-            AppToasts.error('Не удалось прикрепить файл ' + file.name);
-            const block: BlockNode = AppNoteStore.state.note.blocks[blockId];
-            block.content = [];
-            block.attributes = null;
-            block.type = 'div';
-            AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
-                blockId: blockId,
-                newBlock: block
-            });
+        } catch {
+            AppToasts.error("Что-то пошло не так");
         }
     }
 

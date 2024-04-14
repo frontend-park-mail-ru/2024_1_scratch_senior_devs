@@ -29,7 +29,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
             });
         }
 
-        this.savingLabelRef.innerHTML = 'Сохранено';
+        this.savingLabelRef.innerHTML = window.navigator.onLine ? 'Сохранено' : "Не удалось сохранить";
         this.savingLabelRef.style.opacity = 1;
     };
 

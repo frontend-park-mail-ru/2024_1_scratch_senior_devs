@@ -23,7 +23,7 @@ export class HomePage extends ScReact.Component<any, any> {
                 });
             });
 
-        const targetElements = document.querySelectorAll('.second .cards-container .card');
+        const targetElements = document.querySelectorAll('.about .about__container .card');
 
         targetElements.forEach((targetElement) => {
             observer.observe(targetElement);

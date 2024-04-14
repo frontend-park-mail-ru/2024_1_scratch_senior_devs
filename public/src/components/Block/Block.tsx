@@ -12,7 +12,7 @@ import {getCursorInBlock, setCursorInBlock} from '../../utils/cursorPos';
 import {moveCursorUpAndDown} from './utils/cursorActions';
 import {Attach} from '../Attach/Attach';
 import {NotesActions} from '../../modules/stores/NotesStore';
-import {App} from "../../App";
+import {App} from '../../App';
 
 export interface BlockNode {
     id: string
@@ -131,14 +131,14 @@ export class Block extends Component<BlockProps, BlockState> {
                     e.dataTransfer.setData('blockId', this.props.blockId.toString());
                 }}
                 onclick={() => {
-                    if (AppNoteStore.state.note.blocks[this.props.blockId].type === "img" ||
+                    if (AppNoteStore.state.note.blocks[this.props.blockId].type === 'img' ||
                         (AppNoteStore.state.note.blocks[this.props.blockId].attributes != null &&
-                           "fileName" in AppNoteStore.state.note.blocks[this.props.blockId].attributes)) {
-                        const cursorPosition = getCursorInBlock(this.self)
+                           'fileName' in AppNoteStore.state.note.blocks[this.props.blockId].attributes)) {
+                        const cursorPosition = getCursorInBlock(this.self);
                         AppDispatcher.dispatch(NoteStoreActions.MOVE_CURSOR, {
                             blockId: this.props.blockId,
                             pos: cursorPosition
-                        })
+                        });
                     }
                 }}
             >
@@ -227,7 +227,7 @@ export class Block extends Component<BlockProps, BlockState> {
                                 }
                             },
                             onkeydown: (e: Event) => {
-                                if ("key" in e && e.key === "Enter") {
+                                if ('key' in e && e.key === 'Enter') {
                                     e.preventDefault();
                                     AppDispatcher.dispatch(NoteStoreActions.ADD_BLOCK, {insertPos: this.props.blockId + 1});
                                     const block = AppNoteStore.state.note.blocks[this.props.blockId];
