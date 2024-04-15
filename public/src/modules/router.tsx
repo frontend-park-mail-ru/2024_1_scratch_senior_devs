@@ -5,7 +5,7 @@ import {HomePage} from '../pages/Home';
 import {ErrorPage} from '../pages/ErrorPage/errorPage';
 import {AuthPage} from '../pages/Auth';
 import {NotesPage} from '../pages/Notes';
-import {Header} from '../components/Header/header';
+import {Header} from '../components/Header/Header';
 import {Background} from '../components/Background/Background';
 import {Toasts} from './toasts';
 import NotesPageSkeleton from '../pages/Notes/Skeleton';

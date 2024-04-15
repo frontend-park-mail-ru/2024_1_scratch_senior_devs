@@ -133,7 +133,7 @@ export class Toasts extends ScReact.Component<any, ToastState> {
         ));
 
         return (
-            <div>
+            <div className="toasts-wrapper">
                 {toasts}
             </div>
         );

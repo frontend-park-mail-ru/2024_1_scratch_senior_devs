@@ -63,11 +63,11 @@ export class Dropdown extends ScReact.Component<any, any> {
             tag = 'img';
             const fileInput = document.createElement('input');
             fileInput.type = 'file';
-            // fileInput.accept = '.jpg,.png';
+            fileInput.accept = '.jpg,.png';
             fileInput.hidden = true;
             this.ref.append(fileInput);
             fileInput.onchange = (e: InputEvent) => {
-                console.log('onchange');
+                console.log('onchange12344444444444444444');
                 console.log(e);
                 fileInput.remove();
 
@@ -91,7 +91,7 @@ export class Dropdown extends ScReact.Component<any, any> {
             const fileInput = document.createElement('input');
             fileInput.type = 'file';
             fileInput.hidden = true;
-            fileInput.accept = ".jpg,.png"
+            fileInput.accept = ".mp4,.mp3,.wav,.gif,.jpeg,.webp,.jpg,.png,.mp4"
             this.ref.append(fileInput);
             fileInput.onchange = (e) => {
                 console.log('onchange');
