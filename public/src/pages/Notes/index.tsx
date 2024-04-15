@@ -146,9 +146,12 @@ export class NotesPage extends ScReact.Component<any, any> {
 
     onChangeSelectedNoteTitle = (title:string) => {
         console.log('onChangeSelectedNoteTitle');
-        const selectedNote = this.noteRefs[this.state.selectedNote.id];
 
         // TODO: только что созданная заметка == null
+        // const selectedNote = this.noteRefs[this.state.selectedNote.id];
+
+        const selectedNote = document.getElementById(this.state.selectedNote.id);
+
         if (selectedNote) {
             const noteTitle = selectedNote.querySelector('h3');
             noteTitle.innerHTML = truncate(title, 20);
