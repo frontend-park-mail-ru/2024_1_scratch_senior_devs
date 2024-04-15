@@ -177,27 +177,41 @@ export class Editor extends Component<any, EditorState> {
         return result;
     };
 
+    private noteTitlePlaceholderRef
+
     render(): VDomNode {
         console.log(`left: ${AppNoteStore.state.dropdownPos.left}; top: ${AppNoteStore.state.dropdownPos.top};`);
         return (
             <div className="note-editor">
-                <div className="note-title-container">
-                    <h3
-                        className="note-title"
-                        contentEditable={true}
-                        oninput={(e)=>{
-                            this.props.onChangeTitle(e.target.textContent);
+                <div className="note-editor__body">
+                    <span className="placeholder" ref={ref => this.noteTitlePlaceholderRef = ref}></span>
+                    <div className="note-title"
+                         contentEditable={true}
+                         oninput={(e) => {
+                             console.log('oninput');
+                             console.log(e.target.textContent.length);
 
-                            AppDispatcher.dispatch(NoteStoreActions.CHANGE_TITLE, {
-                                title: e.target.textContent
-                            });
-                        }}
-                    >{AppNoteStore.state.note.title}</h3>
-                </div>
-                <div className="note-body-container">
+                             if (e.target.textContent.length == 0) {
+                                 this.noteTitlePlaceholderRef.innerHTML = 'Введите название';
+                             } else {
+                                 this.noteTitlePlaceholderRef.innerHTML = '';
+                             }
+
+                             this.props.onChangeTitle(e.target.textContent);
+
+                             AppDispatcher.dispatch(NoteStoreActions.CHANGE_TITLE, {
+                                 title: e.target.textContent
+                             });
+                         }}
+                    >
+                        {AppNoteStore.state.note.title}
+                    </div>
+
                     {this.renderBlocks()}
+
                 </div>
-                <Modal open={this.state.youtubeDialogOpen} content={<YoutubeDialogForm />} handleClose={this.closeYoutubeDialog} />
+                <Modal open={this.state.youtubeDialogOpen} content={<YoutubeDialogForm/>}
+                       handleClose={this.closeYoutubeDialog}/>
                 <Dropdown blockId={AppNoteStore.state.dropdownPos.blockId}
                           style={`left: ${AppNoteStore.state.dropdownPos.left}px; top: ${AppNoteStore.state.dropdownPos.top}px;`}
                           onClose={this.closeEditor}
