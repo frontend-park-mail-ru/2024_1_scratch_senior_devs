@@ -120,10 +120,10 @@ export class Tippy extends ScReact.Component<any, any> {
     render() {
         const data = [
             // TODO: жирный текст и гиперссылки не робят
-            {
-                type: 'bold',
-                icon: 'bold.svg'
-            },
+            // {
+            //     type: 'bold',
+            //     icon: 'bold.svg'
+            // },
             {
                 type: 'italic',
                 icon: 'italics.svg'
@@ -148,7 +148,7 @@ export class Tippy extends ScReact.Component<any, any> {
                     <span className="link-label">Ссылка</span>
                 </div>
 
-                <LinkInput open={this.state.linkInputOpen} onSubmit={this.handleEnterLink} toggleBtn={this.toggleLinkInputRef}/>
+                {/*<LinkInput open={this.state.linkInputOpen} onSubmit={this.handleEnterLink} toggleBtn={this.toggleLinkInputRef}/>*/}
                 <div className="second-container">
                     {data.map(item => (
                         <div className="item" onclick={() => this.handleSelect(item)}>
