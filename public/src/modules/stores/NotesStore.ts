@@ -135,7 +135,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             this.selectNote(note);
         } catch {
-            AppToasts.error("Что-то пошло не так");
+            AppToasts.error('Что-то пошло не так');
         }
     }
 
@@ -195,7 +195,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             console.log(notes);
         } catch {
-            AppToasts.error("Что-то пошло не так");
+            AppToasts.error('Что-то пошло не так');
         }
     }
 
@@ -215,7 +215,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             AppToasts.info('Заметка успешно удалена');
 
         } catch {
-            AppToasts.error("Что-то пошло не так");
+            AppToasts.error('Что-то пошло не так');
         }
     }
 
@@ -226,7 +226,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
         } catch {
-            AppToasts.error("Что-то пошло не так");
+            AppToasts.error('Что-то пошло не так');
         }
     }
 
@@ -256,7 +256,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             this.selectNote(response.body);
         } catch {
-            AppToasts.error("Что-то пошло не так");
+            AppToasts.error('Что-то пошло не так');
         }
     }
 
@@ -295,7 +295,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 });
             }
         } catch {
-            AppToasts.error("Что-то пошло не так");
+            AppToasts.error('Что-то пошло не так');
         }
     }
 
@@ -349,7 +349,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 });
             }
         } catch {
-            AppToasts.error("Что-то пошло не так");
+            AppToasts.error('Что-то пошло не так');
         }
     }
 

@@ -161,8 +161,8 @@ class UserStore extends BaseStore<UserStoreState>{
             }
 
         } catch (err) {
-            console.log("err")
-            console.log(err)
+            console.log('err');
+            console.log(err);
             this.SetState(state => ({
                 ...state,
                 errorLoginForm: 'Неправильный логин, пароль или код'
@@ -343,7 +343,7 @@ class UserStore extends BaseStore<UserStoreState>{
                     errorUpdatePasswordForm: 'Неправильный пароль'
                 }));
             } else {
-                AppToasts.error("Что-то пошло не так");
+                AppToasts.error('Что-то пошло не так');
             }
         }
     }
@@ -376,7 +376,7 @@ class UserStore extends BaseStore<UserStoreState>{
                 otpEnabled: enabled
             }));
         } catch {
-            AppToasts.error("Что-то пошло не так");
+            AppToasts.error('Что-то пошло не так');
         }
     }
 

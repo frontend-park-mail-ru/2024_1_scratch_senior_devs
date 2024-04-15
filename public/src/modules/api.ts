@@ -35,7 +35,7 @@ type Response = {
 const Ajax = {
     Request: async (method: RequestMethods, url: string, params: RequestParams): Promise<Response> => {
         if (!window.navigator.onLine) {
-            throw new Error("Offline");
+            throw new Error('Offline');
         }
 
         const options: RequestInit = {
@@ -168,7 +168,7 @@ class AuthRequests {
 
     GetQR = async (jwt: string) => {
         if (!window.navigator.onLine) {
-            throw new Error("Offline");
+            throw new Error('Offline');
         }
 
         const options: RequestInit = {
@@ -223,7 +223,7 @@ class ProfileRequests {
 
     UpdateAvatar = async(photo:File, jwt:string, csrf:string) => {
         if (!window.navigator.onLine) {
-            throw new Error("Offline");
+            throw new Error('Offline');
         }
 
         const form_data = new FormData();
@@ -332,7 +332,7 @@ class NoteRequests {
             };
         }
 
-        throw new Error(response.body.message)
+        throw new Error(response.body.message);
     };
 
     Update = async({id, note}, jwt: string, csrf:string)=> {

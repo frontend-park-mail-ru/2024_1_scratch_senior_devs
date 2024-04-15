@@ -20,8 +20,8 @@ export const NoteStoreActions = {
     CHANGE_BLOCK_TYPE: 'CHANGE_BLOCK_TYPE',
     CHANGE_TITLE: 'CHANGE_TITLE',
     CHANGE_PIECE_ATTRIBUTES: 'CHANGE_PIECE_ATTRIBUTES',
-    CLOSE_YOUTUBE_DIALOG: "CLOSE_YOUTUBE_DIALOG",
-    OPEN_YOUTUBE_DIALOG: "OPEN_YOUTUBE_DIALOG"
+    CLOSE_YOUTUBE_DIALOG: 'CLOSE_YOUTUBE_DIALOG',
+    OPEN_YOUTUBE_DIALOG: 'OPEN_YOUTUBE_DIALOG'
 };
 
 export type NoteStoreState = {
@@ -111,8 +111,8 @@ class NoteStore extends BaseStore<NoteStoreState> {
                     this.closeYoutubeDialog();
                     break;
                 case NoteStoreActions.OPEN_YOUTUBE_DIALOG:
-                    this.openYoutubeDialog()
-                    break
+                    this.openYoutubeDialog();
+                    break;
             }
         });
     };

@@ -106,11 +106,11 @@ export class Editor extends Component<any, EditorState> {
     };
 
     openYoutubeDialog = () => {
-        AppDispatcher.dispatch(NoteStoreActions.OPEN_YOUTUBE_DIALOG)
+        AppDispatcher.dispatch(NoteStoreActions.OPEN_YOUTUBE_DIALOG);
     };
 
     closeYoutubeDialog = () => {
-        AppDispatcher.dispatch(NoteStoreActions.CLOSE_YOUTUBE_DIALOG)
+        AppDispatcher.dispatch(NoteStoreActions.CLOSE_YOUTUBE_DIALOG);
     };
 
     openTippy = () => {
