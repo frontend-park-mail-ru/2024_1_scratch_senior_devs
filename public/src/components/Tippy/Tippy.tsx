@@ -143,12 +143,13 @@ export class Tippy extends ScReact.Component<any, any> {
         return (
             <div className={'tippy-container ' + (this.props.open ? 'open' : '')} ref={(val) => this.tippyRef = val} id={'tippy'}>
 
-                <div className="first-container" onclick={this.toggleLinkInput}  ref={ref => {this.toggleLinkInputRef = ref;}}>
-                    <Img src="link.svg" className="link-icon" />
-                    <span className="link-label">Ссылка</span>
-                </div>
+                {/*<div className="first-container" onclick={this.toggleLinkInput}  ref={ref => {this.toggleLinkInputRef = ref;}}>*/}
+                {/*    <Img src="link.svg" className="link-icon" />*/}
+                {/*    <span className="link-label">Ссылка</span>*/}
+                {/*</div>*/}
 
                 {/*<LinkInput open={this.state.linkInputOpen} onSubmit={this.handleEnterLink} toggleBtn={this.toggleLinkInputRef}/>*/}
+
                 <div className="second-container">
                     {data.map(item => (
                         <div className="item" onclick={() => this.handleSelect(item)}>
