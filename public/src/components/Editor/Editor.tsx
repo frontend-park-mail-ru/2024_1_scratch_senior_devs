@@ -1,7 +1,7 @@
 import {Component} from '@veglem/screact/dist/component';
 import {VDomNode} from '@veglem/screact/dist/vdom';
 import {Block, BlockNode} from '../Block/Block';
-import {AppNoteStore, NoteStoreActions} from '../../modules/stores/NoteStore';
+import {AppNoteStore, NoteStoreActions, NoteStoreState} from '../../modules/stores/NoteStore';
 import {getBlockHash} from '../../utils/hash';
 import {AppDispatcher} from '../../modules/dispatcher';
 import './Editor.sass';
@@ -86,7 +86,12 @@ export class Editor extends Component<any, EditorState> {
         };
     }
 
-    updateState = (store) => {
+    updateState = (store:NoteStoreState) => {
+        console.log("Editor.UpdateState")
+        if (AppNoteStore.state.note.title.length > 0) {
+            this.noteTitlePlaceholderRef.innerHTML = '';
+        }
+
         this.setState(state => ({
             ...state,
             youtubeDialogOpen: store.youtubeDialogOpen,
@@ -98,6 +103,7 @@ export class Editor extends Component<any, EditorState> {
     closeEditor = () => {
         console.log('closeEditor');
         AppDispatcher.dispatch(NoteStoreActions.CLOSE_DROPDOWN);
+        this.noteTitlePlaceholderRef.innerHTML = ""
 
         this.setState(state => ({
             ...state,
@@ -177,6 +183,23 @@ export class Editor extends Component<any, EditorState> {
         return result;
     };
 
+    onChangeTitle = (e) => {
+        console.log('oninput');
+        console.log(e.target.textContent.length);
+
+        if (e.target.textContent.length == 0) {
+            this.noteTitlePlaceholderRef.innerHTML = 'Введите название';
+        } else {
+            this.noteTitlePlaceholderRef.innerHTML = '';
+        }
+
+        this.props.onChangeTitle(e.target.textContent);
+
+        AppDispatcher.dispatch(NoteStoreActions.CHANGE_TITLE, {
+            title: e.target.textContent
+        });
+    }
+
     private noteTitlePlaceholderRef
 
     render(): VDomNode {
@@ -185,25 +208,7 @@ export class Editor extends Component<any, EditorState> {
             <div className="note-editor">
                 <div className="note-editor__body">
                     <span className="placeholder" ref={ref => this.noteTitlePlaceholderRef = ref}></span>
-                    <div className="note-title"
-                         contentEditable={true}
-                         oninput={(e) => {
-                             console.log('oninput');
-                             console.log(e.target.textContent.length);
-
-                             if (e.target.textContent.length == 0) {
-                                 this.noteTitlePlaceholderRef.innerHTML = 'Введите название';
-                             } else {
-                                 this.noteTitlePlaceholderRef.innerHTML = '';
-                             }
-
-                             this.props.onChangeTitle(e.target.textContent);
-
-                             AppDispatcher.dispatch(NoteStoreActions.CHANGE_TITLE, {
-                                 title: e.target.textContent
-                             });
-                         }}
-                    >
+                    <div className="note-title" contentEditable={true} oninput={this.onChangeTitle}>
                         {AppNoteStore.state.note.title}
                     </div>
 

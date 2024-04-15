@@ -27,7 +27,8 @@ export const NoteStoreActions = {
 export type NoteStoreState = {
     note: Note,
     cursorPosition?: CursorPosition
-    dropdownPos: DropdownPosition
+    dropdownPos: DropdownPosition,
+    youtubeDialogOpen: boolean
 }
 
 export type CursorPosition = {
