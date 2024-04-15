@@ -271,6 +271,10 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             console.log(2)
 
+            console.log(response.headers)
+            console.log(response.headers.get('x-csrf-token'))
+            console.log("UPDATE_CSRF")
+
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, response.headers.get('x-csrf-token'));
 
             if (response.status == 200) {
