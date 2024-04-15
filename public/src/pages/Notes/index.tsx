@@ -70,7 +70,7 @@ export class NotesPage extends ScReact.Component<any, any> {
 
     updateState = (store:NotesStoreState) => {
         this.setState(state => {
-            if (state.notes.length > 0 && state.notes.length < AppNotesStore.state.notes.length) {
+            if (state.notes.length > 0 && state.notes.length < store.notes.length) {
                 this.createObserver();
             }
 
@@ -144,11 +144,15 @@ export class NotesPage extends ScReact.Component<any, any> {
         this.noteRefs[note.id] = ref;
     };
 
-    onChangeSelectedNoteTitle = (title) => {
+    onChangeSelectedNoteTitle = (title:string) => {
         console.log('onChangeSelectedNoteTitle');
         const selectedNote = this.noteRefs[this.state.selectedNote.id];
-        const noteTitle = selectedNote.querySelector('h3');
-        noteTitle.innerHTML = truncate(title, 20);
+
+        // TODO: только что созданная заметка == null
+        if (selectedNote) {
+            const noteTitle = selectedNote.querySelector('h3');
+            noteTitle.innerHTML = truncate(title, 20);
+        }
     };
 
     render() {
