@@ -406,6 +406,10 @@ class UserStore extends BaseStore<UserStoreState>{
     }
 
     private updateCSRF(token:string) {
+        if(!token) {
+            return
+        }
+
         localStorage.setItem('x-csrf-token', token);
 
         this.SetState(state => ({
