@@ -74,6 +74,10 @@ export class NotesPage extends ScReact.Component<any, any> {
                 this.createObserver();
             }
 
+            if ( store.selectedNote != undefined) {
+                document.title = store.selectedNote.data.title;
+            }
+
             return {
                 ...state,
                 selectedNote: store.selectedNote,
@@ -109,6 +113,8 @@ export class NotesPage extends ScReact.Component<any, any> {
             ...state,
             editorOpen: false
         }));
+
+        document.title = 'Заметки';
 
         history.replaceState(null, null, '/notes');
     };
