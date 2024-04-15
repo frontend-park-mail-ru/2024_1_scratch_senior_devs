@@ -212,6 +212,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             this.closeNote();
 
+            history.pushState(null, null, '/notes');
+
             AppToasts.info('Заметка успешно удалена');
 
         } catch {
@@ -261,12 +263,18 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     async uploadImage({noteId, blockId, file}) {
+        console.log("uploadImage")
         try {
+            console.log(1)
+
             const response = await AppNoteRequests.UploadFile(noteId, file, AppUserStore.state.JWT, AppUserStore.state.csrf);
+
+            console.log(2)
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, response.headers.get('x-csrf-token'));
 
             if (response.status == 200) {
+                console.log(3)
                 const body = await response.json();
                 const attachId = body.path.split('.')[0];
                 const url = await AppNoteRequests.GetImage(attachId, AppUserStore.state.JWT, AppUserStore.state.csrf);
@@ -295,6 +303,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 });
             }
         } catch {
+            console.log('Что-то пошло не так')
             AppToasts.error('Что-то пошло не так');
         }
     }

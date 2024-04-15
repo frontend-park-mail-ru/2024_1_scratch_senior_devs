@@ -61,7 +61,7 @@ export class Dropdown extends ScReact.Component<any, any> {
             tag = 'img';
             const fileInput = document.createElement('input');
             fileInput.type = 'file';
-            fileInput.accept = '.jpg,.png';
+            // fileInput.accept = '.jpg,.png';
             fileInput.hidden = true;
             this.ref.append(fileInput);
             fileInput.onchange = (e: InputEvent) => {
@@ -83,7 +83,7 @@ export class Dropdown extends ScReact.Component<any, any> {
             const fileInput = document.createElement('input');
             fileInput.type = 'file';
             fileInput.hidden = true;
-            // fileInput.accept = ".jpg,.png"
+            fileInput.accept = ".jpg,.png"
             this.ref.append(fileInput);
             fileInput.onchange = (e) => {
                 console.log('onchange');
