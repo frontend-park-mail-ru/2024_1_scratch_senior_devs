@@ -6,12 +6,15 @@ import {AppDispatcher} from '../../modules/dispatcher';
 import {SwipeArea} from '../SwipeArea/SwipeArea';
 import {Editor} from '../Editor/Editor';
 import {AppNoteStore} from '../../modules/stores/NoteStore';
+import {Modal} from '../Modal/Modal';
+import {DeleteNoteDialog} from '../DeleteNoteDialog/DeleteNoteDialog';
 
 
 export class NoteEditor extends ScReact.Component<any, any> {
     state = {
         selectedNote: undefined,
-        content: undefined
+        content: undefined,
+        deleteNoteModalOpen: false
     };
 
     private savingLabelRef;
@@ -45,7 +48,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
     };
 
     updateState = (store:NotesStoreState) => {
-        console.log('updateState');
+        console.log('NoteEditor.updateState');
 
         if (store.selectedNote != this.state.selectedNote) {
             this.savingLabelRef.innerHTML = '';
@@ -67,14 +70,26 @@ export class NoteEditor extends ScReact.Component<any, any> {
     };
 
     deleteNote = () => {
-        AppDispatcher.dispatch(NotesActions.OPEN_DELETE_NOTE_DIALOG);
+        this.setState(state => ({
+            ...state,
+            deleteNoteModalOpen: true
+        }))
     };
+
+    closeDeleteModalDialog = () => {
+        this.setState(state => ({
+            ...state,
+            deleteNoteModalOpen: false
+        }))
+    }
 
     render() {
         return (
             <div className={'note-editor-wrapper ' + (this.props.open ? 'active' : '')}>
 
                 <SwipeArea enable={this.props.open} right={this.closeEditor} target=".note-editor-wrapper"/>
+
+                <Modal open={this.state.deleteNoteModalOpen} handleClose={this.closeDeleteModalDialog} content={<DeleteNoteDialog handleClose={this.closeDeleteModalDialog} />} />
 
                 <div className="top-panel">
                     <div className="left-container">

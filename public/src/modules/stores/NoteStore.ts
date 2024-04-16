@@ -46,7 +46,6 @@ export type DropdownPosition = {
 class NoteStore extends BaseStore<NoteStoreState> {
     state = {
         note: {
-            titleIsEmpty: false,
             title: '',
             blocks: Array<BlockNode>()
         },
@@ -305,10 +304,6 @@ class NoteStore extends BaseStore<NoteStoreState> {
 
         console.log("NoteStore.changeTitle")
         console.log(title)
-
-        if (title.length == 0) {
-            this.state.note.titleIsEmpty = true
-        }
 
         this.state.note.title = title;
         this.saveNote();

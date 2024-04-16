@@ -4,10 +4,8 @@ import {SearchBar} from '../../components/SearchBar/SearchBar';
 import {NoteEditor} from '../../components/NoteEditor/NoteEditor';
 import {AppNotesStore, NotesActions, NotesStoreState} from '../../modules/stores/NotesStore';
 import {AppDispatcher} from '../../modules/dispatcher';
-import {Modal} from '../../components/Modal/Modal';
 import {Button} from '../../components/Button/Button';
 import {Img} from '../../components/Image/Image';
-import {DeleteNoteDialog} from '../../components/DeleteNoteDialog/DeleteNoteDialog';
 import {AppNoteStore} from '../../modules/stores/NoteStore';
 import {Loader} from '../../components/Loader/Loader';
 import {formatDate, truncate} from '../../modules/utils';
@@ -16,7 +14,6 @@ export class NotesPage extends ScReact.Component<any, any> {
     state = {
         notes: [],
         selectedNote: undefined,
-        deleteNoteModal: false,
         editorOpen: false,
         fetching: false
     };
@@ -85,7 +82,6 @@ export class NotesPage extends ScReact.Component<any, any> {
                 selectedNote: store.selectedNote,
                 editorOpen: store.selectedNote != undefined,
                 notes: store.notes,
-                deleteNoteModal: store.modalOpen,
                 fetching: store.fetching
             };
         });
@@ -182,7 +178,6 @@ export class NotesPage extends ScReact.Component<any, any> {
         return (
             <div className={'notes-page-wrapper ' + (this.state.editorOpen ? 'active' : '')} >
                 <aside>
-                    <Modal open={this.state.deleteNoteModal} content={<DeleteNoteDialog />} handleClose={() => AppDispatcher.dispatch(NotesActions.CLOSE_DELETE_NOTE_DIALOG)} />
                     <div className="top-panel">
                         <SearchBar onChange={this.searchNotes} />
                         <div className="add-note-btn-container" onclick={this.createNewNote}>
