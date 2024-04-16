@@ -92,6 +92,9 @@ export class Editor extends Component<any, EditorState> {
             this.noteTitlePlaceholderRef.innerHTML = '';
         }
 
+        console.log(store.note)
+        this.noteTitleRef.innerHTML = store.note?.title
+
         this.setState(state => ({
             ...state,
             youtubeDialogOpen: store.youtubeDialogOpen,
@@ -201,15 +204,19 @@ export class Editor extends Component<any, EditorState> {
     }
 
     private noteTitlePlaceholderRef
+    private noteTitleRef
 
     render(): VDomNode {
+        console.log("render")
+        console.log(AppNoteStore.state.note.title)
+
         console.log(`left: ${AppNoteStore.state.dropdownPos.left}; top: ${AppNoteStore.state.dropdownPos.top};`);
         return (
             <div className="note-editor">
                 <div className="note-editor__body">
                     <span className="placeholder" ref={ref => this.noteTitlePlaceholderRef = ref}></span>
-                    <div className="note-title" contentEditable={true} oninput={this.onChangeTitle}>
-                        {AppNoteStore.state.note.title}
+                    <div className="note-title" contentEditable={true} oninput={this.onChangeTitle} ref={ref => this.noteTitleRef = ref}>
+
                     </div>
 
                     {this.renderBlocks()}
