@@ -51,7 +51,7 @@ export class NotesPage extends ScReact.Component<any, any> {
             notes.forEach((note, index) => {
                 if (note.id == this.state.selectedNote?.id) {
                     console.log('Yeeees');
-                    notes[index].data.title = AppNoteStore.state.note.title == "" ? "Пустая заметка" : AppNoteStore.state.note.title;
+                    notes[index].data.title = AppNoteStore.state.note.title == "" ? "Новая заметка" : AppNoteStore.state.note.title;
                     console.log(notes);
                 }
             });
@@ -109,14 +109,12 @@ export class NotesPage extends ScReact.Component<any, any> {
     closeEditor = () => {
         console.log("closeEditor")
         console.log(1)
-        try {
+        
             this.setState(state => ({
                 ...state,
                 editorOpen: false
             }));
-        } catch {
 
-        }
 
         console.log(2)
 
@@ -169,7 +167,7 @@ export class NotesPage extends ScReact.Component<any, any> {
 
         if (selectedNote) {
             const noteTitle = selectedNote.querySelector('h3');
-            noteTitle.innerHTML = title.length > 0 ? truncate(title, 20) : "Пустая заметка";
+            noteTitle.innerHTML = title.length > 0 ? truncate(title, 20) : "Новая заметка";
             console.log(noteTitle.innerHTML)
         }
     };

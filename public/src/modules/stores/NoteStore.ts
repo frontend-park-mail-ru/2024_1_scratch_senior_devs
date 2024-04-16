@@ -4,7 +4,6 @@ import {AppDispatcher} from '../dispatcher';
 import {BlockNode} from '../../components/Block/Block';
 import {create_UUID} from '../../utils/uuid';
 import {PieceNode} from '../../components/Piece/Piece';
-import {AppNotesStore} from './NotesStore';
 
 export const NoteStoreActions = {
     CHANGE_PIECE: 'CHANGE_PIECE',
