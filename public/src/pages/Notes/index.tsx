@@ -111,14 +111,24 @@ export class NotesPage extends ScReact.Component<any, any> {
     };
 
     closeEditor = () => {
-        this.setState(state => ({
-            ...state,
-            editorOpen: false
-        }));
+        console.log("closeEditor")
+        console.log(1)
+        try {
+            this.setState(state => ({
+                ...state,
+                editorOpen: false
+            }));
+        } catch {
+
+        }
+
+        console.log(2)
 
         document.title = 'Заметки';
+        console.log(3)
 
         history.replaceState(null, null, '/notes');
+        console.log(4)
     };
 
     createObserver() {
@@ -154,6 +164,7 @@ export class NotesPage extends ScReact.Component<any, any> {
 
     onChangeSelectedNoteTitle = (title:string) => {
         console.log('onChangeSelectedNoteTitle');
+        console.log(title)
 
         // TODO: только что созданная заметка == null
         // const selectedNote = this.noteRefs[this.state.selectedNote.id];
@@ -163,6 +174,7 @@ export class NotesPage extends ScReact.Component<any, any> {
         if (selectedNote) {
             const noteTitle = selectedNote.querySelector('h3');
             noteTitle.innerHTML = title.length > 0 ? truncate(title, 20) : "Пустая заметка";
+            console.log(noteTitle.innerHTML)
         }
     };
 
@@ -188,7 +200,7 @@ export class NotesPage extends ScReact.Component<any, any> {
                                 id={note.id}
                                 ref={ref => this.saveSelectedNoteRef(note, ref)}
                             >
-                                <h3>{truncate(note.data.title, 20)}</h3>
+                                <h3>{note.data.title.length == 0 ? "Новая заметка" :  truncate(note.data.title, 20)}</h3>
                                 <p></p>
                                 <span className="update-time">{formatDate(note.update_time)}</span>
                             </div>
