@@ -22,7 +22,7 @@ export class NotesPage extends ScReact.Component<any, any> {
         document.title = 'Заметки';
 
         AppNotesStore.SubscribeToStore(this.updateState);
-        AppNoteStore.AddSaver(this.updateNotesTitles);
+        // AppNoteStore.AddSaver(this.updateNotesTitles);
 
         this.setState(state => ({
             ...state,
@@ -52,6 +52,7 @@ export class NotesPage extends ScReact.Component<any, any> {
                 if (note.id == this.state.selectedNote?.id) {
                     console.log('Yeeees');
                     notes[index].data.title = AppNoteStore.state.note.title == "" ? "Новая заметка" : AppNoteStore.state.note.title;
+                    notes[index].update_time = new Date()
                     console.log(notes);
                 }
             });
