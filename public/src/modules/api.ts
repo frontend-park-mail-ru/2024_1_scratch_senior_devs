@@ -373,7 +373,7 @@ class NoteRequests {
                             ]
                         }
                     ],
-                    title: 'Новая заметка'
+                    title: ''
                 }
             }
         });

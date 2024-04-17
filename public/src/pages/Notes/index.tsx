@@ -68,12 +68,13 @@ export class NotesPage extends ScReact.Component<any, any> {
     }
 
     updateState = (store:NotesStoreState) => {
+        console.log("index.updateState")
         this.setState(state => {
             if (state.notes.length > 0 && state.notes.length < store.notes.length) {
                 this.createObserver();
             }
 
-            if ( store.selectedNote != undefined) {
+            if (store.selectedNote != undefined) {
                 document.title = store.selectedNote.data.title;
             }
 
@@ -110,11 +111,10 @@ export class NotesPage extends ScReact.Component<any, any> {
         console.log("closeEditor")
         console.log(1)
         
-            this.setState(state => ({
-                ...state,
-                editorOpen: false
-            }));
-
+        this.setState(state => ({
+            ...state,
+            editorOpen: false
+        }));
 
         console.log(2)
 
@@ -170,9 +170,14 @@ export class NotesPage extends ScReact.Component<any, any> {
             noteTitle.innerHTML = title.length > 0 ? truncate(title, 20) : "Новая заметка";
             console.log(noteTitle.innerHTML)
         }
+
+        this.updateNotesTitles()
     };
 
     render() {
+        console.log("render")
+        console.log(this.state.notes)
+
         return (
             <div className={'notes-page-wrapper ' + (this.state.editorOpen ? 'active' : '')} >
                 <aside>

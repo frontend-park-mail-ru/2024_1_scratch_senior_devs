@@ -140,6 +140,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     selectNote (note:Note) {
+        console.log("selectNote")
+        console.log(note)
         this.SetState(state => ({
             ...state,
             selectedNote: note
@@ -153,7 +155,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
         return this.state;
     }
 
-    async searchNotes (query) {
+    async searchNotes (query:string) {
         console.log('searchNotes');
         this.SetState(state => ({
             ...state,
@@ -257,6 +259,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             document.getElementById(String(response.body.id)).scrollIntoView();
 
             this.selectNote(response.body);
+
         } catch {
             AppToasts.error('Что-то пошло не так');
         }

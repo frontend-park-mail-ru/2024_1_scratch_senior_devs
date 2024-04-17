@@ -93,6 +93,10 @@ export class Editor extends Component<any, EditorState> {
         }
 
         console.log(store.note)
+        if (store.note?.title.length == 0) {
+            this.noteTitlePlaceholderRef.innerHTML = "Новая заметка"
+        }
+
         this.noteTitleRef.innerHTML = store.note?.title
 
         this.setState(state => ({
