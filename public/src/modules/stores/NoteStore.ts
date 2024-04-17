@@ -26,8 +26,7 @@ export const NoteStoreActions = {
 export type NoteStoreState = {
     note: Note,
     cursorPosition?: CursorPosition
-    dropdownPos: DropdownPosition,
-    youtubeDialogOpen: boolean
+    dropdownPos: DropdownPosition
 }
 
 export type CursorPosition = {
@@ -48,7 +47,6 @@ class NoteStore extends BaseStore<NoteStoreState> {
             title: '',
             blocks: Array<BlockNode>()
         },
-        youtubeDialogOpen: false,
         cursorPosition: null,
         dropdownPos: {
             left: 0,
@@ -106,12 +104,6 @@ class NoteStore extends BaseStore<NoteStoreState> {
                     break;
                 case NoteStoreActions.CHANGE_PIECE_ATTRIBUTES:
                     this.changePieceAttributes(action.payload.blockId, action.payload.anchorId, action.payload.focusId, action.payload.anchorPos, action.payload.focusPos, action.payload.attribute, action.payload.value);
-                    break;
-                case NoteStoreActions.CLOSE_YOUTUBE_DIALOG:
-                    this.closeYoutubeDialog();
-                    break;
-                case NoteStoreActions.OPEN_YOUTUBE_DIALOG:
-                    this.openYoutubeDialog();
                     break;
             }
         });
@@ -479,20 +471,6 @@ class NoteStore extends BaseStore<NoteStoreState> {
                 return {...s};
             });
         }
-    };
-
-    private closeYoutubeDialog = () => {
-        this.SetState(state => ({
-            ...state,
-            youtubeDialogOpen: false
-        }));
-    };
-
-    private openYoutubeDialog = () => {
-        this.SetState(state => ({
-            ...state,
-            youtubeDialogOpen: true
-        }));
     };
 }
 

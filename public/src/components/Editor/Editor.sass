@@ -38,7 +38,12 @@
 			color: $text-main-color
 			font-weight: bold
 			margin-bottom: 5px
-			z-index: 10
+
+			&:before
+				content: attr(data-placeholder)
+				color: $text-main-color--darker
+
+				cursor: text
 
 		.placeholder
 			color: $text-main-color--darker

@@ -69,7 +69,7 @@ export class YoutubeDialogForm extends ScReact.Component<any, any> {
             newBlock: block
         });
 
-        AppDispatcher.dispatch(NoteStoreActions.CLOSE_YOUTUBE_DIALOG);
+        this.props.handleClose()
 
         setTimeout(() => {
             this.setState(state => ({

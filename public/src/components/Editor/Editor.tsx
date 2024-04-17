@@ -89,19 +89,18 @@ export class Editor extends Component<any, EditorState> {
     updateState = (store:NoteStoreState) => {
         console.log("Editor.UpdateState")
         if (AppNoteStore.state.note.title.length > 0) {
-            this.noteTitlePlaceholderRef.innerHTML = '';
+            this.noteTitleRef.dataset.placeholder = '';
         }
 
         console.log(store.note)
         if (store.note?.title.length == 0) {
-            this.noteTitlePlaceholderRef.innerHTML = "Новая заметка"
+            this.noteTitleRef.dataset.placeholder = "Новая заметка"
         }
 
         this.noteTitleRef.innerHTML = store.note?.title
 
         this.setState(state => ({
             ...state,
-            youtubeDialogOpen: store.youtubeDialogOpen,
             dropdownOpen: store.dropdownPos.isOpen,
             blocks: store.note.blocks.length
         }));
@@ -110,7 +109,7 @@ export class Editor extends Component<any, EditorState> {
     closeEditor = () => {
         console.log('closeEditor');
         AppDispatcher.dispatch(NoteStoreActions.CLOSE_DROPDOWN);
-        this.noteTitlePlaceholderRef.innerHTML = ""
+        this.noteTitleRef.dataset.placeholder = ""
 
         this.setState(state => ({
             ...state,
@@ -119,11 +118,17 @@ export class Editor extends Component<any, EditorState> {
     };
 
     openYoutubeDialog = () => {
-        AppDispatcher.dispatch(NoteStoreActions.OPEN_YOUTUBE_DIALOG);
+        this.setState(state => ({
+            ...state,
+            youtubeDialogOpen: true
+        }));
     };
 
     closeYoutubeDialog = () => {
-        AppDispatcher.dispatch(NoteStoreActions.CLOSE_YOUTUBE_DIALOG);
+        this.setState(state => ({
+            ...state,
+            youtubeDialogOpen: false
+        }));
     };
 
     openTippy = () => {
@@ -195,9 +200,9 @@ export class Editor extends Component<any, EditorState> {
         console.log(e.target.textContent.length);
 
         if (e.target.textContent.length == 0) {
-            this.noteTitlePlaceholderRef.innerHTML = 'Введите название';
+            this.noteTitleRef.dataset.placeholder = 'Введите название';
         } else {
-            this.noteTitlePlaceholderRef.innerHTML = '';
+            this.noteTitleRef.dataset.placeholder = '';
         }
 
         this.props.onChangeTitle(e.target.textContent);
@@ -207,7 +212,6 @@ export class Editor extends Component<any, EditorState> {
         });
     }
 
-    private noteTitlePlaceholderRef
     private noteTitleRef
 
     render(): VDomNode {
@@ -215,12 +219,12 @@ export class Editor extends Component<any, EditorState> {
         return (
             <div className="note-editor">
                 <div className="note-editor__body">
-                    <span className="placeholder" ref={ref => this.noteTitlePlaceholderRef = ref}></span>
                     <div className="note-title" contentEditable={true} oninput={this.onChangeTitle} ref={ref => this.noteTitleRef = ref}></div>
                     {this.renderBlocks()}
                 </div>
-                <Modal open={this.state.youtubeDialogOpen} content={<YoutubeDialogForm/>}
-                       handleClose={this.closeYoutubeDialog}/>
+
+                <Modal open={this.state.youtubeDialogOpen}
+                       content={<YoutubeDialogForm handleClose={this.closeYoutubeDialog}/>} handleClose={this.closeYoutubeDialog}/>
 
                 <Dropdown blockId={AppNoteStore.state.dropdownPos.blockId}
                           style={`left: ${AppNoteStore.state.dropdownPos.left}px; top: ${AppNoteStore.state.dropdownPos.top}px;`}
@@ -228,6 +232,7 @@ export class Editor extends Component<any, EditorState> {
                           open={this.state.dropdownOpen}
                           openYoutubeDialog={this.openYoutubeDialog}
                 />
+
                 <Tippy open={this.state.tippyOpen}
                        onClose={this.closeTippy}
                        optionsSetter={(func) => {

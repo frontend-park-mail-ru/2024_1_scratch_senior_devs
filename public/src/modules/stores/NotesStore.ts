@@ -21,7 +21,6 @@ export type NotesStoreState = {
     query: string,
     offset: number,
     count: number,
-    modalOpen: boolean,
     fetching: boolean
 }
 
@@ -33,7 +32,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
         query: '',
         offset: 0,
         count: 10,
-        modalOpen: false,
         fetching: false,
         noteNotFound: false
     };
@@ -64,12 +62,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 case NotesActions.EXIT:
                     this.exit();
                     break;
-                case NotesActions.OPEN_DELETE_NOTE_DIALOG:
-                    this.openModal();
-                    break;
-                case NotesActions.CLOSE_DELETE_NOTE_DIALOG:
-                    this.closeModal();
-                    break;
                 case NotesActions.DELETE_NOTE:
                     await this.deleteNote();
                     break;
@@ -96,20 +88,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
                     break;
             }
         });
-    }
-
-    openModal () {
-        this.SetState(state => ({
-            ...state,
-            modalOpen: true
-        }));
-    }
-
-    closeModal () {
-        this.SetState(state => ({
-            ...state,
-            modalOpen: false
-        }));
     }
 
     exit () {
