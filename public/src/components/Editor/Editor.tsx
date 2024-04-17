@@ -94,7 +94,7 @@ export class Editor extends Component<any, EditorState> {
 
         console.log(store.note)
         if (store.note?.title.length == 0) {
-            this.noteTitleRef.dataset.placeholder = "Новая заметка"
+            this.noteTitleRef.dataset.placeholder = "Введите название"
         }
 
         this.noteTitleRef.innerHTML = store.note?.title

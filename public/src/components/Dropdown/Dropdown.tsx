@@ -181,12 +181,12 @@ export class Dropdown extends ScReact.Component<any, any> {
             //     title: "Текст",
             //     desc: "Просто текст"
             // },
-            // {
-            //     id: "todo",
-            //     icon: "todo.svg",
-            //     title: "To-do список",
-            //     desc: "Отслеживайте ваши задачи"
-            // },
+            {
+                id: "todo",
+                icon: "todo.svg",
+                title: "To-do список",
+                desc: "Отслеживайте ваши задачи"
+            },
             {
                 id: 'bullet-list',
                 icon: 'bullet-list.svg',

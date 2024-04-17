@@ -51,7 +51,7 @@ export class NotesPage extends ScReact.Component<any, any> {
             notes.forEach((note, index) => {
                 if (note.id == this.state.selectedNote?.id) {
                     console.log('Yeeees');
-                    notes[index].data.title = AppNoteStore.state.note.title == "" ? "Новая заметка" : AppNoteStore.state.note.title;
+                    notes[index].data.title = AppNoteStore.state.note.title == "" ? "Пустая заметка" : AppNoteStore.state.note.title;
                     notes[index].update_time = new Date()
                     console.log(notes);
                 }
@@ -168,7 +168,7 @@ export class NotesPage extends ScReact.Component<any, any> {
 
         if (selectedNote) {
             const noteTitle = selectedNote.querySelector('h3');
-            noteTitle.innerHTML = title.length > 0 ? truncate(title, 20) : "Новая заметка";
+            noteTitle.innerHTML = title.length > 0 ? truncate(title, 20) : "Пустая заметка";
             console.log(noteTitle.innerHTML)
         }
 
@@ -176,9 +176,6 @@ export class NotesPage extends ScReact.Component<any, any> {
     };
 
     render() {
-        console.log("render")
-        console.log(this.state.notes)
-
         return (
             <div className={'notes-page-wrapper ' + (this.state.editorOpen ? 'active' : '')} >
                 <aside>
@@ -193,17 +190,20 @@ export class NotesPage extends ScReact.Component<any, any> {
                     </div>
                     <div className="notes-container" onclick={this.handleSelectNote}>
                         <Loader active={this.state.fetching}/>
-                        {this.state.notes.map(note => (
+                        {this.state.notes.length > 0 ?
+                            this.state.notes.map(note => (
                             <div
                                 className={'note-container ' + (this.state.selectedNote?.id == note.id ? 'selected' : '')}
                                 id={note.id}
                                 ref={ref => this.saveSelectedNoteRef(note, ref)}
                             >
-                                <h3>{note.data.title.length == 0 ? "Новая заметка" :  truncate(note.data.title, 20)}</h3>
+                                <h3>{note.data.title.length == 0 ? "Пустая заметка" :  truncate(note.data.title, 20)}</h3>
                                 <p></p>
                                 <span className="update-time">{formatDate(note.update_time)}</span>
                             </div>
-                        ))}
+                        ))
+                        :
+                        !this.state.fetching ? <h3 className="notes-not-found-label">Список заметок пуст</h3> : ""}
                     </div>
                 </aside>
                 <NoteEditor open={this.state.editorOpen}
