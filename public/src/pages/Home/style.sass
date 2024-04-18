@@ -8,12 +8,12 @@
 
 	section
 		width: 100%
+		min-height: 100vh
 
 	.hero
 		display: grid
 		position: relative
 		grid-template-areas: "stack"
-		height: 100vh
 
 		.hero__body
 			display: flex
@@ -23,7 +23,6 @@
 			align-items: center
 			gap: 60px
 			grid-area: stack
-			z-index: 10
 			animation-duration: 1s
 			animation-fill-mode: both
 			animation-name: fadeIn
@@ -46,8 +45,6 @@
 		color: $text-main-color
 		padding: 0 15%
 		gap: 75px
-		min-height: 100vh
-		z-index: 100
 
 		@media screen and (max-width: $md)
 			padding: 0 15px 25px

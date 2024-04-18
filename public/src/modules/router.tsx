@@ -84,7 +84,7 @@ export class Router extends ScReact.Component<any, routerState> {
             page = this.pages['/notes'];
         }
 
-        history.replaceState(null, '', path);
+        history.replaceState(null, null, path);
 
         if (page === undefined) {
             this.setState(s => ({
