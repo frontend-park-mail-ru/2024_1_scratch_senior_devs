@@ -34,7 +34,7 @@ export const NotesLoader = async (path:string) => {
                             resolve({notes: store.notes, note: note});
                         }).catch(() => {
                             AppToasts.error('Заметка не найдена');
-                            history.pushState(null, '', '/notes');
+                            history.replaceState(null, '', '/notes');
                             resolve({notes: store.notes});
                         });
                     } else {

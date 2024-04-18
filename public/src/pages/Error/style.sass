@@ -1,4 +1,5 @@
 @import "/public/src/utils/animations.sass"
+@import "/public/src/utils/variables.sass"
 
 .not-found-page-wrapper
 	width: 100%
@@ -9,9 +10,12 @@
 	position: relative
 	animation: fadeIn 0.5s
 
+	img
+		pointer-events: none
+		user-select: none
+
 	.rocket
 		width: 40px
-		z-index: 90
 		pointer-events: none
 		position: absolute
 		left: 0
@@ -30,17 +34,32 @@
 		left: 15%
 		z-index: 90
 		animation: spin-earth 100s infinite linear both
+		user-select: none
+		pointer-events: none
 
 		@keyframes spin-earth
 			100%
 				transform: rotate(-360deg)
 				transition: transform 20s
 
+		@media screen and (max-width: $lg)
+			top: 20%
+
+		@media screen and (max-width: $sm)
+			top: 17.5%
+
 	.moon
 		width: 80px
 		position: absolute
 		top: 12%
 		left: 25%
+		pointer-events: none
+
+		@media screen and (max-width: $lg)
+			left: 30%
+
+		@media screen and (max-width: $sm)
+			left: 35%
 
 	.astronaut-container
 		position: absolute
@@ -53,13 +72,24 @@
 			100%
 				transform: translate(-160px, -160px)
 
+		@media screen and (max-width: $lg)
+			top: 70%
+			right: 15%
+
+		@media screen and (max-width: $sm)
+			top: 80%
+			right: 0%
+
 		.astronaut
 			width: 150px
 			animation: rotate-astronaut 200s infinite linear both alternate
+			user-select: none
+			pointer-events: none
 
 			@keyframes rotate-astronaut
 				100%
 					transform: rotate(-720deg)
+
 
 	.text-container
 		display: flex
@@ -70,18 +100,34 @@
 			width: 300px
 			margin-bottom: 35px
 
+			@media screen and (max-width: $lg)
+				width: 200px
+
+			@media screen and (max-width: $sm)
+				width: 150px
+
 		h3
 			color: #f2f2f2
 			font-size: 48px
 			font-weight: normal
-
 			line-height: 35px
+
+			@media screen and (max-width: $lg)
+				font-size: 36px
+
+			@media screen and (max-width: $sm)
+				font-size: 28px
 
 		h2
 			color: #f2f2f2
 			font-size: 48px
 			margin-bottom: 50px
 
+			@media screen and (max-width: $lg)
+				font-size: 42px
+
+			@media screen and (max-width: $sm)
+				font-size: 32px
 
 
 

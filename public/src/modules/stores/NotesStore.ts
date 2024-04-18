@@ -125,7 +125,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             selectedNote: note
         }));
 
-        window.history.pushState(null, null, '/notes/' + note.id);
+        window.history.replaceState(null, null, '/notes/' + note.id);
     }
 
     async init () {
@@ -192,7 +192,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             this.closeNote();
 
-            history.pushState(null, null, '/notes');
+            history.replaceState(null, null, '/notes');
 
             AppToasts.info('Заметка успешно удалена');
 

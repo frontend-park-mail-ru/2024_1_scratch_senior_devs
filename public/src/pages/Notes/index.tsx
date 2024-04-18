@@ -127,7 +127,7 @@ export class NotesPage extends ScReact.Component<any, any> {
         document.title = 'Заметки';
         console.log(3)
 
-        history.pushState(null, null, '/notes');
+        history.replaceState(null, null, '/notes');
         console.log(4)
     };
 
