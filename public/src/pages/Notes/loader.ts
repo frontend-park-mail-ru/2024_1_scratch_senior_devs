@@ -2,6 +2,7 @@ import {AppUserStore, UserStoreState} from '../../modules/stores/UserStore';
 import {AppNotesStore} from '../../modules/stores/NotesStore';
 import {AppRouter} from '../../modules/router';
 import {AppNoteRequests} from '../../modules/api';
+import {AppToasts} from '../../modules/toasts';
 
 export const NotesLoader = async (path:string) => {
     const p = new Promise((resolve, reject) => {
@@ -32,8 +33,9 @@ export const NotesLoader = async (path:string) => {
                         AppNoteRequests.Get(noteId, AppUserStore.state.JWT).then(note => {
                             resolve({notes: store.notes, note: note});
                         }).catch(() => {
-                            AppRouter.go('/404');
-                            reject()
+                            AppToasts.error('Заметка не найдена');
+                            history.pushState(null, '', '/notes');
+                            resolve({notes: store.notes});
                         });
                     } else {
                         resolve({notes: store.notes});
