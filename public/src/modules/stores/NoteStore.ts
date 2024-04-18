@@ -4,6 +4,7 @@ import {AppDispatcher} from '../dispatcher';
 import {BlockNode} from '../../components/Block/Block';
 import {create_UUID} from '../../utils/uuid';
 import {PieceNode} from '../../components/Piece/Piece';
+import * as buffer from 'buffer';
 
 export const NoteStoreActions = {
     CHANGE_PIECE: 'CHANGE_PIECE',
@@ -20,7 +21,8 @@ export const NoteStoreActions = {
     CHANGE_TITLE: 'CHANGE_TITLE',
     CHANGE_PIECE_ATTRIBUTES: 'CHANGE_PIECE_ATTRIBUTES',
     CLOSE_YOUTUBE_DIALOG: 'CLOSE_YOUTUBE_DIALOG',
-    OPEN_YOUTUBE_DIALOG: 'OPEN_YOUTUBE_DIALOG'
+    OPEN_YOUTUBE_DIALOG: 'OPEN_YOUTUBE_DIALOG',
+    TOGGLE_CHECKBOX: "TOGGLE_CHECKBOX"
 };
 
 export type NoteStoreState = {
@@ -105,6 +107,9 @@ class NoteStore extends BaseStore<NoteStoreState> {
                 case NoteStoreActions.CHANGE_PIECE_ATTRIBUTES:
                     this.changePieceAttributes(action.payload.blockId, action.payload.anchorId, action.payload.focusId, action.payload.anchorPos, action.payload.focusPos, action.payload.attribute, action.payload.value);
                     break;
+                case NoteStoreActions.TOGGLE_CHECKBOX:
+                    this.toggleCheckbox(action.payload);
+                    break;
             }
         });
     };
@@ -112,8 +117,17 @@ class NoteStore extends BaseStore<NoteStoreState> {
     private timerId: NodeJS.Timeout = setTimeout(() => {
     });
 
-    private saveNote = () => {
+    private saveNote = (immediately=false) => {
         clearTimeout(this.timerId);
+
+        if (immediately) {
+            this.severs.forEach((saver) => {
+                saver();
+            });
+
+            return
+        }
+
         this.timerId = setTimeout(() => {
             this.severs.forEach((saver) => {
                 saver();
@@ -150,7 +164,6 @@ class NoteStore extends BaseStore<NoteStoreState> {
             });
         });
         oldNote.blocks[blockId].content = newBlockContent;
-        // @ts-ignore
         this.state.note = oldNote;
         this.state.cursorPosition = {
             blockId: blockId,
@@ -268,12 +281,6 @@ class NoteStore extends BaseStore<NoteStoreState> {
 
     private closeDropdown = () => {
         console.log('closeDropdown');
-        // this.SetState(state => {
-        //     return {
-        //         ...state,
-        //         dropdownPos: {...state.dropdownPos, isOpen: false}
-        //     }
-        // })
         this.state.dropdownPos.isOpen = false;
     };
 
@@ -472,6 +479,16 @@ class NoteStore extends BaseStore<NoteStoreState> {
             });
         }
     };
+
+    private toggleCheckbox = (blockId:number) => {
+        this.SetState(s => {
+            const oldNote = this.state.note;
+            oldNote.blocks[blockId].attributes["checked"] = !oldNote.blocks[blockId].attributes["checked"]
+            return {...s, note: oldNote};
+        });
+
+        this.saveNote(true);
+    }
 }
 
 

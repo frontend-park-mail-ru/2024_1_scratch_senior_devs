@@ -57,6 +57,10 @@ export class Editor extends Component<any, EditorState> {
                         const piece = document.querySelector(`#piece-${matchesFocus[1]}-${matchesFocus[2]}`) as HTMLElement;
                         const piece2 = document.querySelector(`#piece-${matchesAnchor[1]}-${matchesAnchor[2]}`) as HTMLElement;
 
+                        if (!piece || !piece2 ) {
+                            return
+                        }
+
                         this.openTippy();
                         const tippy = document.querySelector('#tippy') as HTMLElement;
                         tippy.style.top = (piece.getBoundingClientRect().y - tippy.getBoundingClientRect().height - 2).toString() + 'px';

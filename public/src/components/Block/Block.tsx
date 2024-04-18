@@ -65,7 +65,7 @@ export class Block extends Component<BlockProps, BlockState> {
 
             return pieces;
         }
-        renderToDoPrefix(block, pieces);
+        renderToDoPrefix(block, this.props.blockId, pieces);
         renderUlPrefix(block, pieces);
         renderOlPrefix(block, this.props.blockId, pieces);
         return pieces;

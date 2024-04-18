@@ -19,6 +19,10 @@
 			opacity: 1
 
 	.piece-container
+		display: flex
+		align-items: center
+		gap: 10px
+
 		img
 			width: 100%
 			max-width: 500px
@@ -26,6 +30,32 @@
 		.youtube-player
 			width: 100%
 			max-width: 500px
+
+		.checkbox
+			height: 20px
+			width: 20px
+			background-color: #eee
+			transition: background-color 0.25s ease
+			border-radius: 4px
+			position: relative
+			cursor: pointer
+
+			&:before
+				content: ""
+				position: absolute
+				left: 8px
+				top: 4px
+				width: 5px
+				height: 10px
+				border: solid #333
+				border-width: 0 2px 2px 0
+				transform: rotate(45deg)
+				opacity: 0
+				transition: opacity 0.25s ease
+
+			&.checked
+				&:before
+					opacity: 1
 
 		.editablediv
 			&:focus:empty:after
