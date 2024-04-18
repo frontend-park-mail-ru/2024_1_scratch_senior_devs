@@ -2,7 +2,6 @@ import {Component} from '@veglem/screact/dist/component';
 import {ScReact} from '@veglem/screact';
 import {VDomNode} from '@veglem/screact/dist/vdom';
 import {HomePage} from '../pages/Home';
-import {ErrorPage} from '../pages/ErrorPage/errorPage';
 import {AuthPage} from '../pages/Auth';
 import {NotesPage} from '../pages/Notes';
 import {Header} from '../components/Header/Header';
@@ -15,6 +14,7 @@ import {NotesLoader} from '../pages/Notes/loader';
 import {HomePageLoader} from '../pages/Home/loader';
 import { NotesActions} from './stores/NotesStore';
 import {AppDispatcher} from './dispatcher';
+import NotFoundPage from '../pages/Error';
 
 type routerState = {
     currPage: {new(): Component<any, any> }
@@ -74,6 +74,7 @@ export class Router extends ScReact.Component<any, routerState> {
         this.pages['/login'] = {page: AuthPage, loader: AuthPageLoader, skeleton: AuthPageSkeleton};
         this.pages['/register'] = {page: AuthPage, loader: AuthPageLoader, skeleton: AuthPageSkeleton};
         this.pages['/notes'] = {page: NotesPage, loader: NotesLoader, skeleton: NotesPageSkeleton};
+        this.pages['/404'] = {page: NotFoundPage };
     };
 
     public go(path: string): void {
@@ -83,15 +84,12 @@ export class Router extends ScReact.Component<any, routerState> {
             page = this.pages['/notes'];
         }
 
-        history.replaceState(null, '', path);
+        history.pushState(null, '', path);
 
         if (page === undefined) {
             this.setState(s => ({
                 ...s,
-                currPage: ErrorPage,
-                PageProps: {
-                    err: '404 NotFound'
-                }
+                currPage: NotFoundPage
             }));
 
             return;
@@ -115,7 +113,7 @@ export class Router extends ScReact.Component<any, routerState> {
                 // TODO
                 // this.setState(s => ({
                 //     ...s,
-                //     currPage: ErrorPage,
+                //     currPage: Error,
                 //     PageProps: {
                 //         err: err
                 //     }

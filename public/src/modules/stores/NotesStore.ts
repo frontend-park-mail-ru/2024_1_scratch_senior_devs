@@ -125,11 +125,11 @@ class NotesStore extends BaseStore<NotesStoreState> {
             selectedNote: note
         }));
 
-        history.replaceState(null, null, '/notes/' + note.id);
+        window.history.pushState(null, null, '/notes/' + note.id);
     }
 
     async init () {
-        await this.fetchNotes();
+        await this.fetchNotes(true);
         return this.state;
     }
 

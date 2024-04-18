@@ -15,7 +15,8 @@ export class NotesPage extends ScReact.Component<any, any> {
         notes: [],
         selectedNote: undefined,
         editorOpen: false,
-        fetching: false
+        fetching: false,
+        mounted: false
     };
 
     componentDidMount() {
@@ -24,8 +25,12 @@ export class NotesPage extends ScReact.Component<any, any> {
         AppNotesStore.SubscribeToStore(this.updateState);
         // AppNoteStore.AddSaver(this.updateNotesTitles);
 
+        console.log("NotesPage.componentDidMount")
+        console.log(this.props.notes)
+
         this.setState(state => ({
             ...state,
+            mounted: true,
             notes: this.props.notes
         }));
 
@@ -76,7 +81,7 @@ export class NotesPage extends ScReact.Component<any, any> {
             }
 
             if (store.selectedNote != undefined) {
-                document.title = store.selectedNote.data.title;
+                document.title = store.selectedNote.data.title ? store.selectedNote.data.title : "Пустая заметка";
             }
 
             return {
@@ -122,7 +127,7 @@ export class NotesPage extends ScReact.Component<any, any> {
         document.title = 'Заметки';
         console.log(3)
 
-        history.replaceState(null, null, '/notes');
+        history.pushState(null, null, '/notes');
         console.log(4)
     };
 
@@ -169,6 +174,7 @@ export class NotesPage extends ScReact.Component<any, any> {
         if (selectedNote) {
             const noteTitle = selectedNote.querySelector('h3');
             noteTitle.innerHTML = title.length > 0 ? truncate(title, 20) : "Пустая заметка";
+            document.title = noteTitle.innerHTML
             console.log(noteTitle.innerHTML)
         }
 
@@ -176,6 +182,16 @@ export class NotesPage extends ScReact.Component<any, any> {
     };
 
     render() {
+        if (!this.state.mounted) {
+            return (
+                <div>
+
+                </div>
+            )
+        }
+
+        console.log("render")
+
         return (
             <div className={'notes-page-wrapper ' + (this.state.editorOpen ? 'active' : '')} >
                 <aside>

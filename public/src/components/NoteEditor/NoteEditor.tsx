@@ -110,7 +110,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
                 <div className="bottom-panel">
 
                     <Editor
-                        onChangeTitle={(value) => {
+                        onChangeTitle={(value:string) => {
                             console.log('onChangeTitle');
                             this.props.onChangeTitle(value);
                             this.onChangeNote();
