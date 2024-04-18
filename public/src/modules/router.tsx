@@ -135,7 +135,7 @@ export class Router extends ScReact.Component<any, routerState> {
         return (
             <div id={'root'} className={isNotesPage ? 'locked' : ''}>
                 <Toasts />
-                <Background  currPage={this.state.currPage?.name}/>
+                <Background currPage={this.state.currPage?.name}/>
                 <Header currPage={this.state.currPage}/>
                 {ScReact.createComponent(this.state.currPage, {...this.state.PageProps, key: this.state.currPage?.name}) }
             </div>

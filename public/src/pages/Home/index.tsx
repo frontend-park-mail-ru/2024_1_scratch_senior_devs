@@ -4,7 +4,6 @@ import './style.sass';
 import {AppRouter} from '../../modules/router';
 import {AppUserStore} from '../../modules/stores/UserStore';
 import {ShiningButton} from '../../components/ShiningButton/ShinigButton';
-import {Card} from '../../components/Card/Card';
 import {Img} from '../../components/Image/Image';
 
 export class HomePage extends ScReact.Component<any, any> {

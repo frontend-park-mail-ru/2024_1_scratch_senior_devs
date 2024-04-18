@@ -1,4 +1,5 @@
 @import "/public/src/utils/variables.sass"
+@import "/public/src/utils/animations.sass"
 
 .notes-page-wrapper
 	width: 100%
@@ -79,7 +80,7 @@
 					cursor: pointer
 
 					&:hover
-						transform: scale(1.1)
+						opacity: 0.8
 
 					.add-note-icon
 						width: 24px
@@ -120,7 +121,7 @@
 				color: $text-main-color--darker
 				text-align: center
 				font-weight: bold
-				font-size: 32px
+				font-size: 24px
 
 			.note-container
 				display: flex
@@ -169,10 +170,3 @@
 
 						.add-note-icon-wrapper
 							display: flex
-
-@keyframes fadeIn
-	from
-		opacity: 0
-
-	to
-		opacity: 1
