@@ -59,6 +59,10 @@ export class Dropdown extends ScReact.Component<any, any> {
             attr = {};
             attr.ol = true;
             tag = 'div';
+        } else if (id === 'todo-list') {
+            attr = {};
+            attr.todo = true;
+            tag = 'div';
         } else if (id === 'image') {
             tag = 'img';
             const fileInput = document.createElement('input');
@@ -182,7 +186,7 @@ export class Dropdown extends ScReact.Component<any, any> {
             //     desc: "Просто текст"
             // },
             {
-                id: "todo",
+                id: "todo-list",
                 icon: "todo.svg",
                 title: "To-do список",
                 desc: "Отслеживайте ваши задачи"

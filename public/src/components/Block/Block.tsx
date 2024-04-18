@@ -12,6 +12,7 @@ import {getCursorInBlock, setCursorInBlock} from '../../utils/cursorPos';
 import {moveCursorUpAndDown} from './utils/cursorActions';
 import {Attach} from '../Attach/Attach';
 import {NotesActions} from '../../modules/stores/NotesStore';
+import {renderToDoPrefix} from './utils/todo';
 
 export interface BlockNode {
     id: string
@@ -64,6 +65,7 @@ export class Block extends Component<BlockProps, BlockState> {
 
             return pieces;
         }
+        renderToDoPrefix(block, pieces);
         renderUlPrefix(block, pieces);
         renderOlPrefix(block, this.props.blockId, pieces);
         return pieces;
@@ -174,7 +176,8 @@ export class Block extends Component<BlockProps, BlockState> {
                                     if (AppNoteStore.state.note.blocks[this.props.blockId].type == 'div' &&
                                         (AppNoteStore.state.note.blocks[this.props.blockId].attributes == null ||
                                             !('ol' in AppNoteStore.state.note.blocks[this.props.blockId].attributes) &&
-                                            !('ul' in AppNoteStore.state.note.blocks[this.props.blockId].attributes)) &&
+                                            !('ul' in AppNoteStore.state.note.blocks[this.props.blockId].attributes) &&
+                                            !('todo' in AppNoteStore.state.note.blocks[this.props.blockId].attributes)) &&
                                         (e.target as HTMLElement).textContent == '/') {
                                         const elem = e.target as HTMLElement;
                                         AppDispatcher.dispatch(NoteStoreActions.OPEN_DROPDOWN, {
@@ -237,7 +240,9 @@ export class Block extends Component<BlockProps, BlockState> {
                                         (('ul' in block.attributes &&
                                             block.attributes.ul == true) ||
                                         ('ol' in block.attributes &&
-                                            block.attributes.ol == true)) &&
+                                            block.attributes.ol == true) ||
+                                        ('todo' in block.attributes &&
+                                            block.attributes.todo == true)) &&
                                         block.content.length === 0) {
                                         block.attributes = null;
                                         AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
@@ -294,6 +299,29 @@ export class Block extends Component<BlockProps, BlockState> {
                                             });
                                         });
                                     }
+                                    if (block.attributes != null &&
+                                        'todo' in block.attributes &&
+                                        block.attributes.todo == true) {
+                                        setTimeout(() => {
+                                            const newBlock = AppNoteStore.state.note.blocks[this.props.blockId + 1];
+                                            newBlock.attributes = {};
+                                            newBlock.attributes['todo'] = true;
+                                            AppDispatcher.dispatch(NoteStoreActions.MOVE_CURSOR, {
+                                                blockId: this.props.blockId,
+                                                pos: 0
+                                            });
+                                            AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
+                                                blockId: this.props.blockId + 1,
+                                                newBlock: newBlock
+                                            });
+                                            setTimeout(() => {
+                                                AppDispatcher.dispatch(NoteStoreActions.MOVE_CURSOR, {
+                                                    blockId: this.props.blockId + 1,
+                                                    pos: 0
+                                                });
+                                            });
+                                        });
+                                    }
                                 } else if ('key' in e && e.key === 'Backspace' &&
                                     (AppNoteStore.state.note.blocks[this.props.blockId].content == null ||
                                         AppNoteStore.state.note.blocks[this.props.blockId].content.length === 0)) {
@@ -325,6 +353,17 @@ export class Block extends Component<BlockProps, BlockState> {
                                         'ol' in block.attributes &&
                                         block.attributes.ol == true) {
                                         delete block.attributes.ol;
+                                        AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
+                                            blockId: this.props.blockId,
+                                            newBlock: block
+                                        });
+                                        moveCursorUpAndDown(this.props.blockId);
+                                        return;
+                                    }
+                                    if (block.attributes != null &&
+                                        'todo' in block.attributes &&
+                                        block.attributes.todo == true) {
+                                        delete block.attributes.todo;
                                         AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
                                             blockId: this.props.blockId,
                                             newBlock: block
