@@ -62,9 +62,10 @@ export class Editor extends Component<any, EditorState> {
                         }
 
                         this.openTippy();
+                        console.log(this.editorRef.getBoundingClientRect())
                         const tippy = document.querySelector('#tippy') as HTMLElement;
-                        tippy.style.top = (piece.getBoundingClientRect().y - tippy.getBoundingClientRect().height - 2).toString() + 'px';
-                        tippy.style.left = (Math.min(piece.getBoundingClientRect().x, piece2.getBoundingClientRect().x) - 30).toString() + 'px';
+                        tippy.style.top = (piece.getBoundingClientRect().y - tippy.getBoundingClientRect().height - 2 - this.editorRef.getBoundingClientRect().y).toString() + 'px';
+                        tippy.style.left = '15px';
 
                         this.optionsSetter(
                             Number(matchesFocus[1]),
@@ -217,11 +218,12 @@ export class Editor extends Component<any, EditorState> {
     }
 
     private noteTitleRef
+    private editorRef
 
     render(): VDomNode {
         console.log(`left: ${AppNoteStore.state.dropdownPos.left}; top: ${AppNoteStore.state.dropdownPos.top};`);
         return (
-            <div className="note-editor">
+            <div className="note-editor" ref={ref => this.editorRef = ref}>
                 <div className="note-editor__body">
                     <div className="note-title" contentEditable={true} oninput={this.onChangeTitle} ref={ref => this.noteTitleRef = ref}></div>
                     {this.renderBlocks()}
