@@ -34,7 +34,7 @@ export const NotesLoader = async (path:string) => {
                             resolve({notes: store.notes, note: note});
                         }).catch(() => {
                             // AppToasts.error('Заметка не найдена');
-                            // history.replaceState(null, '', '/notes');
+                            // history.pushState(null, '', '/notes');
                             // resolve({notes: store.notes});
                             AppRouter.go("/404")
                             reject()

@@ -36,7 +36,7 @@ export class AuthPage extends ScReact.Component<any, any> {
             this.state.inToggle = false;
         }, 500);
 
-        history.replaceState(null, null, this.state.selectedForm);
+        history.pushState(null, null, this.state.selectedForm);
         document.title = this.state.selectedForm === 'login' ? 'Вход' : 'Регистрация';
     };
 
