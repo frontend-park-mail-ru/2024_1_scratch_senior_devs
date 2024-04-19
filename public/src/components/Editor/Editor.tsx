@@ -63,7 +63,7 @@ export class Editor extends Component<any, EditorState> {
 
                         this.openTippy();
                         const tippy = document.querySelector('#tippy') as HTMLElement;
-                        tippy.style.top = (piece.getBoundingClientRect().y - tippy.getBoundingClientRect().height - 2 - this.editorRef.getBoundingClientRect().y).toString() + 'px';
+                        tippy.style.top = (piece.parentElement.parentElement.parentElement.offsetTop - 35).toString()  + 'px';
                         tippy.style.left = '15px';
 
                         this.optionsSetter(
@@ -176,6 +176,7 @@ export class Editor extends Component<any, EditorState> {
                     blockHash={getBlockHash(AppNoteStore.state.note.blocks[i])}
                     isChosen={AppNoteStore.state.cursorPosition != null && AppNoteStore.state.cursorPosition.blockId == i}
                     onChange={this.props.onChangeContent}
+                    offsetTop={this.editorRef?.scrollTop}
                 />
             );
         }

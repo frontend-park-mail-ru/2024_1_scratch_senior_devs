@@ -156,11 +156,11 @@ export class NotesPage extends ScReact.Component<any, any> {
         AppDispatcher.dispatch(NotesActions.CREATE_NEW_NOTE);
     };
 
-    private noteRefs = {};
-
-    saveSelectedNoteRef = (note, ref) => {
-        this.noteRefs[note.id] = ref;
-    };
+    // private noteRefs = {};
+    //
+    // saveSelectedNoteRef = (note, ref) => {
+    //     this.noteRefs[note.id] = ref;
+    // };
 
     onChangeSelectedNoteTitle = (title:string) => {
         // console.log('onChangeSelectedNoteTitle');
@@ -209,7 +209,7 @@ export class NotesPage extends ScReact.Component<any, any> {
                                 <div
                                     className={'note-container ' + (this.state.selectedNote?.id == note.id ? 'selected' : '')}
                                     id={note.id}
-                                    ref={ref => this.saveSelectedNoteRef(note, ref)}
+                                    // ref={ref => this.saveSelectedNoteRef(note, ref)}
                                 >
                                     <h3>{note.data.title.length == 0 ? "Пустая заметка" :  truncate(note.data.title, 20)}</h3>
                                     <p></p>

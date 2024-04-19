@@ -181,7 +181,7 @@ export class Block extends Component<BlockProps, BlockState> {
                                         (e.target as HTMLElement).textContent == '/') {
                                         const elem = e.target as HTMLElement;
                                         AppDispatcher.dispatch(NoteStoreActions.OPEN_DROPDOWN, {
-                                            blockPos: elem.getBoundingClientRect(),
+                                            blockPos: elem.parentElement.parentElement.offsetTop + 40,
                                             blockId: this.props.blockId
                                         });
                                     }

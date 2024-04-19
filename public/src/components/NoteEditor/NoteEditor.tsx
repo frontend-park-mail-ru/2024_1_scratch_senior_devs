@@ -9,7 +9,6 @@ import {AppNoteStore} from '../../modules/stores/NoteStore';
 import {Modal} from '../Modal/Modal';
 import {DeleteNoteDialog} from '../DeleteNoteDialog/DeleteNoteDialog';
 
-
 export class NoteEditor extends ScReact.Component<any, any> {
     state = {
         selectedNote: undefined,

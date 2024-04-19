@@ -267,16 +267,21 @@ class NoteStore extends BaseStore<NoteStoreState> {
         this.saveNote();
     };
 
-    private openDropdown = (blockPos: DOMRect, blockId: number) => {
-        if (blockPos.y > 250) {
-            this.SetState(s => {
-                return {...s, dropdownPos: {left: blockPos.x, top: blockPos.y - 240, isOpen: true, blockId: blockId}};
-            });
-        } else {
-            this.SetState(s => {
-                return {...s, dropdownPos: {left: blockPos.x, top: blockPos.y + 31, isOpen: true, blockId: blockId}};
-            });
-        }
+    private openDropdown = (blockTopOffset: number, blockId: number) => {
+        // if (blockTopOffset > 250) {
+        //     console.log(blockTopOffset )
+        //     this.SetState(s => {
+        //         return {...s, dropdownPos: {left: 30, top: blockTopOffset - 120, isOpen: true, blockId: blockId}};
+        //     });
+        // } else {
+        //     this.SetState(s => {
+        //         return {...s, dropdownPos: {left: 30, top: blockTopOffset + 51, isOpen: true, blockId: blockId}};
+        //     });
+        // }
+
+        this.SetState(s => {
+            return {...s, dropdownPos: {left: 30, top: blockTopOffset, isOpen: true, blockId: blockId}};
+        });
     };
 
     private closeDropdown = () => {
