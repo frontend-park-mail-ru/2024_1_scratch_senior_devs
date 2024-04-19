@@ -62,7 +62,6 @@ export class Editor extends Component<any, EditorState> {
                         }
 
                         this.openTippy();
-                        console.log(this.editorRef.getBoundingClientRect())
                         const tippy = document.querySelector('#tippy') as HTMLElement;
                         tippy.style.top = (piece.getBoundingClientRect().y - tippy.getBoundingClientRect().height - 2 - this.editorRef.getBoundingClientRect().y).toString() + 'px';
                         tippy.style.left = '15px';

@@ -26,8 +26,9 @@ export class Piece extends Component<PieceProps, PieceState> {
         const piece = AppNoteStore.state.note.blocks[this.props.blockId].content[this.props.pieceId];
         if (piece.attributes != null) {
             piece.attributes.style = '';
+            console.log(piece.attributes)
             if ('bold' in piece.attributes && piece.attributes.bold === true) {
-                piece.attributes.style += 'font-style: bold; ';
+                piece.attributes.style += 'font-weight: bold; ';
             }
             if ('underline' in piece.attributes && piece.attributes.underline === true ||
                 'lineThrough' in piece.attributes && piece.attributes.lineThrough === true) {
