@@ -115,7 +115,10 @@ export class NoteEditor extends ScReact.Component<any, any> {
                             this.props.onChangeTitle(value);
                             this.onChangeNote();
                         }}
-                        onChangeContent={this.onChangeNote}
+                        onChangeContent={() => {
+                            this.props.onChangeNote()
+                            this.onChangeNote()
+                        }}
                     />
 
                 </div>

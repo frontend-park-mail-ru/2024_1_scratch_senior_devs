@@ -181,6 +181,10 @@ export class NotesPage extends ScReact.Component<any, any> {
         this.updateNotesTitles()
     };
 
+    onChangeSelectedNoteContent = () => {
+        this.updateNotesTitles()
+    }
+
     render() {
 
         // console.log("render")
@@ -218,6 +222,7 @@ export class NotesPage extends ScReact.Component<any, any> {
                 </aside>
                 <NoteEditor open={this.state.editorOpen}
                             setClose={this.closeEditor}
+                            onChangeNote={this.onChangeSelectedNoteContent}
                             onChangeTitle={this.onChangeSelectedNoteTitle}
                 />
             </div>
