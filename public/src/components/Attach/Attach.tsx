@@ -27,7 +27,7 @@ export class Attach extends ScReact.Component<any, any> {
             <div className="attach-wrapper">
                 <div className="attach-container" onmousedown={this.downloadAttach}>
                     <div className="file-extension-label">
-                        {this.props.fileName.split('.')[1]}
+                        {this.props.fileName.split('.').at(-1)}
                     </div>
                     <span className="file-name">
                     {truncate(this.props.fileName, 18)}

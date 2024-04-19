@@ -182,13 +182,6 @@ export class NotesPage extends ScReact.Component<any, any> {
     };
 
     render() {
-        if (!this.state.mounted) {
-            return (
-                <div>
-
-                </div>
-            )
-        }
 
         console.log("render")
 
@@ -206,20 +199,21 @@ export class NotesPage extends ScReact.Component<any, any> {
                     </div>
                     <div className="notes-container" onclick={this.handleSelectNote}>
                         <Loader active={this.state.fetching}/>
-                        {this.state.notes.length > 0 ?
-                            this.state.notes.map(note => (
-                            <div
-                                className={'note-container ' + (this.state.selectedNote?.id == note.id ? 'selected' : '')}
-                                id={note.id}
-                                ref={ref => this.saveSelectedNoteRef(note, ref)}
-                            >
-                                <h3>{note.data.title.length == 0 ? "Пустая заметка" :  truncate(note.data.title, 20)}</h3>
-                                <p></p>
-                                <span className="update-time">{formatDate(note.update_time)}</span>
-                            </div>
-                        ))
-                        :
-                        !this.state.fetching ? <h3 className="notes-not-found-label">Список заметок пуст</h3> : ""}
+                        {!this.state.mounted ? "" :
+                            this.state.notes.length > 0 ?
+                                this.state.notes.map(note => (
+                                <div
+                                    className={'note-container ' + (this.state.selectedNote?.id == note.id ? 'selected' : '')}
+                                    id={note.id}
+                                    ref={ref => this.saveSelectedNoteRef(note, ref)}
+                                >
+                                    <h3>{note.data.title.length == 0 ? "Пустая заметка" :  truncate(note.data.title, 20)}</h3>
+                                    <p></p>
+                                    <span className="update-time">{formatDate(note.update_time)}</span>
+                                </div>
+                            ))
+                            :
+                            !this.state.fetching ? <h3 className="notes-not-found-label">Список заметок пуст</h3> : ""}
                     </div>
                 </aside>
                 <NoteEditor open={this.state.editorOpen}

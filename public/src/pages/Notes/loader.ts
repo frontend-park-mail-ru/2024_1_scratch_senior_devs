@@ -33,9 +33,11 @@ export const NotesLoader = async (path:string) => {
                         AppNoteRequests.Get(noteId, AppUserStore.state.JWT).then(note => {
                             resolve({notes: store.notes, note: note});
                         }).catch(() => {
-                            AppToasts.error('Заметка не найдена');
-                            history.replaceState(null, '', '/notes');
-                            resolve({notes: store.notes});
+                            // AppToasts.error('Заметка не найдена');
+                            // history.replaceState(null, '', '/notes');
+                            // resolve({notes: store.notes});
+                            AppRouter.go("/404")
+                            reject()
                         });
                     } else {
                         resolve({notes: store.notes});
