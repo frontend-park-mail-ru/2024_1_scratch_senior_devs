@@ -82,6 +82,7 @@ export class Dropdown extends ScReact.Component<any, any> {
                         noteId: AppNotesStore.state.selectedNote.id,
                         blockId: this.props.blockId
                     });
+                    AppDispatcher.dispatch(NoteStoreActions.REMOVE_CURSOR, {});
                 } else {
                     AppToasts.error('Фото слишком большое');
                 }
@@ -110,6 +111,7 @@ export class Dropdown extends ScReact.Component<any, any> {
                         blockId: this.props.blockId,
                         fileName: (e.target as HTMLInputElement).files[0].name
                     });
+                    AppDispatcher.dispatch(NoteStoreActions.REMOVE_CURSOR, {});
                 } else {
                     AppToasts.error('Файл слишком большой');
                 }

@@ -22,7 +22,8 @@ export const NoteStoreActions = {
     CHANGE_PIECE_ATTRIBUTES: 'CHANGE_PIECE_ATTRIBUTES',
     CLOSE_YOUTUBE_DIALOG: 'CLOSE_YOUTUBE_DIALOG',
     OPEN_YOUTUBE_DIALOG: 'OPEN_YOUTUBE_DIALOG',
-    TOGGLE_CHECKBOX: "TOGGLE_CHECKBOX"
+    TOGGLE_CHECKBOX: "TOGGLE_CHECKBOX",
+    REMOVE_CURSOR: "REMOVE_CURSOR"
 };
 
 export type NoteStoreState = {
@@ -110,6 +111,8 @@ class NoteStore extends BaseStore<NoteStoreState> {
                 case NoteStoreActions.TOGGLE_CHECKBOX:
                     this.toggleCheckbox(action.payload);
                     break;
+                case NoteStoreActions.REMOVE_CURSOR:
+                    this.removeCursor();
             }
         });
     };
@@ -283,6 +286,12 @@ class NoteStore extends BaseStore<NoteStoreState> {
             return {...s, dropdownPos: {left: 30, top: blockTopOffset, isOpen: true, blockId: blockId}};
         });
     };
+
+    private removeCursor = () => {
+        this.SetState(s => {
+            return {...s, cursorPosition: null}
+        })
+    }
 
     private closeDropdown = () => {
         // console.log('closeDropdown');
