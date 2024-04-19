@@ -186,7 +186,6 @@ export class NotesPage extends ScReact.Component<any, any> {
     }
 
     render() {
-
         // console.log("render")
 
         return (
