@@ -48,7 +48,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
     };
 
     updateState = (store:NotesStoreState) => {
-        console.log('NoteEditor.updateState');
+        // console.log('NoteEditor.updateState');
 
         if (store.selectedNote != this.state.selectedNote) {
             this.savingLabelRef.innerHTML = '';
@@ -111,7 +111,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
                     <Editor
                         onChangeTitle={(value:string) => {
-                            console.log('onChangeTitle');
+                            // console.log('onChangeTitle');
                             this.props.onChangeTitle(value);
                             this.onChangeNote();
                         }}

@@ -73,7 +73,7 @@ export class Editor extends Component<any, EditorState> {
                             offsetAnchor,
                             offsetFocus
                         );
-                        console.log('MOOVE');
+                        // console.log('MOOVE');
 
                         // AppDispatcher.dispatch(NoteStoreActions.CHANGE_PIECE_ATTRIBUTES,
                         //     {
@@ -91,12 +91,12 @@ export class Editor extends Component<any, EditorState> {
     }
 
     updateState = (store:NoteStoreState) => {
-        console.log("Editor.UpdateState")
+        // console.log("Editor.UpdateState")
         if (AppNoteStore.state.note.title.length > 0) {
             this.noteTitleRef.dataset.placeholder = '';
         }
 
-        console.log(store.note)
+        // console.log(store.note)
         if (store.note?.title.length == 0) {
             this.noteTitleRef.dataset.placeholder = "Введите название"
         }
@@ -111,7 +111,7 @@ export class Editor extends Component<any, EditorState> {
     };
 
     closeEditor = () => {
-        console.log('closeEditor');
+        // console.log('closeEditor');
         AppDispatcher.dispatch(NoteStoreActions.CLOSE_DROPDOWN);
         this.noteTitleRef.dataset.placeholder = ""
 
@@ -155,7 +155,7 @@ export class Editor extends Component<any, EditorState> {
             result.push(
                 <div className={'drag-area'}
                      ondrop={(e) => {
-                         console.log(e.dataTransfer.getData('blockId'), i);
+                         // console.log(e.dataTransfer.getData('blockId'), i);
                          e.target.classList.remove('active');
                          AppDispatcher.dispatch(NoteStoreActions.MOVE_BLOCK, {
                             blockId: Number(e.dataTransfer.getData('blockId')),
@@ -182,7 +182,7 @@ export class Editor extends Component<any, EditorState> {
         result.push(
             <div className={'drag-area'}
                  ondrop={(e) => {
-                     console.log(e.dataTransfer.getData('blockId'), this.state.blocks);
+                     // console.log(e.dataTransfer.getData('blockId'), this.state.blocks);
                      e.target.style.border = 'none';
                      AppDispatcher.dispatch(NoteStoreActions.MOVE_BLOCK, {
                          blockId: Number(e.dataTransfer.getData('blockId')),
@@ -200,8 +200,8 @@ export class Editor extends Component<any, EditorState> {
     };
 
     onChangeTitle = (e) => {
-        console.log('oninput');
-        console.log(e.target.textContent.length);
+        // console.log('oninput');
+        // console.log(e.target.textContent.length);
 
         if (e.target.textContent.length == 0) {
             this.noteTitleRef.dataset.placeholder = 'Введите название';
@@ -220,7 +220,7 @@ export class Editor extends Component<any, EditorState> {
     private editorRef
 
     render(): VDomNode {
-        console.log(`left: ${AppNoteStore.state.dropdownPos.left}; top: ${AppNoteStore.state.dropdownPos.top};`);
+        // console.log(`left: ${AppNoteStore.state.dropdownPos.left}; top: ${AppNoteStore.state.dropdownPos.top};`);
         return (
             <div className="note-editor" ref={ref => this.editorRef = ref}>
                 <div className="note-editor__body">

@@ -109,7 +109,7 @@ export class Block extends Component<BlockProps, BlockState> {
         });
 
         if (AppNoteStore.state.note.blocks[this.props.blockId].type == 'img') {
-            console.log(AppNoteStore.state.note.blocks[this.props.blockId].id);
+            // console.log(AppNoteStore.state.note.blocks[this.props.blockId].id);
             AppDispatcher.dispatch(NotesActions.FETCH_IMAGE, {
                 blockId: this.props.blockId,
                 imageId: AppNoteStore.state.note.blocks[this.props.blockId].attributes['id']
@@ -120,7 +120,7 @@ export class Block extends Component<BlockProps, BlockState> {
     private contener: HTMLElement;
 
     render(): VDomNode {
-        console.log(AppNoteStore.state.cursorPosition);
+        // console.log(AppNoteStore.state.cursorPosition);
         return (
             <div
                 className={'block' + (AppNoteStore.state.cursorPosition?.blockId == this.props.blockId.toString() ? ' block-chosen' : '')}
@@ -228,7 +228,7 @@ export class Block extends Component<BlockProps, BlockState> {
 
                                     this.props.onChange();
 
-                                    console.log(elemPieces, cursorPosition);
+                                    // console.log(elemPieces, cursorPosition);
                                 }
                             },
                             onkeydown: (e: Event) => {

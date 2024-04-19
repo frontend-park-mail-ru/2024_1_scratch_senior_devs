@@ -118,8 +118,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     selectNote (note:Note) {
-        console.log("selectNote")
-        console.log(note)
+        // console.log("selectNote")
+        // console.log(note)
         this.SetState(state => ({
             ...state,
             selectedNote: note
@@ -134,7 +134,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     async searchNotes (query:string) {
-        console.log('searchNotes');
+        // console.log('searchNotes');
         this.SetState(state => ({
             ...state,
             notes: [],
@@ -162,8 +162,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 count: this.state.count
             };
 
-            console.log('fetchNotes');
-            console.log(params);
+            // console.log('fetchNotes');
+            // console.log(params);
 
             const notes = await AppNoteRequests.GetAll(AppUserStore.state.JWT, params);
 
@@ -173,7 +173,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 notes: reset ? notes : state.notes.concat(notes)
             }));
 
-            console.log(notes);
+            // console.log(notes);
         } catch {
             AppToasts.error('Что-то пошло не так');
         }
@@ -202,7 +202,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     async saveNote(data) {
-        console.log('saveNote');
+        // console.log('saveNote');
         try {
             const {status, csrf} = await AppNoteRequests.Update(data, AppUserStore.state.JWT, AppUserStore.state.csrf);
 

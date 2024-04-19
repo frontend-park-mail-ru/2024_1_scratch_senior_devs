@@ -25,8 +25,8 @@ export class NotesPage extends ScReact.Component<any, any> {
         AppNotesStore.SubscribeToStore(this.updateState);
         // AppNoteStore.AddSaver(this.updateNotesTitles);
 
-        console.log("NotesPage.componentDidMount")
-        console.log(this.props.notes)
+        // // console.log("NotesPage.componentDidMount")
+        // // console.log(this.props.notes)
 
         this.setState(state => ({
             ...state,
@@ -49,16 +49,16 @@ export class NotesPage extends ScReact.Component<any, any> {
     }
 
     updateNotesTitles = () => {
-        console.log('updateNotesTitles');
+        // // console.log('updateNotesTitles');
         setTimeout(()=> {
-            console.log(AppNoteStore.state.note);
+            // // console.log(AppNoteStore.state.note);
             const notes = AppNotesStore.state.notes;
             notes.forEach((note, index) => {
                 if (note.id == this.state.selectedNote?.id) {
-                    console.log('Yeeees');
+                    // // console.log('Yeeees');
                     notes[index].data.title = AppNoteStore.state.note.title == "" ? "Пустая заметка" : AppNoteStore.state.note.title;
                     notes[index].update_time = new Date()
-                    console.log(notes);
+                    // // console.log(notes);
                 }
             });
             this.setState(s=>({
@@ -74,7 +74,7 @@ export class NotesPage extends ScReact.Component<any, any> {
     }
 
     updateState = (store:NotesStoreState) => {
-        console.log("index.updateState")
+        // // console.log("index.updateState")
         this.setState(state => {
             if (state.notes.length > 0 && state.notes.length < store.notes.length) {
                 this.createObserver();
@@ -114,21 +114,21 @@ export class NotesPage extends ScReact.Component<any, any> {
     };
 
     closeEditor = () => {
-        console.log("closeEditor")
-        console.log(1)
+        // // console.log("closeEditor")
+        // // console.log(1)
         
         this.setState(state => ({
             ...state,
             editorOpen: false
         }));
 
-        console.log(2)
+        // // console.log(2)
 
         document.title = 'Заметки';
-        console.log(3)
+        // // console.log(3)
 
         history.replaceState(null, null, '/notes');
-        console.log(4)
+        // // console.log(4)
     };
 
     createObserver() {
@@ -163,8 +163,8 @@ export class NotesPage extends ScReact.Component<any, any> {
     };
 
     onChangeSelectedNoteTitle = (title:string) => {
-        console.log('onChangeSelectedNoteTitle');
-        console.log(title)
+        // // console.log('onChangeSelectedNoteTitle');
+        // // console.log(title)
 
         // TODO: только что созданная заметка == null
         // const selectedNote = this.noteRefs[this.state.selectedNote.id];
@@ -175,7 +175,7 @@ export class NotesPage extends ScReact.Component<any, any> {
             const noteTitle = selectedNote.querySelector('h3');
             noteTitle.innerHTML = title.length > 0 ? truncate(title, 20) : "Пустая заметка";
             document.title = noteTitle.innerHTML
-            console.log(noteTitle.innerHTML)
+            // // console.log(noteTitle.innerHTML)
         }
 
         this.updateNotesTitles()
@@ -183,7 +183,7 @@ export class NotesPage extends ScReact.Component<any, any> {
 
     render() {
 
-        console.log("render")
+        // // console.log("render")
 
         return (
             <div className={'notes-page-wrapper ' + (this.state.editorOpen ? 'active' : '')} >

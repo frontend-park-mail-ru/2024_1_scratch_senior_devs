@@ -26,7 +26,6 @@ export class Piece extends Component<PieceProps, PieceState> {
         const piece = AppNoteStore.state.note.blocks[this.props.blockId].content[this.props.pieceId];
         if (piece.attributes != null) {
             piece.attributes.style = '';
-            console.log(piece.attributes)
             if ('bold' in piece.attributes && piece.attributes.bold === true) {
                 piece.attributes.style += 'font-weight: bold; ';
             }

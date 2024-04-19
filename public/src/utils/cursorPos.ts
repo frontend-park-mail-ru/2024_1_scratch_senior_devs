@@ -41,7 +41,7 @@ export const setCursorInBlock = (elem: HTMLElement, blockId: number) => {
                 elem.click();
             }
         } catch (e) {
-            console.log(e);
+            // console.log(e);
         }
     }
 };
