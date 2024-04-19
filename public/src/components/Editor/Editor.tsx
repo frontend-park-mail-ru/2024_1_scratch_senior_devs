@@ -64,6 +64,8 @@ export class Editor extends Component<any, EditorState> {
                         this.openTippy();
                         const tippy = document.querySelector('#tippy') as HTMLElement;
                         tippy.style.top = (piece.parentElement.parentElement.parentElement.offsetTop - 35).toString()  + 'px';
+
+                        // TODO: привязывать всплывашку к зофокошинному тексту а не к блоку
                         tippy.style.left = '15px';
 
                         this.optionsSetter(

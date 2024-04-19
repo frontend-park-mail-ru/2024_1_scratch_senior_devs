@@ -30,7 +30,7 @@ export class NotesPage extends ScReact.Component<any, any> {
 
         this.setState(state => ({
             ...state,
-            mounted: true,
+            // mounted: true,
             notes: this.props.notes
         }));
 
@@ -203,7 +203,7 @@ export class NotesPage extends ScReact.Component<any, any> {
                     </div>
                     <div className="notes-container" onclick={this.handleSelectNote}>
                         <Loader active={this.state.fetching}/>
-                        {!this.state.mounted ? "" :
+                        {
                             this.state.notes.length > 0 ?
                                 this.state.notes.map(note => (
                                 <div
