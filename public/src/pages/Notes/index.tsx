@@ -109,6 +109,8 @@ export class NotesPage extends ScReact.Component<any, any> {
                 editorOpen: true
             }));
 
+            document.body.classList.add('locked');
+
             AppDispatcher.dispatch(NotesActions.FETCH_NOTE, id);
         }
     };
@@ -129,6 +131,8 @@ export class NotesPage extends ScReact.Component<any, any> {
 
         history.pushState(null, null, '/notes');
         // console.log(4)
+
+        document.body.classList.remove('locked');
     };
 
     createObserver() {
