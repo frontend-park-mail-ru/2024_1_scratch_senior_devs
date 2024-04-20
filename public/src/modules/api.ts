@@ -267,8 +267,8 @@ class ProfileRequests {
             }
         });
 
-        // console.log('UpdatePassword');
-        // console.log(response.headers);
+        console.log('UpdatePassword');
+        console.log(response.headers);
 
         return {
             status: response.status,
@@ -336,7 +336,7 @@ class NoteRequests {
     };
 
     Update = async({id, note}, jwt: string, csrf:string)=> {
-        // console.log('Update');
+        console.log('Update');
 
         const response = await Ajax.Post(this.baseUrl + '/' + id + '/edit', {
             headers: {

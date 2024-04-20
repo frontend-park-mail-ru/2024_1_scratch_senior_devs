@@ -3,15 +3,15 @@ import './ColorPicker.sass';
 
 export class ColorPicker extends ScReact.Component<any, any> {
     handleSelectText = (item: { label: any; color: any; }) => {
-        // console.log('handleSelectText');
-        // console.log(item.label);
+        console.log('handleSelectText');
+        console.log(item.label);
         this.props.onSel('color', item.color);
         this.props.handleClose();
     };
 
     handleSelectBackground = (item: { label: any; color: any; }) => {
-        // console.log('handleSelectBackground');
-        // console.log(item.label);
+        console.log('handleSelectBackground');
+        console.log(item.label);
         this.props.onSel('backgroundColor', item.color);
         this.props.handleClose();
     };
@@ -55,7 +55,7 @@ export class ColorPicker extends ScReact.Component<any, any> {
                     <div className="items">
                         {data.text.map(item => (
                             <div className="item" onmousedown={() => {
-                                // console.log('SELECT color');
+                                console.log('SELECT color');
                                 this.handleSelectText(item);
                             }}>
                                 <div className="icon-container">

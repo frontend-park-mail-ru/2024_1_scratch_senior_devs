@@ -22,13 +22,15 @@ export const NotesLoader = async (path:string) => {
         }
 
         const callback = (state: UserStoreState) => {
+            console.log("NotesPage.loader")
+
             isAuth = state.isAuth;
 
             AppUserStore.UnSubscribeToStore(callback);
 
             if (isAuth) {
                 AppNotesStore.init().then((store) => {
-                    if (path?.includes('/notes/')) {
+                    if (path?.includes('notes/')) {
                         const noteId = window.location.pathname.split('/').at(-1);
                         AppNoteRequests.Get(noteId, AppUserStore.state.JWT).then(note => {
                             resolve({notes: store.notes, note: note});
@@ -36,6 +38,7 @@ export const NotesLoader = async (path:string) => {
                             // AppToasts.error('Заметка не найдена');
                             // history.pushState(null, '', '/notes');
                             // resolve({notes: store.notes});
+                            console.log("not found")
                             AppRouter.go("/404")
                             reject()
                         });

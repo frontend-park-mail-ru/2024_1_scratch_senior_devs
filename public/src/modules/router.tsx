@@ -45,52 +45,94 @@ export class Router extends ScReact.Component<any, routerState> {
     }
 
     componentDidMount() {
-        const path = window.location.pathname;
-        window.addEventListener('popstate', () => {
-
-            if (path.includes('/notes')) {
-                const noteId = window.location.pathname.split('/').at(-1);
-                AppDispatcher.dispatch(NotesActions.FETCH_NOTE, noteId);
-                return;
-            }
-
-            this.go(window.location.pathname);
-        });
+        const path = this.normalizeURL(window.location.pathname);
+        window.addEventListener('popstate', this.handlePopState);
 
         this.go(path);
     }
 
-    componentDidUpdate() {
-        // @ts-ignore
-        if (this.state.currPage === NotesPage) {
-            // document.body.classList.add('locked');
-        } else {
-            // document.body.classList.remove('locked');
-        }
+    normalizeURL = (path:string) => {
+        return path.replace(/\/\/+/g, '/').replace(/^\//, '').replace(/\/$/, '')
     }
 
     private initPages = () => {
-        this.pages['/'] = {page: HomePage, loader: HomePageLoader};
-        this.pages['/login'] = {page: AuthPage, loader: AuthPageLoader, skeleton: AuthPageSkeleton};
-        this.pages['/register'] = {page: AuthPage, loader: AuthPageLoader, skeleton: AuthPageSkeleton};
-        this.pages['/notes'] = {page: NotesPage, loader: NotesLoader, skeleton: NotesPageSkeleton};
-        this.pages['/404'] = {page: NotFoundPage };
+        this.pages[''] = {page: HomePage, loader: HomePageLoader};
+        this.pages['login'] = {page: AuthPage, loader: AuthPageLoader, skeleton: AuthPageSkeleton};
+        this.pages['register'] = {page: AuthPage, loader: AuthPageLoader, skeleton: AuthPageSkeleton};
+        this.pages['notes'] = {page: NotesPage, loader: NotesLoader, skeleton: NotesPageSkeleton};
+        this.pages['404'] = {page: NotFoundPage };
     };
 
-    public go(path: string): void {
+    public handlePopState = () => {
+        console.log("handlePopState")
+        const path = this.normalizeURL(window.location.pathname)
+
+        console.log(path)
+
+        if (path.includes('notes/')) {
+            const noteId = path.split('/').at(-1);
+            AppDispatcher.dispatch(NotesActions.FETCH_NOTE, noteId);
+            return;
+        }
+        
+        history.replaceState(null, null, path)
+
+        const page: RouterMapValue = this.pages[path];
+
+        console.log(page)
+
+        if (page.loader !== undefined) {
+
+            this.setState(s => ({
+                ...s,
+                currPage: page.skeleton
+            }));
+
+            page.loader(path).then((props) => {
+                this.setState(s => ({
+                    ...s,
+                    currPage: page.page,
+                    PageProps: props
+                }));
+            }).catch(() => {
+                this.setState(s => ({
+                    ...s,
+                    currPage: NotFoundPage
+                }));
+            });
+
+        } else {
+            this.setState(s => ({
+                ...s,
+                currPage: page.page
+            }));
+        }
+    }
+
+    public go(raw: string): void {
+        console.log("go")
+        console.log(raw)
+
+        const path = this.normalizeURL(raw)
+
+        console.log(path)
+
         let page: RouterMapValue = this.pages[path];
 
-        if (path.includes('/notes')) {
-            page = this.pages['/notes'];
+        if (path.includes('notes/')) {
+            page = this.pages['notes'];
         }
 
-        history.pushState(null, null, path);
+        console.log(page)
 
+        history.pushState(null, null, path);
         if (page === undefined) {
             this.setState(s => ({
                 ...s,
                 currPage: NotFoundPage
             }));
+
+            history.pushState(null, null, "/404")
 
             return;
         }
@@ -108,16 +150,13 @@ export class Router extends ScReact.Component<any, routerState> {
                     currPage: page.page,
                     PageProps: props
                 }));
-            }).catch(() => {
 
-                // TODO
-                // this.setState(s => ({
-                //     ...s,
-                //     currPage: Error,
-                //     PageProps: {
-                //         err: err
-                //     }
-                // }));
+
+            }).catch(() => {
+                this.setState(s => ({
+                    ...s,
+                    currPage: NotFoundPage
+                }));
             });
 
         } else {
@@ -126,6 +165,7 @@ export class Router extends ScReact.Component<any, routerState> {
                 currPage: page.page
             }));
         }
+
     }
 
     render(): VDomNode {

@@ -37,7 +37,7 @@ export class Dropdown extends ScReact.Component<any, any> {
     };
 
     handleOnHover = (id:string) => {
-        // console.log('handleOnHover ' + id);
+        console.log('handleOnHover ' + id);
 
         this.setState(state => ({
             ...state,
@@ -46,7 +46,7 @@ export class Dropdown extends ScReact.Component<any, any> {
     };
 
     handleOnClick = (id:string) => {
-        // console.log('handleOnClick ' + id);
+        console.log('handleOnClick ' + id);
 
         let tag = id;
         let attr = null;
@@ -71,8 +71,8 @@ export class Dropdown extends ScReact.Component<any, any> {
             fileInput.hidden = true;
             this.ref.append(fileInput);
             fileInput.onchange = (e: InputEvent) => {
-                // console.log('onchange12344444444444444444');
-                // console.log(e);
+                console.log('onchange12344444444444444444');
+                console.log(e);
                 fileInput.remove();
 
                 const file = (e.target as HTMLInputElement).files[0]
@@ -99,8 +99,8 @@ export class Dropdown extends ScReact.Component<any, any> {
             fileInput.accept = ".mp4,.mp3,.wav,.gif,.jpeg,.webp,.jpg,.png,.mp4, .pdf"
             this.ref.append(fileInput);
             fileInput.onchange = (e) => {
-                // console.log('onchange');
-                // console.log(e);
+                console.log('onchange');
+                console.log(e);
                 fileInput.remove();
 
                 const file = (e.target as HTMLInputElement).files[0]
@@ -122,7 +122,7 @@ export class Dropdown extends ScReact.Component<any, any> {
             attr.fileName = '';
             content = undefined;
         } else if (id === 'youtube') {
-            // console.log('Select youtube');
+            console.log('Select youtube');
             this.props.openYoutubeDialog();
         }
 

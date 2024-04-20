@@ -118,3 +118,11 @@ export const parseYoutubeLink = (url:string) => {
 
     return null;
 };
+
+
+/**
+ * Скроллит вверх к началу страницы
+ */
+export const scrollToTop = () => {
+    document.body.scrollTop = document.documentElement.scrollTop = 0
+}

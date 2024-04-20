@@ -161,8 +161,8 @@ class UserStore extends BaseStore<UserStoreState>{
             }
 
         } catch (err) {
-            // console.log('err');
-            // console.log(err);
+            console.log('err');
+            console.log(err);
             this.SetState(state => ({
                 ...state,
                 errorLoginForm: 'Неправильный логин, пароль или код'
@@ -197,7 +197,7 @@ class UserStore extends BaseStore<UserStoreState>{
             AppRouter.go('/');
 
         } catch (err) {
-            // console.log(err);
+            console.log(err);
         }
     }
 
@@ -249,7 +249,7 @@ class UserStore extends BaseStore<UserStoreState>{
             // AppRouter.go("/notes")
 
         } catch (err) {
-            // console.log(err);
+            console.log(err);
 
             this.SetState(state => ({
                 ...state,

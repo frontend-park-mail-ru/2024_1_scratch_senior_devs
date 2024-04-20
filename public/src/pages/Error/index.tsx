@@ -19,7 +19,7 @@ class NotFoundPage extends ScReact.Component<{err: any}, any> {
                     <Img src="404.svg"></Img>
                     <h3>Похоже вы</h3>
                     <h2>потерялись в космосе</h2>
-                    <ShiningButton label="Вернуться на главную" onClick={() => AppRouter.go("/")}/>
+                    <ShiningButton label="Вернуться назад" onClick={() => AppRouter.go("/")}/>
                 </div>
             </div>
         );

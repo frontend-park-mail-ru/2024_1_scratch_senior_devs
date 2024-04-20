@@ -294,7 +294,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
     }
 
     private closeDropdown = () => {
-        // console.log('closeDropdown');
+        console.log('closeDropdown');
         this.state.dropdownPos.isOpen = false;
     };
 
@@ -314,8 +314,8 @@ class NoteStore extends BaseStore<NoteStoreState> {
     private changeTitle = (title: string) => {
         this.closeDropdown();
 
-        // console.log("NoteStore.changeTitle")
-        // console.log(title)
+        console.log("NoteStore.changeTitle")
+        console.log(title)
 
         this.state.note.title = title;
         this.saveNote();
@@ -325,7 +325,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
     });
 
     private changePieceAttributes = (blockId: number, anchorId: number, focusId: number, anchorPos: number, focusPos: number, attribute: string, value?: string | number | boolean | undefined) => {
-        // console.log('value', value);
+        console.log('value', value);
         const block = AppNoteStore.state.note.blocks[blockId];
         let minPiece = 0;
         let minPos = 0;
@@ -448,7 +448,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
                 content: block.content[maxPiece].content.substring(maxPos)
             };
 
-            // console.log(maxBefore);
+            console.log(maxBefore);
 
             this.SetState(s => {
                 const oldNote = this.state.note;
