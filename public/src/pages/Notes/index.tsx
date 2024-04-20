@@ -22,6 +22,8 @@ export class NotesPage extends ScReact.Component<any, any> {
     componentDidMount() {
         document.title = 'Заметки';
 
+        document.body.scrollTop = document.documentElement.scrollTop = 0
+
         AppNotesStore.SubscribeToStore(this.updateState);
         // AppNoteStore.AddSaver(this.updateNotesTitles);
 
