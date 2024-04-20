@@ -11,11 +11,15 @@
 	background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%)
 	position: relative
 
+	@media screen and (max-width: $sm)
+		min-height: 100vh
+		padding: 0 5% 50px
+
 	@media screen and (max-width: $xl)
 		padding: 75px 10%
 
 	@media screen and (max-width: $lg)
-		padding: 0 5%
+		padding: 0 5% 50px
 
 	&.active
 		@media screen and (min-width: $lg)
