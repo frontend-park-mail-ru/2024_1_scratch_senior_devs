@@ -85,6 +85,9 @@
 				&:hover
 					background: rgba(0,0,0,0.15)
 
+				@media screen and (max-width: $lg)
+					display: none
+
 			.icon
 				width: 24px
 				height: 24px
@@ -94,11 +97,7 @@
 				&:hover
 					opacity: 1
 
-			.close-editor-icon
-				display: flex
 
-				@media screen and (max-width: $lg)
-					display: none
 
 	.bottom-panel
 		display: flex
