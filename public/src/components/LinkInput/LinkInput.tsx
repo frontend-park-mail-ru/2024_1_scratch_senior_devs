@@ -30,10 +30,10 @@ export class LinkInput extends ScReact.Component<any, any> {
 
     render() {
         return (
-            <div className={'link-input-container ' + (this.props.open ? 'open' : '')}>
-                <input type="text" placeholder="Введите ссылку" className="link-input" oninput={this.setValue} value={this.state.value}/>
-                <button type="submit" className="link-btn" onclick={this.handleSubmit}>
-                    <Img src="daw.svg" className="success-icon"/>
+            <div className={'link-input ' + (this.props.open ? 'open' : '')}>
+                <input type="text" placeholder="Введите ссылку" className="link-input__input" oninput={this.setValue} value={this.state.value}/>
+                <button type="submit" className="link-input__btn" onclick={this.handleSubmit}>
+                    <Img src="daw.svg" className="link-input__icon link-input__icon-success"/>
                 </button>
             </div>
         );

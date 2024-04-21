@@ -30,15 +30,15 @@ export class Toast extends ScReact.Component<ToastProps, any> {
     render() {
         return (
             <div className={'toast success ' + (this.props.open ? '' : 'hide')} style={`bottom: ${this.props.offset}px`}>
-                <div className="toast-content">
+                <div className="toast__content">
                     <Img src={this.props.type + '.svg'} className="toast-icon"/>
                     <div className="content">
-                        <span className="title">{this.formatType()}</span>
-                        <span className="message">{this.props.message}</span>
+                        <span className="content__title">{this.formatType()}</span>
+                        <span className="content__message">{this.props.message}</span>
                     </div>
                 </div>
-                <Img src="close.svg" className="toast-close-btn" onClick={this.closeToast}/>
-                <div className="progress"></div>
+                <Img src="close.svg" className="toast__close-btn" onClick={this.closeToast}/>
+                <div className="toast__progress-bar"></div>
             </div>
         );
     }

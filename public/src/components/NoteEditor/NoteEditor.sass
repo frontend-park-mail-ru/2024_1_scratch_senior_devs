@@ -54,7 +54,7 @@
 			padding: 0 20px
 
 		.left-container
-			.close-editor-label-container
+			.close-editor
 				display: none
 				align-items: center
 				justify-content: center
@@ -64,11 +64,11 @@
 				@media screen and (max-width: $lg)
 					display: flex
 
-				.back-icon
+				.close-editor__icon
 					width: 9px
 					height: 9px
 
-				.back-label
+				.close-editor_label
 					font-size: 18px
 					color: $text-main-color--darker
 
@@ -82,7 +82,7 @@
 					color: $text-main-color--darker
 					transition: 0.3s
 
-			.icon
+			.right-container__icon
 				width: 24px
 				height: 24px
 				cursor: pointer
@@ -93,7 +93,7 @@
 				&:hover
 					opacity: 1
 
-			.close-editor-icon
+			.right-container__icon-close
 				display: flex
 
 				@media screen and (max-width: $lg)

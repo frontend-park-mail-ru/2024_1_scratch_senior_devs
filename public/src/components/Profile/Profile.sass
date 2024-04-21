@@ -1,9 +1,9 @@
 @import "/public/src/utils/variables.sass"
 
-.user-profile-wrapper
+.user-profile
 	position: relative
 
-	.toggle-profile-button
+	.toggle-profile
 		font-size: 0
 		width: 42px
 		height: 42px
@@ -18,13 +18,13 @@
 		&:hover .slider:before
 			left: 30%
 
-		&:hover .slider.two:before
+		&:hover .slider.toggle-profile__slider-two:before
 			left: 70%
 
-		&:hover .slider.three:before
+		&:hover .slider.toggle-profile__slider-three:before
 			left: 30%
 
-		.slider
+		.toggle-profile__slider
 			width: 22px
 			border-radius: 4px
 			height: 2px
@@ -33,14 +33,14 @@
 			transform-origin: 2px 2px
 			transition: all 500ms cubic-bezier(0, 1, 0, 1)
 
-			&.two
+			&.toggle-profile__slider-two
 				margin-top: 6px
 
 				&:before
 					left: 30%
 					transition-delay: 55ms
 
-			&.three
+			&.toggle-profile__slider-three
 				margin-top: 12px
 
 				&:before
@@ -107,15 +107,15 @@
 			right: 0
 			overflow: hidden
 
-			.username
+			.popup-content__username
 				color: $white
 				font-weight: 700
 				font-size: 22px
 
-			.link
+			.popup-content__link
 				width: 200px
 
-			.logout-btn
+			.popup-content__logout-btn
 				width: 140px
 				background: $white
 				color: $secondary-color

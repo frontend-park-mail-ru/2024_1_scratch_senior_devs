@@ -1,6 +1,6 @@
 @import "/public/src/utils/variables.sass"
 
-.modal-wrapper
+.modal
 	position: fixed
 	top: -110vh
 	left: 0
@@ -16,14 +16,14 @@
 		top: 0
 		transition: top 0ms ease-in-out 0ms
 
-		.overlay
+		.modal__overlay
 			opacity: 1
 
-		.modal-content
+		.modal__content
 			animation: 0.3s superScaleIn ease-in-out
 			opacity: 1
 
-	.overlay
+	.modal__overlay
 		position: absolute
 		top: 0
 		left: 0
@@ -33,7 +33,7 @@
 		opacity: 0
 		transition: all 300ms ease-in-out
 
-	.modal-content
+	.modal__content
 		position: absolute
 		background: $modal-background
 		border-radius: 20px
@@ -66,7 +66,7 @@
 				transform: scale(1.2)
 				opacity: 0
 
-		.close-modal-btn
+		.modal__close-btn
 			position: absolute
 			top: 16px
 			right: 16px
