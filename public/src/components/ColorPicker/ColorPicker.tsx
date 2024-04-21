@@ -49,32 +49,32 @@ export class ColorPicker extends ScReact.Component<any, any> {
         };
 
         return (
-            <div className={'color-picker ' + (this.props.open ? 'open' : '')}>
-                <div className="text-picker">
-                    <span className="text-picker__label">Текст</span>
-                    <div className="text-picker__items">
+            <div className={'color-picker-container ' + (this.props.open ? 'open' : '')}>
+                <div className="text-color-picker-container">
+                    <span className="label">Текст</span>
+                    <div className="items">
                         {data.text.map(item => (
-                            <div className="text-picker__item" onmousedown={() => {
+                            <div className="item" onmousedown={() => {
                                 console.log('SELECT color');
                                 this.handleSelectText(item);
                             }}>
-                                <div className="text-picker__icon-container">
+                                <div className="icon-container">
                                     <span style={`color: ${item.color}`}>A</span>
                                 </div>
-                                <span className="text-picker__text">{item.label}</span>
+                                <span className="text">{item.label}</span>
                             </div>
                         ))}
                     </div>
                 </div>
-                <div className="background-picker">
-                    <span className="background-picker__label">Фон</span>
-                    <div className="background-picker__items">
+                <div className="background-color-picker-container">
+                    <span className="label">Фон</span>
+                    <div className="items">
                         {data.bg.map(item => (
-                            <div className="background-picker__item" onmousedown={() => this.handleSelectBackground(item)}>
-                                <div className="background-picker__icon-container" style={`background: ${item.color}`}>
+                            <div className="item" onmousedown={() => this.handleSelectBackground(item)}>
+                                <div className="icon-container" style={`background: ${item.color}`}>
                                     <span>A</span>
                                 </div>
-                                <span className="background-picker__text">{item.label}</span>
+                                <span className="text">{item.label}</span>
                             </div>
                         ))}
                     </div>

@@ -39,8 +39,8 @@ export class HomePage extends ScReact.Component<any, any> {
         return (
             <div className="home__wrapper">
                 <section className="hero">
-                    <div className="hero-body">
-                        <h1 className="hero-body__title">YouNote - современный сервис для ведения заметок</h1>
+                    <div className="hero__body">
+                        <h1 className="hero__body-title">YouNote - современный сервис для ведения заметок</h1>
                         <ShiningButton label="Попробовать" onClick={this.handleButtonClick}/>
                     </div>
                 </section>

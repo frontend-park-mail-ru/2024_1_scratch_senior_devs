@@ -1,6 +1,6 @@
 @import "/public/src/utils/variables.sass"
 
-.auth-page
+.auth-page-wrapper
 	width: 100%
 	height: 100vh
 	display: flex
@@ -12,7 +12,7 @@
 	@media screen and (max-width: $md)
 		padding: 0
 
-	.auth-page__glassmorphism
+	.glassmorphism-container
 		flex: 1
 		width: 100%
 		max-width: 768px
@@ -51,7 +51,7 @@
 				bottom: -75px
 				right: -75px
 
-		.auth-page__container
+		.auth-container
 			background: rgba(64, 64, 64, 0.15)
 			border: 2px solid rgba(255, 255, 255, 0.3)
 			backdrop-filter: blur(25px)
@@ -73,7 +73,7 @@
 				to
 					opacity: 1
 
-			.auth-page-container__form-container
+			.form-container
 				position: absolute
 				top: 0
 				width: 100%
@@ -117,7 +117,7 @@
 						padding: 12px 18px
 						margin-top: 10px
 
-				&.auth-page-container__form-container-sign-in
+				&.sign-in
 					left: 0
 					width: 50%
 					opacity: 1
@@ -127,7 +127,7 @@
 						width: 100%
 						padding: 0 20px
 
-				&.auth-page-container__form-container-sign-up
+				&.sign-up
 					left: 0
 					width: 50%
 					opacity: 0
@@ -159,7 +159,7 @@
 								opacity: 1
 								z-index: 5
 
-			.auth-page__toggle-container
+			.toggle-container
 				position: absolute
 				top: 0
 				left: 50%
@@ -173,7 +173,7 @@
 				@media screen and (max-width: $md)
 					display: none
 
-				.auth-page__toggle
+				.toggle
 					background: $primary-color
 					color: $white
 					position: relative
@@ -183,7 +183,7 @@
 					transform: translateX(0)
 					transition: all 0.6s ease-in-out
 
-					.auth-page__toggle-panel
+					.toggle-panel
 						position: absolute
 						width: 50%
 						height: 100%
@@ -196,21 +196,21 @@
 						transform: translateX(0)
 						transition: all 0.6s ease-in-out
 
-					.auth-page__toggle-panel-toggle-left
+					.toggle-left
 						transform: translateX(-100%)
 
-					.auth-page__toggle-panel-toggle-right
+					.toggle-right
 						right: 0
 						transform: translateX(0)
 
 	&.active
 		.auth-container
 			.form-container
-				&.auth-page-container__form-container-sign-in
+				&.sign-in
 					transform: translateX(40%)
 					opacity: 0
 
-				&.auth-page-container__form-container-sign-up
+				&.sign-up
 					transform: translateX(100%)
 					opacity: 1
 					z-index: 5
@@ -218,15 +218,15 @@
 					@media screen and (max-width: $md)
 						transform: translateX(0%)
 
-			.auth-page__toggle-container
+			.toggle-container
 				transform: translateX(-100%)
 				border-radius: 0 150px 100px 0
 
-				.auth-page__toggle
+				.toggle
 					transform: translateX(50%)
 
-					.auth-page__toggle-panel-toggle-left
+					.toggle-left
 						transform: translateX(0)
 
-					.auth-page__toggle-panel-toggle-right
+					.toggle-right
 						transform: translateX(100%)

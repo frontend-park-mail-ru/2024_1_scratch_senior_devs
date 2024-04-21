@@ -5,7 +5,7 @@ export class Loader extends ScReact.Component<any, any> {
     render() {
         return (
             <div className={'loader ' + (this.props.active ? 'active' : '')}>
-                <div className="loader__circle">
+                <div className="circle">
 
                 </div>
             </div>

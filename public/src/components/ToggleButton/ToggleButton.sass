@@ -1,6 +1,6 @@
 @import "/public/src/utils/variables.sass"
 
-.toggle
+.toggle-button-container
 	display: flex
 	align-items: center
 	justify-content: center
@@ -9,7 +9,7 @@
 	$sw-height: 30px
 	$sw-width: 51px
 
-	.toggle__label
+	.toggle-label
 		text-align: center
 		display: flex
 		flex: 0
@@ -21,7 +21,7 @@
 		&:hover
 			color: $primary-color--darker
 
-	.toggle__btn
+	.toggle
 		user-select: none
 		transition: .2s ease
 		display: inline-block
@@ -58,7 +58,7 @@
 			box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1), 0 4px 0 0 hsla(0,0%,0%,.04), 0 4px 9px hsla(0,0%,0%,.13), 0 3px 3px hsla(0,0%,0%,.05)
 			transition: 0.35s cubic-bezier(.54,1.60,.5,1)
 
-		&.toggle__btn-active
+		&.active
 			&:before
 				width: $sw-width
 				background: $primary-color

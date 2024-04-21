@@ -4,18 +4,18 @@ import './AvatarUploadLoader.sass';
 export class AvatarUploadLoader extends ScReact.Component<any, any> {
     render() {
         return (
-            <div className={'progress-bar ' + (this.props.active ? 'active' : '')}>
-                <div className="progress-bar__inner"></div>
-                <div className="progress-bar__checkmark">
+            <div className={'progress-wrapper ' + (this.props.active ? 'active' : '')}>
+                <div className="inner"></div>
+                <div className="checkmark">
                     <span></span>
                     <span></span>
                 </div>
-                <div className="progress-bar__circle">
-                    <div className="progress-bar__container progress-bar__container-left">
-                        <div className="progress-bar__progress"></div>
+                <div className="circle">
+                    <div className="bar left">
+                        <div className="progress"></div>
                     </div>
-                    <div className="progress-bar__container progress-bar__container-right">
-                        <div className="progress-bar__progress"></div>
+                    <div className="bar right">
+                        <div className="progress"></div>
                     </div>
                 </div>
             </div>
