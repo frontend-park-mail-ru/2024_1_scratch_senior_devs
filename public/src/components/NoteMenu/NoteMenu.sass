@@ -20,13 +20,12 @@ $hover-color: rgba(0,0,0,0.2)
 			opacity: 1
 
 	.dots-wrapper
-		border-radius: calc($dots-button-size / 12)
+		border-radius: 8px
 		cursor: pointer
-		height: $dots-button-size
+		padding: 20px
 		overflow: hidden
 		position: relative
 		transition: all .2s ease-in
-		width: $dots-button-size
 
 		&:hover
 			background: $hover-color
@@ -38,7 +37,7 @@ $hover-color: rgba(0,0,0,0.2)
 			left: 50%
 			position: absolute
 			top: 50%
-			transform: translateX((calc(-1 * $dot-size / 2))) translateY(calc(-1* $dot-size / 2))
+			transform: translateX((calc(-1 * $dot-size / 2))) translateY(calc(-1 * $dot-size / 2))
 			width: $dot-size
 
 			&:before, &:after
@@ -86,6 +85,7 @@ $hover-color: rgba(0,0,0,0.2)
 			cursor: pointer
 			width: 100%
 			justify-content: center
+			transition: 0.15s ease-in
 
 			&:hover
 				background: $note-menu-background--darker
