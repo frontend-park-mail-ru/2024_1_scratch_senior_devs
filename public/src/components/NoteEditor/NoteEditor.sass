@@ -1,4 +1,5 @@
 @import "/public/src/utils/variables.sass"
+@import "/public/src/utils/animations.sass"
 
 .note-editor-wrapper
 	border-radius: 15px
@@ -31,13 +32,6 @@
 	&.active
 		display: flex
 		animation: fadeIn 1s
-
-		@keyframes fadeIn
-			from
-				opacity: 0
-
-			to
-				opacity: 1
 
 		@media screen and (max-width: $lg)
 			animation: none
@@ -75,6 +69,7 @@
 
 		.right-container
 			display: flex
+			align-items: center
 			gap: 12px
 
 			.note-save-indicator
@@ -82,13 +77,19 @@
 					color: $text-main-color--darker
 					transition: 0.3s
 
+			.close-editor-btn-container
+				padding: 5px
+				border-radius: 4px
+				cursor: pointer
+
+				&:hover
+					background: rgba(0,0,0,0.15)
+
 			.icon
 				width: 24px
 				height: 24px
-				cursor: pointer
 				transition: 0.3s
 				filter: invert(80%)
-				opacity: 0.8
 
 				&:hover
 					opacity: 1

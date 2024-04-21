@@ -114,6 +114,8 @@ export class Block extends Component<BlockProps, BlockState> {
                 blockId: this.props.blockId,
                 imageId: AppNoteStore.state.note.blocks[this.props.blockId].attributes['id']
             });
+        } else if (AppNoteStore.state.note.blocks[this.props.blockId].attributes && "youtube" in AppNoteStore.state.note.blocks[this.props.blockId].attributes) {
+            this.self.classList.add("hidden")
         }
     }
 
@@ -168,7 +170,7 @@ export class Block extends Component<BlockProps, BlockState> {
                             ref: (elem: HTMLElement) => {
                                 this.self = elem;
                             },
-                            className: 'editablediv',
+                            className: 'editablediv' ,
                             style: 'display: inline;',
                             oninput: (e: InputEvent) => {
                                 e.preventDefault();

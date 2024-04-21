@@ -8,12 +8,15 @@ import {Editor} from '../Editor/Editor';
 import {AppNoteStore} from '../../modules/stores/NoteStore';
 import {Modal} from '../Modal/Modal';
 import {DeleteNoteDialog} from '../DeleteNoteDialog/DeleteNoteDialog';
+import NoteMenu from "../NoteMenu/NoteMenu";
+import {InviteUserModal} from "../InviteUserModal/InviteUserModal";
 
 export class NoteEditor extends ScReact.Component<any, any> {
     state = {
         selectedNote: undefined,
         content: undefined,
-        deleteNoteModalOpen: false
+        deleteNoteModalOpen: false,
+        inviteUserModalOpen: false
     };
 
     private savingLabelRef;
@@ -68,10 +71,17 @@ export class NoteEditor extends ScReact.Component<any, any> {
         }
     };
 
-    deleteNote = () => {
+    openDeleteNoteModal = () => {
         this.setState(state => ({
             ...state,
             deleteNoteModalOpen: true
+        }))
+    };
+
+    openInviteUserModal = () => {
+        this.setState(state => ({
+            ...state,
+            inviteUserModalOpen: true
         }))
     };
 
@@ -82,6 +92,13 @@ export class NoteEditor extends ScReact.Component<any, any> {
         }))
     }
 
+    closeInviteUserModal = () => {
+        this.setState(state => ({
+            ...state,
+            inviteUserModalOpen: false
+        }))
+    }
+
     render() {
         return (
             <div className={'note-editor-wrapper ' + (this.props.open ? 'active' : '')}>
@@ -89,6 +106,8 @@ export class NoteEditor extends ScReact.Component<any, any> {
                 <SwipeArea enable={this.props.open} right={this.closeEditor} target=".note-editor-wrapper"/>
 
                 <Modal open={this.state.deleteNoteModalOpen} handleClose={this.closeDeleteModalDialog} content={<DeleteNoteDialog handleClose={this.closeDeleteModalDialog} />} />
+
+                <Modal open={this.state.inviteUserModalOpen} handleClose={this.closeInviteUserModal} content={<InviteUserModal handleClose={this.closeInviteUserModal} open={this.state.inviteUserModalOpen} />} />
 
                 <div className="top-panel">
                     <div className="left-container">
@@ -101,8 +120,10 @@ export class NoteEditor extends ScReact.Component<any, any> {
                         <div className="note-save-indicator">
                             <span ref={ref => this.savingLabelRef = ref}></span>
                         </div>
-                        <Img src="trash.svg" className="icon delete-note-icon" onClick={this.deleteNote}/>
-                        <Img src="close.svg" className="icon close-editor-icon" onClick={this.closeEditor}/>
+                        <NoteMenu deleteNote={this.openDeleteNoteModal} inviteUser={this.openInviteUserModal}/>
+                        <div className="close-editor-btn-container" onclick={this.closeEditor}>
+                            <Img src="close.svg" className="icon close-editor-icon" />
+                        </div>
                     </div>
                 </div>
 

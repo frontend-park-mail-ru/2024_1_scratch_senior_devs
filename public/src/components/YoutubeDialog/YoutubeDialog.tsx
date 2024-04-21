@@ -38,6 +38,7 @@ export class YoutubeDialogForm extends ScReact.Component<any, any> {
     };
 
     handleChange = (value:string) => {
+
         this.setValue(value);
 
         if (parseYoutubeLink(value)) {
