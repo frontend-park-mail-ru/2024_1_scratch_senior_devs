@@ -47,11 +47,15 @@ export const setCursorInBlock = (elem: HTMLElement, blockId: number) => {
 };
 
 export const getCursorInBlock = (elem: HTMLElement): number => {
-    const selection = window.getSelection();
-    const range = selection.getRangeAt(0);
-    const clonedRange = range.cloneRange();
-    clonedRange.selectNodeContents(elem);
-    clonedRange.setEnd(range.endContainer, range.endOffset);
+    try {
+        const selection = window.getSelection();
+        const range = selection.getRangeAt(0);
+        const clonedRange = range.cloneRange();
+        clonedRange.selectNodeContents(elem);
+        clonedRange.setEnd(range.endContainer, range.endOffset);
 
-    return  clonedRange.toString().length;
+        return  clonedRange.toString().length;
+    } catch {
+        return 0
+    }
 };
