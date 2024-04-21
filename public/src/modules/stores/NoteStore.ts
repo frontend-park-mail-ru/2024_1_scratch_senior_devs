@@ -4,7 +4,7 @@ import {AppDispatcher} from '../dispatcher';
 import {BlockNode} from '../../components/Block/Block';
 import {create_UUID} from '../../utils/uuid';
 import {PieceNode} from '../../components/Piece/Piece';
-import {AppNotesStore} from './NotesStore';
+import * as buffer from 'buffer';
 
 export const NoteStoreActions = {
     CHANGE_PIECE: 'CHANGE_PIECE',
@@ -20,8 +20,10 @@ export const NoteStoreActions = {
     CHANGE_BLOCK_TYPE: 'CHANGE_BLOCK_TYPE',
     CHANGE_TITLE: 'CHANGE_TITLE',
     CHANGE_PIECE_ATTRIBUTES: 'CHANGE_PIECE_ATTRIBUTES',
-    CLOSE_YOUTUBE_DIALOG: "CLOSE_YOUTUBE_DIALOG",
-    OPEN_YOUTUBE_DIALOG: "OPEN_YOUTUBE_DIALOG"
+    CLOSE_YOUTUBE_DIALOG: 'CLOSE_YOUTUBE_DIALOG',
+    OPEN_YOUTUBE_DIALOG: 'OPEN_YOUTUBE_DIALOG',
+    TOGGLE_CHECKBOX: "TOGGLE_CHECKBOX",
+    REMOVE_CURSOR: "REMOVE_CURSOR"
 };
 
 export type NoteStoreState = {
@@ -48,7 +50,6 @@ class NoteStore extends BaseStore<NoteStoreState> {
             title: '',
             blocks: Array<BlockNode>()
         },
-        youtubeDialogOpen: false,
         cursorPosition: null,
         dropdownPos: {
             left: 0,
@@ -107,12 +108,11 @@ class NoteStore extends BaseStore<NoteStoreState> {
                 case NoteStoreActions.CHANGE_PIECE_ATTRIBUTES:
                     this.changePieceAttributes(action.payload.blockId, action.payload.anchorId, action.payload.focusId, action.payload.anchorPos, action.payload.focusPos, action.payload.attribute, action.payload.value);
                     break;
-                case NoteStoreActions.CLOSE_YOUTUBE_DIALOG:
-                    this.closeYoutubeDialog();
+                case NoteStoreActions.TOGGLE_CHECKBOX:
+                    this.toggleCheckbox(action.payload);
                     break;
-                case NoteStoreActions.OPEN_YOUTUBE_DIALOG:
-                    this.openYoutubeDialog()
-                    break
+                case NoteStoreActions.REMOVE_CURSOR:
+                    this.removeCursor();
             }
         });
     };
@@ -120,8 +120,17 @@ class NoteStore extends BaseStore<NoteStoreState> {
     private timerId: NodeJS.Timeout = setTimeout(() => {
     });
 
-    private saveNote = () => {
+    private saveNote = (immediately=false) => {
         clearTimeout(this.timerId);
+
+        if (immediately) {
+            this.severs.forEach((saver) => {
+                saver();
+            });
+
+            return
+        }
+
         this.timerId = setTimeout(() => {
             this.severs.forEach((saver) => {
                 saver();
@@ -261,26 +270,31 @@ class NoteStore extends BaseStore<NoteStoreState> {
         this.saveNote();
     };
 
-    private openDropdown = (blockPos: DOMRect, blockId: number) => {
-        if (blockPos.y > 250) {
-            this.SetState(s => {
-                return {...s, dropdownPos: {left: blockPos.x, top: blockPos.y - 240, isOpen: true, blockId: blockId}};
-            });
-        } else {
-            this.SetState(s => {
-                return {...s, dropdownPos: {left: blockPos.x, top: blockPos.y + 31, isOpen: true, blockId: blockId}};
-            });
-        }
+    private openDropdown = (blockTopOffset: number, blockId: number) => {
+        // if (blockTopOffset > 250) {
+        //     console.log(blockTopOffset )
+        //     this.SetState(s => {
+        //         return {...s, dropdownPos: {left: 30, top: blockTopOffset - 120, isOpen: true, blockId: blockId}};
+        //     });
+        // } else {
+        //     this.SetState(s => {
+        //         return {...s, dropdownPos: {left: 30, top: blockTopOffset + 51, isOpen: true, blockId: blockId}};
+        //     });
+        // }
+
+        this.SetState(s => {
+            return {...s, dropdownPos: {left: 30, top: blockTopOffset, isOpen: true, blockId: blockId}};
+        });
     };
+
+    private removeCursor = () => {
+        this.SetState(s => {
+            return {...s, cursorPosition: null}
+        })
+    }
 
     private closeDropdown = () => {
         console.log('closeDropdown');
-        // this.SetState(state => {
-        //     return {
-        //         ...state,
-        //         dropdownPos: {...state.dropdownPos, isOpen: false}
-        //     }
-        // })
         this.state.dropdownPos.isOpen = false;
     };
 
@@ -299,6 +313,9 @@ class NoteStore extends BaseStore<NoteStoreState> {
 
     private changeTitle = (title: string) => {
         this.closeDropdown();
+
+        console.log("NoteStore.changeTitle")
+        console.log(title)
 
         this.state.note.title = title;
         this.saveNote();
@@ -477,19 +494,15 @@ class NoteStore extends BaseStore<NoteStoreState> {
         }
     };
 
-    private closeYoutubeDialog = () => {
-        this.SetState(state => ({
-            ...state,
-            youtubeDialogOpen: false
-        }));
-    };
+    private toggleCheckbox = (blockId:number) => {
+        this.SetState(s => {
+            const oldNote = this.state.note;
+            oldNote.blocks[blockId].attributes["checked"] = !oldNote.blocks[blockId].attributes["checked"]
+            return {...s, note: oldNote};
+        });
 
-    private openYoutubeDialog = () => {
-        this.SetState(state => ({
-            ...state,
-            youtubeDialogOpen: true
-        }));
-    };
+        this.saveNote(true);
+    }
 }
 
 

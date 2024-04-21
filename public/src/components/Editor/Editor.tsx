@@ -1,7 +1,7 @@
 import {Component} from '@veglem/screact/dist/component';
 import {VDomNode} from '@veglem/screact/dist/vdom';
 import {Block, BlockNode} from '../Block/Block';
-import {AppNoteStore, NoteStoreActions} from '../../modules/stores/NoteStore';
+import {AppNoteStore, NoteStoreActions, NoteStoreState} from '../../modules/stores/NoteStore';
 import {getBlockHash} from '../../utils/hash';
 import {AppDispatcher} from '../../modules/dispatcher';
 import './Editor.sass';
@@ -57,10 +57,16 @@ export class Editor extends Component<any, EditorState> {
                         const piece = document.querySelector(`#piece-${matchesFocus[1]}-${matchesFocus[2]}`) as HTMLElement;
                         const piece2 = document.querySelector(`#piece-${matchesAnchor[1]}-${matchesAnchor[2]}`) as HTMLElement;
 
+                        if (!piece || !piece2 ) {
+                            return
+                        }
+
                         this.openTippy();
                         const tippy = document.querySelector('#tippy') as HTMLElement;
-                        tippy.style.top = (piece.getBoundingClientRect().y - tippy.getBoundingClientRect().height - 2).toString() + 'px';
-                        tippy.style.left = (Math.min(piece.getBoundingClientRect().x, piece2.getBoundingClientRect().x) - 30).toString() + 'px';
+                        tippy.style.top = (piece.parentElement.parentElement.parentElement.offsetTop - 35).toString()  + 'px';
+
+                        // TODO: привязывать всплывашку к зофокошинному тексту а не к блоку
+                        tippy.style.left = '15px';
 
                         this.optionsSetter(
                             Number(matchesFocus[1]),
@@ -86,10 +92,21 @@ export class Editor extends Component<any, EditorState> {
         };
     }
 
-    updateState = (store) => {
+    updateState = (store:NoteStoreState) => {
+        console.log("Editor.UpdateState")
+        if (AppNoteStore.state.note.title.length > 0) {
+            this.noteTitleRef.dataset.placeholder = '';
+        }
+
+        console.log(store.note)
+        if (store.note?.title.length == 0) {
+            this.noteTitleRef.dataset.placeholder = "Введите название"
+        }
+
+        this.noteTitleRef.innerHTML = store.note?.title
+
         this.setState(state => ({
             ...state,
-            youtubeDialogOpen: store.youtubeDialogOpen,
             dropdownOpen: store.dropdownPos.isOpen,
             blocks: store.note.blocks.length
         }));
@@ -98,6 +115,7 @@ export class Editor extends Component<any, EditorState> {
     closeEditor = () => {
         console.log('closeEditor');
         AppDispatcher.dispatch(NoteStoreActions.CLOSE_DROPDOWN);
+        this.noteTitleRef.dataset.placeholder = ""
 
         this.setState(state => ({
             ...state,
@@ -106,11 +124,17 @@ export class Editor extends Component<any, EditorState> {
     };
 
     openYoutubeDialog = () => {
-        AppDispatcher.dispatch(NoteStoreActions.OPEN_YOUTUBE_DIALOG)
+        this.setState(state => ({
+            ...state,
+            youtubeDialogOpen: true
+        }));
     };
 
     closeYoutubeDialog = () => {
-        AppDispatcher.dispatch(NoteStoreActions.CLOSE_YOUTUBE_DIALOG)
+        this.setState(state => ({
+            ...state,
+            youtubeDialogOpen: false
+        }));
     };
 
     openTippy = () => {
@@ -154,6 +178,7 @@ export class Editor extends Component<any, EditorState> {
                     blockHash={getBlockHash(AppNoteStore.state.note.blocks[i])}
                     isChosen={AppNoteStore.state.cursorPosition != null && AppNoteStore.state.cursorPosition.blockId == i}
                     onChange={this.props.onChangeContent}
+                    offsetTop={this.editorRef?.scrollTop}
                 />
             );
         }
@@ -177,32 +202,45 @@ export class Editor extends Component<any, EditorState> {
         return result;
     };
 
+    onChangeTitle = (e) => {
+        console.log('oninput');
+        console.log(e.target.textContent.length);
+
+        if (e.target.textContent.length == 0) {
+            this.noteTitleRef.dataset.placeholder = 'Введите название';
+        } else {
+            this.noteTitleRef.dataset.placeholder = '';
+        }
+
+        this.props.onChangeTitle(e.target.textContent);
+
+        AppDispatcher.dispatch(NoteStoreActions.CHANGE_TITLE, {
+            title: e.target.textContent
+        });
+    }
+
+    private noteTitleRef
+    private editorRef
+
     render(): VDomNode {
         console.log(`left: ${AppNoteStore.state.dropdownPos.left}; top: ${AppNoteStore.state.dropdownPos.top};`);
         return (
-            <div className="note-editor">
-                <div className="note-editor__title">
-                    <h3
-                        contentEditable={true}
-                        oninput={(e)=>{
-                            this.props.onChangeTitle(e.target.textContent);
-
-                            AppDispatcher.dispatch(NoteStoreActions.CHANGE_TITLE, {
-                                title: e.target.textContent
-                            });
-                        }}
-                    >{AppNoteStore.state.note.title}</h3>
-                </div>
+            <div className="note-editor" ref={ref => this.editorRef = ref}>
                 <div className="note-editor__body">
+                    <div className="note-title" contentEditable={true} oninput={this.onChangeTitle} ref={ref => this.noteTitleRef = ref}></div>
                     {this.renderBlocks()}
                 </div>
-                <Modal open={this.state.youtubeDialogOpen} content={<YoutubeDialogForm />} handleClose={this.closeYoutubeDialog} />
+
+                <Modal open={this.state.youtubeDialogOpen}
+                       content={<YoutubeDialogForm handleClose={this.closeYoutubeDialog}/>} handleClose={this.closeYoutubeDialog}/>
+
                 <Dropdown blockId={AppNoteStore.state.dropdownPos.blockId}
                           style={`left: ${AppNoteStore.state.dropdownPos.left}px; top: ${AppNoteStore.state.dropdownPos.top}px;`}
                           onClose={this.closeEditor}
                           open={this.state.dropdownOpen}
                           openYoutubeDialog={this.openYoutubeDialog}
                 />
+
                 <Tippy open={this.state.tippyOpen}
                        onClose={this.closeTippy}
                        optionsSetter={(func) => {

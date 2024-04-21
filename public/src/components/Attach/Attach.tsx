@@ -3,6 +3,7 @@ import {Img} from '../Image/Image';
 import './Attach.sass';
 import {AppDispatcher} from '../../modules/dispatcher';
 import {NotesActions} from '../../modules/stores/NotesStore';
+import {truncate} from '../../modules/utils';
 
 export class Attach extends ScReact.Component<any, any> {
     private closeBtnRef;
@@ -23,18 +24,18 @@ export class Attach extends ScReact.Component<any, any> {
 
     render() {
         return (
-            <div className="attach">
-                <div className="attach__body" onmousedown={this.downloadAttach}>
-                    <div className="attach__file-extension-label">
-                        {this.props.fileName.split('.')[1]}
+            <div className="attach-wrapper">
+                <div className="attach-container" onmousedown={this.downloadAttach}>
+                    <div className="file-extension-label">
+                        {this.props.fileName.split('.').at(-1)}
                     </div>
-                    <span className="attach__file-name">
-                    {this.props.fileName}
+                    <span className="file-name">
+                    {truncate(this.props.fileName, 18)}
                 </span>
-                <span className="attach__close-btn-container">
+                <span className="close-attach-btn-container">
                     <Img
                         src="close.svg"
-                        className="attach__close-btn"
+                        className="close-attach-btn"
                         ref={ref => this.closeBtnRef = ref}
                         onClick={(e) => {
                             e.preventDefault();

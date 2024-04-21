@@ -21,7 +21,6 @@ export type NotesStoreState = {
     query: string,
     offset: number,
     count: number,
-    modalOpen: boolean,
     fetching: boolean
 }
 
@@ -33,7 +32,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
         query: '',
         offset: 0,
         count: 10,
-        modalOpen: false,
         fetching: false,
         noteNotFound: false
     };
@@ -64,12 +62,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 case NotesActions.EXIT:
                     this.exit();
                     break;
-                case NotesActions.OPEN_DELETE_NOTE_DIALOG:
-                    this.openModal();
-                    break;
-                case NotesActions.CLOSE_DELETE_NOTE_DIALOG:
-                    this.closeModal();
-                    break;
                 case NotesActions.DELETE_NOTE:
                     await this.deleteNote();
                     break;
@@ -98,20 +90,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
         });
     }
 
-    openModal () {
-        this.SetState(state => ({
-            ...state,
-            modalOpen: true
-        }));
-    }
-
-    closeModal () {
-        this.SetState(state => ({
-            ...state,
-            modalOpen: false
-        }));
-    }
-
     exit () {
         this.SetState(state => ({
             ...state,
@@ -135,25 +113,26 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             this.selectNote(note);
         } catch {
-            AppToasts.error("Что-то пошло не так");
+            AppToasts.error('Что-то пошло не так');
         }
     }
 
     selectNote (note:Note) {
+        console.log("selectNote")
+        console.log(note)
+
         this.SetState(state => ({
             ...state,
             selectedNote: note
         }));
-
-        history.replaceState(null, null, '/notes/' + note.id);
     }
 
     async init () {
-        await this.fetchNotes();
+        await this.fetchNotes(true);
         return this.state;
     }
 
-    async searchNotes (query) {
+    async searchNotes (query:string) {
         console.log('searchNotes');
         this.SetState(state => ({
             ...state,
@@ -195,7 +174,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             console.log(notes);
         } catch {
-            AppToasts.error("Что-то пошло не так");
+            AppToasts.error('Что-то пошло не так');
         }
     }
 
@@ -212,10 +191,12 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             this.closeNote();
 
+            history.pushState(null, null, '/notes');
+
             AppToasts.info('Заметка успешно удалена');
 
         } catch {
-            AppToasts.error("Что-то пошло не так");
+            AppToasts.error('Что-то пошло не так');
         }
     }
 
@@ -226,7 +207,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
         } catch {
-            AppToasts.error("Что-то пошло не так");
+            AppToasts.error('Что-то пошло не так');
         }
     }
 
@@ -255,8 +236,11 @@ class NotesStore extends BaseStore<NotesStoreState> {
             document.getElementById(String(response.body.id)).scrollIntoView();
 
             this.selectNote(response.body);
+
+            history.pushState(null, null, "/notes/" + response.body.id)
+
         } catch {
-            AppToasts.error("Что-то пошло не так");
+            AppToasts.error('Что-то пошло не так');
         }
     }
 
@@ -295,7 +279,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 });
             }
         } catch {
-            AppToasts.error("Что-то пошло не так");
+            AppToasts.error('Что-то пошло не так');
         }
     }
 
@@ -349,7 +333,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 });
             }
         } catch {
-            AppToasts.error("Что-то пошло не так");
+            AppToasts.error('Что-то пошло не так');
         }
     }
 

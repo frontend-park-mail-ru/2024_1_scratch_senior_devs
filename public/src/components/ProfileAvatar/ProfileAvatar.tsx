@@ -7,9 +7,7 @@ import {AppUserStore, UserActions, UserStoreState} from '../../modules/stores/Us
 import './ProfileAvatar.sass';
 import {AvatarUploadLoader} from '../AvatarUplodaLoader/AvatarUploadLoader';
 import {crop} from '../../modules/utils';
-
-const MEGABYTE_SIZE = 1024 * 1024;
-const MAX_AVATAR_SIZE = 5 * MEGABYTE_SIZE;
+import {MAX_AVATAR_SIZE} from '../../utils/consts';
 
 type ProfileAvatarState = {
     uploadAnimation: boolean,

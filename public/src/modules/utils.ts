@@ -110,11 +110,19 @@ export const crop = (url:string, aspectRatio=1):Promise<HTMLCanvasElement> => {
  * Возвращает null в случае, если ссылка некорректна
  */
 export const parseYoutubeLink = (url:string) => {
-    const check = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/
-    const match = check.exec(url)
+    const check = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/;
+    const match = check.exec(url);
     if (match != null && match.length > 0) {
-        return match[1]
+        return match[1];
     }
 
-    return null
+    return null;
+};
+
+
+/**
+ * Скроллит вверх к началу страницы
+ */
+export const scrollToTop = () => {
+    document.body.scrollTop = document.documentElement.scrollTop = 0
 }

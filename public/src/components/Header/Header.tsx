@@ -1,5 +1,5 @@
 import {ScReact} from '@veglem/screact';
-import './header.sass';
+import './Header.sass';
 import {Button} from '../Button/Button';
 import {AppRouter} from '../../modules/router';
 import {Logo} from '../Logo/logo';

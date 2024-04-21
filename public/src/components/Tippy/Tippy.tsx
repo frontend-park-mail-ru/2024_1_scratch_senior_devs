@@ -141,26 +141,26 @@ export class Tippy extends ScReact.Component<any, any> {
         this.props.optionsSetter(this.setOptions);
 
         return (
-            <div className={'tippy ' + (this.props.open ? 'open' : '')} ref={(val) => this.tippyRef = val} id={'tippy'}>
+            <div className={'tippy-container ' + (this.props.open ? 'open' : '')} ref={(val) => this.tippyRef = val} id={'tippy'}>
 
-                <div className="first-container" onclick={this.toggleLinkInput}  ref={ref => {this.toggleLinkInputRef = ref;}}>
-                    <Img src="link.svg" className="first-container__link-icon" />
-                    <span className="first-container__link-label">Ссылка</span>
-                </div>
+                {/*<div className="first-container" onclick={this.toggleLinkInput}  ref={ref => {this.toggleLinkInputRef = ref;}}>*/}
+                {/*    <Img src="link.svg" className="link-icon" />*/}
+                {/*    <span className="link-label">Ссылка</span>*/}
+                {/*</div>*/}
 
-                <LinkInput open={this.state.linkInputOpen} onSubmit={this.handleEnterLink} toggleBtn={this.toggleLinkInputRef}/>
+                {/*<LinkInput open={this.state.linkInputOpen} onSubmit={this.handleEnterLink} toggleBtn={this.toggleLinkInputRef}/>*/}
 
                 <div className="second-container">
                     {data.map(item => (
-                        <div className="second-container__item" onclick={() => this.handleSelect(item)}>
+                        <div className="item" onclick={() => this.handleSelect(item)}>
                             <Img src={item.icon}/>
                         </div>
                     ))}
                 </div>
 
                 <div className={'third-container color-picker-toggle ' + (this.state.colorPickerOpen ? 'open' : '')} onclick={this.toggleColorPicker} ref={ref => {this.toggleBtnRef = ref;}}>
-                    <Img className="third-container__font-icon" src="font.svg"/>
-                    <Img className="third-container__chevron-icon" src="chevron-bottom.svg"/>
+                    <Img className="font-icon" src="font.svg"/>
+                    <Img className="chevron-icon" src="chevron-bottom.svg"/>
                 </div>
 
                 <ColorPicker

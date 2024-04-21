@@ -4,6 +4,8 @@ import {Img} from '../Image/Image';
 import {AppDispatcher} from '../../modules/dispatcher';
 import {NoteStoreActions} from '../../modules/stores/NoteStore';
 import {AppNotesStore, NotesActions} from '../../modules/stores/NotesStore';
+import {MAX_ATTACH_SIZE, MAX_AVATAR_SIZE} from '../../utils/consts';
+import {AppToasts} from '../../modules/toasts';
 
 export class Dropdown extends ScReact.Component<any, any> {
     state = {
@@ -57,22 +59,33 @@ export class Dropdown extends ScReact.Component<any, any> {
             attr = {};
             attr.ol = true;
             tag = 'div';
+        } else if (id === 'todo-list') {
+            attr = {};
+            attr.todo = true;
+            tag = 'div';
         } else if (id === 'image') {
             tag = 'img';
             const fileInput = document.createElement('input');
             fileInput.type = 'file';
-            fileInput.accept = '.jpg,.png';
+            fileInput.accept = '.jpg,.png,.jpeg';
             fileInput.hidden = true;
             this.ref.append(fileInput);
             fileInput.onchange = (e: InputEvent) => {
-                console.log('onchange');
+                console.log('onchange12344444444444444444');
                 console.log(e);
                 fileInput.remove();
-                AppDispatcher.dispatch(NotesActions.UPLOAD_IMAGE, {
-                    file: (e.target as HTMLInputElement).files[0],
-                    noteId: AppNotesStore.state.selectedNote.id,
-                    blockId: this.props.blockId
-                });
+
+                const file = (e.target as HTMLInputElement).files[0]
+                if (file.size < MAX_ATTACH_SIZE) {
+                    AppDispatcher.dispatch(NotesActions.UPLOAD_IMAGE, {
+                        file: file,
+                        noteId: AppNotesStore.state.selectedNote.id,
+                        blockId: this.props.blockId
+                    });
+                    AppDispatcher.dispatch(NoteStoreActions.REMOVE_CURSOR, {});
+                } else {
+                    AppToasts.error('Фото слишком большое');
+                }
             };
             fileInput.click();
             attr = {};
@@ -83,18 +96,25 @@ export class Dropdown extends ScReact.Component<any, any> {
             const fileInput = document.createElement('input');
             fileInput.type = 'file';
             fileInput.hidden = true;
-            // fileInput.accept = ".jpg,.png"
+            fileInput.accept = ".mp4,.mp3,.wav,.gif,.jpeg,.webp,.jpg,.png,.mp4, .pdf"
             this.ref.append(fileInput);
             fileInput.onchange = (e) => {
                 console.log('onchange');
                 console.log(e);
                 fileInput.remove();
-                AppDispatcher.dispatch(NotesActions.UPLOAD_FILE, {
-                    file: (e.target as HTMLInputElement).files[0],
-                    noteId: AppNotesStore.state.selectedNote.id,
-                    blockId: this.props.blockId,
-                    fileName: (e.target as HTMLInputElement).files[0].name
-                });
+
+                const file = (e.target as HTMLInputElement).files[0]
+                if (file.size < MAX_ATTACH_SIZE) {
+                    AppDispatcher.dispatch(NotesActions.UPLOAD_FILE, {
+                        file: file,
+                        noteId: AppNotesStore.state.selectedNote.id,
+                        blockId: this.props.blockId,
+                        fileName: (e.target as HTMLInputElement).files[0].name
+                    });
+                    AppDispatcher.dispatch(NoteStoreActions.REMOVE_CURSOR, {});
+                } else {
+                    AppToasts.error('Файл слишком большой');
+                }
             };
             fileInput.click();
             attr = {};
@@ -167,12 +187,12 @@ export class Dropdown extends ScReact.Component<any, any> {
             //     title: "Текст",
             //     desc: "Просто текст"
             // },
-            // {
-            //     id: "todo",
-            //     icon: "todo.svg",
-            //     title: "To-do список",
-            //     desc: "Отслеживайте ваши задачи"
-            // },
+            {
+                id: "todo-list",
+                icon: "todo.svg",
+                title: "To-do список",
+                desc: "Отслеживайте ваши задачи"
+            },
             {
                 id: 'bullet-list',
                 icon: 'bullet-list.svg',
