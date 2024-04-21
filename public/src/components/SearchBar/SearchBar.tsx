@@ -18,9 +18,9 @@ export class SearchBar extends ScReact.Component<any, any> {
 
     render() {
         return (
-            <div className="search-bar">
-                <input type="text" className="search-bar__input" placeholder="Поиск..." oninput={this.handleChange} />
-                <img src="/src/assets/search.svg" alt="" className="search-bar__icon"/>
+            <div className="search">
+                <input type="text" className="search-input" placeholder="Поиск..." oninput={this.handleChange} />
+                <img src="/src/assets/search.svg" alt="" className="search-icon"/>
             </div>
         );
     }

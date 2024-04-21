@@ -84,7 +84,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
     render() {
         return (
-            <div className={'note-editor ' + (this.props.open ? 'active' : '')}>
+            <div className={'note-editor-wrapper ' + (this.props.open ? 'active' : '')}>
 
                 <SwipeArea enable={this.props.open} right={this.closeEditor} target=".note-editor-wrapper"/>
 
@@ -92,17 +92,17 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
                 <div className="top-panel">
                     <div className="left-container">
-                        <div className="close-editor" onclick={this.closeEditor}>
-                            <Img src="left-chevron.svg" className="close-editor__icon"/>
-                            <span className="close-editor_label">Заметки</span>
+                        <div className="close-editor-label-container" onclick={this.closeEditor}>
+                            <Img src="left-chevron.svg" className="back-icon"/>
+                            <span className="back-label">Заметки</span>
                         </div>
                     </div>
                     <div className="right-container">
                         <div className="note-save-indicator">
                             <span ref={ref => this.savingLabelRef = ref}></span>
                         </div>
-                        <Img src="trash.svg" className="right-container__icon right-container__icon-delete" onClick={this.deleteNote}/>
-                        <Img src="close.svg" className="right-container__icon right-container__icon-close" onClick={this.closeEditor}/>
+                        <Img src="trash.svg" className="icon delete-note-icon" onClick={this.deleteNote}/>
+                        <Img src="close.svg" className="icon close-editor-icon" onClick={this.closeEditor}/>
                     </div>
                 </div>
 

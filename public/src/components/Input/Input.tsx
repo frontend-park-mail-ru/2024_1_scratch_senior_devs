@@ -54,13 +54,13 @@ export class Input extends ScReact.Component<InputProps, InputState>{
 
                 <div className={'input-container ' + (this.props.validationResult ? 'success' : '') + (this.props.error  ? 'error' : '') + (this.state.hasIcon  ? ' has-icon' : '')}>
                     <input type={this.state.type} placeholder=" " value={this.props.value} oninput={this.handleChange}/>
-                    <div className="input-container__label">{this.state.placeholder}</div>
-                    <div className="input-container__underline"></div>
+                    <div className="label">{this.state.placeholder}</div>
+                    <div className="underline"></div>
 
                     {this.state.isPassword ?
-                        <div className="password-toggle" onclick={this.toggleInputType}>
-                            <img className="password-toggle__btn password-toggle__btn-show-btn" src="/src/assets/eye-slash.svg" alt=""/>
-                            <img className="password-toggle__btn password-toggle__btn-hide-btn" src="/src/assets/eye.svg" alt=""/>
+                        <div className="password-toggle-btn-container" onclick={this.toggleInputType}>
+                            <img className="password-toggle-btn show-btn" src="/src/assets/eye-slash.svg" alt=""/>
+                            <img className="password-toggle-btn hide-btn" src="/src/assets/eye.svg" alt=""/>
                         </div> : ''
                     }
 

@@ -1,11 +1,12 @@
 @import "/public/src/utils/variables.sass"
 
-.attach
+.attach-wrapper
+
 	display: flex
 	justify-content: flex-start
 	width: 100%
 
-	.attach__body
+	.attach-container
 		background: $modal-background
 		padding: 8px 64px 8px 16px
 		border-radius: 16px
@@ -20,7 +21,7 @@
 		&:hover
 			opacity: 0.9
 
-		.attach__file-extension-label
+		.file-extension-label
 			background: #546189
 			color: #fff
 			border-radius: 8px
@@ -30,17 +31,17 @@
 			justify-content: center
 			align-items: center
 
-		.attach__file-name
+		.file-name
 			color: $text-main-color
 
-		.attach__close-btn-container
+		.close-attach-btn-container
 			background: #546189
 			padding: 8px
 			border-radius: 50%
 			position: absolute
 			right: 15px
 
-			.attach__close-btn
+			.close-attach-btn
 				filter: invert(80%)
 				width: 20px
 				height: 20px

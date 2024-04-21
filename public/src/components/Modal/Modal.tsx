@@ -21,11 +21,11 @@ export class Modal extends ScReact.Component<any, any> {
 
     render() {
         return (
-            <div className={'modal ' + (this.props.open ? 'active' : '')}>
-                <div className="modal__overlay" ref={ref => this.overlayRef = ref}></div>
-                <div className="modal__content">
+            <div className={'modal-wrapper ' + (this.props.open ? 'active' : '')}>
+                <div className="overlay" ref={ref => this.overlayRef = ref}></div>
+                <div className="modal-content">
                     {this.props.content}
-                    <Img src="close.svg" className="modal__close-btn" onClick={this.props.handleClose}/>
+                    <Img src="close.svg" className="close-modal-btn" onClick={this.props.handleClose}/>
                 </div>
             </div>
         );

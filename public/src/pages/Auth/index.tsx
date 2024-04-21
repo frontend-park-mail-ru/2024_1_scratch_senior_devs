@@ -42,22 +42,22 @@ export class AuthPage extends ScReact.Component<any, any> {
 
     render(): VDomNode {
         return (
-            <div className={'auth-page ' + (window.location.pathname.includes('login') ? (this.state.selectedForm === 'login' ? '' : 'active') : (this.state.toggled ? '' : 'active'))}>
-                <div className="auth-page__glassmorphism">
-                    <div className="auth-page-container">
-                        <div className="auth-page-container__form-container auth-page-container__form-container-sign-in">
+            <div className={'auth-page-wrapper ' + (window.location.pathname.includes('login') ? (this.state.selectedForm === 'login' ? '' : 'active') : (this.state.toggled ? '' : 'active'))}>
+                <div className="glassmorphism-container">
+                    <div className="auth-container">
+                        <div className="form-container sign-in">
                             <LoginForm toggleForm={this.toggleForm}/>
                         </div>
-                        <div className={'auth-page-container__form-container auth-page-container__form-container-sign-up' + (this.state.toggled ? ' fade-left' : '') + (window.location.pathname.includes('login') && this.state.toggled ? ' fade-right' : '')}>
+                        <div className={'form-container sign-up' + (this.state.toggled ? ' fade-left' : '') + (window.location.pathname.includes('login') && this.state.toggled ? ' fade-right' : '')}>
                             <RegisterForm toggleForm={this.toggleForm}/>
                         </div>
-                        <div className="auth-page__toggle-container">
-                            <div className="auth-page__toggle">
-                                <div className="auth-page__toggle-panel auth-page__toggle-panel-toggle-left">
+                        <div className="toggle-container">
+                            <div className="toggle">
+                                <div className="toggle-panel toggle-left">
                                     <h2>Уже есть аккаунт?</h2>
                                     <ShineButton label="Войти" onClick={this.toggleForm} />
                                 </div>
-                                <div className="auth-page__toggle-panel auth-page__toggle-panel-toggle-right">
+                                <div className="toggle-panel toggle-right">
                                     <h2>Ещё нет аккаунта?</h2>
                                     <ShineButton label="Зарегистрироваться" onClick={this.toggleForm} />
                                 </div>

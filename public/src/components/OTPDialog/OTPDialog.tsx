@@ -59,9 +59,9 @@ export class OTPDialog extends ScReact.Component<any, any>{
         ));
 
         return (
-            <div className={'otp-dialog ' + (this.props.open ? 'open ' : '') + (this.props.error ? ' error' : '')}>
-                <span className="otp-dialog__title">Введите OTP код</span>
-                <div className="otp-dialog__inputs">
+            <div className={'otp-dialog-container ' + (this.props.open ? 'open ' : '') + (this.props.error ? ' error' : '')}>
+                <span>Введите OTP код</span>
+                <div className="input-field">
                     {inputs}
                 </div>
             </div>
