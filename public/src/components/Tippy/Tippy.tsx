@@ -2,7 +2,6 @@ import {ScReact} from '@veglem/screact';
 import './Tippy.sass';
 import {Img} from '../Image/Image';
 import {ColorPicker} from '../ColorPicker/ColorPicker';
-import {LinkInput} from '../LinkInput/LinkInput';
 import {AppDispatcher} from '../../modules/dispatcher';
 import {NoteStoreActions} from '../../modules/stores/NoteStore';
 

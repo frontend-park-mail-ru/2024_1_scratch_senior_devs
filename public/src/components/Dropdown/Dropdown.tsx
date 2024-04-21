@@ -4,7 +4,7 @@ import {Img} from '../Image/Image';
 import {AppDispatcher} from '../../modules/dispatcher';
 import {NoteStoreActions} from '../../modules/stores/NoteStore';
 import {AppNotesStore, NotesActions} from '../../modules/stores/NotesStore';
-import {MAX_ATTACH_SIZE, MAX_AVATAR_SIZE} from '../../utils/consts';
+import {MAX_ATTACH_SIZE} from '../../utils/consts';
 import {AppToasts} from '../../modules/toasts';
 
 export class Dropdown extends ScReact.Component<any, any> {
