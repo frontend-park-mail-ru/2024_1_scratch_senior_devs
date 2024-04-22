@@ -5,7 +5,7 @@ import {ScReact} from '@veglem/screact';
 import {AppNoteStore, NoteStoreActions} from '../../modules/stores/NoteStore';
 import {AppDispatcher} from '../../modules/dispatcher';
 import {getPieceHash} from '../../utils/hash';
-import './block.sass';
+import './Block.sass';
 import {renderUlPrefix} from './utils/ul';
 import {renderOlPrefix} from './utils/ol';
 import {getCursorInBlock, setCursorInBlock} from '../../utils/cursorPos';
@@ -13,6 +13,7 @@ import {moveCursorUpAndDown} from './utils/cursorActions';
 import {Attach} from '../Attach/Attach';
 import {NotesActions} from '../../modules/stores/NotesStore';
 import {renderToDoPrefix} from './utils/todo';
+import SubNote from "../SubNote/SubNote";
 
 export interface BlockNode {
     id: string
@@ -45,11 +46,15 @@ export class Block extends Component<BlockProps, BlockState> {
         if (block.attributes != null && 'youtube' in block.attributes) {
             pieces.push(<iframe width="560" height="315" className="youtube-player" src={block.attributes.youtube} sandbox="allow-same-origin allow-scripts"></iframe>);
         }
+        if (block.attributes != null && 'note' in block.attributes) {
+            pieces.push(<SubNote note={block.attributes.note}/>);
+        }
         if (block.attributes != null && 'attach' in block.attributes) {
             const attachId = block.attributes['attach'];
+            const filename = block.attributes['fileName']
 
             pieces.push(
-                <Attach id={attachId} fileName={block.attributes['fileName']} handleRemove={() => {
+                <Attach id={attachId} fileName={filename} handleRemove={() => {
                     const block = AppNoteStore.state.note.blocks[this.props.blockId];
                     block.type = 'div';
                     block.attributes = null;
@@ -114,6 +119,7 @@ export class Block extends Component<BlockProps, BlockState> {
                 blockId: this.props.blockId,
                 imageId: AppNoteStore.state.note.blocks[this.props.blockId].attributes['id']
             });
+
         } else if (AppNoteStore.state.note.blocks[this.props.blockId].attributes && "youtube" in AppNoteStore.state.note.blocks[this.props.blockId].attributes) {
             this.self.classList.add("hidden")
         }
@@ -122,6 +128,8 @@ export class Block extends Component<BlockProps, BlockState> {
     private contener: HTMLElement;
 
     render(): VDomNode {
+        const block = AppNoteStore.state.note.blocks[this.props.blockId]
+
         return (
             <div
                 className={'block' + (AppNoteStore.state.cursorPosition?.blockId == this.props.blockId.toString() ? ' block-chosen' : '')}
@@ -136,9 +144,7 @@ export class Block extends Component<BlockProps, BlockState> {
                     e.dataTransfer.setData('blockId', this.props.blockId.toString());
                 }}
                 onclick={() => {
-                    if (AppNoteStore.state.note.blocks[this.props.blockId].type === 'img' ||
-                        (AppNoteStore.state.note.blocks[this.props.blockId].attributes != null &&
-                           'fileName' in AppNoteStore.state.note.blocks[this.props.blockId].attributes)) {
+                    if (block.type == "img" || block.attributes != null && ('fileName' in block.attributes || "youtube" in block.attributes || "note" in block.attributes)) {
                         const cursorPosition = getCursorInBlock(this.self);
                         AppDispatcher.dispatch(NoteStoreActions.MOVE_CURSOR, {
                             blockId: this.props.blockId,
@@ -159,7 +165,7 @@ export class Block extends Component<BlockProps, BlockState> {
 
 
                 <div className="piece-container">
-                    <span key1={'delim'}>
+                    <span key1={'delim'} className={AppNoteStore.state.note.blocks[this.props.blockId].attributes != undefined && 'youtube' in AppNoteStore.state.note.blocks[this.props.blockId].attributes ? "video-container" : ""}>
                         {this.renderPrevSymbol()}
                     </span>
                     {ScReact.createElement(AppNoteStore.state.note.blocks[this.props.blockId].type, {
@@ -232,7 +238,7 @@ export class Block extends Component<BlockProps, BlockState> {
 
                                     this.props.onChange();
 
-                                    
+
                                 }
                             },
                             onkeydown: (e: Event) => {
@@ -375,8 +381,7 @@ export class Block extends Component<BlockProps, BlockState> {
                                         moveCursorUpAndDown(this.props.blockId);
                                         return;
                                     }
-                                    if (block.attributes != null &&
-                                        'fileName' in block.attributes) {
+                                    if (block.attributes != null && 'fileName' in block.attributes) {
                                         delete block.attributes.fileName;
                                         block.attributes = null;
                                         block.type = 'div';

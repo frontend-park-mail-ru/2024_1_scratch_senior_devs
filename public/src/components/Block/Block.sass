@@ -22,14 +22,12 @@
 		display: flex
 		align-items: center
 
+		.video-container
+			width: 100%
 
 		.piece-prefix
 			user-select: none
 			margin-right: 10px
-
-		img
-			width: 100%
-			max-width: 500px
 
 		.youtube-player
 			width: 100%
@@ -63,7 +61,11 @@
 					opacity: 1
 
 		.editablediv
-			width: 100%
+
+			&.img
+				width: 100%
+				max-width: 500px
+
 
 			&.hidden
 				display: none

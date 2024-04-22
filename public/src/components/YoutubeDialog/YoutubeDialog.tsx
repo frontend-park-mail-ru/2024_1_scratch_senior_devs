@@ -71,15 +71,6 @@ export class YoutubeDialogForm extends ScReact.Component<any, any> {
         });
 
         this.props.handleClose()
-
-        setTimeout(() => {
-            this.setState(state => ({
-                ...state,
-                value: '',
-                validationResult: null,
-                errorMessage: ''
-            }));
-        }, 300);
     };
 
     render() {

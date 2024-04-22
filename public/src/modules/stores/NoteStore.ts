@@ -117,9 +117,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
         });
     };
 
-    private timerId = setTimeout(() => {
-
-    });
+    private timerId;
 
     private saveNote = (immediately=false) => {
         clearTimeout(this.timerId);
@@ -306,15 +304,10 @@ class NoteStore extends BaseStore<NoteStoreState> {
     private changeTitle = (title: string) => {
         this.closeDropdown();
 
-        
-        
-
         this.state.note.title = title;
         this.saveNote();
     };
 
-    private timerIdPiece: NodeJS.Timeout = setTimeout(() => {
-    });
 
     private changePieceAttributes = (blockId: number, anchorId: number, focusId: number, anchorPos: number, focusPos: number, attribute: string, value?: string | number | boolean | undefined) => {
         
@@ -339,8 +332,6 @@ class NoteStore extends BaseStore<NoteStoreState> {
             maxPiece = focusId;
             maxPos = Math.max(anchorPos, focusPos);
         }
-
-        const pieces: PieceNode[] = [];
 
         const beforePieces: PieceNode[] = [];
         const modifyPieces: PieceNode[] = [];

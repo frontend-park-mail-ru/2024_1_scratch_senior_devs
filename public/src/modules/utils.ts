@@ -126,3 +126,7 @@ export const parseYoutubeLink = (url:string) => {
 export const scrollToTop = () => {
     document.body.scrollTop = document.documentElement.scrollTop = 0
 }
+
+export const parseNoteTitle = (title:string) => {
+    return title ? title : "Пустая заметка"
+}

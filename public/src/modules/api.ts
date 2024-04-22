@@ -267,9 +267,6 @@ class ProfileRequests {
             }
         });
 
-        
-        
-
         return {
             status: response.status,
             csrf: response.headers['x-csrf-token']

@@ -97,10 +97,7 @@ export class Dropdown extends ScReact.Component<any, any> {
             fileInput.accept = ".mp4,.mp3,.wav,.gif,.jpeg,.webp,.jpg,.png,.mp4, .pdf"
             this.ref.append(fileInput);
             fileInput.onchange = (e) => {
-                
-                
                 fileInput.remove();
-
                 const file = (e.target as HTMLInputElement).files[0]
                 if (file.size < MAX_ATTACH_SIZE) {
                     AppDispatcher.dispatch(NotesActions.UPLOAD_FILE, {
@@ -120,7 +117,6 @@ export class Dropdown extends ScReact.Component<any, any> {
             attr.fileName = '';
             content = undefined;
         } else if (id === 'youtube') {
-            
             this.props.openYoutubeDialog();
         } else if (id === "note") {
             this.props.openAddNoteLinkDialog()

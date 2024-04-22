@@ -8,7 +8,7 @@ class SearchBar extends ScReact.Component<any, any> {
 
     handleChange = (e) => {
         if (this.props.onChange) {
-            this.props.onStartTyping();
+            this.props.onStartTyping && this.props.onStartTyping();
             clearTimeout(this.state.timer);
             this.state.timer = setTimeout(() => { this.props.onChange(e.target.value); }, 250);
         }

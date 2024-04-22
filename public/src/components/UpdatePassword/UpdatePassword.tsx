@@ -17,42 +17,6 @@ export class UpdatePasswordForm extends ScReact.Component<any, any> {
         repeatPasswordValidationResult: false,
     };
 
-    componentDidUpdate() {
-        
-        
-
-        // TODO
-        // if (this.props.open === false) {
-        //     setTimeout(() => {
-        //         this.setState(() => ({
-        //             password: "",
-        //             errorPassword: "",
-        //             passwordValidationResult: false,
-        //
-        //             repeatPassword: "",
-        //             errorRepeatPassword: "",
-        //             repeatPasswordValidationResult: false
-        //         }))
-        //     }, 500)
-        // }
-    }
-
-    closeModal = () => {
-        AppDispatcher.dispatch(UserActions.CLOSE_CHANGE_PASSWORD_FORM);
-
-        setTimeout(() => {
-            this.setState(() => ({
-                password: '',
-                errorPassword: '',
-                passwordValidationResult: false,
-
-                repeatPassword: '',
-                errorRepeatPassword: '',
-                repeatPasswordValidationResult: false
-            }));
-        }, 500);
-    };
-
     setPassword = (value:string) => {
         this.setState(state => ({
             ...state,

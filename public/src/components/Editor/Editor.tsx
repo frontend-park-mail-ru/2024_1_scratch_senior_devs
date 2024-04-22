@@ -9,7 +9,7 @@ import {Dropdown} from '../Dropdown/Dropdown';
 import {Tippy} from '../Tippy/Tippy';
 import {Modal} from '../Modal/Modal';
 import YoutubeDialogForm from '../YoutubeDialog/YoutubeDialog';
-import AddNoteLinkForm from "../AddNoteLinkForm/AddNoteLinkForm";
+import AddSubNoteForm from "../AddSubNoteForm/AddSubNoteForm";
 
 export interface Note {
     title: string,
@@ -219,9 +219,6 @@ export class Editor extends Component<any, EditorState> {
     };
 
     onChangeTitle = (e) => {
-        
-        
-
         if (e.target.textContent.length == 0) {
             this.noteTitleRef.dataset.placeholder = 'Введите название';
         } else {
@@ -249,14 +246,15 @@ export class Editor extends Component<any, EditorState> {
 
                 <Modal open={this.state.youtubeDialogOpen} content={<YoutubeDialogForm handleClose={this.closeYoutubeDialog}/>} handleClose={this.closeYoutubeDialog}/>
 
-                <Modal open={this.state.addNoteLinkDialogOpen} content={<AddNoteLinkForm handleClose={this.closeAddNoteLinkDialog}/>} handleClose={this.closeAddNoteLinkDialog}/>
+                <Modal open={this.state.addNoteLinkDialogOpen} content={<AddSubNoteForm handleClose={this.closeAddNoteLinkDialog}/>} handleClose={this.closeAddNoteLinkDialog}/>
 
-                <Dropdown blockId={AppNoteStore.state.dropdownPos.blockId}
-                          style={`left: ${AppNoteStore.state.dropdownPos.left}px; top: ${AppNoteStore.state.dropdownPos.top}px;`}
-                          onClose={this.closeEditor}
-                          open={this.state.dropdownOpen}
-                          openYoutubeDialog={this.openYoutubeDialog}
-                          openAddNoteLinkDialog={this.openAddNoteLinkDialog}
+                <Dropdown
+                    blockId={AppNoteStore.state.dropdownPos.blockId}
+                    style={`left: ${AppNoteStore.state.dropdownPos.left}px; top: ${AppNoteStore.state.dropdownPos.top}px;`}
+                    onClose={this.closeEditor}
+                    open={this.state.dropdownOpen}
+                    openYoutubeDialog={this.openYoutubeDialog}
+                    openAddNoteLinkDialog={this.openAddNoteLinkDialog}
                 />
 
                 <Tippy open={this.state.tippyOpen}

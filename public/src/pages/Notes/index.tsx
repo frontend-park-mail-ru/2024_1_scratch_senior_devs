@@ -18,6 +18,8 @@ export class NotesPage extends ScReact.Component<any, any> {
         fetching: false
     };
 
+    private notesContainerRef
+
     componentDidMount() {
         document.title = 'Заметки';
 
@@ -26,9 +28,6 @@ export class NotesPage extends ScReact.Component<any, any> {
         AppNotesStore.SubscribeToStore(this.updateState);
 
         // AppNoteStore.AddSaver(this.updateNotesTitles);
-
-        
-        
 
         this.setState(state => ({
             ...state,
@@ -44,28 +43,27 @@ export class NotesPage extends ScReact.Component<any, any> {
             AppDispatcher.dispatch(NotesActions.SELECT_NOTE, this.props.note);
         }
 
-        if (this.props.notes.length > 10) {
+        if (this.props.notes.length == 10) {
             this.createObserver();
         }
     }
 
     updateNotesTitles = () => {
-        
         setTimeout(()=> {
-            
             const notes = AppNotesStore.state.notes;
             notes.forEach((note, index) => {
                 if (note.id == this.state.selectedNote?.id) {
-                    
+                    console.log(AppNoteStore.state.note.title)
                     notes[index].data.title = AppNoteStore.state.note.title == "" ? "Пустая заметка" : AppNoteStore.state.note.title;
                     notes[index].update_time = new Date()
-                    
                 }
             });
+
             this.setState(s=>({
                 ...s,
                 notes: notes
             }));
+
         }, 10);
     };
 
@@ -75,7 +73,6 @@ export class NotesPage extends ScReact.Component<any, any> {
     }
 
     updateState = (store:NotesStoreState) => {
-        
         this.setState(state => {
             if (state.notes.length > 0 && state.notes.length < store.notes.length) {
                 this.createObserver();
@@ -112,9 +109,8 @@ export class NotesPage extends ScReact.Component<any, any> {
 
             document.body.classList.add('locked');
 
-            AppDispatcher.dispatch(NotesActions.FETCH_NOTE, id);
+            AppDispatcher.dispatch(NotesActions.OPEN_NOTE, id);
 
-            history.pushState(null, null, "/notes/" + id)
         }
     };
 
@@ -132,6 +128,7 @@ export class NotesPage extends ScReact.Component<any, any> {
     };
 
     createObserver() {
+        console.log("createObserver")
         const observer = new IntersectionObserver(
             function (entries, observer) {
                 entries.forEach((entry) => {
@@ -144,7 +141,7 @@ export class NotesPage extends ScReact.Component<any, any> {
                 });
             });
 
-        const lastNote = document.querySelector('.note-container:last-child');
+        const lastNote = this.notesContainerRef.lastChild;
         lastNote && observer.observe(lastNote);
     }
 
@@ -153,7 +150,7 @@ export class NotesPage extends ScReact.Component<any, any> {
     };
 
     createNewNote = () => {
-        AppDispatcher.dispatch(NotesActions.CREATE_NEW_NOTE);
+        AppDispatcher.dispatch(NotesActions.CREATE_NEW_NOTE, true);
     };
 
     onSearchBarStartTyping = () => {
@@ -168,7 +165,6 @@ export class NotesPage extends ScReact.Component<any, any> {
             const noteTitle = selectedNote.querySelector('h3');
             noteTitle.innerHTML = title.length > 0 ? truncate(title, 20) : "Пустая заметка";
             document.title = noteTitle.innerHTML
-            
         }
 
         this.updateNotesTitles()
@@ -191,7 +187,7 @@ export class NotesPage extends ScReact.Component<any, any> {
                             </div>
                         </div>
                     </div>
-                    <div className="notes-container" onclick={this.handleSelectNote}>
+                    <div className="notes-container" onclick={this.handleSelectNote}  ref={ref => this.notesContainerRef = ref}>
                         <Loader active={this.state.fetching}/>
                         {
                             this.state.notes.length > 0 ?

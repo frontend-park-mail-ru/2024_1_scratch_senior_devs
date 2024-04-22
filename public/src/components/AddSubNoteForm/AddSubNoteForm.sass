@@ -1,0 +1,50 @@
+@import "/public/src/utils/variables.sass"
+@import "/public/src/utils/mixins.sass"
+
+.add-note-link-form
+	display: flex
+	justify-content: center
+	align-items: center
+	flex-direction: column
+	gap: 15px
+
+	.select-note-container
+		background: $modal-background--darker
+		display: flex
+		flex-direction: column
+		border-radius: 16px
+		overflow: hidden
+		margin-bottom: 10px
+
+		.search-bar-container
+			width: 100%
+			padding: 15px
+
+			.search
+				border: 1px solid rgba(255, 255, 255, 0.1)
+
+		.notes-container
+			display: flex
+			flex-direction: column
+			align-items: center
+			justify-content: center
+			height: 125px
+			overflow-y: auto
+
+			@include scrollbar
+
+			.note-item
+				width: 100%
+				padding: 15px
+				cursor: pointer
+				user-select: none
+				display: flex
+				align-items: center
+				justify-content: space-between
+
+				&.selected
+					background: #121b25
+
+				&:not(.selected):hover
+					background: #121b25
+

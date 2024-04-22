@@ -4,6 +4,7 @@ import './InviteUserModal.sass';
 import {Input} from "../Input/Input";
 import {ValidateLogin} from "../../modules/validation";
 import {AppToasts} from "../../modules/toasts";
+import {Img} from "../Image/Image";
 
 export class InviteUserModal extends ScReact.Component<any, any>{
     state = {
@@ -64,16 +65,13 @@ export class InviteUserModal extends ScReact.Component<any, any>{
         if (this.state.validationResult) {
             this.props.handleClose()
             AppToasts.success("Приглашение успешно отправлено")
-            setTimeout(() => {
-                this.setValue("")
-                this.setValidated(null)
-            }, 300)
         }
     }
 
     render() {
         return (
             <form className="invite-user-form" onsubmit={this.handleSubmit}>
+                <Img src="close.svg" className="close-modal-btn" onClick={this.props.handleClose}/>
                 <h2>Пригласить пользователя</h2>
                 <Input value={this.state.value} onChange={this.handleChange} placeholder="Логин" error={this.state.errorMessage} validationResult={this.state.validationResult} />
                 <Button label="Отправить" />

@@ -5,19 +5,11 @@ import {AppDispatcher} from '../dispatcher';
 import {AppToasts} from '../toasts';
 import {AppNoteStore, NoteStoreActions} from './NoteStore';
 import {BlockNode} from '../../components/Block/Block';
-
-export type Note = {
-    id: number,
-    data: {
-        title: string
-        content: string,
-    },
-    update_time: string
-}
+import {NoteType} from "../../utils/types";
 
 export type NotesStoreState = {
-    notes: Note[],
-    selectedNote: Note,
+    notes: NoteType[],
+    selectedNote: NoteType,
     query: string,
     offset: number,
     count: number,
@@ -28,7 +20,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
     state = {
         notes: [],
         selectedNote: undefined,
-        selectedNoteTitle: undefined,
         query: '',
         offset: 0,
         count: 10,
@@ -69,7 +60,10 @@ class NotesStore extends BaseStore<NotesStoreState> {
                     await this.saveNote(action.payload);
                     break;
                 case NotesActions.CREATE_NEW_NOTE:
-                    await this.createNewNote();
+                    await this.createNewNote(action.payload);
+                    break;
+                case NotesActions.CREATE_SUB_NOTE:
+                    await this.createSubNote(action.payload);
                     break;
                 case NotesActions.UPLOAD_IMAGE:
                     await this.uploadImage(action.payload);
@@ -86,6 +80,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 case NotesActions.START_FETCHING:
                     this.startFetching();
                     break;
+                case NotesActions.OPEN_NOTE:
+                    await this.openNote(action.payload)
+                    break
             }
         });
     }
@@ -112,20 +109,32 @@ class NotesStore extends BaseStore<NotesStoreState> {
             const note = await AppNoteRequests.Get(id, AppUserStore.state.JWT);
 
             this.selectNote(note);
+
         } catch {
-            AppToasts.error('Что-то пошло не так');
+            AppToasts.error('Заметка не найдена');
         }
     }
 
-    selectNote (note:Note) {
-        
-        
-
+    selectNote (note:NoteType) {
         this.SetState(state => ({
             ...state,
             selectedNote: note
         }));
     }
+
+    async openNote(id) {
+        try {
+            const note = await AppNoteRequests.Get(id, AppUserStore.state.JWT);
+
+            this.selectNote(note);
+
+            history.pushState(null, null, '/notes/' + id)
+
+        } catch {
+            AppToasts.error('Заметка не найдена');
+        }
+    }
+
 
     async init () {
         await this.fetchNotes(true);
@@ -133,7 +142,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     async searchNotes (query:string) {
-        
         this.SetState(state => ({
             ...state,
             notes: [],
@@ -153,16 +161,13 @@ class NotesStore extends BaseStore<NotesStoreState> {
         await this.fetchNotes();
     }
 
-    async fetchNotes (reset: boolean=false) {
+    async fetchNotes (reset=false) {
         try {
             const params:Record<string,any> = {
                 title: this.state.query,
                 offset: this.state.offset,
                 count: this.state.count
             };
-
-            
-            
 
             const notes = await AppNoteRequests.GetAll(AppUserStore.state.JWT, params);
 
@@ -180,7 +185,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
     async deleteNote() {
         try {
-            const {status, csrf} = await AppNoteRequests.Delete(this.state.selectedNote.id, AppUserStore.state.JWT, AppUserStore.state.csrf);
+            const {csrf} = await AppNoteRequests.Delete(this.state.selectedNote.id, AppUserStore.state.JWT, AppUserStore.state.csrf);
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 
@@ -203,9 +208,10 @@ class NotesStore extends BaseStore<NotesStoreState> {
     async saveNote(data) {
         
         try {
-            const {status, csrf} = await AppNoteRequests.Update(data, AppUserStore.state.JWT, AppUserStore.state.csrf);
+            const {csrf} = await AppNoteRequests.Update(data, AppUserStore.state.JWT, AppUserStore.state.csrf);
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+
         } catch {
             AppToasts.error('Что-то пошло не так');
         }
@@ -217,19 +223,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, response.headers['x-csrf-token']);
 
-            // const note = {
-            //     data: {
-            //         content: "",
-            //         title: "Новая заметка"
-            //     },
-            //     update_time: new Date().toISOString()
-            // }
-            //
-
             this.SetState(state => ({
                 ...state,
-                offset: state.offset + 1, // ?
-                // notes: [...state.notes, response.body],
+                offset: state.offset + 1,
                 notes: [response.body, ...state.notes]
             }));
 
@@ -366,7 +362,8 @@ export const NotesActions = {
     UPLOAD_FILE: 'UPLOAD_FILE',
     DOWNLOAD_FILE: 'DOWNLOAD_FILE',
     FETCH_IMAGE: 'FETCH_IMAGE',
-    START_FETCHING: 'START_FETCHING'
+    START_FETCHING: 'START_FETCHING',
+    OPEN_NOTE: 'OPEN_NOTE',
 };
 
 export const AppNotesStore = new NotesStore();
