@@ -8,8 +8,7 @@ import './Editor.sass';
 import {Dropdown} from '../Dropdown/Dropdown';
 import {Tippy} from '../Tippy/Tippy';
 import {Modal} from '../Modal/Modal';
-import YoutubeDialogForm from '../YoutubeDialog/YoutubeDialog';
-import AddSubNoteForm from "../AddSubNoteForm/AddSubNoteForm";
+import YoutubeDialogForm from '../YoutubeDialog/YoutubeDialog'
 
 export interface Note {
     title: string,
@@ -26,7 +25,6 @@ export class Editor extends Component<any, EditorState> {
         dropdownOpen: false,
         tippyOpen: false,
         youtubeDialogOpen: false,
-        addNoteLinkDialogOpen: false,
         title: ''
     };
 
@@ -153,20 +151,6 @@ export class Editor extends Component<any, EditorState> {
         }));
     };
 
-    closeAddNoteLinkDialog = () => {
-        this.setState(state => ({
-            ...state,
-            addNoteLinkDialogOpen: false
-        }));
-    }
-
-    openAddNoteLinkDialog = () => {
-        this.setState(state => ({
-            ...state,
-            addNoteLinkDialogOpen: true
-        }));
-    }
-
     private renderBlocks = () => {
         const result = Array<VDomNode>();
         for (let i = 0; i < this.state.blocks; ++i) {
@@ -245,15 +229,12 @@ export class Editor extends Component<any, EditorState> {
 
                 <Modal open={this.state.youtubeDialogOpen} content={<YoutubeDialogForm handleClose={this.closeYoutubeDialog}/>} handleClose={this.closeYoutubeDialog}/>
 
-                <Modal open={this.state.addNoteLinkDialogOpen} content={<AddSubNoteForm handleClose={this.closeAddNoteLinkDialog}/>} handleClose={this.closeAddNoteLinkDialog}/>
-
                 <Dropdown
                     blockId={AppNoteStore.state.dropdownPos.blockId}
                     style={`left: ${AppNoteStore.state.dropdownPos.left}px; top: ${AppNoteStore.state.dropdownPos.top}px;`}
                     onClose={this.closeEditor}
                     open={this.state.dropdownOpen}
                     openYoutubeDialog={this.openYoutubeDialog}
-                    openAddNoteLinkDialog={this.openAddNoteLinkDialog}
                 />
 
                 <Tippy open={this.state.tippyOpen}

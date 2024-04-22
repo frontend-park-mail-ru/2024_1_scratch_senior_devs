@@ -5,6 +5,7 @@ import './UpdatePassword.sass';
 import {ValidatePassword} from '../../modules/validation';
 import {AppDispatcher} from '../../modules/dispatcher';
 import {UserActions} from '../../modules/stores/UserStore';
+import {Img} from "../Image/Image";
 
 export class UpdatePasswordForm extends ScReact.Component<any, any> {
     state = {
@@ -121,6 +122,7 @@ export class UpdatePasswordForm extends ScReact.Component<any, any> {
     render() {
         return (
             <div className="change-password-form">
+                <Img src="close.svg" className="close-modal-btn" onClick={this.props.handleClose}/>
                 <h2>Форма изменения пароля</h2>
                 <Input
                     type="password"
