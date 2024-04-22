@@ -49,6 +49,8 @@ export class NotesPage extends ScReact.Component<any, any> {
     }
 
     updateNotesTitles = () => {
+        console.log("updateNotesTitles")
+
         setTimeout(()=> {
             const notes = AppNotesStore.state.notes;
             notes.forEach((note, index) => {
@@ -171,6 +173,7 @@ export class NotesPage extends ScReact.Component<any, any> {
     };
 
     onChangeSelectedNoteContent = () => {
+        console.log("onChangeSelectedNoteContent")
         this.updateNotesTitles()
     }
 

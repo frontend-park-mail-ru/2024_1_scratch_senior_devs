@@ -201,7 +201,6 @@ export class Editor extends Component<any, EditorState> {
         result.push(
             <div className={'drag-area'}
                  ondrop={(e) => {
-                     
                      e.target.style.border = 'none';
                      AppDispatcher.dispatch(NoteStoreActions.MOVE_BLOCK, {
                          blockId: Number(e.dataTransfer.getData('blockId')),

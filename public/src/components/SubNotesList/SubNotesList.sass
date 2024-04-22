@@ -1,0 +1,92 @@
+@import "/public/src/utils/variables.sass"
+
+.sub-notes-wrapper
+	padding: 8px
+	border-radius: 8px
+	position: relative
+	z-index: 2
+
+	&:hover
+		background: rgba(0,0,0,0.15)
+
+	img
+		width: 24px
+		height: 24px
+		transition: 0.3s
+		filter: invert(80%)
+		cursor: pointer
+
+		&:hover
+			opacity: 1
+
+	.sub-notes-container
+		width: 210px
+		position: absolute
+		background: $note-menu-background
+		flex-direction: column
+		top: 45px
+		right: 0
+		border-radius: 8px
+		box-shadow: rgba(0, 0, 0, 0.2) 0 7px 29px 0
+		overflow: hidden
+		display: none
+		opacity: 0
+		animation: closeAnim 0.2s ease-in-out
+
+		&.open
+			display: flex
+			opacity: 1
+			animation: openAnim 0.2s ease-in-out
+
+		.top-container
+			display: flex
+			align-items: center
+			justify-content: space-between
+			width: 100%
+			padding: 16px
+			border-bottom: 2px solid #121b25
+
+			h3
+				color: #aaaab2
+
+			.add-note-icon-wrapper
+				background: #131c25
+				border-radius: 50%
+				padding: 2px
+
+				&:hover
+					transform: scale(1.1)
+
+				.add-note-icon
+					width: 24px
+					height: 24px
+
+		.sub-notes-list
+			display: flex
+			flex-direction: column
+
+			.not-found-label
+				padding: 16px
+				font-weight: bold
+				color: $text-main-color--darker
+				text-align: center
+
+			.sub-note
+				display: flex
+				align-items: center
+				gap: 10px
+				padding: 16px
+				cursor: pointer
+				width: 100%
+				justify-content: center
+				transition: 0.15s ease-in
+
+				&:hover
+					background: $note-menu-background--darker
+
+				img
+					user-select: none
+
+				span
+					color: $text-main-color--darker
+					user-select: none

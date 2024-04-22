@@ -14,6 +14,7 @@ import {InviteUserModal} from "../InviteUserModal/InviteUserModal";
 export class NoteEditor extends ScReact.Component<any, any> {
     state = {
         selectedNote: undefined,
+        selectedNoteChildren: [],
         content: undefined,
         deleteNoteModalOpen: false,
         inviteUserModalOpen: false
@@ -27,10 +28,14 @@ export class NoteEditor extends ScReact.Component<any, any> {
     }
 
     saveNote = () => {
+        console.log("saveNote")
+        console.log(AppNoteStore.state.note)
+
         if (this.state.selectedNote) {
             AppDispatcher.dispatch(NotesActions.SAVE_NOTE,  {
                 id: this.state.selectedNote.id,
-                note: AppNoteStore.state.note
+                note: AppNoteStore.state.note,
+                parent: this.state.selectedNote.data.parent
             });
         }
 
@@ -50,8 +55,6 @@ export class NoteEditor extends ScReact.Component<any, any> {
     };
 
     updateState = (store:NotesStoreState) => {
-        
-
         if (store.selectedNote != this.state.selectedNote) {
             this.savingLabelRef.innerHTML = '';
         }
@@ -59,7 +62,8 @@ export class NoteEditor extends ScReact.Component<any, any> {
         this.setState(state => {
             return {
                 ...state,
-                selectedNote: store.selectedNote
+                selectedNote: store.selectedNote,
+                selectedNoteChildren: store.selectedNoteChildren
             };
         });
 
@@ -99,6 +103,10 @@ export class NoteEditor extends ScReact.Component<any, any> {
         }))
     }
 
+    openParentIcon = () => {
+        AppDispatcher.dispatch(NotesActions.OPEN_NOTE, this.state.selectedNote.data.parent)
+    }
+
     render() {
         return (
             <div className={'note-editor-wrapper ' + (this.props.open ? 'active' : '')}>
@@ -120,6 +128,12 @@ export class NoteEditor extends ScReact.Component<any, any> {
                         <div className="note-save-indicator">
                             <span ref={ref => this.savingLabelRef = ref}></span>
                         </div>
+                        {this.state.selectedNote?.data.parent ?
+                            <div className="back-to-parent-note-btn-container">
+                                <Img src="arrow-up.svg" className="back-to-parent-note-btn" onClick={this.openParentIcon}/>
+                            </div> : ""
+                        }
+                        {/*<SubNotesList notes={this.state.selectedNoteChildren} />*/}
                         <NoteMenu deleteNote={this.openDeleteNoteModal} inviteUser={this.openInviteUserModal}/>
                         <div className="close-editor-btn-container" onclick={this.closeEditor}>
                             <Img src="close.svg" className="icon close-editor-icon" />
@@ -131,11 +145,11 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
                     <Editor
                         onChangeTitle={(value:string) => {
-                            
                             this.props.onChangeTitle(value);
                             this.onChangeNote();
                         }}
                         onChangeContent={() => {
+                            console.log("onChangeContent")
                             this.props.onChangeNote()
                             this.onChangeNote()
                         }}

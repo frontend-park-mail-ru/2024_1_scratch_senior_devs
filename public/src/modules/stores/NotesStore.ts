@@ -10,6 +10,7 @@ import {NoteType} from "../../utils/types";
 export type NotesStoreState = {
     notes: NoteType[],
     selectedNote: NoteType,
+    selectedNoteChildren: any[],
     query: string,
     offset: number,
     count: number,
@@ -20,6 +21,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
     state = {
         notes: [],
         selectedNote: undefined,
+        selectedNoteChildren: [],
         query: '',
         offset: 0,
         count: 10,
@@ -60,7 +62,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
                     await this.saveNote(action.payload);
                     break;
                 case NotesActions.CREATE_NEW_NOTE:
-                    await this.createNewNote(action.payload);
+                    await this.createNewNote();
                     break;
                 case NotesActions.CREATE_SUB_NOTE:
                     await this.createSubNote(action.payload);
@@ -106,11 +108,16 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
     async fetchNote (id:string) {
         try {
+            console.log("fetchNote")
+
             const note = await AppNoteRequests.Get(id, AppUserStore.state.JWT);
+
+            console.log(note)
 
             this.selectNote(note);
 
-        } catch {
+        } catch (e) {
+            console.log(e)
             AppToasts.error('Заметка не найдена');
         }
     }
@@ -118,19 +125,25 @@ class NotesStore extends BaseStore<NotesStoreState> {
     selectNote (note:NoteType) {
         this.SetState(state => ({
             ...state,
-            selectedNote: note
+            selectedNote: note,
+            selectedNoteChildren: note.data.children
         }));
     }
 
-    async openNote(id) {
+    async openNote(id:string) {
         try {
+            console.log("openNote")
+
             const note = await AppNoteRequests.Get(id, AppUserStore.state.JWT);
+
+            console.log(note)
 
             this.selectNote(note);
 
             history.pushState(null, null, '/notes/' + id)
 
-        } catch {
+        } catch (e) {
+            console.log(e)
             AppToasts.error('Заметка не найдена');
         }
     }
@@ -169,7 +182,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 count: this.state.count
             };
 
-            const notes = await AppNoteRequests.GetAll(AppUserStore.state.JWT, params);
+            let notes:NoteType[] = await AppNoteRequests.GetAll(AppUserStore.state.JWT, params);
+
+            notes = notes.filter((note) => !note.data.parent)
 
             this.SetState(state => ({
                 ...state,
@@ -177,7 +192,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 notes: reset ? notes : state.notes.concat(notes)
             }));
 
-            
         } catch {
             AppToasts.error('Что-то пошло не так');
         }
@@ -206,9 +220,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     async saveNote(data) {
-        
         try {
-            const {csrf} = await AppNoteRequests.Update(data, AppUserStore.state.JWT, AppUserStore.state.csrf);
+            const {csrf} = await AppNoteRequests.Update(data, this.state.selectedNoteChildren, AppUserStore.state.JWT, AppUserStore.state.csrf);
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 
@@ -236,6 +249,58 @@ class NotesStore extends BaseStore<NotesStoreState> {
             history.pushState(null, null, "/notes/" + response.body.id)
 
         } catch {
+            AppToasts.error('Что-то пошло не так');
+        }
+    }
+
+    async createSubNote(insertLink=false) {
+
+        if (!this.state.selectedNote) {
+            return
+        }
+
+        try {
+            const response = await AppNoteRequests.AddSubNote(this.state.selectedNote.id, AppUserStore.state.JWT, AppUserStore.state.csrf);
+
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, response.headers['x-csrf-token']);
+
+            console.log(response.body)
+
+            const subNote = {
+                id: response.body.id,
+                title: "Новая заметка"
+            }
+
+            console.log(subNote)
+
+            this.state.selectedNoteChildren = [...this.state.selectedNoteChildren, subNote]
+
+            await this.saveNote({
+                id: this.state.selectedNote.id,
+                note: AppNoteStore.state.note
+            })
+
+            if (insertLink) {
+                const block = AppNoteStore.state.note.blocks[AppNoteStore.state.dropdownPos.blockId];
+                block.type = 'div';
+                block.content = undefined;
+                block.attributes = {
+                    note: subNote
+                };
+
+                console.log(block)
+
+                AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
+                    blockId: AppNoteStore.state.dropdownPos.blockId,
+                    newBlock: block
+                });
+
+                AppDispatcher.dispatch(NoteStoreActions.REMOVE_CURSOR)
+            }
+
+
+        } catch (e) {
+            console.log(e.message)
             AppToasts.error('Что-то пошло не так');
         }
     }
@@ -364,6 +429,7 @@ export const NotesActions = {
     FETCH_IMAGE: 'FETCH_IMAGE',
     START_FETCHING: 'START_FETCHING',
     OPEN_NOTE: 'OPEN_NOTE',
+    CREATE_SUB_NOTE: "CREATE_SUB_NOTE"
 };
 
 export const AppNotesStore = new NotesStore();

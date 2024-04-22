@@ -2,7 +2,7 @@ import {ScReact} from '@veglem/screact';
 import './Dropdown.sass';
 import {Img} from '../Image/Image';
 import {AppDispatcher} from '../../modules/dispatcher';
-import {NoteStoreActions} from '../../modules/stores/NoteStore';
+import {AppNoteStore, NoteStoreActions} from '../../modules/stores/NoteStore';
 import {AppNotesStore, NotesActions} from '../../modules/stores/NotesStore';
 import {MAX_ATTACH_SIZE} from '../../utils/consts';
 import {AppToasts} from '../../modules/toasts';
@@ -37,8 +37,6 @@ export class Dropdown extends ScReact.Component<any, any> {
     };
 
     handleOnHover = (id:string) => {
-        
-
         this.setState(state => ({
             ...state,
             selected: id
@@ -106,7 +104,7 @@ export class Dropdown extends ScReact.Component<any, any> {
                         blockId: this.props.blockId,
                         fileName: (e.target as HTMLInputElement).files[0].name
                     });
-                    AppDispatcher.dispatch(NoteStoreActions.REMOVE_CURSOR, {});
+                    AppDispatcher.dispatch(NoteStoreActions.REMOVE_CURSOR);
                 } else {
                     AppToasts.error('Файл слишком большой');
                 }
@@ -119,7 +117,7 @@ export class Dropdown extends ScReact.Component<any, any> {
         } else if (id === 'youtube') {
             this.props.openYoutubeDialog();
         } else if (id === "note") {
-            this.props.openAddNoteLinkDialog()
+            AppDispatcher.dispatch(NotesActions.CREATE_SUB_NOTE, true)
         }
 
         AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK_TYPE, {
@@ -180,8 +178,8 @@ export class Dropdown extends ScReact.Component<any, any> {
             {
                 id: 'note',
                 icon: 'note.svg',
-                title: 'Заметка',
-                desc: 'Вставьте ссылку на заметку'
+                title: 'Подзаметка',
+                desc: 'Создайте подзаметку'
             },
             // {
             //     id: "text",

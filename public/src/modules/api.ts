@@ -332,8 +332,9 @@ class NoteRequests {
         throw new Error(response.body.message);
     };
 
-    Update = async({id, note}, jwt: string, csrf:string)=> {
-        
+    Update = async({id, note, parent}, children, jwt: string, csrf:string)=> {
+        console.log("Update")
+        console.log(note)
 
         const response = await Ajax.Post(this.baseUrl + '/' + id + '/edit', {
             headers: {
@@ -342,6 +343,8 @@ class NoteRequests {
             },
             body: {
                 data: {
+                    parent: parent,
+                    children: children,
                     title: note.title,
                     content: note.blocks
                 }
@@ -361,7 +364,10 @@ class NoteRequests {
                 'x-csrf-token': csrf
             },
             body: {
+                embedded: false,
                 data: {
+                    children: [],
+                    title: '',
                     content: [
                         {
                             'id': '1',
@@ -369,8 +375,39 @@ class NoteRequests {
                             'content': [
                             ]
                         }
-                    ],
-                    title: ''
+                    ]
+                }
+            }
+        });
+
+        if (response.status == 201) {
+            response.body.data = decode(response.body.data);
+            return response;
+        }
+
+        throw new Error();
+    };
+
+    AddSubNote = async (id:string, jwt:string, csrf:string) => {
+        const response = await Ajax.Post(this.baseUrl + '/add', {
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            },
+            body: {
+                embedded: true,
+                data: {
+                    children: [],
+                    title: '',
+                    parent: id,
+                    content: [
+                        {
+                            'id': '1',
+                            'type': 'div',
+                            'content': [
+                            ]
+                        }
+                    ]
                 }
             }
         });

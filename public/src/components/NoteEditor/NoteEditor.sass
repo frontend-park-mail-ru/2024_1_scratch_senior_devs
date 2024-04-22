@@ -66,7 +66,6 @@
 					font-size: 18px
 					color: $text-main-color--darker
 
-
 		.right-container
 			display: flex
 			align-items: center
@@ -76,6 +75,24 @@
 				span
 					color: $text-main-color--darker
 					transition: 0.3s
+
+			.back-to-parent-note-btn-container
+				padding: 8px
+				border-radius: 8px
+				cursor: pointer
+
+				&:hover
+					background: rgba(0,0,0,0.15)
+
+				.back-to-parent-note-btn
+					width: 24px
+					height: 24px
+					transition: 0.3s
+					filter: invert(80%)
+					cursor: pointer
+
+					&:hover
+						opacity: 1
 
 			.close-editor-btn-container
 				padding: 8px
