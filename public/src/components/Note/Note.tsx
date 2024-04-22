@@ -1,5 +1,5 @@
 import {ScReact} from '@veglem/screact';
-import './note.sass';
+import './Note.sass';
 import {formatDate, truncate} from '../../modules/utils';
 
 type NoteState = {
@@ -30,8 +30,8 @@ export class Note extends ScReact.Component<any, NoteState> {
     }
 
     render() {
-        console.log("render")
-        console.log(this.props.note.data.title)
+        
+        
         return (
             <div className={'note-container ' + (this.props.selected ? 'selected' : '')} id={this.props.note.id} >
                 <h3>{this.props.note.data.title.length == 0 ? "Пустая заметка" : this.props.note.data.title}</h3>

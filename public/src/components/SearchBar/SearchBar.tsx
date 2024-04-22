@@ -1,16 +1,14 @@
 import {ScReact} from '@veglem/screact';
 import './SearchBar.sass';
-import {AppDispatcher} from '../../modules/dispatcher';
-import {NotesActions} from '../../modules/stores/NotesStore';
 
-export class SearchBar extends ScReact.Component<any, any> {
+class SearchBar extends ScReact.Component<any, any> {
     state = {
         timer: null
     };
 
     handleChange = (e) => {
         if (this.props.onChange) {
-            AppDispatcher.dispatch(NotesActions.START_FETCHING);
+            this.props.onStartTyping();
             clearTimeout(this.state.timer);
             this.state.timer = setTimeout(() => { this.props.onChange(e.target.value); }, 250);
         }
@@ -25,3 +23,5 @@ export class SearchBar extends ScReact.Component<any, any> {
         );
     }
 }
+
+export default SearchBar

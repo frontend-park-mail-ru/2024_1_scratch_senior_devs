@@ -51,7 +51,7 @@ export class Input extends ScReact.Component<InputProps, InputState>{
 
     handleChange = (e) => {
         e.preventDefault()
-        console.log(this.props.value)
+        
         this.props.onChange && this.props.onChange(e.target.value);
         this.inputRef.value = this.props.value
     };

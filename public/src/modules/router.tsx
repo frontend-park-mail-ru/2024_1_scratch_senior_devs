@@ -64,10 +64,10 @@ export class Router extends ScReact.Component<any, routerState> {
     };
 
     public handlePopState = () => {
-        console.log("handlePopState")
+        
         const path = this.normalizeURL(window.location.pathname)
 
-        console.log(path)
+        
 
         if (path.includes('notes/')) {
             const noteId = path.split('/').at(-1);
@@ -79,7 +79,7 @@ export class Router extends ScReact.Component<any, routerState> {
 
         const page: RouterMapValue = this.pages[path];
 
-        console.log(page)
+        
 
         if (page.loader !== undefined) {
 
@@ -110,12 +110,12 @@ export class Router extends ScReact.Component<any, routerState> {
     }
 
     public go(raw: string): void {
-        console.log("go")
-        console.log(raw)
+        
+        
 
         const path = this.normalizeURL(raw)
 
-        console.log(path)
+        
 
         let page: RouterMapValue = this.pages[path];
 
@@ -123,7 +123,7 @@ export class Router extends ScReact.Component<any, routerState> {
             page = this.pages['notes'];
         }
 
-        console.log(page)
+        
 
         history.pushState(null, null, path);
         if (page === undefined) {

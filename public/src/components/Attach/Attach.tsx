@@ -13,7 +13,7 @@ export class Attach extends ScReact.Component<any, any> {
     }
 
     downloadAttach = (e) => {
-        console.log('downloadAttach');
+        
         if (!this.closeBtnRef.contains(e.target)){
             AppDispatcher.dispatch(NotesActions.DOWNLOAD_FILE, {
                 id: this.props.id,

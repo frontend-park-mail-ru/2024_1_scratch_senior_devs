@@ -18,8 +18,8 @@ export class UpdatePasswordForm extends ScReact.Component<any, any> {
     };
 
     componentDidUpdate() {
-        console.log('componentDidUpdate');
-        console.log(this.props); // Пусто
+        
+        
 
         // TODO
         // if (this.props.open === false) {

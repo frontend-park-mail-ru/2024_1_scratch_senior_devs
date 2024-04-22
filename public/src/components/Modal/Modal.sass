@@ -11,10 +11,12 @@
 	align-items: center
 	transition: top 0ms ease-in-out 300ms
 	z-index: 10
+	pointer-events: none
 
 	&.active
 		top: 0
 		transition: top 0ms ease-in-out 0ms
+		pointer-events: auto
 
 		.overlay
 			opacity: 1

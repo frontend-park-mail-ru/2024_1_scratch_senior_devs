@@ -22,7 +22,7 @@ export const NotesLoader = async (path:string) => {
         }
 
         const callback = (state: UserStoreState) => {
-            console.log("NotesPage.loader")
+            
 
             isAuth = state.isAuth;
 
@@ -38,7 +38,7 @@ export const NotesLoader = async (path:string) => {
                             // AppToasts.error('Заметка не найдена');
                             // history.pushState(null, '', '/notes');
                             // resolve({notes: store.notes});
-                            console.log("not found")
+                            
                             AppRouter.go("/404")
                             reject()
                         });

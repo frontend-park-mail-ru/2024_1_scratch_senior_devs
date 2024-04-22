@@ -9,6 +9,7 @@ import {Dropdown} from '../Dropdown/Dropdown';
 import {Tippy} from '../Tippy/Tippy';
 import {Modal} from '../Modal/Modal';
 import YoutubeDialogForm from '../YoutubeDialog/YoutubeDialog';
+import AddNoteLinkForm from "../AddNoteLinkForm/AddNoteLinkForm";
 
 export interface Note {
     title: string,
@@ -25,6 +26,7 @@ export class Editor extends Component<any, EditorState> {
         dropdownOpen: false,
         tippyOpen: false,
         youtubeDialogOpen: false,
+        addNoteLinkDialogOpen: false,
         title: ''
     };
 
@@ -75,7 +77,7 @@ export class Editor extends Component<any, EditorState> {
                             offsetAnchor,
                             offsetFocus
                         );
-                        console.log('MOOVE');
+                        
 
                         // AppDispatcher.dispatch(NoteStoreActions.CHANGE_PIECE_ATTRIBUTES,
                         //     {
@@ -93,12 +95,12 @@ export class Editor extends Component<any, EditorState> {
     }
 
     updateState = (store:NoteStoreState) => {
-        console.log("Editor.UpdateState")
+        
         if (AppNoteStore.state.note.title.length > 0) {
             this.noteTitleRef.dataset.placeholder = '';
         }
 
-        console.log(store.note)
+        
         if (store.note?.title.length == 0) {
             this.noteTitleRef.dataset.placeholder = "Введите название"
         }
@@ -113,7 +115,7 @@ export class Editor extends Component<any, EditorState> {
     };
 
     closeEditor = () => {
-        console.log('closeEditor');
+        
         AppDispatcher.dispatch(NoteStoreActions.CLOSE_DROPDOWN);
         this.noteTitleRef.dataset.placeholder = ""
 
@@ -151,13 +153,27 @@ export class Editor extends Component<any, EditorState> {
         }));
     };
 
+    closeAddNoteLinkDialog = () => {
+        this.setState(state => ({
+            ...state,
+            addNoteLinkDialogOpen: false
+        }));
+    }
+
+    openAddNoteLinkDialog = () => {
+        this.setState(state => ({
+            ...state,
+            addNoteLinkDialogOpen: true
+        }));
+    }
+
     private renderBlocks = () => {
         const result = Array<VDomNode>();
         for (let i = 0; i < this.state.blocks; ++i) {
             result.push(
                 <div className={'drag-area'}
                      ondrop={(e) => {
-                         console.log(e.dataTransfer.getData('blockId'), i);
+                         
                          e.target.classList.remove('active');
                          AppDispatcher.dispatch(NoteStoreActions.MOVE_BLOCK, {
                             blockId: Number(e.dataTransfer.getData('blockId')),
@@ -185,7 +201,7 @@ export class Editor extends Component<any, EditorState> {
         result.push(
             <div className={'drag-area'}
                  ondrop={(e) => {
-                     console.log(e.dataTransfer.getData('blockId'), this.state.blocks);
+                     
                      e.target.style.border = 'none';
                      AppDispatcher.dispatch(NoteStoreActions.MOVE_BLOCK, {
                          blockId: Number(e.dataTransfer.getData('blockId')),
@@ -203,8 +219,8 @@ export class Editor extends Component<any, EditorState> {
     };
 
     onChangeTitle = (e) => {
-        console.log('oninput');
-        console.log(e.target.textContent.length);
+        
+        
 
         if (e.target.textContent.length == 0) {
             this.noteTitleRef.dataset.placeholder = 'Введите название';
@@ -223,7 +239,7 @@ export class Editor extends Component<any, EditorState> {
     private editorRef
 
     render(): VDomNode {
-        console.log(`left: ${AppNoteStore.state.dropdownPos.left}; top: ${AppNoteStore.state.dropdownPos.top};`);
+        
         return (
             <div className="note-editor" ref={ref => this.editorRef = ref}>
                 <div className="note-editor__body">
@@ -231,14 +247,16 @@ export class Editor extends Component<any, EditorState> {
                     {this.renderBlocks()}
                 </div>
 
-                <Modal open={this.state.youtubeDialogOpen}
-                       content={<YoutubeDialogForm handleClose={this.closeYoutubeDialog}/>} handleClose={this.closeYoutubeDialog}/>
+                <Modal open={this.state.youtubeDialogOpen} content={<YoutubeDialogForm handleClose={this.closeYoutubeDialog}/>} handleClose={this.closeYoutubeDialog}/>
+
+                <Modal open={this.state.addNoteLinkDialogOpen} content={<AddNoteLinkForm handleClose={this.closeAddNoteLinkDialog}/>} handleClose={this.closeAddNoteLinkDialog}/>
 
                 <Dropdown blockId={AppNoteStore.state.dropdownPos.blockId}
                           style={`left: ${AppNoteStore.state.dropdownPos.left}px; top: ${AppNoteStore.state.dropdownPos.top}px;`}
                           onClose={this.closeEditor}
                           open={this.state.dropdownOpen}
                           openYoutubeDialog={this.openYoutubeDialog}
+                          openAddNoteLinkDialog={this.openAddNoteLinkDialog}
                 />
 
                 <Tippy open={this.state.tippyOpen}

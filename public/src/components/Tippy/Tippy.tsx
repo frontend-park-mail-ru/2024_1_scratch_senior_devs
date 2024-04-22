@@ -38,8 +38,8 @@ export class Tippy extends ScReact.Component<any, any> {
     };
 
     handleEnterLink = (link:string) => {
-        console.log('handleEnterLink');
-        console.log(link);
+        
+        
 
         // TODO
         // AppDispatcher.dispatch(
@@ -80,8 +80,8 @@ export class Tippy extends ScReact.Component<any, any> {
     };
 
     handleSelect = (item) => {
-        console.log('handleSelect');
-        console.log(item.type);
+        
+        
         AppDispatcher.dispatch(
             NoteStoreActions.CHANGE_PIECE_ATTRIBUTES,
             {

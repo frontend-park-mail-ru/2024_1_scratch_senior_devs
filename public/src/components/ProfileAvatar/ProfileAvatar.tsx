@@ -57,7 +57,7 @@ export class ProfileAvatar extends ScReact.Component<any, ProfileAvatarState> {
         }
 
         const file = e.target.files[0];
-        console.log(file.type);
+        
 
         if (file.size > MAX_AVATAR_SIZE) {
             AppToasts.error('Фото слишком большое');

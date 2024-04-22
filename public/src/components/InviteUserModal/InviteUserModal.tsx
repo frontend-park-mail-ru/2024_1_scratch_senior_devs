@@ -61,7 +61,7 @@ export class InviteUserModal extends ScReact.Component<any, any>{
     handleSubmit = (e) => {
         e.preventDefault()
         this.check()
-        if (this.props.open && this.state.validationResult) {
+        if (this.state.validationResult) {
             this.props.handleClose()
             AppToasts.success("Приглашение успешно отправлено")
             setTimeout(() => {
