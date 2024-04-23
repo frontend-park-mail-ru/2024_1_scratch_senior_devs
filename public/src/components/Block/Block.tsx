@@ -43,11 +43,11 @@ export class Block extends Component<BlockProps, BlockState> {
     renderPrevSymbol = (): VDomNode[] => {
         const pieces: Array<VDomNode> = [];
         const block = AppNoteStore.state.note.blocks[this.props.blockId];
-        if (block.attributes != null && 'youtube' in block.attributes) {
-            pieces.push(<iframe width="560" height="315" className="youtube-player" src={block.attributes.youtube} sandbox="allow-same-origin allow-scripts"></iframe>);
-        }
+        // if (block.attributes != null && 'youtube' in block.attributes) {
+        //     pieces.push(<iframe width="560" height="315" className="youtube-player" src={block.attributes.youtube} sandbox="allow-same-origin allow-scripts"></iframe>);
+        // }
         if (block.attributes != null && 'note' in block.attributes) {
-            pieces.push(<SubNote note={block.attributes.note}/>);
+            pieces.push(<SubNote note={block.attributes.note} block={block}/>);
         }
         if (block.attributes != null && 'attach' in block.attributes) {
             const attachId = block.attributes['attach'];
@@ -75,6 +75,10 @@ export class Block extends Component<BlockProps, BlockState> {
         renderOlPrefix(block, this.props.blockId, pieces);
         return pieces;
     };
+
+    renderSpecialBlocks = () => {
+
+    }
 
     renderChildren = () => {
         if (AppNoteStore.state.note.blocks[this.props.blockId].content !== undefined) {
@@ -163,9 +167,8 @@ export class Block extends Component<BlockProps, BlockState> {
                         this.contener.draggable = true;
                     }}/>
 
-
                 <div className="piece-container">
-                    <span key1={'delim'} className={AppNoteStore.state.note.blocks[this.props.blockId].attributes != undefined && 'youtube' in AppNoteStore.state.note.blocks[this.props.blockId].attributes ? "video-container" : ""}>
+                    <span key1={'delim'}>
                         {this.renderPrevSymbol()}
                     </span>
                     {ScReact.createElement(AppNoteStore.state.note.blocks[this.props.blockId].type, {

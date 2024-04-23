@@ -2,7 +2,7 @@ import {ScReact} from "@veglem/screact";
 import "./SubNotesList.sass"
 import {Img} from "../Image/Image";
 import {AppDispatcher} from "../../modules/dispatcher";
-import {NotesActions} from "../../modules/stores/NotesStore";
+import { NotesActions} from "../../modules/stores/NotesStore";
 
 export class SubNotesList extends ScReact.Component<any, any> {
     state = {

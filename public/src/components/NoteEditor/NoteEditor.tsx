@@ -32,6 +32,8 @@ export class NoteEditor extends ScReact.Component<any, any> {
         console.log(AppNoteStore.state.note)
 
         if (this.state.selectedNote) {
+            console.log("parent")
+            console.log(this.state.selectedNote.data.parent)
             AppDispatcher.dispatch(NotesActions.SAVE_NOTE,  {
                 id: this.state.selectedNote.id,
                 note: AppNoteStore.state.note,
@@ -129,8 +131,8 @@ export class NoteEditor extends ScReact.Component<any, any> {
                             <span ref={ref => this.savingLabelRef = ref}></span>
                         </div>
                         {this.state.selectedNote?.data.parent ?
-                            <div className="back-to-parent-note-btn-container">
-                                <Img src="arrow-up.svg" className="back-to-parent-note-btn" onClick={this.openParentIcon}/>
+                            <div className="back-to-parent-note-btn-container" onclick={this.openParentIcon}>
+                                <Img src="arrow-up.svg" className="back-to-parent-note-btn" o/>
                             </div> : ""
                         }
                         {/*<SubNotesList notes={this.state.selectedNoteChildren} />*/}

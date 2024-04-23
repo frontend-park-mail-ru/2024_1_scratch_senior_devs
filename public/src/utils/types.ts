@@ -4,7 +4,7 @@ export type NoteType = {
         parent: string,
         children: [],
         title: string
-        content: string,
+        content: any[],
     },
     update_time: string
 }

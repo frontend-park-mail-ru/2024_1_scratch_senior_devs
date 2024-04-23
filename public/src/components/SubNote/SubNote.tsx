@@ -3,13 +3,31 @@ import {AppDispatcher} from "../../modules/dispatcher";
 import {NotesActions} from "../../modules/stores/NotesStore";
 import {Img} from "../Image/Image";
 import "./SubNote.sass"
+import {AppToasts} from "../../modules/toasts";
 
 export class SubNote extends ScReact.Component<any, any> {
+    state = {
+        loading: true
+    }
+
+    componentDidMount() {
+        setTimeout(() => {
+            this.setState(state => ({
+                ...state,
+                loading: false
+            }))
+        }, 1000)
+    }
+
     handleClick = () => {
-        try {
+        if (this.state.loading) {
+            return
+        }
+
+        if (this.props.note.id) {
             AppDispatcher.dispatch(NotesActions.OPEN_NOTE, this.props.note.id)
-        } catch {
-            console.log("asdfasdfasdfasdasdf")
+        } else {
+            AppToasts.info("Данной заметки не существует")
         }
     }
 

@@ -333,9 +333,6 @@ class NoteRequests {
     };
 
     Update = async({id, note, parent}, children, jwt: string, csrf:string)=> {
-        console.log("Update")
-        console.log(note)
-
         const response = await Ajax.Post(this.baseUrl + '/' + id + '/edit', {
             headers: {
                 'Authorization': jwt,

@@ -117,7 +117,7 @@ export class Dropdown extends ScReact.Component<any, any> {
         } else if (id === 'youtube') {
             this.props.openYoutubeDialog();
         } else if (id === "note") {
-            AppDispatcher.dispatch(NotesActions.CREATE_SUB_NOTE, true)
+            AppDispatcher.dispatch(NotesActions.CREATE_SUB_NOTE)
         }
 
         AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK_TYPE, {

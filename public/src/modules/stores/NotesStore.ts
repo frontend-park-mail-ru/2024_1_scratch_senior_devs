@@ -6,6 +6,7 @@ import {AppToasts} from '../toasts';
 import {AppNoteStore, NoteStoreActions} from './NoteStore';
 import {BlockNode} from '../../components/Block/Block';
 import {NoteType} from "../../utils/types";
+import {parseNoteTitle} from "../utils";
 
 export type NotesStoreState = {
     notes: NoteType[],
@@ -65,7 +66,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
                     await this.createNewNote();
                     break;
                 case NotesActions.CREATE_SUB_NOTE:
-                    await this.createSubNote(action.payload);
+                    await this.createSubNote();
                     break;
                 case NotesActions.UPLOAD_IMAGE:
                     await this.uploadImage(action.payload);
@@ -117,8 +118,46 @@ class NotesStore extends BaseStore<NotesStoreState> {
             this.selectNote(note);
 
         } catch (e) {
-            console.log(e)
             AppToasts.error('Заметка не найдена');
+        }
+    }
+
+    async fetchSubNote (noteId, blockId) {
+        try {
+            const note = await AppNoteRequests.Get(noteId, AppUserStore.state.JWT);
+
+            const block = AppNoteStore.state.note.blocks.find(block => block.id == blockId);
+
+            block.attributes = {
+                note: {
+                    id: noteId,
+                    title: parseNoteTitle(note.data.title)
+                }
+            };
+
+            AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
+                blockId: AppNoteStore.state.note.blocks.indexOf(block),
+                newBlock: block
+            });
+
+            AppDispatcher.dispatch(NoteStoreActions.REMOVE_CURSOR)
+
+        } catch {
+            const block = AppNoteStore.state.note.blocks.find(block => block.id == blockId);
+
+            block.attributes = {
+                note: {
+                    id: null,
+                    title: "Заметка не найдена"
+                }
+            };
+
+            AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
+                blockId: AppNoteStore.state.note.blocks.indexOf(block),
+                newBlock: block
+            });
+
+            AppDispatcher.dispatch(NoteStoreActions.REMOVE_CURSOR)
         }
     }
 
@@ -128,6 +167,12 @@ class NotesStore extends BaseStore<NotesStoreState> {
             selectedNote: note,
             selectedNoteChildren: note.data.children
         }));
+
+        note.data.content.forEach(async (item) => {
+            if (item.type == "note" && item.attributes) {
+                await this.fetchSubNote(item.attributes.note.id, item.id)
+            }
+        })
     }
 
     async openNote(id:string) {
@@ -184,6 +229,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             let notes:NoteType[] = await AppNoteRequests.GetAll(AppUserStore.state.JWT, params);
 
+            // TODO: перенести фильтрацию (по полю embedded) на бэкенд
             notes = notes.filter((note) => !note.data.parent)
 
             this.SetState(state => ({
@@ -207,6 +253,13 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 ...state,
                 notes: state.notes.filter(item => item.id !== this.state.selectedNote.id)
             }));
+
+            console.log("deleteNote")
+
+            if (this.state.selectedNote.data.parent) {
+                await this.openNote(this.state.selectedNote.data.parent)
+                return
+            }
 
             this.closeNote();
 
@@ -253,7 +306,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
         }
     }
 
-    async createSubNote(insertLink=false) {
+    async createSubNote() {
 
         if (!this.state.selectedNote) {
             return
@@ -271,33 +324,26 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 title: "Новая заметка"
             }
 
-            console.log(subNote)
-
             this.state.selectedNoteChildren = [...this.state.selectedNoteChildren, subNote]
+
+            const block = AppNoteStore.state.note.blocks[AppNoteStore.state.dropdownPos.blockId];
+            block.type = 'note';
+            block.content = undefined;
+            block.attributes = {
+                note: subNote
+            };
+
+            AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
+                blockId: AppNoteStore.state.dropdownPos.blockId,
+                newBlock: block
+            });
+
+            AppDispatcher.dispatch(NoteStoreActions.REMOVE_CURSOR)
 
             await this.saveNote({
                 id: this.state.selectedNote.id,
                 note: AppNoteStore.state.note
             })
-
-            if (insertLink) {
-                const block = AppNoteStore.state.note.blocks[AppNoteStore.state.dropdownPos.blockId];
-                block.type = 'div';
-                block.content = undefined;
-                block.attributes = {
-                    note: subNote
-                };
-
-                console.log(block)
-
-                AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
-                    blockId: AppNoteStore.state.dropdownPos.blockId,
-                    newBlock: block
-                });
-
-                AppDispatcher.dispatch(NoteStoreActions.REMOVE_CURSOR)
-            }
-
 
         } catch (e) {
             console.log(e.message)
