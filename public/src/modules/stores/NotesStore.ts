@@ -247,8 +247,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             let notes:NoteType[] = await AppNoteRequests.GetAll(AppUserStore.state.JWT, params);
 
-            // TODO: перенести фильтрацию (по полю embedded) на бэкенд
-            notes = notes.filter((note) => !note.parent)
+            // TODO: странная фильтрация
+            notes = notes.filter((note) => note.parent == "00000000-0000-0000-0000-000000000000")
 
             this.SetState(state => ({
                 ...state,
