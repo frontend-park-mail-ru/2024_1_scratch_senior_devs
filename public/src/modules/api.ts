@@ -339,9 +339,9 @@ class NoteRequests {
                 'x-csrf-token': csrf
             },
             body: {
+                parent: parent,
+                children: children,
                 data: {
-                    parent: parent,
-                    children: children,
                     title: note.title,
                     content: note.blocks
                 }
@@ -361,9 +361,8 @@ class NoteRequests {
                 'x-csrf-token': csrf
             },
             body: {
-                embedded: false,
+                children: [],
                 data: {
-                    children: [],
                     title: '',
                     content: [
                         {
@@ -385,6 +384,7 @@ class NoteRequests {
         throw new Error();
     };
 
+    // TODO: отдельная ручка /add_sub_note
     AddSubNote = async (id:string, jwt:string, csrf:string) => {
         const response = await Ajax.Post(this.baseUrl + '/add', {
             headers: {
@@ -392,11 +392,8 @@ class NoteRequests {
                 'x-csrf-token': csrf
             },
             body: {
-                embedded: true,
                 data: {
-                    children: [],
                     title: '',
-                    parent: id,
                     content: [
                         {
                             'id': '1',

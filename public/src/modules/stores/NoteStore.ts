@@ -133,7 +133,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
             this.severs.forEach((saver) => {
                 saver();
             });
-        }, 1000);
+        }, 500);
     };
 
     public AddSaver = (saver: () => any) => {

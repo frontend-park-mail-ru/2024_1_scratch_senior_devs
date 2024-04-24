@@ -16,7 +16,7 @@ export class SubNote extends ScReact.Component<any, any> {
                 ...state,
                 loading: false
             }))
-        }, 1000)
+        }, 500)
     }
 
     handleClick = () => {

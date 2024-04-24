@@ -64,7 +64,7 @@
 
 				.back-label
 					font-size: 18px
-					color: $text-main-color--darker
+					color: $text-secondary-color
 
 		.right-container
 			display: flex
@@ -73,16 +73,61 @@
 
 			.note-save-indicator
 				span
-					color: $text-main-color--darker
+					color: $text-secondary-color
 					transition: 0.3s
 
 			.back-to-parent-note-btn-container
 				padding: 8px
 				border-radius: 8px
 				cursor: pointer
+				position: relative
 
 				&:hover
-					background: rgba(0,0,0,0.15)
+					background: rgba(0, 0, 0, 0.15)
+
+					&::before, &::after
+						display: flex
+						opacity: 1
+						animation: showAnim 0.3s
+
+				&::before, &::after
+					text-transform: none
+					font-size: .9em
+					line-height: 1
+					user-select: none
+					pointer-events: none
+					position: absolute
+					display: none
+					opacity: 0
+					animation: closeAnim 0.3s
+
+				&::before
+					content: ''
+					border: 5px solid transparent
+					border-top-width: 0
+					border-bottom-color: $tooltip-background
+					z-index: 1001
+					left: 0
+					bottom: 0
+					transform: translate(150%, 5px)
+
+				&::after
+					content: "Вернуться"
+					text-align: center
+					min-width: 3em
+					max-width: 21em
+					white-space: nowrap
+					overflow: hidden
+					text-overflow: ellipsis
+					padding: 1ch 1.5ch
+					border-radius: 8px
+					box-shadow: $box-shadow-primary
+					background: $tooltip-background
+					color: $text-secondary-color
+					z-index: 1000
+					top: 100%
+					left: 50%
+					transform: translate(-50%, 5px)
 
 				.back-to-parent-note-btn
 					width: 24px
@@ -90,6 +135,7 @@
 					transition: 0.3s
 					filter: invert(80%)
 					cursor: pointer
+					user-select: none
 
 					&:hover
 						opacity: 1
@@ -113,8 +159,6 @@
 
 				&:hover
 					opacity: 1
-
-
 
 	.bottom-panel
 		display: flex

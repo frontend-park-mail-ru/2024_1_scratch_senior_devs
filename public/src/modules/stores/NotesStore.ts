@@ -126,13 +126,22 @@ class NotesStore extends BaseStore<NotesStoreState> {
         try {
             const note = await AppNoteRequests.Get(noteId, AppUserStore.state.JWT);
 
+            const data = {
+                id: noteId,
+                title: parseNoteTitle(note.data.title)
+            }
+
+            this.SetState(state => ({
+                ...state,
+                selectedNoteChildren: state.selectedNoteChildren.map(subnote => subnote.id != note.id ? subnote : data)
+            }))
+
+            // this.state.selectedNoteChildren = this.state.selectedNoteChildren.map(subnote => subnote.id != note.id ? subnote : data)
+
             const block = AppNoteStore.state.note.blocks.find(block => block.id == blockId);
 
             block.attributes = {
-                note: {
-                    id: noteId,
-                    title: parseNoteTitle(note.data.title)
-                }
+                note: data
             };
 
             AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
@@ -144,6 +153,11 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
         } catch {
             const block = AppNoteStore.state.note.blocks.find(block => block.id == blockId);
+
+            this.SetState(state => ({
+                ...state,
+                selectedNoteChildren: state.selectedNoteChildren.filter(note => note.id != noteId)
+            }))
 
             block.attributes = {
                 note: {
@@ -162,12 +176,16 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     selectNote (note:NoteType) {
+        console.log("selectNote")
+        console.log("note.children")
+
         this.SetState(state => ({
             ...state,
             selectedNote: note,
-            selectedNoteChildren: note.data.children
+            selectedNoteChildren: note.children
         }));
 
+        // TODO: пробегаться не по блокам а по children
         note.data.content.forEach(async (item) => {
             if (item.type == "note" && item.attributes) {
                 await this.fetchSubNote(item.attributes.note.id, item.id)
@@ -230,7 +248,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             let notes:NoteType[] = await AppNoteRequests.GetAll(AppUserStore.state.JWT, params);
 
             // TODO: перенести фильтрацию (по полю embedded) на бэкенд
-            notes = notes.filter((note) => !note.data.parent)
+            notes = notes.filter((note) => !note.parent)
 
             this.SetState(state => ({
                 ...state,

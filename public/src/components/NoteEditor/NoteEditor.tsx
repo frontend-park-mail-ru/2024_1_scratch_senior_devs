@@ -28,12 +28,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
     }
 
     saveNote = () => {
-        console.log("saveNote")
-        console.log(AppNoteStore.state.note)
-
         if (this.state.selectedNote) {
-            console.log("parent")
-            console.log(this.state.selectedNote.data.parent)
             AppDispatcher.dispatch(NotesActions.SAVE_NOTE,  {
                 id: this.state.selectedNote.id,
                 note: AppNoteStore.state.note,
@@ -130,11 +125,18 @@ export class NoteEditor extends ScReact.Component<any, any> {
                         <div className="note-save-indicator">
                             <span ref={ref => this.savingLabelRef = ref}></span>
                         </div>
-                        {this.state.selectedNote?.data.parent ?
-                            <div className="back-to-parent-note-btn-container" onclick={this.openParentIcon}>
-                                <Img src="arrow-up.svg" className="back-to-parent-note-btn" o/>
-                            </div> : ""
-                        }
+
+                        {/*{this.state.selectedNote?.data.parent ?*/}
+                        {/*    <div className="back-to-parent-note-btn-container" onclick={this.openParentIcon}>*/}
+                        {/*        <Img src="arrow-up.svg" className="back-to-parent-note-btn" o/>*/}
+                        {/*    </div> : ""*/}
+                        {/*}*/}
+
+                        <div className="back-to-parent-note-btn-container" onclick={this.openParentIcon}>
+                            <Img src="arrow-up.svg" className="back-to-parent-note-btn" />
+                       </div>
+
+
                         {/*<SubNotesList notes={this.state.selectedNoteChildren} />*/}
                         <NoteMenu deleteNote={this.openDeleteNoteModal} inviteUser={this.openInviteUserModal}/>
                         <div className="close-editor-btn-container" onclick={this.closeEditor}>
