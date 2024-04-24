@@ -10,6 +10,9 @@ import {Modal} from '../Modal/Modal';
 import {DeleteNoteDialog} from '../DeleteNoteDialog/DeleteNoteDialog';
 import NoteMenu from "../NoteMenu/NoteMenu";
 import {InviteUserModal} from "../InviteUserModal/InviteUserModal";
+import {Tooltip} from "../Tooltip/Tooltip";
+import {AppToasts} from "../../modules/toasts";
+import {TagList} from "../TagList/TagList";
 
 export class NoteEditor extends ScReact.Component<any, any> {
     state = {
@@ -17,7 +20,8 @@ export class NoteEditor extends ScReact.Component<any, any> {
         selectedNoteChildren: [],
         content: undefined,
         deleteNoteModalOpen: false,
-        inviteUserModalOpen: false
+        inviteUserModalOpen: false,
+        favourite: false // TODO
     };
 
     private savingLabelRef;
@@ -100,8 +104,20 @@ export class NoteEditor extends ScReact.Component<any, any> {
         }))
     }
 
-    openParentIcon = () => {
-        AppDispatcher.dispatch(NotesActions.OPEN_NOTE, this.state.selectedNote.data.parent)
+    openParentNote = () => {
+        // TODO
+        console.log("openParentNote")
+        // AppDispatcher.dispatch(NotesActions.OPEN_NOTE, this.state.selectedNote.data.parent)
+    }
+
+    addToFavoriteBtn = () => {
+        // TODO
+        console.log("addToFavoriteBtn")
+        AppToasts.success("Заметка добавлена в избранное")
+        this.setState(state => ({
+            ...state,
+            favourite: !state.favourite
+        }))
     }
 
     render() {
@@ -120,6 +136,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
                             <Img src="left-chevron.svg" className="back-icon"/>
                             <span className="back-label">Заметки</span>
                         </div>
+                        <TagList />
                     </div>
                     <div className="right-container">
                         <div className="note-save-indicator">
@@ -132,13 +149,14 @@ export class NoteEditor extends ScReact.Component<any, any> {
                         {/*    </div> : ""*/}
                         {/*}*/}
 
-                        <div className="back-to-parent-note-btn-container" onclick={this.openParentIcon}>
-                            <Img src="arrow-up.svg" className="back-to-parent-note-btn" />
-                       </div>
+                        <Tooltip label="В избранное" icon={this.state.favourite ? "star-filled.svg" : "star.svg"} onClick={this.addToFavoriteBtn}/>
 
+                        <Tooltip label="Вернуться" icon="arrow-up.svg" onClick={this.openParentNote}/>
 
                         {/*<SubNotesList notes={this.state.selectedNoteChildren} />*/}
+
                         <NoteMenu deleteNote={this.openDeleteNoteModal} inviteUser={this.openInviteUserModal}/>
+
                         <div className="close-editor-btn-container" onclick={this.closeEditor}>
                             <Img src="close.svg" className="icon close-editor-icon" />
                         </div>

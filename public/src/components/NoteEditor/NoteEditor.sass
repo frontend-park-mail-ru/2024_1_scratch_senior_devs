@@ -48,6 +48,105 @@
 			padding: 0 20px
 
 		.left-container
+			display: flex
+			align-items: flex-start
+			padding-left: 30px
+			flex: 1
+
+			.tags-wrapper
+				align-items: flex-start
+				gap: 10px
+				background: #18232f
+				padding: 8px 42px 8px 16px
+				border-radius: 12px
+				position: absolute
+				z-index: 100
+				flex-wrap: wrap
+				justify-content: flex-start
+				width: 425px
+				display: grid
+				grid-template-rows: 0fr
+				transition: grid-template-rows 0.5s
+				overflow: hidden
+
+				&.expanded
+					grid-template-rows: 1fr
+					box-shadow: $box-shadow-primary
+
+					.tag-items
+						flex-flow: row wrap
+
+					.expand-btn
+						transform: rotate(-180deg)
+
+				.mock
+					width: 30px
+					height: 30px
+
+				span
+					font-size: 20px
+					color: #eee
+
+				.expand-btn, .tags-icon
+					width: 24px
+					height: 24px
+					transition: 0.3s
+					filter: invert(80%)
+					cursor: pointer
+					position: absolute
+					right: 12px
+					top: 12px
+
+					&:hover
+						filter: invert(90%)
+
+				.tags-icon
+					left: 0
+
+				.tag-items
+					display: flex
+					align-items: flex-start
+					flex-flow: row wrap
+					overflow: hidden
+
+					input
+						outline: none
+						border: none
+						flex: 3
+						padding: 5px
+						font-size: 16px
+						background: transparent
+						color: #eee
+						width: 100%
+						min-width: 100px
+						line-height: 30px
+
+						&::placeholder
+							color: $text-secondary-color
+
+					.tag-item
+						display: flex
+						justify-content: center
+						align-items: center
+						gap: 5px
+						padding: 4px 8px
+						background: #2b3b55
+						border-radius: 12px
+						margin: 3px 6px 3px 0
+
+						span
+							font-size: 18px
+
+						.delete-tag-btn
+							width: 24px
+							height: 24px
+							transition: 0.3s
+							filter: invert(80%)
+							cursor: pointer
+
+							&:hover
+								filter: invert(90%)
+
 			.close-editor-label-container
 				display: none
 				align-items: center
@@ -76,7 +175,7 @@
 					color: $text-secondary-color
 					transition: 0.3s
 
-			.back-to-parent-note-btn-container
+			.add-to-favorite-btn-container
 				padding: 8px
 				border-radius: 8px
 				cursor: pointer
@@ -85,57 +184,11 @@
 				&:hover
 					background: rgba(0, 0, 0, 0.15)
 
-					&::before, &::after
-						display: flex
-						opacity: 1
-						animation: showAnim 0.3s
-
-				&::before, &::after
-					text-transform: none
-					font-size: .9em
-					line-height: 1
-					user-select: none
-					pointer-events: none
-					position: absolute
-					display: none
-					opacity: 0
-					animation: closeAnim 0.3s
-
-				&::before
-					content: ''
-					border: 5px solid transparent
-					border-top-width: 0
-					border-bottom-color: $tooltip-background
-					z-index: 1001
-					left: 0
-					bottom: 0
-					transform: translate(150%, 5px)
-
-				&::after
-					content: "Вернуться"
-					text-align: center
-					min-width: 3em
-					max-width: 21em
-					white-space: nowrap
-					overflow: hidden
-					text-overflow: ellipsis
-					padding: 1ch 1.5ch
-					border-radius: 8px
-					box-shadow: $box-shadow-primary
-					background: $tooltip-background
-					color: $text-secondary-color
-					z-index: 1000
-					top: 100%
-					left: 50%
-					transform: translate(-50%, 5px)
-
-				.back-to-parent-note-btn
+				.add-to-favorite-btn
 					width: 24px
 					height: 24px
 					transition: 0.3s
 					filter: invert(80%)
-					cursor: pointer
-					user-select: none
 
 					&:hover
 						opacity: 1
@@ -151,14 +204,11 @@
 				@media screen and (max-width: $lg)
 					display: none
 
-			.icon
-				width: 24px
-				height: 24px
-				transition: 0.3s
-				filter: invert(80%)
-
-				&:hover
-					opacity: 1
+		.icon
+			width: 24px
+			height: 24px
+			transition: 0.3s
+			filter: invert(80%)
 
 	.bottom-panel
 		display: flex
