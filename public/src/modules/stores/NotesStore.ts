@@ -57,7 +57,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
                     this.exit();
                     break;
                 case NotesActions.DELETE_NOTE:
-                    await this.deleteNote();
+                    await this.deleteNote(action.payload);
                     break;
                 case NotesActions.SAVE_NOTE:
                     await this.saveNote(action.payload);
@@ -177,7 +177,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
     selectNote (note:NoteType) {
         console.log("selectNote")
-        console.log("note.children")
+        console.log(note)
 
         this.SetState(state => ({
             ...state,
@@ -195,11 +195,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
     async openNote(id:string) {
         try {
-            console.log("openNote")
-
             const note = await AppNoteRequests.Get(id, AppUserStore.state.JWT);
-
-            console.log(note)
 
             this.selectNote(note);
 
@@ -210,7 +206,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
             AppToasts.error('Заметка не найдена');
         }
     }
-
 
     async init () {
         await this.fetchNotes(true);
@@ -247,9 +242,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             let notes:NoteType[] = await AppNoteRequests.GetAll(AppUserStore.state.JWT, params);
 
-            // TODO: странная фильтрация
-            notes = notes.filter((note) => note.parent == "00000000-0000-0000-0000-000000000000")
-
             this.SetState(state => ({
                 ...state,
                 fetching: false,
@@ -261,21 +253,23 @@ class NotesStore extends BaseStore<NotesStoreState> {
         }
     }
 
-    async deleteNote() {
+    async deleteNote({id, redirect=true}:{id:string, redirect:boolean}) {
         try {
-            const {csrf} = await AppNoteRequests.Delete(this.state.selectedNote.id, AppUserStore.state.JWT, AppUserStore.state.csrf);
+            const {csrf} = await AppNoteRequests.Delete(id, AppUserStore.state.JWT, AppUserStore.state.csrf);
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 
             this.SetState(state => ({
                 ...state,
-                notes: state.notes.filter(item => item.id !== this.state.selectedNote.id)
+                notes: state.notes.filter(item => item.id !== id)
             }));
 
-            console.log("deleteNote")
+            if (!redirect) {
+                return
+            }
 
-            if (this.state.selectedNote.data.parent) {
-                await this.openNote(this.state.selectedNote.data.parent)
+            if (this.state.selectedNote.parent != "00000000-0000-0000-0000-000000000000") {
+                await this.openNote(this.state.selectedNote.parent)
                 return
             }
 
@@ -292,7 +286,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
     async saveNote(data) {
         try {
-            const {csrf} = await AppNoteRequests.Update(data, this.state.selectedNoteChildren, AppUserStore.state.JWT, AppUserStore.state.csrf);
+            const {csrf} = await AppNoteRequests.Update(data, AppUserStore.state.JWT, AppUserStore.state.csrf);
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 
@@ -325,20 +319,23 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     async createSubNote() {
+        console.log("createSubNote")
 
         if (!this.state.selectedNote) {
             return
         }
 
         try {
-            const response = await AppNoteRequests.AddSubNote(this.state.selectedNote.id, AppUserStore.state.JWT, AppUserStore.state.csrf);
+            const {status, csrf, subnote_id} = await AppNoteRequests.AddSubNote(this.state.selectedNote.id, AppUserStore.state.JWT, AppUserStore.state.csrf);
 
-            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, response.headers['x-csrf-token']);
 
-            console.log(response.body)
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+
+            console.log(subnote_id)
+            console.log(status)
 
             const subNote = {
-                id: response.body.id,
+                id: subnote_id,
                 title: "Новая заметка"
             }
 

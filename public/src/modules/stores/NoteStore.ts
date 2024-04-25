@@ -205,10 +205,14 @@ class NoteStore extends BaseStore<NoteStoreState> {
     };
 
     private deleteBlock = (delPos: number) => {
+        console.log("deleteBlock")
+        console.log(this.state.note.blocks[(delPos == 0 ? 0 : (delPos - 1))])
+
         this.closeDropdown();
         if (this.state.note.blocks.length == 1) {
             return;
         }
+
         this.SetState(s => {
             const oldNote: Note = this.state.note;
             oldNote.blocks.splice(delPos, 1);
@@ -218,6 +222,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
             }, 0);
             return {...s, note: oldNote, cursorPosition: {blockId: (delPos == 0 ? 0 : (delPos - 1)), pos: pos}};
         });
+
         this.addEmptyBlockToEnd();
         this.saveNote();
     };

@@ -314,7 +314,7 @@ class NoteRequests {
         throw Error(response.body.message);
     };
 
-    Delete = async (id: number, jwt: string, csrf:string) => {
+    Delete = async (id: string, jwt: string, csrf:string) => {
         const response = await Ajax.Delete(this.baseUrl + '/' + id + '/delete', {
             headers: {
                 'Authorization': jwt,
@@ -332,15 +332,13 @@ class NoteRequests {
         throw new Error(response.body.message);
     };
 
-    Update = async({id, note, parent}, children, jwt: string, csrf:string)=> {
+    Update = async({id, note}, jwt: string, csrf:string)=> {
         const response = await Ajax.Post(this.baseUrl + '/' + id + '/edit', {
             headers: {
                 'Authorization': jwt,
                 'x-csrf-token': csrf
             },
             body: {
-                parent: parent,
-                children: children,
                 data: {
                     title: note.title,
                     content: note.blocks
@@ -384,9 +382,11 @@ class NoteRequests {
         throw new Error();
     };
 
-    // TODO: отдельная ручка /add_sub_note
     AddSubNote = async (id:string, jwt:string, csrf:string) => {
-        const response = await Ajax.Post(this.baseUrl + '/add', {
+        console.log("AddSubNote")
+        console.log(id)
+
+        const response = await Ajax.Post(this.baseUrl + '/' + id + "/add_subnote", {
             headers: {
                 'Authorization': jwt,
                 'x-csrf-token': csrf
@@ -406,9 +406,14 @@ class NoteRequests {
             }
         });
 
-        if (response.status == 201) {
-            response.body.data = decode(response.body.data);
-            return response;
+        console.log(response.status)
+
+        if (response.status == 200) {
+            return {
+                status: response.status,
+                csrf: response.headers['x-csrf-token'],
+                subnote_id: response.body.id
+            }
         }
 
         throw new Error();

@@ -11,9 +11,10 @@ import {renderOlPrefix} from './utils/ol';
 import {getCursorInBlock, setCursorInBlock} from '../../utils/cursorPos';
 import {moveCursorUpAndDown} from './utils/cursorActions';
 import {Attach} from '../Attach/Attach';
-import {NotesActions} from '../../modules/stores/NotesStore';
+import {AppNotesStore, NotesActions} from '../../modules/stores/NotesStore';
 import {renderToDoPrefix} from './utils/todo';
 import SubNote from "../SubNote/SubNote";
+import {SubNoteType} from "../../utils/types";
 
 export interface BlockNode {
     id: string
@@ -340,6 +341,18 @@ export class Block extends Component<BlockProps, BlockState> {
                                         AppNoteStore.state.note.blocks[this.props.blockId].content.length === 0)) {
                                     e.preventDefault();
                                     const block = AppNoteStore.state.note.blocks[this.props.blockId];
+                                    console.log(block.attributes)
+                                    if (block.type == "note") {
+                                        const note = block.attributes["note"] as SubNoteType
+                                        console.log(note)
+                                        console.log(note.id)
+                                        if (note.id) {
+                                            AppDispatcher.dispatch(NotesActions.DELETE_NOTE, {
+                                                id: note.id,
+                                                redirect: false
+                                            })
+                                        }
+                                    }
                                     if (block.type !== 'div') {
                                         block.type = 'div';
                                         block.attributes = null;

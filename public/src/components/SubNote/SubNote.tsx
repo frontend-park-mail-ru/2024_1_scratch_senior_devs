@@ -7,17 +7,18 @@ import {AppToasts} from "../../modules/toasts";
 
 export class SubNote extends ScReact.Component<any, any> {
     state = {
-        loading: true
+        loading: false
     }
 
-    componentDidMount() {
-        setTimeout(() => {
-            this.setState(state => ({
-                ...state,
-                loading: false
-            }))
-        }, 500)
-    }
+    // TODO: ?
+    // componentDidMount() {
+    //     setTimeout(() => {
+    //         this.setState(state => ({
+    //             ...state,
+    //             loading: false
+    //         }))
+    //     }, 500)
+    // }
 
     handleClick = () => {
         if (this.state.loading) {

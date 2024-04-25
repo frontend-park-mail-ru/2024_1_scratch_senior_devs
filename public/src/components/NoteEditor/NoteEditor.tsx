@@ -12,7 +12,6 @@ import NoteMenu from "../NoteMenu/NoteMenu";
 import {InviteUserModal} from "../InviteUserModal/InviteUserModal";
 import {Tooltip} from "../Tooltip/Tooltip";
 import {AppToasts} from "../../modules/toasts";
-import {TagList} from "../TagList/TagList";
 
 export class NoteEditor extends ScReact.Component<any, any> {
     state = {
@@ -105,9 +104,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
     }
 
     openParentNote = () => {
-        // TODO
-        console.log("openParentNote")
-        // AppDispatcher.dispatch(NotesActions.OPEN_NOTE, this.state.selectedNote.data.parent)
+        AppDispatcher.dispatch(NotesActions.OPEN_NOTE, this.state.selectedNote.parent)
     }
 
     addToFavoriteBtn = () => {
@@ -136,7 +133,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
                             <Img src="left-chevron.svg" className="back-icon"/>
                             <span className="back-label">Заметки</span>
                         </div>
-                        <TagList />
+                        {/*<TagList />*/}
                     </div>
                     <div className="right-container">
                         <div className="note-save-indicator">
@@ -151,7 +148,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
                         <Tooltip label="В избранное" icon={this.state.favourite ? "star-filled.svg" : "star.svg"} onClick={this.addToFavoriteBtn}/>
 
-                        <Tooltip label="Вернуться" icon="arrow-up.svg" onClick={this.openParentNote}/>
+                        {this.state.selectedNote?.parent != "00000000-0000-0000-0000-000000000000" ? <Tooltip label="Вернуться" icon="arrow-up.svg" onClick={this.openParentNote}/> : ""}
 
                         {/*<SubNotesList notes={this.state.selectedNoteChildren} />*/}
 
