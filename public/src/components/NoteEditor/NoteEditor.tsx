@@ -13,6 +13,7 @@ import {InviteUserModal} from "../InviteUserModal/InviteUserModal";
 import {Tooltip} from "../Tooltip/Tooltip";
 import {AppToasts} from "../../modules/toasts";
 import {TagList} from "../TagList/TagList";
+import {EditorWrapper} from "../EditorNext/EditorWrapper";
 
 export class NoteEditor extends ScReact.Component<any, any> {
     state = {
@@ -32,7 +33,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
     saveNote = () => {
         if (this.state.selectedNote) {
-            AppDispatcher.dispatch(NotesActions.SAVE_NOTE,  {
+            AppDispatcher.dispatch(NotesActions.SAVE_NOTE, {
                 id: this.state.selectedNote.id,
                 note: AppNoteStore.state.note,
                 parent: this.state.selectedNote.data.parent
@@ -52,7 +53,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
         setTimeout(() => AppDispatcher.dispatch(NotesActions.CLOSE_NOTE), 300);
     };
 
-    updateState = (store:NotesStoreState) => {
+    updateState = (store: NotesStoreState) => {
         if (store.selectedNote != this.state.selectedNote) {
             this.savingLabelRef.classList.remove("active")
         }
@@ -129,7 +130,8 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
                 <Modal open={this.state.inviteUserModalOpen}
                        handleClose={this.closeInviteUserModal}
-                       content={<InviteUserModal handleClose={this.closeInviteUserModal} open={this.state.inviteUserModalOpen}/>}
+                       content={<InviteUserModal handleClose={this.closeInviteUserModal}
+                                                 open={this.state.inviteUserModalOpen}/>}
                 />
 
                 <div className="top-panel">
@@ -155,7 +157,8 @@ export class NoteEditor extends ScReact.Component<any, any> {
                         </div>
 
                         <div className={isSubNote ? "hidden" : ""}>
-                            <Tooltip label="В избранное" icon={this.state.favourite ? "star-filled.svg" : "star.svg"} onClick={this.addToFavoriteBtn}/>
+                            <Tooltip label="В избранное" icon={this.state.favourite ? "star-filled.svg" : "star.svg"}
+                                     onClick={this.addToFavoriteBtn}/>
                         </div>
 
                         <div className={!isSubNote ? "hidden" : ""}>
@@ -172,7 +175,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
                 <div className="bottom-panel">
 
-                    <Editor
+                    <EditorWrapper
                         onChangeTitle={(value: string) => {
                             this.props.onChangeTitle(value);
                             this.onChangeNote();
@@ -181,8 +184,19 @@ export class NoteEditor extends ScReact.Component<any, any> {
                             console.log("onChangeContent")
                             this.props.onChangeNote()
                             this.onChangeNote()
-                        }}
-                    />
+                        }}/>
+
+                    {/*<Editor*/}
+                    {/*    onChangeTitle={(value: string) => {*/}
+                    {/*        this.props.onChangeTitle(value);*/}
+                    {/*        this.onChangeNote();*/}
+                    {/*    }}*/}
+                    {/*    onChangeContent={() => {*/}
+                    {/*        console.log("onChangeContent")*/}
+                    {/*        this.props.onChangeNote()*/}
+                    {/*        this.onChangeNote()*/}
+                    {/*    }}*/}
+                    {/*/>*/}
 
 
                 </div>
