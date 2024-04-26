@@ -2,6 +2,10 @@ import {ScReact} from "@veglem/screact";
 import {Img} from "../Image/Image";
 import {AppToasts} from "../../modules/toasts";
 import "./TagList.sass"
+import {AppNotesStore, NotesActions, NotesStoreState} from "../../modules/stores/NotesStore";
+import {AppDispatcher} from "../../modules/dispatcher";
+import {AppNoteStore} from "../../modules/stores/NoteStore";
+
 type TagListState = {
     tags: string[],
     value: string,
@@ -10,17 +14,24 @@ type TagListState = {
 
 export class TagList extends ScReact.Component<any, TagListState> {
     state = {
-        tags: ["Работа", "Учеба", "ВУЗ"],
+        tags: [],
+        selectedTag: null,
         value: "",
-        open: false,
-        count: 2
+        open: false
     }
 
+    private MIN_TAG_LENGTH = 2
+    private MAX_TAG_LENGTH = 12
+
+    private wrapperRef
+    private inputRef
     private openBtnRef
     private tagsPanelRef
 
     componentDidMount() {
         document.addEventListener('click', this.handleClickOutside, true);
+
+        AppNotesStore.SubscribeToStore(this.updateState)
     }
 
     componentWillUnmount() {
@@ -33,7 +44,16 @@ export class TagList extends ScReact.Component<any, TagListState> {
         }
     }
 
-    private inputRef
+    updateState = (store:NotesStoreState) => {
+        console.log("updateState")
+        console.log(store)
+        this.setState(state => {
+            return {
+                ...state,
+                tags: store.selectedNoteTags
+            };
+        });
+    };
 
     setValue = (e) => {
         this.setState(state => ({
@@ -43,6 +63,23 @@ export class TagList extends ScReact.Component<any, TagListState> {
     }
 
     onInput = (e) => {
+        if (e.key == "Backspace") {
+            if (this.state.selectedTag) {
+                this.deleteTag(this.state.selectedTag)
+                this.setState(state => ({
+                    ...state,
+                    selectedTag: null
+                }))
+            } else {
+                if (!this.state.value) {
+                    this.setState(state => ({
+                        ...state,
+                        selectedTag: this.state.tags.at(-1)
+                    }))
+                }
+            }
+        }
+
         if (e.key == "Enter") {
             this.addTag()
         }
@@ -52,31 +89,27 @@ export class TagList extends ScReact.Component<any, TagListState> {
 
     addTag = () => {
         if (this.state.value.length > 0) {
-            if (this.state.value.length < 2) {
-                AppToasts.error("Тэг не может быть короче 2 символов")
+            if (this.state.value.length < this.MIN_TAG_LENGTH) {
+                AppToasts.error("Тэг не может быть короче ${this.MIN_TAG_LENGTH} символов")
                 return
             }
 
-            if (this.state.value.length > 10) {
-                AppToasts.error("Тэг не может быть длинее 10 символов")
+            if (this.state.value.length > this.MAX_TAG_LENGTH) {
+                AppToasts.error(`Тэг не может быть длинее ${this.MAX_TAG_LENGTH} символов`)
                 return
             }
 
-            console.log(this.state.value)
+            this.props.onAddTag(this.state.value)
 
-            this.setState(state => ({
-                ...state,
-                value: "",
-                tags: [...state.tags, this.state.value]
-            }))
-
-            console.log(this.state.tags)
+            // this.setState(state => ({
+            //     ...state,
+            //     value: "",
+            //     tags: [...state.tags, this.state.value]
+            // }))
         }
     }
 
     deleteTag = (name:string) => {
-        const tags = this.state.tags.filter(tag => tag != name)
-        console.log(tags)
         this.setState(state => ({
             ...state,
             tags: state.tags.filter(tag => tag != name)
@@ -84,15 +117,17 @@ export class TagList extends ScReact.Component<any, TagListState> {
     }
 
     toggleOpen = () => {
+        console.log("toggleOpen")
+
         this.setState(state => ({
             ...state,
             open: !state.open
         }))
+
+        // this.wrapperRef.classList.toggle("open")
     }
 
     render() {
-        const tags =this.state.tags.slice(0)
-
         return (
             <div className={"tag-list " + (this.state.open ? "open" : "")}>
 
@@ -105,12 +140,16 @@ export class TagList extends ScReact.Component<any, TagListState> {
 
                     <div className="tag-items">
 
-                        {tags.map(tag => (
-                            <div className="tag-item">
+                        {this.state.tags.map(tag => (
+                            <div className={"tag-item " + (this.state.selectedTag == tag ? "selected" : "")}>
                                 <span>{tag}</span>
                                 <Img src="delete.svg" className="delete-tag-btn" onClick={() => this.deleteTag(tag)}/>
                             </div>
                         ))}
+
+                        <div className="hidden">
+
+                        </div>
 
                         <input type="text" placeholder="Введите тэг" value={this.state.value} oninput={this.setValue} onkeyup={this.onInput} ref={ref => this.inputRef = ref}/>
 

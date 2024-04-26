@@ -12,6 +12,7 @@ export type NotesStoreState = {
     notes: NoteType[],
     selectedNote: NoteType,
     selectedNoteChildren: any[],
+    selectedNoteTags: any[],
     query: string,
     offset: number,
     count: number,
@@ -23,6 +24,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
         notes: [],
         selectedNote: undefined,
         selectedNoteChildren: [],
+        selectedNoteTags: [],
         query: '',
         offset: 0,
         count: 10,
@@ -85,6 +87,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
                     break;
                 case NotesActions.OPEN_NOTE:
                     await this.openNote(action.payload)
+                    break
+                case NotesActions.CREATE_TAG:
+                    await this.createTag(action.payload)
                     break
             }
         });
@@ -182,7 +187,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
         this.SetState(state => ({
             ...state,
             selectedNote: note,
-            selectedNoteChildren: note.children
+            selectedNoteChildren: note.children,
+            selectedNoteTags: ["Работа", "Учеба", "+4"] // TODO
         }));
 
         // TODO: пробегаться не по блокам а по children
@@ -470,6 +476,17 @@ class NotesStore extends BaseStore<NotesStoreState> {
             fetching: true
         }));
     }
+
+    createTag(data) {
+        console.log("createTag")
+        console.log(data)
+        this.SetState(state => ({
+            ...state,
+            selectedNoteTags: [...state.selectedNoteTags, data.tag]
+        }))
+
+       //  this.state.selectedNoteTags =  [...this.state.selectedNoteTags, data.tag]
+    }
 }
 
 export const NotesActions = {
@@ -490,7 +507,8 @@ export const NotesActions = {
     FETCH_IMAGE: 'FETCH_IMAGE',
     START_FETCHING: 'START_FETCHING',
     OPEN_NOTE: 'OPEN_NOTE',
-    CREATE_SUB_NOTE: "CREATE_SUB_NOTE"
+    CREATE_SUB_NOTE: "CREATE_SUB_NOTE",
+    CREATE_TAG: "CREATE_TAG",
 };
 
 export const AppNotesStore = new NotesStore();

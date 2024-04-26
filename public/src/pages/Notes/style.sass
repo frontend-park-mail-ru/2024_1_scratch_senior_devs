@@ -142,6 +142,20 @@
 				&:hover
 					background: rgba(27, 39, 53, 0.8)
 
+				.note-tags-container
+					display: flex
+					gap: 5px
+
+					.note-tag
+						display: flex
+						justify-content: center
+						align-items: center
+						gap: 5px
+						padding: 4px 8px
+						background: #2b3b55
+						border-radius: 12px
+						color: $text-main-color
+
 				h3
 					color: $text-main-color
 
@@ -150,7 +164,7 @@
 
 				@media screen and (min-width: $lg)
 					&.selected
-						box-shadow: 0 0 3px $primary-color, 0 0 10px $primary-color
+						box-shadow: $box-shadow-secondary
 
 				.update-time
 					position: absolute

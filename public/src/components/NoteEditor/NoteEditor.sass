@@ -45,6 +45,9 @@
 		display: flex
 		justify-content: space-between
 
+		.hidden
+			display: none
+
 		@media screen and (max-width: $sm)
 			padding: 0 20px
 
@@ -56,6 +59,7 @@
 
 			@media screen and (max-width: $lg)
 				justify-content: space-between
+				padding-left: 0
 
 			.close-editor-label-container
 				display: none
@@ -79,9 +83,6 @@
 			display: flex
 			align-items: center
 			gap: 12px
-
-			.hidden
-				display: none
 
 			.note-save-indicator
 				display: none

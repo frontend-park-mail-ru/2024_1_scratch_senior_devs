@@ -17,7 +17,6 @@ import {TagList} from "../TagList/TagList";
 export class NoteEditor extends ScReact.Component<any, any> {
     state = {
         selectedNote: undefined,
-        selectedNoteChildren: [],
         content: undefined,
         deleteNoteModalOpen: false,
         inviteUserModalOpen: false,
@@ -61,8 +60,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
         this.setState(state => {
             return {
                 ...state,
-                selectedNote: store.selectedNote,
-                selectedNoteChildren: store.selectedNoteChildren
+                selectedNote: store.selectedNote
             };
         });
 
@@ -124,12 +122,15 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
                 <SwipeArea enable={this.props.open} right={this.closeEditor} target=".note-editor-wrapper"/>
 
-                <Modal open={this.state.deleteNoteModalOpen} handleClose={this.closeDeleteModalDialog}
-                       content={<DeleteNoteDialog handleClose={this.closeDeleteModalDialog}/>}/>
+                <Modal open={this.state.deleteNoteModalOpen}
+                       handleClose={this.closeDeleteModalDialog}
+                       content={<DeleteNoteDialog handleClose={this.closeDeleteModalDialog}/>}
+                />
 
-                <Modal open={this.state.inviteUserModalOpen} handleClose={this.closeInviteUserModal}
-                       content={<InviteUserModal handleClose={this.closeInviteUserModal}
-                                                 open={this.state.inviteUserModalOpen}/>}/>
+                <Modal open={this.state.inviteUserModalOpen}
+                       handleClose={this.closeInviteUserModal}
+                       content={<InviteUserModal handleClose={this.closeInviteUserModal} open={this.state.inviteUserModalOpen}/>}
+                />
 
                 <div className="top-panel">
                     <div className="left-container">
@@ -137,8 +138,8 @@ export class NoteEditor extends ScReact.Component<any, any> {
                             <Img src="left-chevron.svg" className="back-icon"/>
                             <span className="back-label">Заметки</span>
                         </div>
-                        <div className={!isSubNote ? "hidden" : ""}>
-                            <TagList/>
+                        <div className={isSubNote ? "hidden" : ""}>
+                            <TagList onAddTag={this.props.onAddTag}/>
                         </div>
                     </div>
                     <div className="right-container">

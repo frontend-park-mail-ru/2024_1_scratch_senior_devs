@@ -14,6 +14,7 @@ export class NotesPage extends ScReact.Component<any, any> {
     state = {
         notes: [],
         selectedNote: undefined,
+        selectedNoteTags: [],
         editorOpen: false,
         fetching: false
     };
@@ -87,6 +88,7 @@ export class NotesPage extends ScReact.Component<any, any> {
             return {
                 ...state,
                 selectedNote: store.selectedNote,
+                selectedNoteTags: store.selectedNoteTags,
                 editorOpen: store.selectedNote != undefined,
                 notes: store.notes,
                 fetching: store.fetching
@@ -177,6 +179,16 @@ export class NotesPage extends ScReact.Component<any, any> {
         this.updateNotesTitles()
     }
 
+    onAddTag = (tag) => {
+        console.log("onAddTag")
+        console.log(tag)
+
+        AppDispatcher.dispatch(NotesActions.CREATE_TAG, {
+            note: AppNotesStore.state.selectedNote,
+            tag: tag
+        })
+    }
+
     render() {
         return (
             <div className={'notes-page-wrapper ' + (this.state.editorOpen ? 'active' : '')} >
@@ -195,12 +207,13 @@ export class NotesPage extends ScReact.Component<any, any> {
                         {
                             this.state.notes.length > 0 ?
                                 this.state.notes.map(note => (
-                                <div
-                                    className={'note-container ' + (this.state.selectedNote?.id == note.id ? 'selected' : '')}
-                                    id={note.id}
-                                >
+                                <div className={'note-container ' + (this.state.selectedNote?.id == note.id ? 'selected' : '')} id={note.id} >
                                     <h3>{note.data.title.length == 0 ? "Пустая заметка" :  truncate(note.data.title, 20)}</h3>
-                                    <p></p>
+                                    <div className="note-tags-container">
+                                        {this.state.selectedNoteTags.map(tag => (
+                                            <span className="note-tag">{tag}</span>
+                                        ))}
+                                    </div>
                                     <span className="update-time">{formatDate(note.update_time)}</span>
                                 </div>
                             ))
@@ -208,11 +221,14 @@ export class NotesPage extends ScReact.Component<any, any> {
                             !this.state.fetching ? <h3 className="notes-not-found-label">Список заметок пуст</h3> : ""}
                     </div>
                 </aside>
+
                 <NoteEditor open={this.state.editorOpen}
                             setClose={this.closeEditor}
                             onChangeNote={this.onChangeSelectedNoteContent}
                             onChangeTitle={this.onChangeSelectedNoteTitle}
+                            onAddTag={this.onAddTag}
                 />
+
             </div>
         );
     }
