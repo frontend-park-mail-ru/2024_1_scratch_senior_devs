@@ -1,42 +1,22 @@
 import {ScReact} from '@veglem/screact';
 import './Note.sass';
-import {formatDate, truncate} from '../../modules/utils';
+import {formatDate, parseNoteTitle, truncate} from "../../modules/utils";
 
-type NoteState = {
-    id: number,
-    title: string,
-    content: string,
-    update_time: string
-}
 
 const MAX_NOTE_CONTENT_PREVIEW_LENGTH = 25;
 
-export class Note extends ScReact.Component<any, NoteState> {
-    state = {
-        id: 0,
-        title: '',
-        content: '',
-        update_time: ''
-    };
-
-    componentDidMount() {
-        this.setState(state => ({
-            ...state,
-            id: this.props.note.id,
-            title: this.props.note.data.title,
-            content: truncate(this.props.note.data.content, MAX_NOTE_CONTENT_PREVIEW_LENGTH),
-            update_time: formatDate(this.props.note.update_time)
-        }));
-    }
-
+export class Note extends ScReact.Component<any, any> {
     render() {
-        
-        
         return (
             <div className={'note-container ' + (this.props.selected ? 'selected' : '')} id={this.props.note.id} >
-                <h3>{this.props.note.data.title.length == 0 ? "Пустая заметка" : this.props.note.data.title}</h3>
-                <p></p>
-                <span className="update-time">{this.state.update_time}</span>
+                <h3>{truncate(parseNoteTitle(this.props.note.data.title), MAX_NOTE_CONTENT_PREVIEW_LENGTH)}</h3>
+                <div className="note-tags-container">
+                    {this.props.tags.slice(0, 2).map(tag => (
+                        <span className="note-tag">{tag}</span>
+                    ))}
+                    {this.props.tags.length > 2 ? <span className="note-tag">+{(this.props.tags.length - 2).toString()}</span> : ""}
+                </div>
+                <span className="update-time">{formatDate(this.props.note.update_time)}</span>
             </div>
         );
     }

@@ -9,6 +9,7 @@ import {Img} from '../../components/Image/Image';
 import {AppNoteStore, NoteStoreActions} from '../../modules/stores/NoteStore';
 import {Loader} from '../../components/Loader/Loader';
 import {formatDate, scrollToTop, truncate} from '../../modules/utils';
+import {Note} from "../../components/Note/Note";
 
 export class NotesPage extends ScReact.Component<any, any> {
     state = {
@@ -197,17 +198,8 @@ export class NotesPage extends ScReact.Component<any, any> {
                         {
                             this.state.notes.length > 0 ?
                                 this.state.notes.map(note => (
-                                <div className={'note-container ' + (this.state.selectedNote?.id == note.id ? 'selected' : '')} id={note.id} >
-                                    <h3>{note.data.title.length == 0 ? "Пустая заметка" :  truncate(note.data.title, 20)}</h3>
-                                    <div className="note-tags-container">
-                                        {this.state.selectedNoteTags.slice(0, 2).map(tag => (
-                                            <span className="note-tag">{tag}</span>
-                                        ))}
-                                        {this.state.selectedNoteTags.length > 2 ? <span className="note-tag">+{(this.state.selectedNoteTags.length - 2).toString()}</span> : ""}
-                                    </div>
-                                    <span className="update-time">{formatDate(note.update_time)}</span>
-                                </div>
-                            ))
+                                    <Note selected={this.state.selectedNote?.id == note.id} note={note} tags={this.state.selectedNoteTags} />
+                                ))
                             :
                             !this.state.fetching ? <h3 className="notes-not-found-label">Список заметок пуст</h3> : ""}
                     </div>
