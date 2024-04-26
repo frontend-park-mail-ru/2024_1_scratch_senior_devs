@@ -243,6 +243,7 @@ export class Editor extends Component<any, EditorState> {
                            this.optionsSetter = func;
                        }}
                 />
+
             </div>
         );
     }

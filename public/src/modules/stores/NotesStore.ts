@@ -91,6 +91,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 case NotesActions.CREATE_TAG:
                     await this.createTag(action.payload)
                     break
+                case NotesActions.REMOVE_TAG:
+                    await this.removeTag(action.payload)
+                    break
             }
         });
     }
@@ -188,7 +191,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             ...state,
             selectedNote: note,
             selectedNoteChildren: note.children,
-            selectedNoteTags: ["Работа", "Учеба", "+4"] // TODO
+            selectedNoteTags: ["Работа", "Учеба", "Технопарк", "ВУЗ"] // TODO
         }));
 
         // TODO: пробегаться не по блокам а по children
@@ -487,6 +490,13 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
        //  this.state.selectedNoteTags =  [...this.state.selectedNoteTags, data.tag]
     }
+
+    removeTag(tag) {
+        this.SetState(state => ({
+            ...state,
+            selectedNoteTags: state.selectedNoteTags.filter(t => t != tag)
+        }))
+    }
 }
 
 export const NotesActions = {
@@ -509,6 +519,7 @@ export const NotesActions = {
     OPEN_NOTE: 'OPEN_NOTE',
     CREATE_SUB_NOTE: "CREATE_SUB_NOTE",
     CREATE_TAG: "CREATE_TAG",
+    REMOVE_TAG: "REMOVE_TAG",
 };
 
 export const AppNotesStore = new NotesStore();

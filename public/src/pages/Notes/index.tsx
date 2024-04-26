@@ -179,16 +179,6 @@ export class NotesPage extends ScReact.Component<any, any> {
         this.updateNotesTitles()
     }
 
-    onAddTag = (tag) => {
-        console.log("onAddTag")
-        console.log(tag)
-
-        AppDispatcher.dispatch(NotesActions.CREATE_TAG, {
-            note: AppNotesStore.state.selectedNote,
-            tag: tag
-        })
-    }
-
     render() {
         return (
             <div className={'notes-page-wrapper ' + (this.state.editorOpen ? 'active' : '')} >
@@ -210,9 +200,10 @@ export class NotesPage extends ScReact.Component<any, any> {
                                 <div className={'note-container ' + (this.state.selectedNote?.id == note.id ? 'selected' : '')} id={note.id} >
                                     <h3>{note.data.title.length == 0 ? "Пустая заметка" :  truncate(note.data.title, 20)}</h3>
                                     <div className="note-tags-container">
-                                        {this.state.selectedNoteTags.map(tag => (
+                                        {this.state.selectedNoteTags.slice(0, 2).map(tag => (
                                             <span className="note-tag">{tag}</span>
                                         ))}
+                                        {this.state.selectedNoteTags.length > 2 ? <span className="note-tag">+{(this.state.selectedNoteTags.length - 2).toString()}</span> : ""}
                                     </div>
                                     <span className="update-time">{formatDate(note.update_time)}</span>
                                 </div>
@@ -226,7 +217,6 @@ export class NotesPage extends ScReact.Component<any, any> {
                             setClose={this.closeEditor}
                             onChangeNote={this.onChangeSelectedNoteContent}
                             onChangeTitle={this.onChangeSelectedNoteTitle}
-                            onAddTag={this.onAddTag}
                 />
 
             </div>

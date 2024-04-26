@@ -184,7 +184,6 @@ export class NoteEditor extends ScReact.Component<any, any> {
                         }}
                     />
 
-
                 </div>
             </div>
         );

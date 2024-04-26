@@ -4,7 +4,6 @@ import {AppToasts} from "../../modules/toasts";
 import "./TagList.sass"
 import {AppNotesStore, NotesActions, NotesStoreState} from "../../modules/stores/NotesStore";
 import {AppDispatcher} from "../../modules/dispatcher";
-import {AppNoteStore} from "../../modules/stores/NoteStore";
 
 type TagListState = {
     tags: string[],
@@ -23,7 +22,6 @@ export class TagList extends ScReact.Component<any, TagListState> {
     private MIN_TAG_LENGTH = 2
     private MAX_TAG_LENGTH = 12
 
-    private wrapperRef
     private inputRef
     private openBtnRef
     private tagsPanelRef
@@ -90,7 +88,7 @@ export class TagList extends ScReact.Component<any, TagListState> {
     addTag = () => {
         if (this.state.value.length > 0) {
             if (this.state.value.length < this.MIN_TAG_LENGTH) {
-                AppToasts.error("Тэг не может быть короче ${this.MIN_TAG_LENGTH} символов")
+                AppToasts.error(`Тэг не может быть короче ${this.MIN_TAG_LENGTH} символов`)
                 return
             }
 
@@ -99,32 +97,32 @@ export class TagList extends ScReact.Component<any, TagListState> {
                 return
             }
 
-            this.props.onAddTag(this.state.value)
+            if (this.state.tags.includes(this.state.value)) {
+                AppToasts.error(`Такой тэг уже существует`)
+                return
+            }
 
-            // this.setState(state => ({
-            //     ...state,
-            //     value: "",
-            //     tags: [...state.tags, this.state.value]
-            // }))
+            AppDispatcher.dispatch(NotesActions.CREATE_TAG, {
+                note: AppNotesStore.state.selectedNote,
+                tag: this.state.value
+            })
+
+            this.setState(state => ({
+                ...state,
+                value: ""
+            }))
         }
     }
 
-    deleteTag = (name:string) => {
-        this.setState(state => ({
-            ...state,
-            tags: state.tags.filter(tag => tag != name)
-        }))
+    deleteTag = (tag:string) => {
+        AppDispatcher.dispatch(NotesActions.REMOVE_TAG, tag)
     }
 
     toggleOpen = () => {
-        console.log("toggleOpen")
-
         this.setState(state => ({
             ...state,
             open: !state.open
         }))
-
-        // this.wrapperRef.classList.toggle("open")
     }
 
     render() {
