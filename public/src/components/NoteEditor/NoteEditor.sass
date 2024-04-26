@@ -11,6 +11,7 @@
 	width: 100%
 	flex-basis: 100%
 	overflow: hidden
+	position: relative
 
 	@media screen and (max-width: $lg)
 		display: flex
@@ -49,103 +50,12 @@
 
 		.left-container
 			display: flex
-			align-items: flex-start
-			padding-left: 30px
+			align-items: center
 			flex: 1
+			padding-left: 30px
 
-			.tags-wrapper
-				align-items: flex-start
-				gap: 10px
-				background: #18232f
-				padding: 8px 42px 8px 16px
-				border-radius: 12px
-				position: absolute
-				z-index: 100
-				flex-wrap: wrap
-				justify-content: flex-start
-				width: 425px
-				display: grid
-				grid-template-rows: 0fr
-				transition: grid-template-rows 0.5s
-				overflow: hidden
-
-				&.expanded
-					grid-template-rows: 1fr
-					box-shadow: $box-shadow-primary
-
-					.tag-items
-						flex-flow: row wrap
-
-					.expand-btn
-						transform: rotate(-180deg)
-
-				.mock
-					width: 30px
-					height: 30px
-
-				span
-					font-size: 20px
-					color: #eee
-
-				.expand-btn, .tags-icon
-					width: 24px
-					height: 24px
-					transition: 0.3s
-					filter: invert(80%)
-					cursor: pointer
-					position: absolute
-					right: 12px
-					top: 16px
-
-					&:hover
-						filter: invert(90%)
-
-				.tags-icon
-					left: 0
-
-				.tag-items
-					display: flex
-					align-items: flex-start
-					flex-flow: row wrap
-					overflow: hidden
-
-					input
-						outline: none
-						border: none
-						flex: 3
-						padding: 5px
-						font-size: 16px
-						background: transparent
-						color: #eee
-						width: 100%
-						min-width: 100px
-						line-height: 30px
-
-						&::placeholder
-							color: $text-secondary-color
-
-					.tag-item
-						display: flex
-						justify-content: center
-						align-items: center
-						gap: 5px
-						padding: 4px 8px
-						background: #2b3b55
-						border-radius: 12px
-						margin: 3px 6px 3px 0
-
-						span
-							font-size: 18px
-
-						.delete-tag-btn
-							width: 24px
-							height: 24px
-							transition: 0.3s
-							filter: invert(80%)
-							cursor: pointer
-
-							&:hover
-								filter: invert(90%)
+			@media screen and (max-width: $lg)
+				justify-content: space-between
 
 			.close-editor-label-container
 				display: none
@@ -170,10 +80,16 @@
 			align-items: center
 			gap: 12px
 
+			.hidden
+				display: none
+
 			.note-save-indicator
-				span
-					color: $text-secondary-color
-					transition: 0.3s
+				display: none
+				animation: closeAnim 0.25s
+
+				&.active
+					display: flex
+					animation: showAnim 0.25s
 
 			.add-to-favorite-btn-container
 				padding: 8px
@@ -208,7 +124,7 @@
 			width: 24px
 			height: 24px
 			transition: 0.3s
-			filter: invert(80%)
+			filter: invert(75%)
 			user-select: none
 
 	.bottom-panel
@@ -216,6 +132,7 @@
 		flex-direction: column
 		gap: 10px
 		height: 100%
+		position: relative
 
 		[contenteditable]
 			outline: none

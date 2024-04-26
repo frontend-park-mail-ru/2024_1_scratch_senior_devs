@@ -1,41 +1,36 @@
 import {ScReact} from "@veglem/screact";
 import {Img} from "../Image/Image";
 import {AppToasts} from "../../modules/toasts";
-
+import "./TagList.sass"
 type TagListState = {
     tags: string[],
     value: string,
-    expanded: boolean
+    open: boolean
 }
 
 export class TagList extends ScReact.Component<any, TagListState> {
     state = {
         tags: ["Работа", "Учеба", "ВУЗ"],
         value: "",
-        expanded: false,
+        open: false,
         count: 2
     }
 
+    private openBtnRef
+    private tagsPanelRef
+
     componentDidMount() {
-        this.calculateTags()
+        document.addEventListener('click', this.handleClickOutside, true);
     }
 
-    calculateTags = () => {
-        let tmp = 0
-        let i = 0
+    componentWillUnmount() {
+        document.removeEventListener('click', this.handleClickOutside, true);
+    }
 
-        this.state.tags.length > 0 && this.state.tags.forEach(tag => {
-            tmp += tag.length
-
-            if (i < 2 && tmp < 12 || tmp < 10 && i < 3) {
-                i += 1
-            }
-        })
-
-        this.setState(state => ({
-            ...state,
-            count: i
-        }))
+    handleClickOutside = (e) => {
+        if (this.state.open && !this.openBtnRef.contains(e.target) && !this.tagsPanelRef.contains(e.target)) {
+            this.toggleOpen();
+        }
     }
 
     private inputRef
@@ -76,13 +71,10 @@ export class TagList extends ScReact.Component<any, TagListState> {
             }))
 
             console.log(this.state.tags)
-
-            this.calculateTags()
         }
     }
 
     deleteTag = (name:string) => {
-        console.log("deleteTag")
         const tags = this.state.tags.filter(tag => tag != name)
         console.log(tags)
         this.setState(state => ({
@@ -91,47 +83,40 @@ export class TagList extends ScReact.Component<any, TagListState> {
         }))
     }
 
-    toggleExpanded = () => {
+    toggleOpen = () => {
         this.setState(state => ({
             ...state,
-            expanded: !state.expanded
+            open: !state.open
         }))
     }
 
     render() {
-        const tags = this.state.expanded ? this.state.tags.slice(0) : this.state.tags.slice(0, this.state.count)
+        const tags =this.state.tags.slice(0)
 
         return (
-            <div className={"tags-wrapper " + (this.state.expanded ? "expanded" : "") }>
+            <div className={"tag-list " + (this.state.open ? "open" : "")}>
 
-                {/*<Img src="tag.svg" className="tags-icon icon"/>*/}
+                <div className="open-btn" onclick={this.toggleOpen} ref={ref => this.openBtnRef = ref}>
+                    <Img src="tag.svg" className="icon" />
+                    <span>Тэги</span>
+                </div>
 
-                <div className="tag-items">
+                <div className="tags-wrapper" ref={ref => this.tagsPanelRef = ref}>
 
-                    {tags.map(tag => (
-                        <div className="tag-item">
-                            <span>{tag}</span>
-                            <Img src="delete.svg" className="delete-tag-btn" onClick={() => this.deleteTag(tag)}/>
-                        </div>
-                    ))}
+                    <div className="tag-items">
 
-                    <div className="asdf">
-                        {
-                            this.state.tags.length > this.state.count && !this.state.expanded ?
-                                <div className="tag-item"><span>+{(this.state.tags.length - this.state.count).toString()}</span></div> : ""
-                        }
+                        {tags.map(tag => (
+                            <div className="tag-item">
+                                <span>{tag}</span>
+                                <Img src="delete.svg" className="delete-tag-btn" onClick={() => this.deleteTag(tag)}/>
+                            </div>
+                        ))}
+
+                        <input type="text" placeholder="Введите тэг" value={this.state.value} oninput={this.setValue} onkeyup={this.onInput} ref={ref => this.inputRef = ref}/>
+
                     </div>
 
-                    <input type="text" placeholder="Введите тэг" value={this.state.value} oninput={this.setValue}  onkeyup={this.onInput} ref={ref => this.inputRef = ref}/>
-
                 </div>
-
-                <div className="mock">
-
-                </div>
-
-                <Img src="expand.svg" className="expand-btn" onClick={this.toggleExpanded}/>
-
             </div>
         )
     }

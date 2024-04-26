@@ -12,6 +12,7 @@ import NoteMenu from "../NoteMenu/NoteMenu";
 import {InviteUserModal} from "../InviteUserModal/InviteUserModal";
 import {Tooltip} from "../Tooltip/Tooltip";
 import {AppToasts} from "../../modules/toasts";
+import {TagList} from "../TagList/TagList";
 
 export class NoteEditor extends ScReact.Component<any, any> {
     state = {
@@ -39,13 +40,11 @@ export class NoteEditor extends ScReact.Component<any, any> {
             });
         }
 
-        this.savingLabelRef.innerHTML = window.navigator.onLine ? 'Сохранено' : 'Не удалось сохранить';
-        this.savingLabelRef.style.opacity = 1;
+        this.savingLabelRef.classList.add("active");
     };
 
     onChangeNote = () => {
-        this.savingLabelRef.innerHTML = '';
-        this.savingLabelRef.style.opacity = 0;
+        this.savingLabelRef.classList.remove("active")
     };
 
     closeEditor = () => {
@@ -56,7 +55,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
     updateState = (store:NotesStoreState) => {
         if (store.selectedNote != this.state.selectedNote) {
-            this.savingLabelRef.innerHTML = '';
+            this.savingLabelRef.classList.remove("active")
         }
 
         this.setState(state => {
@@ -118,14 +117,19 @@ export class NoteEditor extends ScReact.Component<any, any> {
     }
 
     render() {
+        const isSubNote = this.state.selectedNote?.parent != "00000000-0000-0000-0000-000000000000" ? "hidden" : ""
+
         return (
             <div className={'note-editor-wrapper ' + (this.props.open ? 'active' : '')}>
 
                 <SwipeArea enable={this.props.open} right={this.closeEditor} target=".note-editor-wrapper"/>
 
-                <Modal open={this.state.deleteNoteModalOpen} handleClose={this.closeDeleteModalDialog} content={<DeleteNoteDialog handleClose={this.closeDeleteModalDialog} />} />
+                <Modal open={this.state.deleteNoteModalOpen} handleClose={this.closeDeleteModalDialog}
+                       content={<DeleteNoteDialog handleClose={this.closeDeleteModalDialog}/>}/>
 
-                <Modal open={this.state.inviteUserModalOpen} handleClose={this.closeInviteUserModal} content={<InviteUserModal handleClose={this.closeInviteUserModal} open={this.state.inviteUserModalOpen} />} />
+                <Modal open={this.state.inviteUserModalOpen} handleClose={this.closeInviteUserModal}
+                       content={<InviteUserModal handleClose={this.closeInviteUserModal}
+                                                 open={this.state.inviteUserModalOpen}/>}/>
 
                 <div className="top-panel">
                     <div className="left-container">
@@ -133,12 +137,11 @@ export class NoteEditor extends ScReact.Component<any, any> {
                             <Img src="left-chevron.svg" className="back-icon"/>
                             <span className="back-label">Заметки</span>
                         </div>
-                        {/*<TagList />*/}
+                        <div className={!isSubNote ? "hidden" : ""}>
+                            <TagList/>
+                        </div>
                     </div>
                     <div className="right-container">
-                        <div className="note-save-indicator">
-                            <span ref={ref => this.savingLabelRef = ref}></span>
-                        </div>
 
                         {/*{this.state.selectedNote?.data.parent ?*/}
                         {/*    <div className="back-to-parent-note-btn-container" onclick={this.openParentIcon}>*/}
@@ -146,16 +149,22 @@ export class NoteEditor extends ScReact.Component<any, any> {
                         {/*    </div> : ""*/}
                         {/*}*/}
 
-                        <Tooltip label="В избранное" icon={this.state.favourite ? "star-filled.svg" : "star.svg"} onClick={this.addToFavoriteBtn}/>
+                        <div className="note-save-indicator" ref={ref => this.savingLabelRef = ref}>
+                            <Tooltip icon="check.svg" label="Сохранено"/>
+                        </div>
 
-                        {this.state.selectedNote?.parent != "00000000-0000-0000-0000-000000000000" ? <Tooltip label="Вернуться" icon="arrow-up.svg" onClick={this.openParentNote}/> : ""}
+                        <div className={isSubNote ? "hidden" : ""}>
+                            <Tooltip label="В избранное" icon={this.state.favourite ? "star-filled.svg" : "star.svg"} onClick={this.addToFavoriteBtn}/>
+                        </div>
 
-                        {/*<SubNotesList notes={this.state.selectedNoteChildren} />*/}
+                        <div className={!isSubNote ? "hidden" : ""}>
+                            <Tooltip label="Вернуться" icon="arrow-up.svg" onClick={this.openParentNote}/>
+                        </div>
 
                         <NoteMenu deleteNote={this.openDeleteNoteModal} inviteUser={this.openInviteUserModal}/>
 
                         <div className="close-editor-btn-container" onclick={this.closeEditor}>
-                            <Img src="close.svg" className="icon close-editor-icon" />
+                            <Img src="close.svg" className="icon close-editor-icon"/>
                         </div>
                     </div>
                 </div>
@@ -163,7 +172,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
                 <div className="bottom-panel">
 
                     <Editor
-                        onChangeTitle={(value:string) => {
+                        onChangeTitle={(value: string) => {
                             this.props.onChangeTitle(value);
                             this.onChangeNote();
                         }}
@@ -173,6 +182,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
                             this.onChangeNote()
                         }}
                     />
+
 
                 </div>
             </div>

@@ -22,7 +22,7 @@ export class NoteMenu extends ScReact.Component<any, any> {
         if (this.state.open && !this.dotsRef.contains(e.target) && !this.noteMenuRef.contains(e.target)) {
             this.toggleMenu();
         }
-    };
+    }
 
     toggleMenu = () => {
         this.setState(state => ({
