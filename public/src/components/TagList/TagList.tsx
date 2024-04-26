@@ -24,10 +24,16 @@ export class TagList extends ScReact.Component<any, TagListState> {
 
     private inputRef
     private openBtnRef
-    private tagsPanelRef
 
     componentDidMount() {
-        document.addEventListener('click', this.handleClickOutside, true);
+        document.addEventListener('click', this.handleClickOutside, false);
+
+        this.setState(state => {
+            return {
+                ...state,
+                tags: AppNotesStore.state.selectedNoteTags
+            };
+        });
 
         AppNotesStore.SubscribeToStore(this.updateState)
     }
@@ -37,7 +43,11 @@ export class TagList extends ScReact.Component<any, TagListState> {
     }
 
     handleClickOutside = (e) => {
-        if (this.state.open && !this.openBtnRef.contains(e.target) && !this.tagsPanelRef.contains(e.target)) {
+        console.log("handleClickOutside")
+        console.log(e)
+        console.log(e.target)
+        console.log(e.target.matches(".tags-wrapper, .tags-wrapper *"))
+        if (this.state.open && !this.openBtnRef.contains(e.target) && !e.target.matches(".tags-wrapper,.tags-wrapper *")) {
             this.toggleOpen();
         }
     }
@@ -134,7 +144,7 @@ export class TagList extends ScReact.Component<any, TagListState> {
                     <span>Тэги</span>
                 </div>
 
-                <div className="tags-wrapper" ref={ref => this.tagsPanelRef = ref}>
+                <div className="tags-wrapper">
 
                     <div className="tag-items">
 
