@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - home
-      - vls-36
-      - vls-58
-      - vls-58-1
       - vls-65
 jobs:
   you-note-deploy:

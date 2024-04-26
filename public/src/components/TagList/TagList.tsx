@@ -146,7 +146,7 @@ export class TagList extends ScReact.Component<any, TagListState> {
                         ))}
 
                         <div className="hidden">
-
+                            <span>Hidden</span>
                         </div>
 
                         <input type="text" placeholder="Введите тэг" value={this.state.value} oninput={this.setValue} onkeyup={this.onInput} ref={ref => this.inputRef = ref}/>
