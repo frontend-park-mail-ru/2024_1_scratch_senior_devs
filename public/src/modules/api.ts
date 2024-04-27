@@ -371,15 +371,13 @@ class SurveyRequests {
                         value: value.value
                     }
                 } else {
-                    let max = 0;
+                    let sum = 0;
                     for (const key in value.stats) {
-                        if (value.stats[key] > max) {
-                            max = value.stats[key];
-                        }
+                        sum += value.stats[key];
                     }
-                    stat['detractor'] = value.stats['detractor'] != undefined ? value.stats['detractor'] / max : 0;
-                    stat['passive'] = value.stats['passive'] != undefined ? value.stats['passive'] / max : 0;
-                    stat['promouter'] = value.stats['promouter'] != undefined ? value.stats['promouter'] / max : 0;
+                    stat['detractor'] = value.stats['detractor'] != undefined ? value.stats['detractor'] / sum : 0;
+                    stat['passive'] = value.stats['passive'] != undefined ? value.stats['passive'] / sum : 0;
+                    stat['promouter'] = value.stats['promouter'] != undefined ? value.stats['promouter'] / sum : 0;
 
                     console.log({
                         title: value.title,
