@@ -15,6 +15,7 @@ import {HomePageLoader} from '../pages/Home/loader';
 import { NotesActions} from './stores/NotesStore';
 import {AppDispatcher} from './dispatcher';
 import NotFoundPage from '../pages/Error';
+import {CSATPage} from "../pages/CSAT/CSAT";
 import {AdminPage} from "../pages/Admin";
 
 type routerState = {
@@ -61,6 +62,7 @@ export class Router extends ScReact.Component<any, routerState> {
         this.pages['login'] = {page: AuthPage, loader: AuthPageLoader, skeleton: AuthPageSkeleton};
         this.pages['register'] = {page: AuthPage, loader: AuthPageLoader, skeleton: AuthPageSkeleton};
         this.pages['notes'] = {page: NotesPage, loader: NotesLoader, skeleton: NotesPageSkeleton};
+        this.pages['csat'] = {page: CSATPage};
         this.pages['404'] = {page: NotFoundPage };
         this.pages['admin'] = {page: AdminPage};
     };
