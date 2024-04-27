@@ -370,9 +370,9 @@ class SurveyRequests {
                             max = value.stats[key];
                         }
                     }
-                    stat['detractor'] = value.stats['1'] != undefined ? value.stats['1'] / max : 0;
-                    stat['passive'] = value.stats['2'] != undefined ? value.stats['2'] / max : 0;
-                    stat['promouter'] = value.stats['3'] != undefined ? value.stats['3'] / max : 0;
+                    stat['detractor'] = value.stats['1'] != undefined ? value.stats['detractor'] / max : 0;
+                    stat['passive'] = value.stats['2'] != undefined ? value.stats['passive'] / max : 0;
+                    stat['promouter'] = value.stats['3'] != undefined ? value.stats['promouter'] / max : 0;
 
                     return {
                         title: response.body.title,
