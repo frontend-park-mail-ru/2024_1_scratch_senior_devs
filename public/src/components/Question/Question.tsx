@@ -35,7 +35,7 @@ export class Question extends ScReact.Component<any, any> {
                     {this.props.type == "NPS" ? <DonutChart options={mapStat(this.props.stat)}/> : <BarChart options={mapStat(this.props.stat)}/>}
                 </div>
                 <div>
-                    {this.props.value}
+                    {this.props.value.toString()}
                 </div>
             </div>
         )
