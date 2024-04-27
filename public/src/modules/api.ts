@@ -347,7 +347,7 @@ class SurveyRequests {
             }
             return (response.body as {question_id: string, title: string, value: number, question_type: 'CSAT' | 'NPS', stats: Record<string, number>}[]).map(value => {
                 const stat = {};
-                if (value.title === 'CSAT') {
+                if (value.question_type === 'CSAT') {
                     let max = 0;
                     for (const key in value.stats) {
                         if (value.stats[key] > max) {
