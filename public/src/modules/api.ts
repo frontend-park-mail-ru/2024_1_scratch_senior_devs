@@ -274,8 +274,42 @@ class ProfileRequests {
     };
 }
 
+class SurveyRequests {
+    private baseUrl = '/survey'
+
+    GetSurvey = async (jwt: string) => {
+        const response = await Ajax.Get(this.baseUrl + '/get', {
+            headers: {
+                'Authorization': jwt
+            }
+        });
+
+        if (response.status === 200) {
+            return response.body;
+        }
 
 
+        throw Error(response.body.message);
+    }
+
+    Vote = async (jwt: string, csrf: string, answer: {question_id: string, voice: number}) => {
+        const response = await Ajax.Post(this.baseUrl + '/' + '/vote', {
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            },
+            body: {
+                question_id: answer.question_id,
+                voice: answer.voice
+            }
+        });
+
+        return {
+            status: response.status,
+            csrf: response.headers['x-csrf-token']
+        };
+    }
+}
 
 class NoteRequests {
     private baseUrl = '/note';
@@ -484,3 +518,5 @@ export const AppAuthRequests = new AuthRequests();
 export const AppNoteRequests = new NoteRequests();
 
 export const AppProfileRequests = new ProfileRequests();
+
+export const AppSurveyRequests = new SurveyRequests();

@@ -7,6 +7,7 @@ on:
       - vls-36
       - vls-58
       - vls-58-1
+      - xacaton
 jobs:
   you-note-deploy:
     name: deploy YouNote

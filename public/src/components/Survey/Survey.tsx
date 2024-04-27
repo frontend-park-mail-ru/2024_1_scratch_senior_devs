@@ -1,6 +1,9 @@
 import {ScReact} from "@veglem/screact";
 import {VDomNode} from "@veglem/screact/dist/vdom";
 import "./Survey.sass"
+import {AppSurveyRequests} from "../../modules/api";
+import {AppUserStore, UserActions} from "../../modules/stores/UserStore";
+import {AppDispatcher} from "../../modules/dispatcher";
 
 type SurveyProps = {
     surveys: Array<SurveyStruct>
@@ -15,24 +18,34 @@ type SurveyStruct = {
 export class Survey extends ScReact.Component<SurveyProps, SurveyStruct | undefined | 'ended'> {
 
     componentDidMount() {
-        this.setState(s => {
-            return this.props.surveys[0];
+        AppSurveyRequests.GetSurvey(AppUserStore.state.JWT).then(response => {
+            this.props = response;
+            this.setState(s => {
+                return this.props.surveys[0];
+            });
         })
     }
 
     surveyHandler = (answer: number) => {
         // todo: send result
-        if (this.state !== undefined && this.state !== 'ended') {
-            this.setState(s => {
-                const currindex = this.props.surveys.indexOf(this.state as SurveyStruct);
-                if (currindex === this.props.surveys.length - 1) {
-                    return 'ended';
-                } else {
-                    return this.props.surveys[currindex + 1];
-                }
-            })
-        }
-
+        AppSurveyRequests.Vote(AppUserStore.state.JWT, AppUserStore.state.csrf, {
+            question_id: (this.state as SurveyStruct).id,
+            voice: answer
+        }).then(response => {
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, response.csrf);
+            if (this.state !== undefined && this.state !== 'ended') {
+                this.setState(s => {
+                    const currindex = this.props.surveys.indexOf(this.state as SurveyStruct);
+                    if (currindex === this.props.surveys.length - 1) {
+                        return 'ended';
+                    } else {
+                        return this.props.surveys[currindex + 1];
+                    }
+                })
+            }
+        }).catch(res => {
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, res.csrf);
+        })
     }
 
     render(): VDomNode {
