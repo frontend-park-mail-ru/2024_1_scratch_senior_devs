@@ -68,7 +68,7 @@ export class AddSurvay extends ScReact.Component<any, AddSurveyState> {
                                         this.state.surveys[index].type = e.target.value;
                                         console.log(this.state.surveys);
                                     }}>
-                                        <option value={'NPS'} selected>
+                                        <option value={'NPS'}>
                                             NPS
                                         </option>
                                         <option value={'CSAT'}>
