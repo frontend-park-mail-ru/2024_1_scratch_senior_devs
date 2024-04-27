@@ -27,7 +27,7 @@ export class Survey extends ScReact.Component<SurveyProps, SurveyStruct | undefi
     }
 
     surveyHandler = (answer: number) => {
-        // todo: send result
+        // todo: send resultn
         AppSurveyRequests.Vote(AppUserStore.state.JWT, AppUserStore.state.csrf, {
             question_id: (this.state as SurveyStruct).id,
             voice: answer
