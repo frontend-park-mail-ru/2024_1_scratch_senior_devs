@@ -293,7 +293,7 @@ class SurveyRequests {
     }
 
     Vote = async (jwt: string, csrf: string, answer: {question_id: string, voice: number}) => {
-        const response = await Ajax.Post(this.baseUrl + '/' + '/vote', {
+        const response = await Ajax.Post(this.baseUrl + '/vote', {
             headers: {
                 'Authorization': jwt,
                 'x-csrf-token': csrf
