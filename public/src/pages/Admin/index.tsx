@@ -3,8 +3,6 @@ import {VDomNode} from "@veglem/screact/dist/vdom";
 import {SurvayList} from "../../components/SurveyList/SurvayList";
 import {AddSurvay} from "../../components/AddSurvay/AddSurvay";
 import "./style.sass";
-import {BarChart} from "../../components/BarChart/BarChart";
-import {DonutChart} from "../../components/ DonutChart/DonutChart";
 
 type AdminState = {
     page: 'statistic' | 'add'
@@ -27,7 +25,7 @@ export class AdminPage extends ScReact.Component<any, AdminState> {
                                 return {...s, page: 'statistic'}
                             })
                         }}>
-                        <h3>Статистика</h3>
+                        <h1>Статистика</h1>
                     </div>
                     <div
                         className={'admin-page-selector-btn' + (this.state.page !== 'statistic' ? ' selected' : '')}
@@ -37,7 +35,7 @@ export class AdminPage extends ScReact.Component<any, AdminState> {
                                 return {...s, page: 'add'}
                             })
                         }}>
-                        <h3>Опросы</h3>
+                        <h1>Опросы</h1>
                     </div>
                 </div>
                 <div className="bottom-panel">

@@ -1,0 +1,41 @@
+@import "/public/src/utils/variables.sass"
+
+.add-survey-page-wrapper
+	display: flex
+	width: 100%
+	padding: 50px 0
+	justify-content: center
+	flex-direction: column
+	align-items: center
+	gap: 50px
+
+	.survey-questions-container
+		display: flex
+		flex-direction: column
+		gap: 25px
+
+		.survey-question
+			display: flex
+			padding: 20px
+			border: 1px solid #2b3b55
+			border-radius: 12px
+
+			input
+				width: 100%
+				padding: 12px
+				outline: none
+				transition: 0.3s
+				background: transparent
+				color: $text-main-color
+				z-index: 1111
+				border: none
+				border-bottom: 2px solid rgba(255, 255, 255, 0.7)
+
+
+	.buttons-container
+		display: flex
+		gap: 25px
+
+	.button
+		font-size: 26px
+		padding: 16px 24px
