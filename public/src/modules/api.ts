@@ -340,7 +340,7 @@ class SurveyRequests {
         });
 
         if (response.status === 200) {
-            return (response.body as {question_id: string, title: string, question_type: 'CSAT' | 'NPS', stats: Record<string, number>}[]).map(value => {
+            return (response.body as {question_id: string, title: string, value: number, question_type: 'CSAT' | 'NPS', stats: Record<string, number>}[]).map(value => {
                 const stat = {};
                 if (value.title === 'CSAT') {
                     let max = 0;
@@ -354,7 +354,32 @@ class SurveyRequests {
                     stat['third'] = value.stats['3'] != undefined ? value.stats['3'] / max : 0;
                     stat['fourth'] = value.stats['4'] != undefined ? value.stats['4'] / max : 0;
                     stat['fifth'] = value.stats['5'] != undefined ? value.stats['5'] / max : 0;
+
+                    return {
+                        title: response.body.title,
+                        type: 'CSAT',
+                        stat: stat,
+                        nps: response.body.value
+                    }
+                } else {
+                    let max = 0;
+                    for (const key in value.stats) {
+                        if (value.stats[key] > max) {
+                            max = value.stats[key];
+                        }
+                    }
+                    stat['detractor'] = value.stats['1'] != undefined ? value.stats['1'] / max : 0;
+                    stat['passive'] = value.stats['2'] != undefined ? value.stats['2'] / max : 0;
+                    stat['promouter'] = value.stats['3'] != undefined ? value.stats['3'] / max : 0;
+
+                    return {
+                        title: response.body.title,
+                        type: 'NPS',
+                        stat: stat,
+                        nps: response.body.value
+                    }
                 }
+
             });
         }
 

@@ -9,7 +9,7 @@ import {Question} from "../Question/Question";
 type NPSQuestion = {
     title: string,
     type: 'NPS',
-    nps: number,
+    value: number,
     stat: {
         first: number,
         second: number,
@@ -27,6 +27,7 @@ type CSATQuestion = {
         fourth: number,
         fifth: number
     }
+    value: number
 }
 
 export class SurvayList extends ScReact.Component<any, any> {
