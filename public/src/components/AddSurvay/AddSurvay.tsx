@@ -24,8 +24,13 @@ export class AddSurvay extends ScReact.Component<any, AddSurveyState> {
                 {this.state.surveys.map((value, index) => {
                     return (
                         <div key1={value.id}>
-                            <input/>
-                            <select>
+                            <input onchange={(e) => {
+                                this.state.surveys[index].title = e.target.value;
+                            }} />
+                            <select onchange={(e) => {
+                                this.state.surveys[index].type = e.target.value;
+                                console.log(this.state.surveys);
+                            }}>
                                 <option value={'NPS'}>
                                     NPS
                                 </option>
