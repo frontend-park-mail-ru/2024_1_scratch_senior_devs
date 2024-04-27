@@ -66,7 +66,7 @@ export class DonutChart extends ScReact.Component<any, DonutChartStateType> {
             <div className="donut-chart-container">
                 <div className="x-box" ref={ref => this.chartRef = ref}></div>
                 <div className="x-box-cont">
-                    {this.state.options.map((item, i) => (
+                    {this.props.options.map((item, i) => (
                         <div className="option">
                             <span>{item.label}: {(100 * item.value).toString()}%</span>
                             <div className="option-color" style={`background: ${COLORS[i]};`}>

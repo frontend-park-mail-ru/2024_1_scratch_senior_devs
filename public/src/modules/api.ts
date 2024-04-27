@@ -320,7 +320,9 @@ class SurveyRequests {
                 questions: questions.map(value => {
                     return {
                         title: value.title,
-                        question_type: value.type
+                        question_type: value.type,
+                        min_mark: 0,
+                        skip: 0
                     }
                 })
             }
@@ -332,8 +334,8 @@ class SurveyRequests {
         };
     }
 
-    GetQuestions = async (jwt: string, csrf: string) => {
-        const response = await Ajax.Get(this.baseUrl + '/get', {
+    GetQuestions = async (jwt: string) => {
+        const response = await Ajax.Get(this.baseUrl + '/get_stat', {
             headers: {
                 'Authorization': jwt
             }

@@ -2,6 +2,8 @@ import {ScReact} from "@veglem/screact";
 import {VDomNode} from "@veglem/screact/dist/vdom";
 import "./SurvayList.sass"
 import {Question} from "../Question/Question";
+import {AppSurveyRequests} from "../../modules/api";
+import {AppUserStore} from "../../modules/stores/UserStore";
 
 type NPSQuestion = {
     title: string,
@@ -27,29 +29,27 @@ type CSATQuestion = {
     value: number
 }
 
+type QuestionsArray = Array<NPSQuestion | CSATQuestion>
+
 export class SurvayList extends ScReact.Component<any, any> {
-    state = {
+    state: {questions: QuestionsArray} = {
         questions: [
-            {
-                "name": "Вопрос №1",
-                "type": "NPS"
-            },
-            {
-                "name": "Вопрос №2",
-                "type": "CSAT"
-            },
-            {
-                "name": "Вопрос №3",
-                "type": "NPS"
-            }
         ]
+    }
+
+    componentDidMount() {
+        AppSurveyRequests.GetQuestions(AppUserStore.state.JWT).then(response => {
+            this.setState(s => {
+                return {...s, questions: response};
+            })
+        })
     }
 
     render(): VDomNode {
         return (
             <div className="questions-wrapper">
                 {this.state.questions.map(question => (
-                    <Question name={question.name} type={question.type} />
+                    <Question name={question.title} type={question.type} stat={question.stat} value={question.value}/>
                 ))}
             </div>
         )

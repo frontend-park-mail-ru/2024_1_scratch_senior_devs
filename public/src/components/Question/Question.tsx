@@ -17,6 +17,14 @@ export class Question extends ScReact.Component<any, any> {
     }
 
     render() {
+        const mapStat = (stat) => {
+            const options = [];
+            for (const statKey in stat) {
+                options.push({label: statKey, value: stat[statKey]})
+            }
+            return options;
+        }
+
         return (
             <div className={"question " + (this.state.open ? "open" : "")}>
                 <div className="question-item">
@@ -24,7 +32,10 @@ export class Question extends ScReact.Component<any, any> {
                     <Img src="expand.svg" className="expand-btn" onClick={this.toggleOpen}/>
                 </div>
                 <div className="question-diagram">
-                    {this.props.type == "NPS" ? <DonutChart/> : <BarChart/>}
+                    {this.props.type == "NPS" ? <DonutChart options={mapStat(this.props.stat)}/> : <BarChart options={mapStat(this.props.stat)}/>}
+                </div>
+                <div>
+                    {this.props.value}
                 </div>
             </div>
         )

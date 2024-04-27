@@ -7,6 +7,7 @@ import {Img} from "../Image/Image";
 import {AppSurveyRequests} from "../../modules/api";
 import {AppUserStore, UserActions} from "../../modules/stores/UserStore";
 import {AppDispatcher} from "../../modules/dispatcher";
+import {AppToasts} from "../../modules/toasts";
 
 type AddSurveyState = {
     surveys: Array<newSurvey>
@@ -25,6 +26,18 @@ export class AddSurvay extends ScReact.Component<any, AddSurveyState> {
 
     handleSubmit = () => {
         console.log(this.state.surveys)
+
+        let flag = false;
+        this.state.surveys.forEach(val => {
+            if (val.title.length === 0) {
+                AppToasts.info('Название не может быть пустым');
+                flag = true;
+                return;
+            }
+        });
+        if (flag) {
+            return;
+        }
 
         AppSurveyRequests.CreateSurvey(AppUserStore.state.JWT, AppUserStore.state.csrf, this.state.surveys.map(val => {
             return {
