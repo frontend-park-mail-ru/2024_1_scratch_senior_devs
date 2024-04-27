@@ -311,7 +311,7 @@ class SurveyRequests {
     }
 
     CreateSurvey = async (jwt: string, csrf: string, questions: {title: string, type: 'CSAT' | 'NPS'}[]) => {
-        const response = await Ajax.Post(this.baseUrl + '/vote', {
+        const response = await Ajax.Post(this.baseUrl + '/create', {
             headers: {
                 'Authorization': jwt,
                 'x-csrf-token': csrf
@@ -319,8 +319,8 @@ class SurveyRequests {
             body:{
                 questions: questions.map(value => {
                     return {
-                        question_type: value.title,
-                        title: value.type
+                        title: value.title,
+                        question_type: value.type
                     }
                 })
             }
@@ -330,6 +330,36 @@ class SurveyRequests {
             status: response.status,
             csrf: response.headers['x-csrf-token']
         };
+    }
+
+    GetQuestions = async (jwt: string, csrf: string) => {
+        const response = await Ajax.Get(this.baseUrl + '/get', {
+            headers: {
+                'Authorization': jwt
+            }
+        });
+
+        if (response.status === 200) {
+            return (response.body as {question_id: string, title: string, question_type: 'CSAT' | 'NPS', stats: Record<string, number>}[]).map(value => {
+                const stat = {};
+                if (value.title === 'CSAT') {
+                    let max = 0;
+                    for (const key in value.stats) {
+                        if (value.stats[key] > max) {
+                            max = value.stats[key];
+                        }
+                    }
+                    stat['first'] = value.stats['1'] != undefined ? value.stats['1'] / max : 0;
+                    stat['second'] = value.stats['2'] != undefined ? value.stats['2'] / max : 0;
+                    stat['third'] = value.stats['3'] != undefined ? value.stats['3'] / max : 0;
+                    stat['fourth'] = value.stats['4'] != undefined ? value.stats['4'] / max : 0;
+                    stat['fifth'] = value.stats['5'] != undefined ? value.stats['5'] / max : 0;
+                }
+            });
+        }
+
+
+        throw Error(response.body.message);
     }
 }
 
