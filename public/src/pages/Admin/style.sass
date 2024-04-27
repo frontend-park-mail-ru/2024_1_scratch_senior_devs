@@ -1,20 +1,44 @@
 @import "/public/src/utils/variables.sass"
 
 .admin-page-wrapper
-  display: flex
-  align-items: center
-  justify-content: space-around
-  flex-direction: column
-  color: $text-main-color
-  padding-top: 100px
-  .admin-page-selector
-    display: flex
-    flex-direction: row
-    width: 100%
-    justify-content: space-around
+	display: flex
+	align-items: center
+	justify-content: center
+	color: $text-main-color
+	padding: 100px 0
+	width: 100%
 
-    //.admin-page-selector-btn
-    //  width: 100%
+	.admin-page-container
+		background: #1b2735
+		width: 800px
+		border-radius: 15px
+		display: flex
+		flex-direction: column
+		overflow: hidden
 
-    .admin-page-selector-btn-selected
-      border-bottom: 3px solid $primary-color
+		.top-panel
+			display: flex
+			justify-content: space-between
+			width: 100%
+			border: 1px solid #2b3b55
+
+			.admin-page-selector-btn
+				width: 50%
+				padding: 20px
+				display: flex
+				justify-content: center
+				align-items: center
+				cursor: pointer
+				transition: 0.5s
+
+				&.selected
+					background: $primary-color
+
+				&:not(.selected):hover
+					background: #151f2a
+
+
+		.bottom-panel
+			width: 100%
+			display: flex
+			justify-content: center

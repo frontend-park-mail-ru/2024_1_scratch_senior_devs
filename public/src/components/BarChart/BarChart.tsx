@@ -18,7 +18,7 @@ export class BarChart extends ScReact.Component<any, any> {
             },
             {
                 "label": "Option 04",
-                "value": 1.0,
+                "value": 0.95,
             },
             {
                 "label": "Option 05",
@@ -38,7 +38,7 @@ export class BarChart extends ScReact.Component<any, any> {
                 <ul className="bars">
                     {this.state.options.map(option => (
                         <li>
-                            <div className="bar" style={`height: ${(100 * option.value).toString()}%`}>{(100 * option.value).toString()}%</div><span>{option.label}</span>
+                            <div className="bar" style={`height: ${(100 * option.value).toString()}%`}></div><span>{option.label}</span>
                         </li>
                     ))}
                 </ul>

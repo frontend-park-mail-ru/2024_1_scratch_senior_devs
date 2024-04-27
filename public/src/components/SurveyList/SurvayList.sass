@@ -1,0 +1,54 @@
+@import "/public/src/utils/animations.sass"
+@import "/public/src/utils/variables.sass"
+
+.questions-wrapper
+	width: 100%
+	display: flex
+	flex-direction: column
+	justify-content: center
+	align-items: center
+	animation: fadeIn 0.5s
+
+	.question
+		width: 100%
+		border-bottom: 1px solid $text-main-color
+		padding: 20px
+		height: 100px
+		overflow: hidden
+
+		&.open
+			height: 500px
+
+			.question-item
+				.expand-btn
+					transform: rotate(180deg)
+
+			.question-diagram
+				display: flex
+				animation: showAnim 0.5s
+
+		&:last-child
+			border: none
+
+		.question-item
+			width: 100%
+			display: flex
+			justify-content: space-between
+
+			.expand-btn
+				width: 32px
+				height: 32px
+				cursor: pointer
+				transition: 0.3s
+				filter: invert(80%)
+
+				&:hover
+					filter: invert(85%)
+
+		.question-diagram
+			display: none
+			animation: closeAnim 0s
+			justify-content: center
+			align-items: center
+			padding-top: 50px
+

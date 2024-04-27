@@ -11,7 +11,9 @@ export class CSATPage extends ScReact.Component<any, any> {
 
                 <div className="csat-statictic">
 
-                    {/*<DonutChart />*/}
+                    <h2 className="title">Статистика</h2>
+
+                    <DonutChart />
 
                     <BarChart />
 
