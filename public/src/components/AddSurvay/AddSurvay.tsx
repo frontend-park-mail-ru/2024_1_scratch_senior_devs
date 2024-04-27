@@ -64,7 +64,7 @@ export class AddSurvay extends ScReact.Component<any, AddSurveyState> {
                             <div key1={value.id} className="survey-question">
                                 <div className="top-question-body">
                                     <h3>Вопрос №{(index + 1).toString()}</h3>
-                                    <select  onсhange={(e) => {
+                                    <select oninput={(e) => {
                                         this.state.surveys[index].type = e.target.value;
                                         console.log(this.state.surveys);
                                     }}>
