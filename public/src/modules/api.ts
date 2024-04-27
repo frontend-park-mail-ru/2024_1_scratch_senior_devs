@@ -285,7 +285,7 @@ class SurveyRequests {
         });
 
         if (response.status === 200) {
-            return response.body;
+            return response.body as {id: string, title: string, question_type: 'CSAT' | 'NPS'}[];
         }
 
 

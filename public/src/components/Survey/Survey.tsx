@@ -19,7 +19,14 @@ export class Survey extends ScReact.Component<SurveyProps, SurveyStruct | undefi
 
     componentDidMount() {
         AppSurveyRequests.GetSurvey(AppUserStore.state.JWT).then(response => {
-            this.props = response;
+            this.props.surveys = [];
+            response.forEach(val => {
+                this.props.surveys.push({
+                    id: val.id,
+                    title: val.title,
+                    type: val.question_type
+                })
+            })
             this.setState(s => {
                 return this.props.surveys[0];
             });
