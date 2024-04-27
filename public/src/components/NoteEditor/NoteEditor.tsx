@@ -21,6 +21,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
         content: undefined,
         deleteNoteModalOpen: false,
         inviteUserModalOpen: false,
+        surveyModalOpen: false,
         favourite: false // TODO
     };
 
@@ -51,6 +52,9 @@ export class NoteEditor extends ScReact.Component<any, any> {
         this.saveNote();
         this.props.setClose();
         setTimeout(() => AppDispatcher.dispatch(NotesActions.CLOSE_NOTE), 300);
+        this.setState(s => {
+            return {...s, surveyModalOpen: true};
+        })
     };
 
     updateState = (store:NotesStoreState) => {
@@ -102,6 +106,13 @@ export class NoteEditor extends ScReact.Component<any, any> {
         }))
     }
 
+    closeSurveyModal = () => {
+        this.setState(state => ({
+            ...state,
+            surveyModalOpen: false
+        }))
+    }
+
     openParentNote = () => {
         AppDispatcher.dispatch(NotesActions.OPEN_NOTE, this.state.selectedNote.parent)
     }
@@ -130,6 +141,16 @@ export class NoteEditor extends ScReact.Component<any, any> {
                 <Modal open={this.state.inviteUserModalOpen} handleClose={this.closeInviteUserModal}
                        content={<InviteUserModal handleClose={this.closeInviteUserModal}
                                                  open={this.state.inviteUserModalOpen}/>}/>
+
+                <Modal open={this.state.surveyModalOpen} handleClose={this.closeSurveyModal}
+                       content={<div className={"ssesdc"}>
+                           <iframe style={'border: 0'} width={600} height={300} src={'/survey'}></iframe>
+                           <img src={'./src/assets/' + 'close.svg'} alt=""
+                                className={'close-modal-btn'}
+                                onclick={this.closeSurveyModal}/>
+                       </div>
+                       }
+                ></Modal>
 
                 <div className="top-panel">
                     <div className="left-container">

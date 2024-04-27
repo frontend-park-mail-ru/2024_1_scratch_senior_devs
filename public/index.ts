@@ -6,12 +6,22 @@ import {Survey} from "./src/components/Survey/Survey";
 
 if (window.location.pathname === '/survey') {
     renderDOM('root', ScReact.createComponent(Survey, {
-        id: "1",
-        title: "hello",
-        answers: [
-            "Da",
-            "Net",
-            "Blayt"
+        surveys: [
+            {
+                id: "1",
+                title: "Как вам наш сервис?",
+                type: 'CSAT',
+            },
+            {
+                id: "1",
+                title: "Как вам наш редактор?",
+                type: 'CSAT',
+            },
+            {
+                id: "1",
+                title: "Как вам наша главная страница?",
+                type: 'NPS',
+            }
         ],
         key: 'modal'
     }));

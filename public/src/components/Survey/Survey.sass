@@ -1,0 +1,89 @@
+@import "/public/src/utils/variables.sass"
+
+.survey-wrapper
+  display: flex
+  flex-direction: column
+  justify-content: space-around
+  color: $text-main-color
+  margin: 20px
+  //align-items: center
+
+  .survey-counter
+    display: flex
+    justify-content: flex-end
+
+  h2
+    margin-left: 20px
+
+  .survey-nps
+    display: flex
+    flex-direction: row
+    justify-content: center
+    align-items: center
+
+    .survey-nps-btn
+      background-color: $primary-color
+      border-radius: 7px
+      padding: 2px 4px
+      border: none
+      outline: none
+      color: $white
+      text-align: center
+      cursor: pointer
+      transition: all 0.3s
+      margin: 5px
+      width: 35px
+      height: 35px
+
+      &.disabled
+        cursor: not-allowed
+        opacity: 0.8
+
+      &:hover:not(.disabled)
+        transform: scale(1.05)
+
+      &:active:not(.disabled)
+        transform: scale(0.98)
+
+      &.hidden
+        display: none
+
+  .survey-description
+    display: flex
+    flex-direction: row
+    justify-content: space-around
+    align-items: center
+
+
+  .survey-csat
+    display: flex
+    flex-direction: row
+    justify-content: center
+    align-items: center
+
+    .survey-csat-btn
+      background-color: $primary-color
+      border-radius: 7px
+      padding: 2px 4px
+      border: none
+      outline: none
+      color: $white
+      text-align: center
+      cursor: pointer
+      transition: all 0.3s
+      margin: 5px
+      width: 35px
+      height: 35px
+
+      &.disabled
+        cursor: not-allowed
+        opacity: 0.8
+
+      &:hover:not(.disabled)
+        transform: scale(1.05)
+
+      &:active:not(.disabled)
+        transform: scale(0.98)
+
+      &.hidden
+        display: none

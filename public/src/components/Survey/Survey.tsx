@@ -1,29 +1,87 @@
 import {ScReact} from "@veglem/screact";
 import {VDomNode} from "@veglem/screact/dist/vdom";
-import {Button} from "../Button/Button";
+import "./Survey.sass"
 
-// type SurveyProps = {
-//     surveys: Array<SurveyStruct>
-// }
+type SurveyProps = {
+    surveys: Array<SurveyStruct>
+}
 
 type SurveyStruct = {
     id: string,
     title: string,
-    answers: Array<string>
+    type: 'NPS' | 'CSAT'
 }
 
-export class Survey extends ScReact.Component<SurveyStruct, any> {
+export class Survey extends ScReact.Component<SurveyProps, SurveyStruct | undefined | 'ended'> {
+
+    componentDidMount() {
+        this.setState(s => {
+            return this.props.surveys[0];
+        })
+    }
+
+    surveyHandler = (answer: number) => {
+        // todo: send result
+        if (this.state !== undefined && this.state !== 'ended') {
+            this.setState(s => {
+                const currindex = this.props.surveys.indexOf(this.state as SurveyStruct);
+                if (currindex === this.props.surveys.length - 1) {
+                    return 'ended';
+                } else {
+                    return this.props.surveys[currindex + 1];
+                }
+            })
+        }
+
+    }
 
     render(): VDomNode {
-        return(<div>
-            <h2>{this.props.title}</h2>
-            {this.props.answers.map(value => {
-                return (<div>
-                    <button style={"display: inline"}>выбрать</button>
-                    <p style={"display: inline"}>{value}</p>
-                </div>)
-            })}
-            <Button onClick={() => {}} label={"Отправить"}></Button>
-        </div>);
+        if (this.state !== undefined && this.state === 'ended') {
+            return (
+                <div>
+                    Спасибо, что прошли опрос
+                </div>
+            )
+        }else if (this.state !== undefined && this.state !== 'ended') {
+            return (
+                <div className={"survey-wrapper"}>
+                    <div className={'survey-counter'}>
+                        <p>{(this.props.surveys.indexOf(this.state) + 1).toString()}/{this.props.surveys.length.toString()}</p>
+                    </div>
+                    <h2 className={"survey-title"}>{this.state.title}</h2>
+                    {
+                        this.state.type === 'NPS' ?
+                            <div className={'survey-nps'}>
+                                <button onclick={() => {this.surveyHandler(1)}} className={'survey-nps-btn'}>0</button>
+                                <button onclick={() => {this.surveyHandler(1)}} className={'survey-nps-btn'}>1</button>
+                                <button onclick={() => {this.surveyHandler(2)}} className={'survey-nps-btn'}>2</button>
+                                <button onclick={() => {this.surveyHandler(3)}} className={'survey-nps-btn'}>3</button>
+                                <button onclick={() => {this.surveyHandler(4)}} className={'survey-nps-btn'}>4</button>
+                                <button onclick={() => {this.surveyHandler(5)}} className={'survey-nps-btn'}>5</button>
+                                <button onclick={() => {this.surveyHandler(6)}} className={'survey-nps-btn'}>6</button>
+                                <button onclick={() => {this.surveyHandler(7)}} className={'survey-nps-btn'}>7</button>
+                                <button onclick={() => {this.surveyHandler(8)}} className={'survey-nps-btn'}>8</button>
+                                <button onclick={() => {this.surveyHandler(9)}} className={'survey-nps-btn'}>9</button>
+                                <button onclick={() => {this.surveyHandler(10)}} className={'survey-nps-btn'}>10</button>
+                            </div> :
+                            <div className={'survey-csat'}>
+                                <button onclick={() => {this.surveyHandler(1)}} className={'survey-csat-btn'}>1</button>
+                                <button onclick={() => {this.surveyHandler(2)}} className={'survey-csat-btn'}>2</button>
+                                <button onclick={() => {this.surveyHandler(3)}} className={'survey-csat-btn'}>3</button>
+                                <button onclick={() => {this.surveyHandler(4)}} className={'survey-csat-btn'}>4</button>
+                                <button onclick={() => {this.surveyHandler(5)}} className={'survey-csat-btn'}>5</button>
+                            </div>
+                    }
+                    <div className={'survey-description'}>
+                        <div className={'survey-notrecomend'}>Точно не рекомендую</div>
+                        <div className={'survey-recomend'}>Точно рекомендую</div>
+                    </div>
+                </div>);
+        } else {
+            return (
+                <div className={"survey-wrapper-skeleton"}></div>
+            )
+        }
+
     }
 }
