@@ -2,8 +2,24 @@ import {renderDOM} from '@veglem/screact/dist/render';
 import {ScReact} from '@veglem/screact';
 import {App} from './src/App';
 import './index.sass';
+import {Survey} from "./src/components/Survey/Survey";
 
-renderDOM('root', ScReact.createComponent(App, {}));
+if (window.location.pathname === '/survey') {
+    renderDOM('root', ScReact.createComponent(Survey, {
+        id: "1",
+        title: "hello",
+        answers: [
+            "Da",
+            "Net",
+            "Blayt"
+        ],
+        key: 'modal'
+    }));
+} else {
+    renderDOM('root', ScReact.createComponent(App, {}));
+}
+
+
 
 // if (process.env.NODE_ENV === 'production') {
 //     if ('serviceWorker' in navigator) {
