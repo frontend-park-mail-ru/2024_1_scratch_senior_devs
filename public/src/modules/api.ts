@@ -357,6 +357,13 @@ class SurveyRequests {
                     stat['fourth'] = value.stats['4'] != undefined ? value.stats['4'] / max : 0;
                     stat['fifth'] = value.stats['5'] != undefined ? value.stats['5'] / max : 0;
 
+                    console.log({
+                        title: response.body.title,
+                        type: 'CSAT',
+                        stat: stat,
+                        nps: response.body.value
+                    })
+
                     return {
                         title: response.body.title,
                         type: 'CSAT',
@@ -373,6 +380,13 @@ class SurveyRequests {
                     stat['detractor'] = value.stats['1'] != undefined ? value.stats['detractor'] / max : 0;
                     stat['passive'] = value.stats['2'] != undefined ? value.stats['passive'] / max : 0;
                     stat['promouter'] = value.stats['3'] != undefined ? value.stats['promouter'] / max : 0;
+
+                    console.log({
+                        title: response.body.title,
+                        type: 'NPS',
+                        stat: stat,
+                        nps: response.body.value
+                    });
 
                     return {
                         title: response.body.title,
