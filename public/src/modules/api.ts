@@ -358,17 +358,17 @@ class SurveyRequests {
                     stat['fifth'] = value.stats['5'] != undefined ? value.stats['5'] / max : 0;
 
                     console.log({
-                        title: response.body.title,
+                        title: value.title,
                         type: 'CSAT',
                         stat: stat,
-                        nps: response.body.value
+                        value: value.value
                     })
 
                     return {
-                        title: response.body.title,
+                        title: value.title,
                         type: 'CSAT',
                         stat: stat,
-                        nps: response.body.value
+                        value: value.value
                     }
                 } else {
                     let max = 0;
@@ -377,22 +377,22 @@ class SurveyRequests {
                             max = value.stats[key];
                         }
                     }
-                    stat['detractor'] = value.stats['1'] != undefined ? value.stats['detractor'] / max : 0;
-                    stat['passive'] = value.stats['2'] != undefined ? value.stats['passive'] / max : 0;
-                    stat['promouter'] = value.stats['3'] != undefined ? value.stats['promouter'] / max : 0;
+                    stat['detractor'] = value.stats['detractor'] != undefined ? value.stats['detractor'] / max : 0;
+                    stat['passive'] = value.stats['passive'] != undefined ? value.stats['passive'] / max : 0;
+                    stat['promouter'] = value.stats['promouter'] != undefined ? value.stats['promouter'] / max : 0;
 
                     console.log({
-                        title: response.body.title,
+                        title: value.title,
                         type: 'NPS',
                         stat: stat,
-                        nps: response.body.value
+                        value: value.value
                     });
 
                     return {
-                        title: response.body.title,
+                        title: value.title,
                         type: 'NPS',
                         stat: stat,
-                        nps: response.body.value
+                        value: value.value
                     }
                 }
 
