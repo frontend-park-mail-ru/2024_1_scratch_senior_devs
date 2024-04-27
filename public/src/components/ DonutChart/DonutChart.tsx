@@ -52,7 +52,7 @@ export class DonutChart extends ScReact.Component<any, DonutChartStateType> {
         let i = 0
         let tmp = "green repeating-conic-gradient(from 0deg, "
 
-        this.state.options.forEach((option, j) => {
+        this.props.options.forEach((option, j) => {
             tmp += `${COLORS[j]} calc(3.6deg * ${i}) calc(3.6deg * ${100 * option.value + i}),`
             i += 100 * option.value
         })
