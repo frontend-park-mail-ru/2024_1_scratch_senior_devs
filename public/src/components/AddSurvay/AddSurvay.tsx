@@ -4,6 +4,9 @@ import {Button} from "../Button/Button";
 import {create_UUID} from "../../utils/uuid";
 import "./AddSurvay.sass"
 import {Input} from "../Input/Input";
+import {AppNoteRequests, AppSurveyRequests} from "../../modules/api";
+import {AppUserStore, UserActions} from "../../modules/stores/UserStore";
+import {AppDispatcher} from "../../modules/dispatcher";
 
 type AddSurveyState = {
     surveys: Array<newSurvey>
@@ -23,10 +26,20 @@ export class AddSurvay extends ScReact.Component<any, AddSurveyState> {
     handleSubmit = () => {
         console.log(this.state.surveys)
 
-        this.setState(state => ({
-            ...state,
-            surveys: []
-        }))
+        AppSurveyRequests.CreateSurvey(AppUserStore.state.JWT, AppUserStore.state.csrf, this.state.surveys.map(val => {
+            return {
+                title: val.title,
+                type: val.type
+            }
+        })).then(response => {
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, response.csrf);
+            this.setState(state => ({
+                ...state,
+                surveys: []
+            }))
+        }).catch(res => {
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, res.csrf);
+        })
     }
 
     render(): VDomNode {

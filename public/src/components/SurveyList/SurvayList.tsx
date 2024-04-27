@@ -6,6 +6,29 @@ import "./SurvayList.sass"
 import {Img} from "../Image/Image";
 import {Question} from "../Question/Question";
 
+type NPSQuestion = {
+    title: string,
+    type: 'NPS',
+    nps: number,
+    stat: {
+        first: number,
+        second: number,
+        third: number
+    }
+}
+
+type CSATQuestion = {
+    title: string,
+    type: 'CSAT',
+    stat: {
+        first: number,
+        second: number,
+        third: number,
+        fourth: number,
+        fifth: number
+    }
+}
+
 export class SurvayList extends ScReact.Component<any, any> {
     state = {
         questions: [

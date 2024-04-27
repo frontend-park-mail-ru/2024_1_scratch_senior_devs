@@ -309,6 +309,28 @@ class SurveyRequests {
             csrf: response.headers['x-csrf-token']
         };
     }
+
+    CreateSurvey = async (jwt: string, csrf: string, questions: {title: string, type: 'CSAT' | 'NPS'}[]) => {
+        const response = await Ajax.Post(this.baseUrl + '/vote', {
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            },
+            body:{
+                questions: questions.map(value => {
+                    return {
+                        question_type: value.title,
+                        title: value.type
+                    }
+                })
+            }
+        });
+
+        return {
+            status: response.status,
+            csrf: response.headers['x-csrf-token']
+        };
+    }
 }
 
 class NoteRequests {
