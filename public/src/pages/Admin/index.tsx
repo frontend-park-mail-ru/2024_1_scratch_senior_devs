@@ -25,7 +25,7 @@ export class AdminPage extends ScReact.Component<any, AdminState> {
                                 return {...s, page: 'statistic'}
                             })
                         }}>
-                        <h1>Статистика</h1>
+                        <h2>Статистика</h2>
                     </div>
                     <div
                         className={'admin-page-selector-btn' + (this.state.page !== 'statistic' ? ' selected' : '')}
@@ -35,7 +35,7 @@ export class AdminPage extends ScReact.Component<any, AdminState> {
                                 return {...s, page: 'add'}
                             })
                         }}>
-                        <h1>Опросы</h1>
+                        <h2>Опросы</h2>
                     </div>
                 </div>
                 <div className="bottom-panel">

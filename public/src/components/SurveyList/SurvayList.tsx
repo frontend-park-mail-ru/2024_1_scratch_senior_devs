@@ -1,9 +1,6 @@
 import {ScReact} from "@veglem/screact";
 import {VDomNode} from "@veglem/screact/dist/vdom";
-import {BarChart} from "../BarChart/BarChart";
-import {DonutChart} from "../ DonutChart/DonutChart";
 import "./SurvayList.sass"
-import {Img} from "../Image/Image";
 import {Question} from "../Question/Question";
 
 type NPSQuestion = {

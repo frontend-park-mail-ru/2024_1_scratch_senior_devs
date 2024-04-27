@@ -2,6 +2,7 @@ import {ScReact} from "@veglem/screact";
 import {Img} from "../Image/Image";
 import {DonutChart} from "../ DonutChart/DonutChart";
 import {BarChart} from "../BarChart/BarChart";
+import "./Question.sass"
 
 export class Question extends ScReact.Component<any, any> {
     state = {

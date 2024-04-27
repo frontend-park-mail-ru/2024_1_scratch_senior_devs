@@ -19,18 +19,54 @@
 			padding: 20px
 			border: 1px solid #2b3b55
 			border-radius: 12px
+			flex-direction: column
+			gap: 15px
+			position: relative
+			width: 500px
 
-			input
-				width: 100%
-				padding: 12px
-				outline: none
-				transition: 0.3s
-				background: transparent
-				color: $text-main-color
-				z-index: 1111
-				border: none
-				border-bottom: 2px solid rgba(255, 255, 255, 0.7)
+			.top-question-body
+				display: flex
+				gap: 25px
 
+				h3
+					font-size: 24px
+
+				select
+					background: #2b3b55
+					padding: 8px 16px
+					border: none
+					outline: none
+					color: $text-main-color
+					font-size: 16px
+
+
+			.bottom-question-body
+
+				input
+					width: 100%
+					padding: 12px
+					outline: none
+					transition: 0.3s
+					background: transparent
+					color: $text-main-color
+					border: none
+					border-bottom: 1px solid rgba(255, 255, 255, 0.7)
+
+					&:focus
+						border-bottom: 1px solid $primary-color
+
+				.remove-question-btn
+					position: absolute
+					right: 16px
+					top: 16px
+					width: 24px
+					height: 24px
+					transition: 0.3s
+					cursor: pointer
+					filter: invert(80%)
+
+					&:hover
+						opacity: 1
 
 	.buttons-container
 		display: flex
