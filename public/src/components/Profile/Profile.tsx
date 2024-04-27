@@ -9,6 +9,7 @@ import {Modal} from '../Modal/Modal';
 import {ToggleButton} from '../ToggleButton/ToggleButton';
 import {ProfileAvatar} from '../ProfileAvatar/ProfileAvatar';
 import {QRModal} from '../QRModal/QRModal';
+import {AppRouter} from "../../modules/router";
 
 
 export class Profile extends ScReact.Component<any, any> {
@@ -95,6 +96,8 @@ export class Profile extends ScReact.Component<any, any> {
                        <ProfileAvatar avatarUrl={this.props.avatarUrl}/>
 
                         <span className="username">{AppUserStore.state.username}</span>
+
+                        <Button label={"Админ-панель"} onClick={() => {AppRouter.go('admin')}}/>
 
                         <Link label="Изменить пароль" onClick={this.openModal}/>
 

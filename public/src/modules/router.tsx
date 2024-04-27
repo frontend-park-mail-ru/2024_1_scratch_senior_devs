@@ -15,6 +15,7 @@ import {HomePageLoader} from '../pages/Home/loader';
 import { NotesActions} from './stores/NotesStore';
 import {AppDispatcher} from './dispatcher';
 import NotFoundPage from '../pages/Error';
+import {AdminPage} from "../pages/Admin";
 
 type routerState = {
     currPage: {new(): Component<any, any> }
@@ -61,6 +62,7 @@ export class Router extends ScReact.Component<any, routerState> {
         this.pages['register'] = {page: AuthPage, loader: AuthPageLoader, skeleton: AuthPageSkeleton};
         this.pages['notes'] = {page: NotesPage, loader: NotesLoader, skeleton: NotesPageSkeleton};
         this.pages['404'] = {page: NotFoundPage };
+        this.pages['admin'] = {page: AdminPage};
     };
 
     public handlePopState = () => {
