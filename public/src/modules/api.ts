@@ -342,6 +342,9 @@ class SurveyRequests {
         });
 
         if (response.status === 200) {
+            if (response.body == null || response.body == 'null') {
+                return []
+            }
             return (response.body as {question_id: string, title: string, value: number, question_type: 'CSAT' | 'NPS', stats: Record<string, number>}[]).map(value => {
                 const stat = {};
                 if (value.title === 'CSAT') {
