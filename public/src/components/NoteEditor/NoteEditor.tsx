@@ -13,6 +13,7 @@ import {InviteUserModal} from "../InviteUserModal/InviteUserModal";
 import {Tooltip} from "../Tooltip/Tooltip";
 import {AppToasts} from "../../modules/toasts";
 import {TagList} from "../TagList/TagList";
+import {EditorWrapper} from "../EditorNext/EditorWrapper";
 
 export class NoteEditor extends ScReact.Component<any, any> {
     state = {
@@ -172,7 +173,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
                 <div className="bottom-panel">
 
-                    <Editor
+                    <EditorWrapper
                         onChangeTitle={(value: string) => {
                             this.props.onChangeTitle(value);
                             this.onChangeNote();
@@ -181,8 +182,20 @@ export class NoteEditor extends ScReact.Component<any, any> {
                             console.log("onChangeContent")
                             this.props.onChangeNote()
                             this.onChangeNote()
-                        }}
-                    />
+                        }}/>
+
+
+                    {/*<Editor*/}
+                    {/*    onChangeTitle={(value: string) => {*/}
+                    {/*        this.props.onChangeTitle(value);*/}
+                    {/*        this.onChangeNote();*/}
+                    {/*    }}*/}
+                    {/*    onChangeContent={() => {*/}
+                    {/*        console.log("onChangeContent")*/}
+                    {/*        this.props.onChangeNote()*/}
+                    {/*        this.onChangeNote()*/}
+                    {/*    }}*/}
+                    {/*/>*/}
 
                 </div>
             </div>

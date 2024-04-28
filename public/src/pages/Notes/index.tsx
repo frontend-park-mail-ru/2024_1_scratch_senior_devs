@@ -10,12 +10,15 @@ import {AppNoteStore, NoteStoreActions} from '../../modules/stores/NoteStore';
 import {Loader} from '../../components/Loader/Loader';
 import {scrollToTop, truncate} from '../../modules/utils';
 import {Note} from "../../components/Note/Note";
+import {TagsFilter} from "../../components/TagsFilter/TagsFilter";
 
 export class NotesPage extends ScReact.Component<any, any> {
     state = {
         notes: [],
         selectedNote: undefined,
         selectedNoteTags: [],
+        tags: ["Работа", "ВУЗ", "Технопарк", "Учеба", "Зал", "Дача", "Кино", "Спортзал", "Офис", "Сериалы"],
+        selectedTags: [],
         editorOpen: false,
         fetching: false
     };
@@ -178,28 +181,45 @@ export class NotesPage extends ScReact.Component<any, any> {
         this.updateNotesTitles()
     }
 
+    selectTag = (tag:string) => {
+        if (this.state.selectedTags.includes(tag)) {
+            this.setState(state => ({
+                ...state,
+                selectedTags: state.selectedTags.filter(t => t != tag)
+            }))
+        } else {
+            this.setState(state => ({
+                ...state,
+                selectedTags: [...state.selectedTags, tag]
+            }))
+        }
+    }
+
     render() {
         return (
             <div className={'notes-page-wrapper ' + (this.state.editorOpen ? 'active' : '')} >
                 <aside>
                     <div className="top-panel">
-                        <SearchBar onStartTyping={this.onSearchBarStartTyping} onChange={this.searchNotes} />
+                        <SearchBar onStartTyping={this.onSearchBarStartTyping} onChange={this.searchNotes}/>
                         <div className="add-note-btn-container" onclick={this.createNewNote}>
-                            <Button label="Новая заметка" className="add-note-btn" />
+                            <Button label="Новая заметка" className="add-note-btn"/>
                             <div className="add-note-icon-wrapper">
-                                <Img src="plus.svg" className="add-note-icon" />
+                                <Img src="plus.svg" className="add-note-icon"/>
                             </div>
                         </div>
                     </div>
-                    <div className="notes-container" onclick={this.handleSelectNote}  ref={ref => this.notesContainerRef = ref}>
+                    {this.state.tags.length > 0 ? <TagsFilter tags={this.state.tags} selectedTags={this.state.selectedTags} selectTag={this.selectTag}/> : "" }
+                    <div className="notes-container" onclick={this.handleSelectNote} ref={ref => this.notesContainerRef = ref}>
                         <Loader active={this.state.fetching}/>
                         {
                             this.state.notes.length > 0 ?
                                 this.state.notes.map(note => (
-                                    <Note selected={this.state.selectedNote?.id == note.id} note={note} tags={this.state.selectedNoteTags} />
+                                    <Note selected={this.state.selectedNote?.id == note.id} note={note}
+                                          tags={this.state.selectedNoteTags.length > 0 ? this.state.selectedNoteTags : ["Учеба", "Работа", "ВУЗ"]}/>
                                 ))
-                            :
-                            !this.state.fetching ? <h3 className="notes-not-found-label">Список заметок пуст</h3> : ""}
+                                :
+                                !this.state.fetching ?
+                                    <h3 className="notes-not-found-label">Список заметок пуст</h3> : ""}
                     </div>
                 </aside>
 

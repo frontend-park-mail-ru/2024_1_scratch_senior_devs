@@ -6,6 +6,7 @@ import {AppNoteStore, NoteStoreActions} from '../../modules/stores/NoteStore';
 import {AppNotesStore, NotesActions} from '../../modules/stores/NotesStore';
 import {MAX_ATTACH_SIZE} from '../../utils/consts';
 import {AppToasts} from '../../modules/toasts';
+import {insertBlockPlugin} from "../EditorNext/Plugin";
 
 export class Dropdown extends ScReact.Component<any, any> {
     state = {
@@ -44,23 +45,15 @@ export class Dropdown extends ScReact.Component<any, any> {
     };
 
     handleOnClick = (id:string) => {
-        
-
         let tag = id;
         let attr = null;
         let content = [];
         if (id === 'bullet-list') {
-            attr = {};
-            attr.ul = true;
-            tag = 'div';
+            insertBlockPlugin('ul')
         } else if (id === 'numbered-list') {
-            attr = {};
-            attr.ol = true;
-            tag = 'div';
+            insertBlockPlugin('ol')
         } else if (id === 'todo-list') {
-            attr = {};
-            attr.todo = true;
-            tag = 'div';
+            insertBlockPlugin('todo')
         } else if (id === 'image') {
             tag = 'img';
             const fileInput = document.createElement('input');

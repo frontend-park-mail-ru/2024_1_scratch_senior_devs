@@ -1,0 +1,45 @@
+@import "/public/src/utils/variables.sass"
+
+.filters-panel
+	display: flex
+	flex-wrap: wrap
+	gap: 5px
+	width: 100%
+
+	.tag-icon-container
+		display: flex
+		justify-content: center
+		align-items: center
+		padding: 8px
+		background: rgba(43, 59, 85, 0.5)
+		border-radius: 12px
+
+		.icon
+			width: 20px
+			height: 20px
+			transition: 0.3s
+			filter: invert(80%)
+
+			&:hover
+				opacity: 1
+
+	.tag
+		display: flex
+		justify-content: center
+		align-items: center
+		gap: 5px
+		padding: 4px 8px
+		background: rgba(43, 59, 85, 0.3)
+		border-radius: 12px
+		color: $text-main-color
+		z-index: 1
+		user-select: none
+		cursor: pointer
+		font-size: 16px
+		transition: 0.3s
+
+		&:hover
+			background: rgba(43, 59, 85, 0.8)
+
+		&.selected
+			background: #2b3b55
