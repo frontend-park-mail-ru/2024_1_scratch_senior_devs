@@ -144,12 +144,6 @@ export class NoteEditor extends ScReact.Component<any, any> {
                     </div>
                     <div className="right-container">
 
-                        {/*{this.state.selectedNote?.data.parent ?*/}
-                        {/*    <div className="back-to-parent-note-btn-container" onclick={this.openParentIcon}>*/}
-                        {/*        <Img src="arrow-up.svg" className="back-to-parent-note-btn" o/>*/}
-                        {/*    </div> : ""*/}
-                        {/*}*/}
-
                         <div className="note-save-indicator" ref={ref => this.savingLabelRef = ref}>
                             <Tooltip icon="check.svg" label="Сохранено"/>
                         </div>
@@ -173,8 +167,6 @@ export class NoteEditor extends ScReact.Component<any, any> {
                 <div className="bottom-panel">
 
                     <EditorWrapper
-                        title={this.state.selectedNote?.data.title}
-                        content={this.state.selectedNote?.data.content}
                         onChangeTitle={(value: string) => {
                             console.log("onChangeTitle")
                             console.log(value)

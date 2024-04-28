@@ -83,8 +83,6 @@ class NoteStore extends BaseStore<NoteStoreState> {
     };
 
     private setNote = (note: any) => {
-        console.log("setNote")
-        console.log(note)
         this.SetState(state => ({
             ...state,
             note: note
