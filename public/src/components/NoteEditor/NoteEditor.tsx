@@ -4,8 +4,7 @@ import {Img} from '../Image/Image';
 import {AppNotesStore, NotesActions, NotesStoreState} from '../../modules/stores/NotesStore';
 import {AppDispatcher} from '../../modules/dispatcher';
 import {SwipeArea} from '../SwipeArea/SwipeArea';
-import {Editor} from '../Editor/Editor';
-import {AppNoteStore} from '../../modules/stores/NoteStore';
+import {AppNoteStore, NoteStoreActions} from '../../modules/stores/NoteStore';
 import {Modal} from '../Modal/Modal';
 import {DeleteNoteDialog} from '../DeleteNoteDialog/DeleteNoteDialog';
 import NoteMenu from "../NoteMenu/NoteMenu";
@@ -58,18 +57,18 @@ export class NoteEditor extends ScReact.Component<any, any> {
             this.savingLabelRef.classList.remove("active")
         }
 
-        this.setState(state => {
-            return {
-                ...state,
-                selectedNote: store.selectedNote
-            };
-        });
+        this.setState(state => ({
+            ...state,
+            selectedNote: store.selectedNote
+        }));
+
+        console.log("ASDFASDFASDFAD")
 
         if (this.state.selectedNote) {
-            AppNoteStore.SetNote({
+            AppDispatcher.dispatch(NoteStoreActions.SET_NOTE, {
                 title: this.state.selectedNote.data.title,
                 blocks: this.state.selectedNote.data.content
-            });
+            })
         }
     };
 
@@ -174,28 +173,23 @@ export class NoteEditor extends ScReact.Component<any, any> {
                 <div className="bottom-panel">
 
                     <EditorWrapper
+                        title={this.state.selectedNote?.data.title}
+                        content={this.state.selectedNote?.data.content}
                         onChangeTitle={(value: string) => {
+                            console.log("onChangeTitle")
+                            console.log(value)
                             this.props.onChangeTitle(value);
                             this.onChangeNote();
+                            AppDispatcher.dispatch(NoteStoreActions.CHANGE_TITLE, value)
                         }}
-                        onChangeContent={() => {
+                        onChangeContent={(content) => {
                             console.log("onChangeContent")
+                            console.log(content)
                             this.props.onChangeNote()
                             this.onChangeNote()
-                        }}/>
-
-
-                    {/*<Editor*/}
-                    {/*    onChangeTitle={(value: string) => {*/}
-                    {/*        this.props.onChangeTitle(value);*/}
-                    {/*        this.onChangeNote();*/}
-                    {/*    }}*/}
-                    {/*    onChangeContent={() => {*/}
-                    {/*        console.log("onChangeContent")*/}
-                    {/*        this.props.onChangeNote()*/}
-                    {/*        this.onChangeNote()*/}
-                    {/*    }}*/}
-                    {/*/>*/}
+                            AppDispatcher.dispatch(NoteStoreActions.CHANGE_CONTENT, content)
+                        }}
+                    />
 
                 </div>
             </div>

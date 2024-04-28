@@ -71,7 +71,7 @@ export class Dropdown extends ScReact.Component<any, any> {
                         noteId: AppNotesStore.state.selectedNote.id,
                         blockId: this.props.blockId
                     });
-                    AppDispatcher.dispatch(NoteStoreActions.REMOVE_CURSOR, {});
+                    // AppDispatcher.dispatch(NoteStoreActions.REMOVE_CURSOR, {});
                 } else {
                     AppToasts.error('Фото слишком большое');
                 }
@@ -97,7 +97,7 @@ export class Dropdown extends ScReact.Component<any, any> {
                         blockId: this.props.blockId,
                         fileName: (e.target as HTMLInputElement).files[0].name
                     });
-                    AppDispatcher.dispatch(NoteStoreActions.REMOVE_CURSOR);
+                    // AppDispatcher.dispatch(NoteStoreActions.REMOVE_CURSOR);
                 } else {
                     AppToasts.error('Файл слишком большой');
                 }
@@ -113,19 +113,19 @@ export class Dropdown extends ScReact.Component<any, any> {
             AppDispatcher.dispatch(NotesActions.CREATE_SUB_NOTE)
         }
 
-        AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK_TYPE, {
-            blockId: this.props.blockId,
-            tag: tag,
-            attributes: attr,
-            content: content
-        });
+        // AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK_TYPE, {
+        //     blockId: this.props.blockId,
+        //     tag: tag,
+        //     attributes: attr,
+        //     content: content
+        // });
 
         // moveCursorUpAndDown(this.props.blockId)
 
-        AppDispatcher.dispatch(NoteStoreActions.MOVE_CURSOR, {
-            blockId: this.props.blockId,
-            pos: 0
-        });
+        // AppDispatcher.dispatch(NoteStoreActions.MOVE_CURSOR, {
+        //     blockId: this.props.blockId,
+        //     pos: 0
+        // });
 
         this.props.onClose();
     };

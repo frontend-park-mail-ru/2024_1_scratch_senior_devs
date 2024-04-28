@@ -7,11 +7,9 @@ export class Editor {
     private seveCallback
     private dropdownObserver
 
-    constructor(note: PluginProps[], parent: HTMLElement, openDropdown:() => void) {
+    constructor(note: PluginProps[], parent: HTMLElement, openDropdown:() => void, onChange: (schema) => void) {
         this.editable = document.createElement('div');
         this.editable.contentEditable = "true";
-
-
 
         this.dropdownObserver = new MutationObserver((records) => {
             records.forEach(record => {
@@ -57,7 +55,8 @@ export class Editor {
             })
 
             // TODO: вызывать callback сохранения заметки
-            console.log(schema);
+            // console.log(schema);
+            onChange(schema)
         });
 
         this.observer.observe(this.editable, {

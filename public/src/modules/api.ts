@@ -364,9 +364,15 @@ class NoteRequests {
                     title: '',
                     content: [
                         {
-                            'id': '1',
-                            'type': 'div',
-                            'content': [
+                            pluginName: "textBlock",
+                            content: "Hello You-note"
+                        },
+                        {
+                            pluginName: "div",
+                            children: [
+                                {
+                                    pluginName: "br",
+                                }
                             ]
                         }
                     ]
@@ -396,9 +402,15 @@ class NoteRequests {
                     title: '',
                     content: [
                         {
-                            'id': '1',
-                            'type': 'div',
-                            'content': [
+                            pluginName: "textBlock",
+                            content: "Hello You-note"
+                        },
+                        {
+                            pluginName: "div",
+                            children: [
+                                {
+                                    pluginName: "br",
+                                }
                             ]
                         }
                     ]

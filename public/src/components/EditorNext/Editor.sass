@@ -32,24 +32,22 @@
 	.buttons-container
 		display: flex
 
+	.note-title
+		width: 100%
+		font-size: 28px
+		color: $text-main-color
+		font-weight: bold
+		margin-bottom: 5px
+
+		&:before
+			content: attr(data-placeholder)
+			color: $text-secondary-color
+			cursor: text
+
 	.note-editor__body
 		display: flex
 		flex-direction: column
 		position: relative
-
-		.note-title
-			width: 100%
-			padding-left: 30px
-			font-size: 28px
-			color: $text-main-color
-			font-weight: bold
-			margin-bottom: 5px
-
-			&:before
-				content: attr(data-placeholder)
-				color: $text-secondary-color
-
-				cursor: text
 
 		.placeholder
 			color: $text-secondary-color

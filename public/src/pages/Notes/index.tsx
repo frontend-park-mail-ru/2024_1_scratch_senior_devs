@@ -160,7 +160,7 @@ export class NotesPage extends ScReact.Component<any, any> {
     };
 
     onSearchBarStartTyping = () => {
-        AppDispatcher.dispatch(NoteStoreActions.REMOVE_CURSOR)
+        // TODO: AppDispatcher.dispatch(NoteStoreActions.REMOVE_CURSOR)
         AppDispatcher.dispatch(NotesActions.START_FETCHING)
     }
 

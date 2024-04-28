@@ -82,18 +82,18 @@ export class Tippy extends ScReact.Component<any, any> {
     handleSelect = (item) => {
         
         
-        AppDispatcher.dispatch(
-            NoteStoreActions.CHANGE_PIECE_ATTRIBUTES,
-            {
-                blockId: Number(this.options.blockId),
-                anchorId: Number(this.options.anchorId),
-                focusId: Number(this.options.focusId),
-                anchorPos: Number(this.options.anchorPos),
-                focusPos: Number(this.options.focusPos),
-                attribute: item.type,
-                value: 'value' in item ? item.value : undefined
-            }
-        );
+        // AppDispatcher.dispatch(
+        //     NoteStoreActions.CHANGE_PIECE_ATTRIBUTES,
+        //     {
+        //         blockId: Number(this.options.blockId),
+        //         anchorId: Number(this.options.anchorId),
+        //         focusId: Number(this.options.focusId),
+        //         anchorPos: Number(this.options.anchorPos),
+        //         focusPos: Number(this.options.focusPos),
+        //         attribute: item.type,
+        //         value: 'value' in item ? item.value : undefined
+        //     }
+        // );
         this.closeColorPicker();
         this.props.onClose();
     };
@@ -136,8 +136,6 @@ export class Tippy extends ScReact.Component<any, any> {
                 icon: 'crossed.svg'
             }
         ];
-
-        this.props.optionsSetter(this.setOptions);
 
         return (
             <div className={'tippy-container ' + (this.props.open ? 'open' : '')} ref={(val) => this.tippyRef = val} id={'tippy'}>

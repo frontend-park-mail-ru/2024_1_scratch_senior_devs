@@ -4,7 +4,7 @@ import "./Editor.sass"
 import {Editor} from "./Editor";
 import {insertBlockPlugin} from "./Plugin";
 import {Dropdown} from "../Dropdown/Dropdown";
-import {AppNoteStore} from "../../modules/stores/NoteStore";
+import {AppNoteStore, NoteStoreState} from "../../modules/stores/NoteStore";
 import {Tippy} from "../Tippy/Tippy";
 
 export class EditorWrapper extends Component<any, any> {
@@ -28,20 +28,28 @@ export class EditorWrapper extends Component<any, any> {
     private noteTitleRef: HTMLElement
 
     componentDidMount() {
-        this.editor = new Editor([
-            {
-                pluginName: "textBlock",
-                content: "Hello You-note"
-            },
-            {
-                pluginName: "div",
-                children: [
-                    {
-                        pluginName: "br",
-                    }
-                ]
-            }
-        ], this.self, this.openDropdown);
+        AppNoteStore.SubscribeToStore(this.updateState)
+    }
+
+    updateState = (store:NoteStoreState) => {
+        console.log("UPDATE STATE")
+
+        console.log(store)
+
+        this.syncTitle(store.note.title)
+
+        this.self.innerHTML = ""
+        this.editor = new Editor(store.note.blocks, this.self, this.openDropdown, this.props.onChangeContent);
+    }
+
+    syncTitle = (title) => {
+        this.noteTitleRef.innerText = title
+
+        if (this.noteTitleRef.textContent.length == 0) {
+            this.noteTitleRef.dataset.placeholder = 'Введите название';
+        } else {
+            this.noteTitleRef.dataset.placeholder = '';
+        }
     }
 
     openDropdown() {
@@ -65,12 +73,15 @@ export class EditorWrapper extends Component<any, any> {
         }))
     }
 
-    optionsSetter = () => {
-
-    }
 
     onChangeTitle = () => {
-        
+        if (this.noteTitleRef.textContent.length == 0) {
+            this.noteTitleRef.dataset.placeholder = 'Введите название';
+        } else {
+            this.noteTitleRef.dataset.placeholder = '';
+        }
+
+        this.props.onChangeTitle(this.noteTitleRef.textContent)
     }
 
     render(): VDomNode {
@@ -101,21 +112,17 @@ export class EditorWrapper extends Component<any, any> {
                 </div>
 
                 <Dropdown
-                    blockId={AppNoteStore.state.dropdownPos.blockId}
                     style={`left: ${this.state.dropdownPos.left}px; top: ${this.state.dropdownPos.top}px;`}
-                    onClose={this.closeEditor}
+                    onClose={this.closedDropdown}
                     open={this.state.dropdownOpen}
                 />
 
                 <Tippy open={this.state.tippyOpen}
                        onClose={this.closeTippy}
-                       optionsSetter={(func) => {
-                           this.optionsSetter = func;
-                       }}
                 />
 
                 <div className="note-editor-content">
-                    <div className="note-title" contentEditable={true} onInput={this.onChangeTitle} ref={ref => this.noteTitleRef = ref}></div>
+                    <div className="note-title" contentEditable={true} oninput={this.onChangeTitle} ref={ref => this.noteTitleRef = ref}></div>
                     <div className="note-body" ref={elem => this.self = elem}></div>
                 </div>
 
