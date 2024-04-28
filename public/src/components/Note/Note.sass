@@ -12,8 +12,25 @@
 	transition: 0.5s
 	position: relative
 
+	*
+		pointer-events: none
+
 	&:hover
 		background: rgba(27, 39, 53, 0.8)
+
+	.note-tags-container
+		display: flex
+		gap: 5px
+		.note-tag
+			display: flex
+			justify-content: center
+			align-items: center
+			gap: 5px
+			padding: 4px 8px
+			background: #2b3b55
+			border-radius: 12px
+			color: $text-main-color
+			z-index: 1
 
 	h3
 		color: $text-main-color

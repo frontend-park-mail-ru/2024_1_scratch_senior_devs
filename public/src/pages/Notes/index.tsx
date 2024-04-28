@@ -8,7 +8,7 @@ import {Button} from '../../components/Button/Button';
 import {Img} from '../../components/Image/Image';
 import {AppNoteStore, NoteStoreActions} from '../../modules/stores/NoteStore';
 import {Loader} from '../../components/Loader/Loader';
-import {formatDate, scrollToTop, truncate} from '../../modules/utils';
+import {scrollToTop, truncate} from '../../modules/utils';
 import {Note} from "../../components/Note/Note";
 
 export class NotesPage extends ScReact.Component<any, any> {
@@ -102,8 +102,6 @@ export class NotesPage extends ScReact.Component<any, any> {
 
         if (e.target.matches('.note-container')) {
             id = e.target.id;
-        } else if (e.target.matches('.note-container *')) {
-            id = e.target.parentNode.id;
         }
 
         if (id && this.state.selectedNote?.id !== id) {

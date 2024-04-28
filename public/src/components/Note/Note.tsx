@@ -6,8 +6,6 @@ import {formatDate, parseNoteTitle, truncate} from "../../modules/utils";
 const MAX_NOTE_CONTENT_PREVIEW_LENGTH = 25;
 
 export class Note extends ScReact.Component<any, any> {
-
-
     render() {
         const tags = this.props.tags.slice(0, 2).map(tag => (
             <span className="note-tag">{tag}</span>
