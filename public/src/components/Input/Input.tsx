@@ -24,6 +24,7 @@ type InputProps = {
 }
 
 export class Input extends ScReact.Component<InputProps, InputState>{
+    // @ts-ignore
     state:InputState = {
 
     };

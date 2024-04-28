@@ -41,10 +41,17 @@ export class EditorWrapper extends Component<any, any> {
                     }
                 ]
             }
-        ], this.self);
+        ], this.self, this.openDropdown);
     }
 
-    closeEditor() {
+    openDropdown() {
+        this.setState(state => ({
+            ...state,
+            dropdownOpen: true
+        }))
+    }
+
+    closedDropdown() {
         this.setState(state => ({
             ...state,
             dropdownOpen: false

@@ -5,10 +5,27 @@ export class Editor {
     private observer: MutationObserver;
     private insertionObserver: MutationObserver;
     private seveCallback
+    private dropdownObserver
 
-    constructor(note: PluginProps[], parent: HTMLElement) {
+    constructor(note: PluginProps[], parent: HTMLElement, openDropdown:() => void) {
         this.editable = document.createElement('div');
         this.editable.contentEditable = "true";
+
+
+
+        this.dropdownObserver = new MutationObserver((records) => {
+            records.forEach(record => {
+                if (record.type === 'childList' && record.addedNodes.length > 0 && record.addedNodes[0].nodeType === Node.ELEMENT_NODE && (record.addedNodes[0] as HTMLElement).tagName == "DIV") {
+                    const observer = new MutationObserver((tests) => {
+                        tests.forEach(test => {
+
+                        })
+                    })
+
+                    // openDropdown()
+                }
+            })
+        });
 
         this.insertionObserver = new MutationObserver((records) => {
             records.forEach(record => {
@@ -39,8 +56,10 @@ export class Editor {
                 schema.push(toJson(node));
             })
 
+            // TODO: вызывать callback сохранения заметки
             console.log(schema);
         });
+
         this.observer.observe(this.editable, {
             childList: true,
             characterData: true,
@@ -49,6 +68,7 @@ export class Editor {
             attributeOldValue: true,
             subtree: true
         });
+
 
     }
 }
