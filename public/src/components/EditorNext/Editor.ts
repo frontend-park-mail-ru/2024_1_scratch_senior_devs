@@ -20,7 +20,9 @@ export class Editor {
                     const observer = new MutationObserver((tests) => {
 
                         tests.forEach(test => {
+                            console.log("startsWith")
                             if (test.target.textContent.startsWith('/')) {
+                                console.log(test.target.parentElement.offsetTop)
                                 dropdown.open((test.target.parentElement as HTMLElement));
                             } else {
                                 dropdown.close();

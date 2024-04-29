@@ -48,7 +48,7 @@ export class EditorWrapper extends Component<any, any> {
         this.syncTitle(store.note.title)
 
         this.self.innerHTML = ""
-        this.editor = new Editor(store.note.blocks, this.self, {open: this.openDropdown, close: this.closedDropdown}, this.props.onChangeContent);
+        this.editor = new Editor(store.note.blocks, this.self, {open: this.openDropdown, close: this.closeDropdown}, this.props.onChangeContent);
     }
 
     syncTitle = (title) => {
@@ -62,24 +62,26 @@ export class EditorWrapper extends Component<any, any> {
     }
 
     openDropdown = (elem: HTMLElement) => {
+        console.log("openDropdown")
         this.setState(state => ({
             ...state,
             dropdownOpen: true,
             dropdownPos: {
-                left: elem.getBoundingClientRect().left,
-                top: elem.getBoundingClientRect().top
+                left: elem.offsetLeft + 20,
+                top: elem.offsetTop + 20
             }
         }))
     }
 
-    closedDropdown = () => {
+    closeDropdown = () => {
+        console.log("closeDropdown")
         this.setState(state => ({
             ...state,
             dropdownOpen: false
         }))
     }
 
-    closeTippy() {
+    closeTippy = () => {
         this.setState(state => ({
             ...state,
             tippyOpen: false
@@ -126,7 +128,7 @@ export class EditorWrapper extends Component<any, any> {
 
                 <Dropdown
                     style={`left: ${this.state.dropdownPos.left}px; top: ${this.state.dropdownPos.top}px;`}
-                    onClose={this.closedDropdown}
+                    onClose={this.closeDropdown}
                     open={this.state.dropdownOpen}
                 />
 
