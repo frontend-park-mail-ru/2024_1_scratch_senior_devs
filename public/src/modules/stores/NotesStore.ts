@@ -316,9 +316,11 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 notes: [response.body, ...state.notes]
             }));
 
-            document.getElementById(String(response.body.id)).scrollIntoView();
-
             this.selectNote(response.body);
+
+            document.querySelector(".notes-container").scroll({top:0,behavior:'smooth'});
+
+            // document.getElementById(String(response.body.id)).scrollIntoView(true);
 
             history.pushState(null, null, "/notes/" + response.body.id)
 

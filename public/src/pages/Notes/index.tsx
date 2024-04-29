@@ -17,7 +17,7 @@ export class NotesPage extends ScReact.Component<any, any> {
         notes: [],
         selectedNote: undefined,
         selectedNoteTags: [],
-        tags: ["Работа", "ВУЗ", "Технопарк", "Учеба", "Зал", "Дача", "Кино", "Спортзал", "Офис", "Сериалы"],
+        tags: ["Работа", "ВУЗ", "Технопарк", "Учеба", "Зал", "Дача", "Кино", "Спортзал", "Офис", "Сериалы", "Работа", "ВУЗ", "Технопарк", "Учеба", "Зал", "Дача", "Кино", "Спортзал", "Офис", "Сериалы"],
         selectedTags: [],
         editorOpen: false,
         fetching: false
