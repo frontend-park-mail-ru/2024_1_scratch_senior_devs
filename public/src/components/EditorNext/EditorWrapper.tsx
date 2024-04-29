@@ -7,6 +7,15 @@ import {Dropdown} from "../Dropdown/Dropdown";
 import {AppNoteStore, NoteStoreState} from "../../modules/stores/NoteStore";
 import {Tippy} from "../Tippy/Tippy";
 
+type editorState = {
+    tippyOpen: boolean,
+    dropdownOpen: boolean,
+    dropdownPos: {
+        left: number,
+        top: number
+    }
+}
+
 export class EditorWrapper extends Component<any, any> {
     state = {
         tippyOpen: false,
@@ -39,7 +48,7 @@ export class EditorWrapper extends Component<any, any> {
         this.syncTitle(store.note.title)
 
         this.self.innerHTML = ""
-        this.editor = new Editor(store.note.blocks, this.self, this.openDropdown, this.props.onChangeContent);
+        this.editor = new Editor(store.note.blocks, this.self, {open: this.openDropdown, close: this.closedDropdown}, this.props.onChangeContent);
     }
 
     syncTitle = (title) => {
@@ -52,10 +61,14 @@ export class EditorWrapper extends Component<any, any> {
         }
     }
 
-    openDropdown() {
+    openDropdown(elem: HTMLElement) {
         this.setState(state => ({
             ...state,
-            dropdownOpen: true
+            dropdownOpen: true,
+            dropdownPos: {
+                left: elem.getBoundingClientRect().left,
+                top: elem.getBoundingClientRect().top
+            }
         }))
     }
 

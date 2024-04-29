@@ -60,7 +60,7 @@ export class YoutubeDialogForm extends ScReact.Component<any, any> {
     };
 
     insertVideo = (video_id:string) => {
-        const block = AppNoteStore.state.note.blocks[AppNoteStore.state.dropdownPos.blockId];
+        const block = AppNoteStore.state.note.blocks[AppNoteStore.state["dropdownPos"].blockId];
         block.type = 'iframe';
         block.content = undefined;
         block.attributes = {
