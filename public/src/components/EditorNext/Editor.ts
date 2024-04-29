@@ -5,30 +5,37 @@ export class Editor {
     private observer: MutationObserver;
     private insertionObserver: MutationObserver;
     private seveCallback
-    private dropdownObserver
+    private dropdownObserver: MutationObserver
 
     constructor(note: PluginProps[], parent: HTMLElement, dropdown: {open: (elem: HTMLElement) => void, close: () => void }, onChange: (schema: PluginProps[]) => void) {
         this.editable = document.createElement('div');
         this.editable.contentEditable = "true";
 
         this.dropdownObserver = new MutationObserver((records) => {
+            console.log(records)
             records.forEach(record => {
                 if (record.type === 'childList' && record.addedNodes.length > 0 && record.addedNodes[0].nodeType === Node.ELEMENT_NODE &&
                     ((record.addedNodes[0] as HTMLElement).tagName == "DIV" || (record.addedNodes[0] as HTMLElement).tagName == "LI")) {
+                    console.log('test')
                     const observer = new MutationObserver((tests) => {
+
                         tests.forEach(test => {
                             if (test.target.textContent.startsWith('/')) {
-                                dropdown.open((test.target as HTMLElement));
+                                dropdown.open((test.target.parentElement as HTMLElement));
                             } else {
                                 dropdown.close();
                             }
                         })
                     })
 
+                    observer.observe((record.addedNodes[0] as HTMLElement), { characterData: true, subtree: true})
+
                     // openDropdown()
                 }
             })
         });
+
+        this.dropdownObserver.observe(this.editable, {childList: true})
 
         this.insertionObserver = new MutationObserver((records) => {
             records.forEach(record => {

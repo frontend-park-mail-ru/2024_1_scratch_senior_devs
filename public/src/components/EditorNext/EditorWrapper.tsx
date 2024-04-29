@@ -61,7 +61,7 @@ export class EditorWrapper extends Component<any, any> {
         }
     }
 
-    openDropdown(elem: HTMLElement) {
+    openDropdown = (elem: HTMLElement) => {
         this.setState(state => ({
             ...state,
             dropdownOpen: true,
@@ -72,7 +72,7 @@ export class EditorWrapper extends Component<any, any> {
         }))
     }
 
-    closedDropdown() {
+    closedDropdown = () => {
         this.setState(state => ({
             ...state,
             dropdownOpen: false
