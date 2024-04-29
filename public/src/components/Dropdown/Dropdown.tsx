@@ -49,6 +49,7 @@ export class Dropdown extends ScReact.Component<any, any> {
         let attr = null;
         let content = [];
 
+        // TODO
         if (id === "h1") {
             insertBlockPlugin('header', 'h2')
             this.props.onClose();

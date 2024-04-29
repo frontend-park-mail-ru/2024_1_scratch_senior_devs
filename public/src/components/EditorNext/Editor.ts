@@ -16,14 +16,11 @@ export class Editor {
             records.forEach(record => {
                 if (record.type === 'childList' && record.addedNodes.length > 0 && record.addedNodes[0].nodeType === Node.ELEMENT_NODE &&
                     ((record.addedNodes[0] as HTMLElement).tagName == "DIV" || (record.addedNodes[0] as HTMLElement).tagName == "LI")) {
-                    console.log('test')
                     const observer = new MutationObserver((tests) => {
-
                         tests.forEach(test => {
-                            console.log("startsWith")
                             if (test.target.textContent.startsWith('/')) {
-                                console.log(test.target.parentElement.offsetTop)
-                                dropdown.open((test.target.parentElement as HTMLElement));
+                                const target = test.target.parentElement as HTMLElement
+                                dropdown.open(target);
                             } else {
                                 dropdown.close();
                             }
@@ -31,8 +28,6 @@ export class Editor {
                     })
 
                     observer.observe((record.addedNodes[0] as HTMLElement), { characterData: true, subtree: true})
-
-                    // openDropdown()
                 }
             })
         });
