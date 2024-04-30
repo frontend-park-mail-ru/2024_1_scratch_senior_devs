@@ -6,6 +6,8 @@ interface EditorPlugin {
     toJson: (node: Node) => PluginProps
     fromJson: (props: PluginProps) => Node
     insertNode: (innerContent?: Node[], ...args: any) => Node | undefined
+    onInsert?: (node: Node) => void
+    onChange?: (node: Node) => void
 }
 
 export interface PluginProps extends Record<string, string | number | boolean | object> {
@@ -17,13 +19,13 @@ type PluginType = "block" | "inline";
 
 type PluginContent = "block" | "inline" | "none" | string;
 
-const defaultPlugins: EditorPlugin[] = [
+export const defaultPlugins: EditorPlugin[] = [
     {
         pluginName: 'text',
         type: "inline",
         content: "none",
         checkPlugin: (node: Node) => {
-            return node.nodeType === node.TEXT_NODE && node.parentElement.contentEditable !== "true";
+            return node.nodeType === node.TEXT_NODE && node.parentElement?.contentEditable !== "true";
         },
         toJson: (node: Node) => {
             const props: TextProps = {
@@ -42,7 +44,7 @@ const defaultPlugins: EditorPlugin[] = [
         type: "block",
         content: "none",
         checkPlugin: (node: Node) => {
-            return node.nodeType === node.TEXT_NODE && node.parentElement.contentEditable === "true";
+            return node.nodeType === node.TEXT_NODE && node.parentElement?.contentEditable === "true";
         },
         toJson: (node: Node) => {
             const props: TextProps = {
@@ -54,7 +56,13 @@ const defaultPlugins: EditorPlugin[] = [
         fromJson: (props: TextProps) => {
             return document.createTextNode(props.content);
         },
-        insertNode: undefined
+        insertNode: undefined,
+        onInsert: (node: Node) => {
+            const div = document.createElement('div');
+            div.innerHTML = node.textContent;
+            (node as Text).replaceWith(div);
+            document.getSelection().setPosition(div, 1);
+        }
     },
     {
         pluginName: 'div',
@@ -488,6 +496,7 @@ export const insertBlockPlugin = (pluginName: string, ...args: any) => {
     }
     const self: string[] = [plugin.pluginName, plugin.type];
     const anchor = document.getSelection().anchorNode;
+    console.log(anchor)
     const nodeToReplace = findNodeToReplace(anchor, self);
     if (nodeToReplace != null) {
         let childs = [];
@@ -502,6 +511,22 @@ export const insertBlockPlugin = (pluginName: string, ...args: any) => {
         (nodeToReplace as HTMLElement).replaceWith(newNode);
         document.getSelection().setPosition(newNode, newNode.childNodes.length);
     }
+}
+
+export const editorOnInsert = (addedNode: Node) => {
+    defaultPlugins.forEach(plugin => {
+        if (plugin.checkPlugin(addedNode) && plugin.onInsert != null) {
+            plugin.onInsert(addedNode)
+        }
+    });
+}
+
+export const editorOnChange = (target: Node) => {
+    defaultPlugins.forEach(plugin => {
+        if (plugin.checkPlugin(target) && plugin.onChange != null) {
+            plugin.onChange(target);
+        }
+    });
 }
 
 // insertInlinePlugin
