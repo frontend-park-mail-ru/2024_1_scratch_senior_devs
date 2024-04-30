@@ -213,7 +213,7 @@ export class Dropdown extends ScReact.Component<any, any> {
             <div className={'dropdown ' + (this.props.open ? '' : 'close')} style={this.props.style} ref={ref => this.ref = ref}>
                 <div className="listbox">
                     {data.map(item => (
-                        <button className={'list-item ' + (this.state.selected == item.id ? 'selected' : '')} onmouseenter={() => this.handleOnHover(item.id)} onclick={(e) => {
+                        <div className={'list-item ' + (this.state.selected == item.id ? 'selected' : '')} onmouseenter={() => this.handleOnHover(item.id)} onclick={(e) => {
                             this.handleOnClick(item.id)
                             e.preventDefault();
                         }}>
@@ -224,7 +224,7 @@ export class Dropdown extends ScReact.Component<any, any> {
                                 <h3>{item.title}</h3>
                                 <p>{item.desc}</p>
                             </div>
-                        </button>
+                        </div>
                     ))}
                 </div>
             </div>

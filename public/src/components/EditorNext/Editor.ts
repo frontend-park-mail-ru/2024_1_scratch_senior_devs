@@ -1,4 +1,13 @@
-import {defaultPlugins, editorOnChange, editorOnInsert, fromJson, inspectBlocks, PluginProps, toJson} from "./Plugin";
+import {
+    defaultPlugins,
+    editorOnChange,
+    editorOnInsert,
+    fromJson,
+    inspectBlocks,
+    lastChosenElement,
+    PluginProps,
+    toJson
+} from "./Plugin";
 
 export class Editor {
     private readonly editable: HTMLElement;
@@ -28,48 +37,14 @@ export class Editor {
                         editorOnChange(record.target);
                         break;
                 }
-
-                // if (record.type === 'childList' && record.addedNodes.length > 0 && record.addedNodes[0].nodeType === Node.ELEMENT_NODE &&
-                //     ((record.addedNodes[0] as HTMLElement).tagName == "DIV" || (record.addedNodes[0] as HTMLElement).tagName == "LI")) {
-                //     const observer = new MutationObserver((tests) => {
-                //         tests.forEach(test => {
-                //             if (test.target.textContent.startsWith('/')) {
-                //                 const target = test.target.parentElement as HTMLElement
-                //                 dropdown.open(target);
-                //             } else {
-                //                 dropdown.close();
-                //             }
-                //         })
-                //     })
-                //
-                //     observer.observe((record.addedNodes[0] as HTMLElement), { characterData: true, subtree: true})
-                // }
             })
         });
 
         this.dropdownObserver.observe(this.editable, {
             childList: true,
             characterData: true,
-            // characterDataOldValue: true,
-            // attributes: true,
-            // attributeOldValue: true,
             subtree: true
         })
-
-        // this.insertionObserver = new MutationObserver((records) => {
-        //     records.forEach(record => {
-        //         if (record.type === 'childList' && record.addedNodes.length > 0 && record.addedNodes[0].nodeType === Node.TEXT_NODE) {
-        //             const div = document.createElement('div');
-        //             div.innerHTML = record.addedNodes[0].textContent;
-        //             (record.addedNodes[0] as Text).replaceWith(div);
-        //             document.getSelection().setPosition(div, 1);
-        //         }
-        //     })
-        // });
-        //
-        // this.insertionObserver.observe(this.editable, {
-        //     childList: true
-        // })
 
         note.forEach(val => {
             this.editable.append(fromJson(val));
@@ -111,11 +86,11 @@ export class Editor {
                 return plug.checkPlugin(node.parentElement);
             });
             if ((parentPlugin.pluginName === 'div' || parentPlugin.pluginName === 'li' || parentPlugin.pluginName === 'li-todo') && node.textContent.startsWith('/')) {
+                lastChosenElement.node = node;
                 this.dropdownCallbacks.open(node.parentElement)
             } else {
                 this.dropdownCallbacks.close();
             }
         }
     }
-
 }

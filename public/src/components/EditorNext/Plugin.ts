@@ -1,3 +1,5 @@
+import exp from "node:constants";
+
 interface EditorPlugin {
     pluginName: string;
     type: PluginType
@@ -231,7 +233,9 @@ export const defaultPlugins: EditorPlugin[] = [
         type: 'block',
         content: 'li-todo|ol|ul|todo',
         checkPlugin: (node: Node) => {
-            return node.nodeType === node.ELEMENT_NODE && (node as HTMLElement).tagName === 'UL';
+            return node.nodeType === node.ELEMENT_NODE && (node as HTMLElement).tagName === 'UL' &&
+                'type' in (node as HTMLElement).dataset &&
+                (node as HTMLElement).dataset.type === 'todo';
         },
         toJson: (node: Node) => {
             const children: PluginProps[] = [];
@@ -249,6 +253,7 @@ export const defaultPlugins: EditorPlugin[] = [
                 children.push(fromJson(value));
             });
             const ul = document.createElement('ul');
+            ul.dataset.type = 'todo'
             children.forEach(child => {
                 ul.append(child);
             })
@@ -327,7 +332,9 @@ export const defaultPlugins: EditorPlugin[] = [
         content: 'inline',
         checkPlugin: (node: Node) => {
             return node.nodeType === node.ELEMENT_NODE && (node as HTMLElement).tagName === 'LI' &&
-                ("selected" in (node as HTMLElement).dataset);
+                ("selected" in (node as HTMLElement).dataset) &&
+                ((node as HTMLElement).dataset.selected === 'true' ||
+                (node as HTMLElement).dataset.selected === 'false');
         },
         toJson: (node: Node) => {
             const children: PluginProps[] = [];
@@ -483,6 +490,8 @@ export const fromJson = (props: PluginProps) => {
     return plugin.fromJson(props);
 }
 
+export const lastChosenElement: {node?: Node } = {};
+
 export const insertBlockPlugin = (pluginName: string, ...args: any) => {
     let plugin: EditorPlugin;
     defaultPlugins.forEach(val => {
@@ -495,7 +504,7 @@ export const insertBlockPlugin = (pluginName: string, ...args: any) => {
         return;
     }
     const self: string[] = [plugin.pluginName, plugin.type];
-    const anchor = document.getSelection().anchorNode;
+    const anchor = lastChosenElement.node;
     console.log(anchor)
     const nodeToReplace = findNodeToReplace(anchor, self);
     if (nodeToReplace != null) {
