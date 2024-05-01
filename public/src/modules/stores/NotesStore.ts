@@ -195,12 +195,11 @@ class NotesStore extends BaseStore<NotesStoreState> {
         }));
 
 
-        // TODO
-        // let socket = new WebSocket(`wss://localhost:8080/api/note/${note.id}/subscribe_on_updates`)
-        // console.log(socket)
-        // socket.onopen = () => {
-        //     console.log("socket.onopen")
-        // }
+        let socket = new WebSocket(`wss://you-note.ru/api/note/${note.id}/subscribe_on_updates`, [AppUserStore.state.JWT.split(" ").at(-1)])
+        console.log(socket)
+        socket.onopen = () => {
+            console.log("socket.onopen")
+        }
 
         // TODO: пробегаться не по блокам а по children
         note.data.content.forEach(async (item) => {
