@@ -502,13 +502,13 @@ export const insertBlockPlugin = (pluginName: string, ...args: any) => {
             plugin = val;
         }
     });
-    // console.log(plugin.pluginName)
+    // 
     if (plugin === undefined || plugin.insertNode === undefined) {
         return;
     }
     const self: string[] = [plugin.pluginName, plugin.type];
     const anchor = lastChosenElement.node;
-    console.log(anchor)
+    
     const nodeToReplace = findNodeToReplace(anchor, self);
     if (nodeToReplace != null) {
         let childs = [];
@@ -590,7 +590,7 @@ export const inspectBlocks = () => {
     }
     selectedBlock = null;
     const block = findBlock(document.getSelection().anchorNode);
-    // console.log(block);
+    // 
     if (block !== null && block.tagName === 'DIV' && block.textContent === "") {
         block.classList.add('block-chosen');
         selectedBlock = block;

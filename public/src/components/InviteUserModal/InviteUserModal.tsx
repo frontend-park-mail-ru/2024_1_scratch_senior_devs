@@ -3,8 +3,10 @@ import {Button} from '../Button/Button';
 import './InviteUserModal.sass';
 import {Input} from "../Input/Input";
 import {ValidateLogin} from "../../modules/validation";
-import {AppToasts} from "../../modules/toasts";
 import {Img} from "../Image/Image";
+import {AppDispatcher} from "../../modules/dispatcher";
+import {AppNotesStore, NotesActions} from "../../modules/stores/NotesStore";
+import {AppUserStore} from "../../modules/stores/UserStore";
 
 export class InviteUserModal extends ScReact.Component<any, any>{
     state = {
@@ -45,11 +47,18 @@ export class InviteUserModal extends ScReact.Component<any, any>{
 
     check = () => {
         const {message, result} = ValidateLogin(this.state.value);
+
         this.setValidated(result);
 
         if (!result) {
             this.setError(message);
         } else {
+
+            if (this.state.value == AppUserStore.state.username) {
+                this.setError("Вы не можете пригласить себя")
+                return
+            }
+
             this.cleanError();
         }
     };
@@ -63,8 +72,12 @@ export class InviteUserModal extends ScReact.Component<any, any>{
         e.preventDefault()
         this.check()
         if (this.state.validationResult) {
+            AppDispatcher.dispatch(NotesActions.ADD_COLLABORATOR, {
+                note_id: AppNotesStore.state.selectedNote.id,
+                username: this.state.value
+            })
+
             this.props.handleClose()
-            AppToasts.success("Приглашение успешно отправлено")
         }
     }
 

@@ -54,13 +54,13 @@ export class NotesPage extends ScReact.Component<any, any> {
     }
 
     updateNotesTitles = () => {
-        console.log("updateNotesTitles")
+        
 
         setTimeout(()=> {
             const notes = AppNotesStore.state.notes;
             notes.forEach((note, index) => {
                 if (note.id == this.state.selectedNote?.id) {
-                    console.log(AppNoteStore.state.note.title)
+                    
                     notes[index].data.title = AppNoteStore.state.note.title == "" ? "Пустая заметка" : AppNoteStore.state.note.title;
                     notes[index].update_time = new Date()
                 }
@@ -134,7 +134,7 @@ export class NotesPage extends ScReact.Component<any, any> {
     };
 
     createObserver() {
-        console.log("createObserver")
+        
         const observer = new IntersectionObserver(
             function (entries, observer) {
                 entries.forEach((entry) => {
@@ -177,7 +177,7 @@ export class NotesPage extends ScReact.Component<any, any> {
     };
 
     onChangeSelectedNoteContent = () => {
-        console.log("onChangeSelectedNoteContent")
+        
         this.updateNotesTitles()
     }
 

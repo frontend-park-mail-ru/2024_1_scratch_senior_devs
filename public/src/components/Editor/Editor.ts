@@ -29,7 +29,7 @@ export class Editor {
         this.editable.contentEditable = "true";
 
         this.dropdownObserver = new MutationObserver((records) => {
-            console.log("zapisi", records)
+            
             records.forEach(record => {
                 switch (record.type) {
                     case "childList":
@@ -65,7 +65,7 @@ export class Editor {
             })
 
             // TODO: вызывать callback сохранения заметки
-            // console.log(schema);
+            // 
             onChange(schema)
         });
 
@@ -90,11 +90,11 @@ export class Editor {
             }
 
             const selection = document.getSelection();
-            console.log("selection", selection)
+            
             if (!selection.isCollapsed && isInEditor(selection.anchorNode)) {
                 this.tippyCallbacks.open(selection.anchorNode.parentElement);
             } else {
-                console.log('close inside')
+                
                 this.tippyCallbacks.close();
             }
         }

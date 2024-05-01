@@ -49,8 +49,8 @@ export class TagList extends ScReact.Component<any, TagListState> {
     }
 
     updateState = (store:NotesStoreState) => {
-        console.log("updateState")
-        console.log(store)
+        
+        
         this.setState(state => {
             return {
                 ...state,

@@ -6,7 +6,7 @@ import {AppNoteStore, NoteStoreActions} from '../../modules/stores/NoteStore';
 import {AppNotesStore, NotesActions} from '../../modules/stores/NotesStore';
 import {MAX_ATTACH_SIZE} from '../../utils/consts';
 import {AppToasts} from '../../modules/toasts';
-import {insertBlockPlugin} from "../EditorNext/Plugin";
+import {insertBlockPlugin} from "../Editor/Plugin";
 
 export class Dropdown extends ScReact.Component<any, any> {
     state = {
@@ -51,19 +51,7 @@ export class Dropdown extends ScReact.Component<any, any> {
 
         // TODO
         if (id === "h1") {
-            insertBlockPlugin('header', 'h1')
-            this.props.onClose();
-            return
-        }
-
-        if (id === "h2") {
             insertBlockPlugin('header', 'h2')
-            this.props.onClose();
-            return
-        }
-
-        if (id === "h3") {
-            insertBlockPlugin('header', 'h3')
             this.props.onClose();
             return
         }

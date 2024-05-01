@@ -94,6 +94,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 case NotesActions.REMOVE_TAG:
                     await this.removeTag(action.payload)
                     break
+                case NotesActions.ADD_COLLABORATOR:
+                    await this.addCollaborator(action.payload)
+                    break
             }
         });
     }
@@ -117,11 +120,11 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
     async fetchNote (id:string) {
         try {
-            console.log("fetchNote")
+            
 
             const note = await AppNoteRequests.Get(id, AppUserStore.state.JWT);
 
-            console.log(note)
+            
 
             this.selectNote(note);
 
@@ -184,15 +187,21 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     selectNote (note:NoteType) {
-        console.log("selectNote")
-        console.log(note)
-
         this.SetState(state => ({
             ...state,
             selectedNote: note,
             selectedNoteChildren: note.children,
             selectedNoteTags: ["Работа", "Учеба", "Технопарк", "ВУЗ"] // TODO
         }));
+
+        setTimeout(() => {
+
+            let socket = new WebSocket(`wss://you-note.ru/api/note/${note.id}/subscribe_on_updates`)
+            console.log(socket)
+            socket.onopen = () => {
+                console.log("socket.onopen")
+            }
+        }, 1000)
 
         // TODO: пробегаться не по блокам а по children
         note.data.content.forEach(async (item) => {
@@ -211,7 +220,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             history.pushState(null, null, '/notes/' + id)
 
         } catch (e) {
-            console.log(e)
+            
             AppToasts.error('Заметка не найдена');
         }
     }
@@ -330,7 +339,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     async createSubNote() {
-        console.log("createSubNote")
+        
 
         if (!this.state.selectedNote) {
             return
@@ -342,8 +351,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 
-            console.log(subnote_id)
-            console.log(status)
+
+
 
             const subNote = {
                 id: subnote_id,
@@ -372,7 +381,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             })
 
         } catch (e) {
-            console.log(e.message)
+            
             AppToasts.error('Что-то пошло не так');
         }
     }
@@ -483,8 +492,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     createTag(data) {
-        console.log("createTag")
-        console.log(data)
+        
+        
         this.SetState(state => ({
             ...state,
             selectedNoteTags: [...state.selectedNoteTags, data.tag]
@@ -498,6 +507,25 @@ class NotesStore extends BaseStore<NotesStoreState> {
             ...state,
             selectedNoteTags: state.selectedNoteTags.filter(t => t != tag)
         }))
+    }
+
+    addCollaborator = async ({note_id, username}) => {
+        
+        try {
+
+            const {status, csrf} = await AppNoteRequests.AddCollaborator(note_id, username, AppUserStore.state.JWT, AppUserStore.state.csrf)
+
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+
+            if (status == 204) {
+                AppToasts.success("Приглашение успешно отправлено")
+            } else {
+                AppToasts.success("Пользователя не существует")
+            }
+
+        } catch {
+            AppToasts.error("Что-то пошло не так")
+        }
     }
 }
 
@@ -522,6 +550,7 @@ export const NotesActions = {
     CREATE_SUB_NOTE: "CREATE_SUB_NOTE",
     CREATE_TAG: "CREATE_TAG",
     REMOVE_TAG: "REMOVE_TAG",
+    ADD_COLLABORATOR: "ADD_COLLABORATOR"
 };
 
 export const AppNotesStore = new NotesStore();

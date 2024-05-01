@@ -371,7 +371,7 @@ class NoteRequests {
                             pluginName: "div",
                             children: [
                                 {
-                                    pluginName: "br",
+                                    pluginName: "br"
                                 }
                             ]
                         }
@@ -389,8 +389,8 @@ class NoteRequests {
     };
 
     AddSubNote = async (id:string, jwt:string, csrf:string) => {
-        console.log("AddSubNote")
-        console.log(id)
+        
+        
 
         const response = await Ajax.Post(this.baseUrl + '/' + id + "/add_subnote", {
             headers: {
@@ -409,7 +409,7 @@ class NoteRequests {
                             pluginName: "div",
                             children: [
                                 {
-                                    pluginName: "br",
+                                    pluginName: "br"
                                 }
                             ]
                         }
@@ -418,7 +418,7 @@ class NoteRequests {
             }
         });
 
-        console.log(response.status)
+        
 
         if (response.status == 200) {
             return {
@@ -489,6 +489,29 @@ class NoteRequests {
 
         return url;
     };
+
+    AddCollaborator = async (id: string, username:string, jwt:string, csrf:string) => {
+        const response = await Ajax.Post(this.baseUrl + '/' + id + '/add_collaborator/', {
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            },
+            body: {
+                "username": username
+            }
+        });
+
+        
+
+        return {
+            status: response.status,
+            csrf: response.headers['x-csrf-token']
+        }
+    }
+    //
+    // SubscribeToUpdates = async (id:string) => {
+    //     const response = await Ajax.Get(this.baseUrl + "/" + id + "/")
+    // }
 }
 
 export const AppAuthRequests = new AuthRequests();

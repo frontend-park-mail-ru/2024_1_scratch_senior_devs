@@ -12,7 +12,7 @@ import {InviteUserModal} from "../InviteUserModal/InviteUserModal";
 import {Tooltip} from "../Tooltip/Tooltip";
 import {AppToasts} from "../../modules/toasts";
 import {TagList} from "../TagList/TagList";
-import {EditorWrapper} from "../EditorNext/EditorWrapper";
+import {EditorWrapper} from "../Editor/EditorWrapper";
 
 export class NoteEditor extends ScReact.Component<any, any> {
     state = {
@@ -62,7 +62,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
             selectedNote: store.selectedNote
         }));
 
-        console.log("ASDFASDFASDFAD")
+        
 
         if (this.state.selectedNote) {
             AppDispatcher.dispatch(NoteStoreActions.SET_NOTE, {
@@ -106,7 +106,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
     addToFavoriteBtn = () => {
         // TODO
-        console.log("addToFavoriteBtn")
+        
         AppToasts.success("Заметка добавлена в избранное")
         this.setState(state => ({
             ...state,
@@ -168,15 +168,15 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
                     <EditorWrapper
                         onChangeTitle={(value: string) => {
-                            console.log("onChangeTitle")
-                            console.log(value)
+                            
+                            
                             this.props.onChangeTitle(value);
                             this.onChangeNote();
                             AppDispatcher.dispatch(NoteStoreActions.CHANGE_TITLE, value)
                         }}
                         onChangeContent={(content) => {
-                            console.log("onChangeContent")
-                            console.log(content)
+                            
+                            
                             this.props.onChangeNote()
                             this.onChangeNote()
                             AppDispatcher.dispatch(NoteStoreActions.CHANGE_CONTENT, content)

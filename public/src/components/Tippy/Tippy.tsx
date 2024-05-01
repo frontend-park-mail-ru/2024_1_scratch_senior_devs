@@ -26,7 +26,7 @@ export class Tippy extends ScReact.Component<any, any> {
     handleClickOutside = (e) => {
         if (this.props.open && !this.tippyRef.contains(e.target)) {
             this.closeColorPicker();
-            console.log("clickOutside")
+            
             this.props.onClose();
         }
     };

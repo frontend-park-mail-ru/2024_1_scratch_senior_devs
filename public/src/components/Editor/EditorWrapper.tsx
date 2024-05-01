@@ -49,10 +49,8 @@ export class EditorWrapper extends Component<any, any> {
     }
 
     updateState = (store:NoteStoreState) => {
-        console.log("UPDATE STATE")
-
-        console.log(store)
-
+        console.log("updateState")
+        console.log(store.note)
         this.syncTitle(store.note.title)
 
         this.self.innerHTML = ""
@@ -61,10 +59,12 @@ export class EditorWrapper extends Component<any, any> {
             this.self,
             {open: this.openDropdown, close: this.closeDropdown},
             this.props.onChangeContent,
-            {open: this.openTippy, close: this.closeTippy});
+            {open: this.openTippy, close: this.closeTippy}
+        );
     }
 
     syncTitle = (title) => {
+        console.log("syncTitle")
         this.noteTitleRef.innerText = title
 
         if (this.noteTitleRef.textContent.length == 0) {
@@ -75,7 +75,7 @@ export class EditorWrapper extends Component<any, any> {
     }
 
     openDropdown = (elem: HTMLElement) => {
-        console.log("openDropdown")
+        
         this.setState(state => ({
             ...state,
             dropdownOpen: true,
@@ -87,7 +87,7 @@ export class EditorWrapper extends Component<any, any> {
     }
 
     closeDropdown = () => {
-        console.log("closeDropdown")
+        
         this.setState(state => ({
             ...state,
             dropdownOpen: false
@@ -106,15 +106,16 @@ export class EditorWrapper extends Component<any, any> {
     }
 
     closeTippy = () => {
-        console.log('close')
+        
         this.setState(state => ({
             ...state,
             tippyOpen: false
         }))
     }
-
-
+    
     onChangeTitle = () => {
+        console.log("onChangeTitle")
+
         if (this.noteTitleRef.textContent.length == 0) {
             this.noteTitleRef.dataset.placeholder = 'Введите название';
         } else {
