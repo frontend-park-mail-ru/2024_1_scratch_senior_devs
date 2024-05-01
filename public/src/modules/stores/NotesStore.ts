@@ -194,14 +194,13 @@ class NotesStore extends BaseStore<NotesStoreState> {
             selectedNoteTags: ["Работа", "Учеба", "Технопарк", "ВУЗ"] // TODO
         }));
 
-        setTimeout(() => {
 
-            let socket = new WebSocket(`wss://you-note.ru/api/note/${note.id}/subscribe_on_updates`)
-            console.log(socket)
-            socket.onopen = () => {
-                console.log("socket.onopen")
-            }
-        }, 1000)
+        // TODO
+        // let socket = new WebSocket(`wss://localhost:8080/api/note/${note.id}/subscribe_on_updates`)
+        // console.log(socket)
+        // socket.onopen = () => {
+        //     console.log("socket.onopen")
+        // }
 
         // TODO: пробегаться не по блокам а по children
         note.data.content.forEach(async (item) => {

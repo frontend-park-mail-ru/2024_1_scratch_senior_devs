@@ -51,25 +51,28 @@ export class Dropdown extends ScReact.Component<any, any> {
 
         // TODO
         if (id === "h1") {
+            insertBlockPlugin('header', 'h1')
+        } else if (id === "h2") {
             insertBlockPlugin('header', 'h2')
-            this.props.onClose();
-            return
-        }
-
-
-        if (id === 'bullet-list') {
+        } else if (id === "h3") {
+            insertBlockPlugin('header', 'h2')
+        } else if (id === 'bullet-list') {
             insertBlockPlugin('ul')
         } else if (id === 'numbered-list') {
             insertBlockPlugin('ol')
         } else if (id === 'todo-list') {
             insertBlockPlugin('todo')
         } else if (id === 'image') {
-            tag = 'img';
+
+            // TODO
+
             const fileInput = document.createElement('input');
             fileInput.type = 'file';
             fileInput.accept = '.jpg,.png,.jpeg';
             fileInput.hidden = true;
+
             this.ref.append(fileInput);
+
             fileInput.onchange = (e: InputEvent) => {
                 fileInput.remove();
 
@@ -86,11 +89,10 @@ export class Dropdown extends ScReact.Component<any, any> {
                 }
             };
             fileInput.click();
-            attr = {};
-            attr.src = '';
-            content = undefined;
+
         } else if (id === 'document') {
-            tag = 'div';
+            // TODO
+
             const fileInput = document.createElement('input');
             fileInput.type = 'file';
             fileInput.hidden = true;
@@ -112,29 +114,16 @@ export class Dropdown extends ScReact.Component<any, any> {
                 }
             };
             fileInput.click();
-            attr = {};
-            attr.file = '';
-            attr.fileName = '';
-            content = undefined;
+
         } else if (id === 'youtube') {
             this.props.openYoutubeDialog();
+
         } else if (id === "note") {
+
             AppDispatcher.dispatch(NotesActions.CREATE_SUB_NOTE)
+
         }
 
-        // AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK_TYPE, {
-        //     blockId: this.props.blockId,
-        //     tag: tag,
-        //     attributes: attr,
-        //     content: content
-        // });
-
-        // moveCursorUpAndDown(this.props.blockId)
-
-        // AppDispatcher.dispatch(NoteStoreActions.MOVE_CURSOR, {
-        //     blockId: this.props.blockId,
-        //     pos: 0
-        // });
 
         this.props.onClose();
     };
