@@ -12,13 +12,17 @@ import {
 export class Editor {
     private readonly editable: HTMLElement;
     private observer: MutationObserver;
-    private insertionObserver: MutationObserver;
-    private seveCallback
     private dropdownObserver: MutationObserver
     private dropdownCallbacks: {open: (elem: HTMLElement) => void, close: () => void}
+    private tippyCallbacks: {open: (elem: HTMLElement) => void, close: () => void}
 
-    constructor(note: PluginProps[], parent: HTMLElement, dropdown: {open: (elem: HTMLElement) => void, close: () => void }, onChange: (schema: PluginProps[]) => void) {
+    constructor(note: PluginProps[],
+                parent: HTMLElement,
+                dropdown: {open: (elem: HTMLElement) => void, close: () => void },
+                onChange: (schema: PluginProps[]) => void,
+                tippy: {open: (elem: HTMLElement) => void, close: () => void}) {
         this.dropdownCallbacks = dropdown;
+        this.tippyCallbacks = tippy;
         this.addPlugins();
 
         this.editable = document.createElement('div');
@@ -74,7 +78,26 @@ export class Editor {
             subtree: true
         });
 
+        document.onselectionchange = () => {
+            const isInEditor = (node: Node) => {
+                if (node.nodeType === Node.ELEMENT_NODE && (node as HTMLElement).contentEditable === 'true') {
+                    return true
+                } else if (node.parentElement == null) {
+                    return false
+                } else {
+                    return isInEditor(node.parentElement);
+                }
+            }
 
+            const selection = document.getSelection();
+            console.log("selection", selection)
+            if (!selection.isCollapsed && isInEditor(selection.anchorNode)) {
+                this.tippyCallbacks.open(selection.anchorNode.parentElement);
+            } else {
+                console.log('close inside')
+                this.tippyCallbacks.close();
+            }
+        }
     }
 
     addPlugins = () => {

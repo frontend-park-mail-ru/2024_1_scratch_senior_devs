@@ -413,6 +413,9 @@ export const defaultPlugins: EditorPlugin[] = [
             innerContent.forEach(child => {
                 header.append(child);
             })
+            if (innerContent.length == 0) {
+                header.append(document.createElement('br'));
+            }
             return header;
         }
     },
@@ -516,9 +519,9 @@ export const insertBlockPlugin = (pluginName: string, ...args: any) => {
                 childs.push(value);
             });
         }
-        const newNode = plugin.insertNode(childs, args);
+        const newNode = plugin.insertNode([], args);
         (nodeToReplace as HTMLElement).replaceWith(newNode);
-        document.getSelection().setPosition(newNode, newNode.childNodes.length);
+        document.getSelection().setPosition(newNode, 0);
     }
 }
 

@@ -9,6 +9,10 @@ import {Tippy} from "../Tippy/Tippy";
 
 type editorState = {
     tippyOpen: boolean,
+    tippyPos: {
+        left: number,
+        top: number
+    }
     dropdownOpen: boolean,
     dropdownPos: {
         left: number,
@@ -19,6 +23,10 @@ type editorState = {
 export class EditorWrapper extends Component<any, any> {
     state = {
         tippyOpen: false,
+        tippyPos: {
+            left: 0,
+            top: 0
+        },
         dropdownOpen: false,
         dropdownPos: {
             left: 0,
@@ -48,7 +56,12 @@ export class EditorWrapper extends Component<any, any> {
         this.syncTitle(store.note.title)
 
         this.self.innerHTML = ""
-        this.editor = new Editor(store.note.blocks, this.self, {open: this.openDropdown, close: this.closeDropdown}, this.props.onChangeContent);
+        this.editor = new Editor(
+            store.note.blocks,
+            this.self,
+            {open: this.openDropdown, close: this.closeDropdown},
+            this.props.onChangeContent,
+            {open: this.openTippy, close: this.closeTippy});
     }
 
     syncTitle = (title) => {
@@ -81,7 +94,19 @@ export class EditorWrapper extends Component<any, any> {
         }))
     }
 
+    openTippy = (elem: HTMLElement) => {
+        this.setState(state => ({
+            ...state,
+            tippyOpen: true,
+            tippyPos: {
+                left: elem.offsetLeft,
+                top: elem.offsetTop - 40
+            }
+        }))
+    }
+
     closeTippy = () => {
+        console.log('close')
         this.setState(state => ({
             ...state,
             tippyOpen: false
@@ -103,27 +128,7 @@ export class EditorWrapper extends Component<any, any> {
         return (
             <div className="note-editor">
                 <div className="buttons-container">
-                    <button onclick={() => {
-                        insertBlockPlugin('ol')
-                    }}>ol
-                    </button>
-                    <button onclick={() => {
-                        insertBlockPlugin('ul')
-                    }}>ul
-                    </button>
-                    <button onclick={() => {
-                        insertBlockPlugin('todo')
-                    }}>to-do
-                    </button>
-                    <button onclick={() => {
-                        insertBlockPlugin('header', 'h2');
-                    }}>H3
-                    </button>
-                    <button onclick={() => {
-                        document.execCommand('createLink', false, "https://google.com");
-                    }}>
-                        bold
-                    </button>
+
                 </div>
 
                 <Dropdown
@@ -132,7 +137,8 @@ export class EditorWrapper extends Component<any, any> {
                     open={this.state.dropdownOpen}
                 />
 
-                <Tippy open={this.state.tippyOpen}
+                <Tippy style={`left: ${this.state.tippyPos.left}px; top: ${this.state.tippyPos.top}px;`}
+                    open={this.state.tippyOpen}
                        onClose={this.closeTippy}
                 />
 

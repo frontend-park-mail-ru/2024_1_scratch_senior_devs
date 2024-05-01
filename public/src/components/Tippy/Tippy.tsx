@@ -16,16 +16,17 @@ export class Tippy extends ScReact.Component<any, any> {
     private toggleBtnRef: any;
 
     componentDidMount() {
-        document.addEventListener('click', this.handleClickOutside, true);
+        // document.addEventListener('click', this.handleClickOutside, true);
     }
 
     componentWillUnmount() {
-        document.removeEventListener('click', this.handleClickOutside, true);
+        // document.removeEventListener('click', this.handleClickOutside, true);
     }
 
     handleClickOutside = (e) => {
         if (this.props.open && !this.tippyRef.contains(e.target)) {
             this.closeColorPicker();
+            console.log("clickOutside")
             this.props.onClose();
         }
     };
@@ -138,7 +139,7 @@ export class Tippy extends ScReact.Component<any, any> {
         ];
 
         return (
-            <div className={'tippy-container ' + (this.props.open ? 'open' : '')} ref={(val) => this.tippyRef = val} id={'tippy'}>
+            <div className={'tippy-container ' + (this.props.open ? 'open' : '')} ref={(val) => this.tippyRef = val} style={this.props.style} id={'tippy'}>
 
                 {/*<div className="first-container" onclick={this.toggleLinkInput}  ref={ref => {this.toggleLinkInputRef = ref;}}>*/}
                 {/*    <Img src="link.svg" className="link-icon" />*/}
