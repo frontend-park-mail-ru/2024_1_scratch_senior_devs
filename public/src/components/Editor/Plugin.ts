@@ -1,4 +1,5 @@
 import exp from "node:constants";
+import {AppUserStore} from "../../modules/stores/UserStore";
 
 interface EditorPlugin {
     pluginName: string;
@@ -479,7 +480,11 @@ export const toJson = (node: Node): PluginProps => {
             pluginName: "undefined"
         }
     }
-    return plugin.toJson(node);
+    const json = plugin.toJson(node);
+    if (node.nodeType === Node.ELEMENT_NODE && 'cursor' in (node as HTMLElement).dataset) {
+        json.cursor = (node as HTMLElement).dataset.cursor;
+    }
+    return json;
 }
 
 export const fromJson = (props: PluginProps) => {
@@ -490,7 +495,26 @@ export const fromJson = (props: PluginProps) => {
             return
         }
     });
-    return plugin.fromJson(props);
+    const node = plugin.fromJson(props);
+    if ('cursor' in props) {
+        const regex = /([a-zA]+)-([\d]+)/;
+        const matches = regex.exec(props.cursor as string);
+        console.log("user: ", matches[1]);
+        if (matches[1] == AppUserStore.state.username) {
+            if (matches[2] === '0') {
+                setTimeout(() => {
+                    document.getSelection().setPosition(node, 0);
+                })
+
+            } else {
+                setTimeout(() => {
+                    document.getSelection().setPosition(node.firstChild, Number(matches[2]));
+                })
+
+            }
+        }
+    }
+    return node;
 }
 
 export const lastChosenElement: {node?: Node } = {};

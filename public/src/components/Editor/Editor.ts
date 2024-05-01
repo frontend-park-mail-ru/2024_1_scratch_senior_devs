@@ -8,6 +8,7 @@ import {
     PluginProps,
     toJson
 } from "./Plugin";
+import {AppUserStore} from "../../modules/stores/UserStore";
 
 export class Editor {
     private readonly editable: HTMLElement;
@@ -89,9 +90,41 @@ export class Editor {
                 }
             }
 
+            const scanTree = (node: HTMLElement) => {
+                if ('cursor' in node.dataset) {
+                    const cursor = node.dataset.cursor;
+                    const regex = /([a-zA]+)-([\d]+)/;
+
+                    const matches = regex.exec(cursor);
+
+                    if (matches[1] === AppUserStore.state.username) {
+                        delete node.dataset.cursor;
+                    }
+                }
+
+                node.childNodes.forEach(child => {
+                    if (child.nodeType === Node.ELEMENT_NODE) {
+                        scanTree(child as HTMLElement);
+                    }
+                })
+            }
+
             const selection = document.getSelection();
+
+            const isEditor = isInEditor(selection.anchorNode);
+            console.log(selection)
+
+            if (isEditor) {
+                const elem : HTMLElement = selection.anchorNode.nodeType === Node.ELEMENT_NODE ?
+                    selection.anchorNode as HTMLElement
+                    : selection.anchorNode.parentElement;
+
+                scanTree(this.editable);
+
+                elem.dataset.cursor = `${AppUserStore.state.username}-${selection.anchorOffset}`;
+            }
             
-            if (!selection.isCollapsed && isInEditor(selection.anchorNode)) {
+            if (!selection.isCollapsed && isEditor) {
                 this.tippyCallbacks.open(selection.anchorNode.parentElement);
             } else {
                 
@@ -99,6 +132,8 @@ export class Editor {
             }
         }
     }
+
+
 
     addPlugins = () => {
         const index = defaultPlugins.findIndex((plugin => {
