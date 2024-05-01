@@ -197,6 +197,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
         let socket = new WebSocket(`wss://you-note.ru/api/note/${note.id}/subscribe_on_updates`, [AppUserStore.state.JWT.split(" ").at(-1)])
         console.log(socket)
+        socket.send("asdfsadf")
         socket.onopen = () => {
             console.log("socket.onopen")
         }
