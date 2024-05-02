@@ -164,12 +164,16 @@ class NotesStore extends BaseStore<NotesStoreState> {
         }));
 
 
-        const baseUrl = isDebug ? 'ws://localhost:8080/api/' : 'ws://you-note.ru/api/';
+        const baseUrl = isDebug ? 'wss://127.0.0.1:8080/api/' : 'wss://you-note.ru/api/';
 
         let socket = new WebSocket(baseUrl + `note/${note.id}/subscribe_on_updates`, [AppUserStore.state.JWT.split(" ").at(-1)])
 
         socket.onopen = () => {
             console.log("socket.onopen")
+        }
+
+        socket.onmessage = () => {
+            console.log("socket.onmessage")
         }
 
         // TODO: пробегаться не по блокам а по children
