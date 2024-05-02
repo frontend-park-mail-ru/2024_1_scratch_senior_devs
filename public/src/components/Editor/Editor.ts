@@ -9,6 +9,7 @@ import {
     toJson
 } from "./Plugin";
 import {AppUserStore} from "../../modules/stores/UserStore";
+import {getCaretPosition} from "../../modules/utils";
 
 export class Editor {
     private readonly editable: HTMLElement;
@@ -66,7 +67,8 @@ export class Editor {
             })
 
             // TODO: вызывать callback сохранения заметки
-            // 
+            //
+            console.log(schema)
             onChange(schema)
         });
 
@@ -121,7 +123,7 @@ export class Editor {
 
                 scanTree(this.editable);
 
-                elem.dataset[`cursor${AppUserStore.state.username}`] = `${selection.anchorOffset}`;
+                elem.dataset[`cursor${AppUserStore.state.username}`] = `${getCaretPosition(elem)}`;
             }
             
             if (!selection.isCollapsed && isEditor) {

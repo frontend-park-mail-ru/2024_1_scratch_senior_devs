@@ -81,7 +81,10 @@ export class Tippy extends ScReact.Component<any, any> {
     };
 
     handleSelect = (item) => {
-        
+
+        if (item.type === 'bold') {
+            document.execCommand('bold', false, null);
+        }
         
         // AppDispatcher.dispatch(
         //     NoteStoreActions.CHANGE_PIECE_ATTRIBUTES,

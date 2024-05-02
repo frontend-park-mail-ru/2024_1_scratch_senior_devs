@@ -130,3 +130,41 @@ export const scrollToTop = () => {
 export const parseNoteTitle = (title:string) => {
     return title ? title : "Пустая заметка"
 }
+
+export const setCursorAtNodePosition = (node, index) => {
+    let range = document.createRange();
+    let selection = window.getSelection();
+    let currentPos = 0;
+    let found = false;
+
+    function searchNode(node) {
+        if (node.nodeType === Node.TEXT_NODE) {
+            if (currentPos + node.length >= index) {
+                range.setStart(node, index - currentPos);
+                range.collapse(true);
+                found = true;
+            } else {
+                currentPos += node.length;
+            }
+        } else {
+            for (let child of node.childNodes) {
+                if (found) break;
+                searchNode(child);
+            }
+        }
+    }
+
+    searchNode(node);
+    selection.removeAllRanges();
+    selection.addRange(range);
+}
+
+export const getCaretPosition = (editableDiv) => {
+    const selection = window.getSelection();
+    const range = selection.getRangeAt(0);
+    const clonedRange = range.cloneRange();
+    clonedRange.selectNodeContents(editableDiv);
+    clonedRange.setEnd(range.endContainer, range.endOffset);
+
+    return clonedRange.toString().length;
+}

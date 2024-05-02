@@ -2,6 +2,7 @@ import exp from "node:constants";
 import {AppUserStore} from "../../modules/stores/UserStore";
 import {App} from "../../App";
 import {data} from "autoprefixer";
+import {setCursorAtNodePosition} from "../../modules/utils";
 
 interface EditorPlugin {
     pluginName: string;
@@ -405,7 +406,7 @@ export const defaultPlugins: EditorPlugin[] = [
             props.children.forEach(value => {
                 children.push(fromJson(value));
             });
-            const header = document.createElement((props.tag as string));
+            const header = document.createElement((props.size as string));
             children.forEach(child => {
                 header.append(child);
             })
@@ -511,28 +512,17 @@ export const fromJson = (props: PluginProps) => {
 
         if (props[`cursor${AppUserStore.state.username}`] === '0') {
             setTimeout(() => {
-                document.getSelection().setPosition(node, 0);
+                setCursorAtNodePosition(node, 0);
+                // document.getSelection().setPosition(node, 0);
             })
 
         } else {
             setTimeout(() => {
-                document.getSelection().setPosition(node.firstChild, Number(props[`cursor${AppUserStore.state.username}`]));
+                setCursorAtNodePosition(node, Number(props[`cursor${AppUserStore.state.username}`]));
+                // document.getSelection().setPosition(node.firstChild, Number(props[`cursor${AppUserStore.state.username}`]));
             })
 
         }
-        // if (matches[1] == AppUserStore.state.username) {
-        //     if (matches[2] === '0') {
-        //         setTimeout(() => {
-        //             document.getSelection().setPosition(node, 0);
-        //         })
-        //
-        //     } else {
-        //         setTimeout(() => {
-        //             document.getSelection().setPosition(node.firstChild, Number(matches[2]));
-        //         })
-        //
-        //     }
-        // }
     }
     return node;
 }
