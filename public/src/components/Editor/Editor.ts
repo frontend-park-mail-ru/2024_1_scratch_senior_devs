@@ -91,15 +91,15 @@ export class Editor {
             }
 
             const scanTree = (node: HTMLElement) => {
-                if ('cursor' in node.dataset) {
+                if (`cursor${AppUserStore.state.username}` in node.dataset) {
                     const cursor = node.dataset.cursor;
-                    const regex = /([a-zA]+)-([\d]+)/;
-
-                    const matches = regex.exec(cursor);
-
-                    if (matches[1] === AppUserStore.state.username) {
-                        delete node.dataset.cursor;
-                    }
+                    // const regex = /([a-zA]+)-([\d]+)/;
+                    //
+                    // const matches = regex.exec(cursor);
+                    delete node.dataset[`cursor${AppUserStore.state.username}`];
+                    // if (matches[1] === AppUserStore.state.username) {
+                    //     delete node.dataset.cursor;
+                    // }
                 }
 
                 node.childNodes.forEach(child => {
@@ -121,7 +121,7 @@ export class Editor {
 
                 scanTree(this.editable);
 
-                elem.dataset.cursor = `${AppUserStore.state.username}-${selection.anchorOffset}`;
+                elem.dataset[`cursor${AppUserStore.state.username}`] = `${selection.anchorOffset}`;
             }
             
             if (!selection.isCollapsed && isEditor) {

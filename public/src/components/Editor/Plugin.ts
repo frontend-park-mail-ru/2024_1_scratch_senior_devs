@@ -1,5 +1,7 @@
 import exp from "node:constants";
 import {AppUserStore} from "../../modules/stores/UserStore";
+import {App} from "../../App";
+import {data} from "autoprefixer";
 
 interface EditorPlugin {
     pluginName: string;
@@ -481,8 +483,14 @@ export const toJson = (node: Node): PluginProps => {
         }
     }
     const json = plugin.toJson(node);
-    if (node.nodeType === Node.ELEMENT_NODE && 'cursor' in (node as HTMLElement).dataset) {
-        json.cursor = (node as HTMLElement).dataset.cursor;
+    if (node.nodeType === Node.ELEMENT_NODE) {
+        for (const dataKey in (node as HTMLElement).dataset) {
+            // const regex = /cursor-([a-zA-Z]+)/
+            // const matches = regex.exec(dataKey);
+            if (dataKey.startsWith('cursor')) {
+                json[dataKey] = (node as HTMLElement).dataset[dataKey];
+            }
+        }
     }
     return json;
 }
@@ -496,23 +504,35 @@ export const fromJson = (props: PluginProps) => {
         }
     });
     const node = plugin.fromJson(props);
-    if ('cursor' in props) {
-        const regex = /([a-zA]+)-([\d]+)/;
-        const matches = regex.exec(props.cursor as string);
-        console.log("user: ", matches[1]);
-        if (matches[1] == AppUserStore.state.username) {
-            if (matches[2] === '0') {
-                setTimeout(() => {
-                    document.getSelection().setPosition(node, 0);
-                })
+    if (`cursor${AppUserStore.state.username}` in props) {
+        // const regex = /([a-zA]+)-([\d]+)/;
+        // const matches = regex.exec(props.cursor as string);
+        console.log("user: ", props[`cursor${AppUserStore.state.username}`]);
 
-            } else {
-                setTimeout(() => {
-                    document.getSelection().setPosition(node.firstChild, Number(matches[2]));
-                })
+        if (props[`cursor${AppUserStore.state.username}`] === '0') {
+            setTimeout(() => {
+                document.getSelection().setPosition(node, 0);
+            })
 
-            }
+        } else {
+            setTimeout(() => {
+                document.getSelection().setPosition(node.firstChild, Number(props[`cursor${AppUserStore.state.username}`]));
+            })
+
         }
+        // if (matches[1] == AppUserStore.state.username) {
+        //     if (matches[2] === '0') {
+        //         setTimeout(() => {
+        //             document.getSelection().setPosition(node, 0);
+        //         })
+        //
+        //     } else {
+        //         setTimeout(() => {
+        //             document.getSelection().setPosition(node.firstChild, Number(matches[2]));
+        //         })
+        //
+        //     }
+        // }
     }
     return node;
 }
