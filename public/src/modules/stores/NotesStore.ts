@@ -3,10 +3,9 @@ import {AppNoteRequests} from '../api';
 import {AppUserStore, UserActions} from './UserStore';
 import {AppDispatcher} from '../dispatcher';
 import {AppToasts} from '../toasts';
-import {AppNoteStore, NoteStoreActions} from './NoteStore';
-import {BlockNode} from '../../components/Block/Block';
 import {NoteType} from "../../utils/types";
 import {parseNoteTitle} from "../utils";
+import {isDebug} from "../../utils/consts";
 
 export type NotesStoreState = {
     notes: NoteType[],
@@ -120,11 +119,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
     async fetchNote (id:string) {
         try {
-            
 
             const note = await AppNoteRequests.Get(id, AppUserStore.state.JWT);
-
-            
 
             this.selectNote(note);
 
@@ -133,7 +129,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
         }
     }
 
-    async fetchSubNote (noteId, blockId) {
+    async fetchSubNote (noteId) {
         try {
             const note = await AppNoteRequests.Get(noteId, AppUserStore.state.JWT);
 
@@ -149,40 +145,13 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             // this.state.selectedNoteChildren = this.state.selectedNoteChildren.map(subnote => subnote.id != note.id ? subnote : data)
 
-            const block = AppNoteStore.state.note.blocks.find(block => block.id == blockId);
-
-            block.attributes = {
-                note: data
-            };
-
-            AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
-                blockId: AppNoteStore.state.note.blocks.indexOf(block),
-                newBlock: block
-            });
-
-            AppDispatcher.dispatch(NoteStoreActions.REMOVE_CURSOR)
 
         } catch {
-            const block = AppNoteStore.state.note.blocks.find(block => block.id == blockId);
-
             this.SetState(state => ({
                 ...state,
                 selectedNoteChildren: state.selectedNoteChildren.filter(note => note.id != noteId)
             }))
 
-            block.attributes = {
-                note: {
-                    id: null,
-                    title: "Заметка не найдена"
-                }
-            };
-
-            AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
-                blockId: AppNoteStore.state.note.blocks.indexOf(block),
-                newBlock: block
-            });
-
-            AppDispatcher.dispatch(NoteStoreActions.REMOVE_CURSOR)
         }
     }
 
@@ -195,19 +164,20 @@ class NotesStore extends BaseStore<NotesStoreState> {
         }));
 
 
-        let socket = new WebSocket(`ws://localhost:8080/api/note/${note.id}/subscribe_on_updates`, [AppUserStore.state.JWT.split(" ").at(-1)])
-        console.log(socket)
-        socket.send("asdfsadf")
+        const baseUrl = isDebug ? 'ws://localhost:8080/api/' : 'ws://you-note.ru/api/';
+
+        let socket = new WebSocket(baseUrl + `note/${note.id}/subscribe_on_updates`, [AppUserStore.state.JWT.split(" ").at(-1)])
+
         socket.onopen = () => {
             console.log("socket.onopen")
         }
 
         // TODO: пробегаться не по блокам а по children
-        note.data.content.forEach(async (item) => {
-            if (item.type == "note" && item.attributes) {
-                await this.fetchSubNote(item.attributes.note.id, item.id)
-            }
-        })
+        // note.data.content.forEach(async (item) => {
+        //     if (item.type == "note" && item.attributes) {
+        //         await this.fetchSubNote(item.attributes.note.id, item.id)
+        //     }
+        // })
     }
 
     async openNote(id:string) {
@@ -338,7 +308,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     async createSubNote() {
-        
 
         if (!this.state.selectedNote) {
             return
@@ -347,11 +316,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
         try {
             const {status, csrf, subnote_id} = await AppNoteRequests.AddSubNote(this.state.selectedNote.id, AppUserStore.state.JWT, AppUserStore.state.csrf);
 
-
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
-
-
-
 
             const subNote = {
                 id: subnote_id,
@@ -360,32 +325,13 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             this.state.selectedNoteChildren = [...this.state.selectedNoteChildren, subNote]
 
-            const block = AppNoteStore.state.note.blocks[AppNoteStore.state.dropdownPos.blockId];
-            block.type = 'note';
-            block.content = undefined;
-            block.attributes = {
-                note: subNote
-            };
-
-            AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
-                blockId: AppNoteStore.state.dropdownPos.blockId,
-                newBlock: block
-            });
-
-            AppDispatcher.dispatch(NoteStoreActions.REMOVE_CURSOR)
-
-            await this.saveNote({
-                id: this.state.selectedNote.id,
-                note: AppNoteStore.state.note
-            })
-
         } catch (e) {
             
             AppToasts.error('Что-то пошло не так');
         }
     }
 
-    async uploadImage({noteId, blockId, file}) {
+    async uploadImage({noteId, file}) {
         try {
             const response = await AppNoteRequests.UploadFile(noteId, file, AppUserStore.state.JWT, AppUserStore.state.csrf);
 
@@ -395,29 +341,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 const body = await response.json();
                 const attachId = body.path.split('.')[0];
                 const url = await AppNoteRequests.GetImage(attachId, AppUserStore.state.JWT, AppUserStore.state.csrf);
-                const block = AppNoteStore.state.note.blocks[blockId];
 
-                if (block.attributes != null) {
-                    block.attributes['id'] = attachId;
-                    block.attributes['src'] = url;
-                }
-
-                block.content = undefined;
-
-                AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
-                    blockId: blockId,
-                    newBlock: block
-                });
             } else {
                 AppToasts.error('Не удалось загрузить изображение ' + file.name);
-                const block: BlockNode = AppNoteStore.state.note.blocks[blockId];
-                block.content = [];
-                block.attributes = null;
-                block.type = 'div';
-                AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
-                    blockId: blockId,
-                    newBlock: block
-                });
             }
         } catch {
             AppToasts.error('Что-то пошло не так');
@@ -427,51 +353,22 @@ class NotesStore extends BaseStore<NotesStoreState> {
     async fetchImage({blockId, imageId}) {
         const url = await AppNoteRequests.GetImage(imageId, AppUserStore.state.JWT, AppUserStore.state.csrf);
 
-        const block = AppNoteStore.state.note.blocks[blockId];
-        if (block.attributes != null) {
-            block.attributes['src'] = url;
-        }
-
-        block.content = undefined;
-
-        AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
-            blockId: blockId,
-            newBlock: block
-        });
     }
 
-    async uploadFile({noteId, blockId, file, fileName}) {
+    async uploadFile({noteId, file, fileName}) {
         try {
             const response = await AppNoteRequests.UploadFile(noteId, file, AppUserStore.state.JWT, AppUserStore.state.csrf);
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, response.headers.get('x-csrf-token'));
 
             if (response.status == 200) {
-                const block = AppNoteStore.state.note.blocks[blockId];
                 const body = await response.json();
                 const attachId = body.path.split('.')[0];
 
-                if (block.attributes != null) {
-                    block.attributes['attach'] = attachId;
-                    block.attributes['fileName'] = fileName;
-                }
 
-                block.content = undefined;
-
-                AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
-                    blockId: blockId,
-                    newBlock: block
-                });
             } else {
                 AppToasts.error('Не удалось прикрепить файл ' + file.name);
-                const block: BlockNode = AppNoteStore.state.note.blocks[blockId];
-                block.content = [];
-                block.attributes = null;
-                block.type = 'div';
-                AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
-                    blockId: blockId,
-                    newBlock: block
-                });
+
             }
         } catch {
             AppToasts.error('Что-то пошло не так');
@@ -491,8 +388,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     createTag(data) {
-        
-        
         this.SetState(state => ({
             ...state,
             selectedNoteTags: [...state.selectedNoteTags, data.tag]

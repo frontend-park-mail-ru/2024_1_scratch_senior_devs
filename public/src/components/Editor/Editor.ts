@@ -108,8 +108,11 @@ export class Editor {
 
             const selection = document.getSelection();
 
-            const isEditor = isInEditor(selection.anchorNode);
-            console.log(selection)
+            if (!selection.anchorNode) {
+                return
+            }
+
+            const isEditor = isInEditor(selection.anchorNode)
 
             if (isEditor) {
                 const elem : HTMLElement = selection.anchorNode.nodeType === Node.ELEMENT_NODE ?

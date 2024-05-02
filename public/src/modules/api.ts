@@ -4,10 +4,7 @@ import {
     UserRegisterCredentialsType,
     UserUpdatePasswordCredentialsType
 } from './stores/UserStore';
-import {AppToasts} from './toasts';
-import {Exception} from 'sass';
-
-export const isDebug = process.env.NODE_ENV === 'development';
+import {isDebug} from "../utils/consts";
 
 const baseUrl = isDebug ? 'http://localhost:8080/api' : 'https://you-note.ru/api';
 
