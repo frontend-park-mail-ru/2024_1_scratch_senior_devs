@@ -85,6 +85,12 @@ export class Tippy extends ScReact.Component<any, any> {
         if (item.type === 'bold') {
             document.execCommand('bold', false, null);
         }
+        if (item.type === 'underline') {
+            document.execCommand('underline', false, null);
+        }
+        if (item.type === 'lineThrough') {
+            document.execCommand('strikeThrough', false, null);
+        }
         
         // AppDispatcher.dispatch(
         //     NoteStoreActions.CHANGE_PIECE_ATTRIBUTES,

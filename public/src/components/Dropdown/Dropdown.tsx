@@ -7,6 +7,8 @@ import {AppNotesStore, NotesActions} from '../../modules/stores/NotesStore';
 import {MAX_ATTACH_SIZE} from '../../utils/consts';
 import {AppToasts} from '../../modules/toasts';
 import {insertBlockPlugin} from "../Editor/Plugin";
+import {AppNoteRequests} from "../../modules/api";
+import {AppUserStore} from "../../modules/stores/UserStore";
 
 export class Dropdown extends ScReact.Component<any, any> {
     state = {
@@ -71,18 +73,25 @@ export class Dropdown extends ScReact.Component<any, any> {
             fileInput.accept = '.jpg,.png,.jpeg';
             fileInput.hidden = true;
 
-            this.ref.append(fileInput);
+            // this.ref.append(fileInput);
 
             fileInput.onchange = (e: InputEvent) => {
                 fileInput.remove();
 
                 const file = (e.target as HTMLInputElement).files[0]
                 if (file.size < MAX_ATTACH_SIZE) {
-                    AppDispatcher.dispatch(NotesActions.UPLOAD_IMAGE, {
-                        file: file,
-                        noteId: AppNotesStore.state.selectedNote.id,
-                        blockId: this.props.blockId
-                    });
+                    AppNoteRequests.UploadFile(AppNotesStore.state.selectedNote.id, file, AppUserStore.state.JWT, AppUserStore.state.csrf).then(response => {
+                        AppUserStore.state.csrf = response.headers.get('x-csrf-token');
+                        response.json().then(respJson => {
+                            insertBlockPlugin('img', respJson.id);
+                        })
+                    })
+
+                    // AppDispatcher.dispatch(NotesActions.UPLOAD_IMAGE, {
+                    //     file: file,
+                    //     noteId: AppNotesStore.state.selectedNote.id,
+                    //     blockId: this.props.blockId
+                    // });
                     // AppDispatcher.dispatch(NoteStoreActions.REMOVE_CURSOR, {});
                 } else {
                     AppToasts.error('Фото слишком большое');

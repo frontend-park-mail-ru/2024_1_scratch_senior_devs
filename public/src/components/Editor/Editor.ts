@@ -37,6 +37,8 @@ export class Editor {
                     case "childList":
                         if (record.addedNodes.length > 0) {
                             editorOnInsert(record.addedNodes[0]);
+                        } else if (record.removedNodes.length > 0 && record.removedNodes[0].nodeType === Node.TEXT_NODE) {
+                            this.dropdownCallbacks.close();
                         }
                         break;
                     case "characterData":
@@ -94,14 +96,7 @@ export class Editor {
 
             const scanTree = (node: HTMLElement) => {
                 if (`cursor${AppUserStore.state.username}` in node.dataset) {
-                    const cursor = node.dataset.cursor;
-                    // const regex = /([a-zA]+)-([\d]+)/;
-                    //
-                    // const matches = regex.exec(cursor);
                     delete node.dataset[`cursor${AppUserStore.state.username}`];
-                    // if (matches[1] === AppUserStore.state.username) {
-                    //     delete node.dataset.cursor;
-                    // }
                 }
 
                 node.childNodes.forEach(child => {
@@ -150,6 +145,16 @@ export class Editor {
                 this.dropdownCallbacks.open(node.parentElement)
             } else {
                 this.dropdownCallbacks.close();
+            }
+
+        }
+        const divIndex = defaultPlugins.findIndex((plugin => {
+            return plugin.pluginName === 'div';
+        }));
+        defaultPlugins[divIndex].onInsert = (node: Node) => {
+            if (node.textContent.startsWith('/')) {
+                lastChosenElement.node = node;
+                this.dropdownCallbacks.open(node as HTMLElement)
             }
         }
     }

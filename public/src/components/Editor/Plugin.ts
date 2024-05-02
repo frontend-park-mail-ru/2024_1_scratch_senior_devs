@@ -3,6 +3,8 @@ import {AppUserStore} from "../../modules/stores/UserStore";
 import {App} from "../../App";
 import {data} from "autoprefixer";
 import {setCursorAtNodePosition} from "../../modules/utils";
+import {AppNotesStore} from "../../modules/stores/NotesStore";
+import {AppNoteRequests} from "../../modules/api";
 
 interface EditorPlugin {
     pluginName: string;
@@ -423,18 +425,6 @@ export const defaultPlugins: EditorPlugin[] = [
             return header;
         }
     },
-    // {
-    //     pluginName: "img",
-    //     type: "block",
-    //     content: "none",
-    //     checkPlugin: (node: Node) => {
-    //         return node.nodeType === node.ELEMENT_NODE &&
-    //             (node as HTMLElement).tagName === "IMG";
-    //     },
-    //     toJson: (node: Node) => {
-    //
-    //     }
-    // }
     {
         pluginName: "bold",
         type: "inline",
@@ -465,6 +455,144 @@ export const defaultPlugins: EditorPlugin[] = [
         },
         insertNode: (innerContent) => {
             document.execCommand('bold', false, null);
+            return null;
+        }
+    },
+    {
+        pluginName: "img",
+        type: "block",
+        content: "none",
+        checkPlugin: (node: Node) => {
+            return node.nodeType === node.ELEMENT_NODE &&
+                (node as HTMLElement).tagName === "IMG";
+        },
+        toJson: (node: Node) => {
+            return {
+                pluginName: 'img',
+                imgId: (node as HTMLImageElement).dataset.imgid
+            }
+        },
+        fromJson: (props: PluginProps) => {
+            const img = document.createElement('img');
+            img.contentEditable = 'false';
+            img.width = 500
+            img.src = '/assets/add.svg'; //todo: default image url
+            img.dataset.imgid = props['imgId'] as string;
+
+            AppNoteRequests.GetImage(props['imgId'] as string, AppUserStore.state.JWT, AppUserStore.state.csrf).then(url => {
+                img.src = url;
+            })
+            return img;
+        },
+        insertNode: (innerContent, ...args) => {
+            const img = document.createElement('img');
+            img.contentEditable = 'false';
+            img.width = 500
+            img.src = '/assets/add.svg'; //todo: default image url
+            img.dataset.imgid = args[0];
+
+            AppNoteRequests.GetImage(args[0], AppUserStore.state.JWT, AppUserStore.state.csrf).then(url => {
+                img.src = url;
+            })
+            return img;
+        }
+    },
+    {
+        pluginName: "underline",
+        type: "inline",
+        content: "inline",
+        checkPlugin: (node: Node) => {
+            return node.nodeType === node.ELEMENT_NODE && (node as HTMLElement).tagName === "U";
+        },
+        toJson: (node: Node) => {
+            const children: PluginProps[] = [];
+            (node as HTMLElement).childNodes.forEach(child => {
+                children.push(toJson(child));
+            })
+            return {
+                pluginName: "underline",
+                children: children
+            }
+        },
+        fromJson: (props: PluginProps) => {
+            const children: Node[] = [];
+            props.children.forEach(value => {
+                children.push(fromJson(value));
+            });
+            const b = document.createElement('u');
+            children.forEach(child => {
+                b.append(child);
+            })
+            return b;
+        },
+        insertNode: (innerContent) => {
+            document.execCommand('underline', false, null);
+            return null;
+        }
+    },
+    {
+        pluginName: "strike",
+        type: "inline",
+        content: "inline",
+        checkPlugin: (node: Node) => {
+            return node.nodeType === node.ELEMENT_NODE && ((node as HTMLElement).tagName === "STRIKE" || (node as HTMLElement).tagName === "S");
+        },
+        toJson: (node: Node) => {
+            const children: PluginProps[] = [];
+            (node as HTMLElement).childNodes.forEach(child => {
+                children.push(toJson(child));
+            })
+            return {
+                pluginName: "strike",
+                children: children
+            }
+        },
+        fromJson: (props: PluginProps) => {
+            const children: Node[] = [];
+            props.children.forEach(value => {
+                children.push(fromJson(value));
+            });
+            const b = document.createElement('s');
+            children.forEach(child => {
+                b.append(child);
+            })
+            return b;
+        },
+        insertNode: (innerContent) => {
+            document.execCommand('strikeThrough', false, null);
+            return null;
+        }
+    },
+    {
+        pluginName: "italic",
+        type: "inline",
+        content: "inline",
+        checkPlugin: (node: Node) => {
+            return node.nodeType === node.ELEMENT_NODE && (node as HTMLElement).tagName === "I";
+        },
+        toJson: (node: Node) => {
+            const children: PluginProps[] = [];
+            (node as HTMLElement).childNodes.forEach(child => {
+                children.push(toJson(child));
+            })
+            return {
+                pluginName: "italic",
+                children: children
+            }
+        },
+        fromJson: (props: PluginProps) => {
+            const children: Node[] = [];
+            props.children.forEach(value => {
+                children.push(fromJson(value));
+            });
+            const b = document.createElement('i');
+            children.forEach(child => {
+                b.append(child);
+            })
+            return b;
+        },
+        insertNode: (innerContent) => {
+            document.execCommand('italic', false, null);
             return null;
         }
     }
