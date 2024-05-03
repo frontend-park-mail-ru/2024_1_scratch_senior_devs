@@ -122,6 +122,10 @@ export class Editor {
                 scanTree(this.editable);
 
                 elem.dataset[`cursor${AppUserStore.state.username}`] = `${getCaretPosition(elem)}`;
+
+                // const fakeCaret = document.createElement("div")
+                // fakeCaret.className = "fake-caret"
+                // elem.append(fakeCaret)
             }
             
             if (!selection.isCollapsed && isEditor) {
@@ -132,8 +136,6 @@ export class Editor {
             }
         }
     }
-
-
 
     addPlugins = () => {
         const index = defaultPlugins.findIndex((plugin => {

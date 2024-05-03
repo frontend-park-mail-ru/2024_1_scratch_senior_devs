@@ -168,8 +168,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
         let socket = new WebSocket(baseUrl + `note/${note.id}/subscribe_on_updates`, [AppUserStore.state.JWT.split(" ").at(-1)])
 
         socket.onmessage = (event) => {
+            // TODO: не обновлять заметку если отредачил ее сам
+
             let data = JSON.parse(event.data)
-            console.log("Message from server ", data);
 
             let updatedNote = this.state.selectedNote
             updatedNote.data = decode(data.message_info)
