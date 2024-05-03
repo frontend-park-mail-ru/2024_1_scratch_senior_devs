@@ -12,7 +12,7 @@ import AuthPageSkeleton from '../pages/Auth/Skeleton';
 import {AuthPageLoader} from '../pages/Auth/loader';
 import {NotesLoader} from '../pages/Notes/loader';
 import {HomePageLoader} from '../pages/Home/loader';
-import { NotesActions} from './stores/NotesStore';
+import {NotesActions} from './stores/NotesStore';
 import {AppDispatcher} from './dispatcher';
 import NotFoundPage from '../pages/Error';
 

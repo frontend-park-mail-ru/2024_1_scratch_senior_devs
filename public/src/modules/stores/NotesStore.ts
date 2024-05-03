@@ -4,7 +4,7 @@ import {AppUserStore, UserActions} from './UserStore';
 import {AppDispatcher} from '../dispatcher';
 import {AppToasts} from '../toasts';
 import {NoteType} from "../../utils/types";
-import {parseNoteTitle} from "../utils";
+import {decode, parseNoteTitle} from "../utils";
 import {isDebug} from "../../utils/consts";
 
 export type NotesStoreState = {
@@ -175,7 +175,10 @@ class NotesStore extends BaseStore<NotesStoreState> {
         }
 
         this.socket.onmessage = (event) => {
-            console.log("Message from server ", JSON.parse(event.data));
+            let data = JSON.parse(event.data)
+            console.log("Message from server ", data);
+            let note = decode(data.message_info)
+            console.log("Decoded note data ", note);
         }
 
         // TODO: пробегаться не по блокам а по children
