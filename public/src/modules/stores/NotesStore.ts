@@ -175,7 +175,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
         }
 
         this.socket.onmessage = (event) => {
-            console.log("Message from server ", event.data);
+            console.log("Message from server ", JSON.parse(event.data));
         }
 
         // TODO: пробегаться не по блокам а по children
