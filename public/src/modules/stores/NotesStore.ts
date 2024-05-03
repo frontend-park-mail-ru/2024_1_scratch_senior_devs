@@ -31,6 +31,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
         noteNotFound: false
     };
 
+    private socket
+
     constructor() {
         super();
         this.registerEvents();
@@ -163,16 +165,15 @@ class NotesStore extends BaseStore<NotesStoreState> {
             selectedNoteTags: ["Работа", "Учеба", "Технопарк", "ВУЗ"] // TODO
         }));
 
+        const baseUrl = isDebug ? 'ws://localhost:8080/api/' : 'wss://you-note.ru/api/';
 
-        const baseUrl = isDebug ? 'wss://127.0.0.1:8080/api/' : 'wss://you-note.ru/api/';
+        this.socket = new WebSocket(baseUrl + `note/${note.id}/subscribe_on_updates`, [AppUserStore.state.JWT.split(" ").at(-1)])
 
-        let socket = new WebSocket(baseUrl + `note/${note.id}/subscribe_on_updates`, [AppUserStore.state.JWT.split(" ").at(-1)])
-
-        socket.onopen = () => {
+        this.socket.onopen = () => {
             console.log("socket.onopen")
         }
 
-        socket.onmessage = () => {
+        this.socket.onmessage = () => {
             console.log("socket.onmessage")
         }
 
@@ -280,6 +281,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
             const {csrf} = await AppNoteRequests.Update(data, AppUserStore.state.JWT, AppUserStore.state.csrf);
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+
+            this.socket.send("heasdfasdf")
 
         } catch {
             AppToasts.error('Что-то пошло не так');
