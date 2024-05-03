@@ -96,7 +96,7 @@ export class Editor {
 
             const scanTree = (node: HTMLElement) => {
                 if (`cursor${AppUserStore.state.username}` in node.dataset) {
-                    delete node.dataset[`cursor${AppUserStore.state.username}`];
+                    delete node.dataset[`cursor`];
                 }
 
                 node.childNodes.forEach(child => {
@@ -121,7 +121,7 @@ export class Editor {
 
                 scanTree(this.editable);
 
-                elem.dataset[`cursor${AppUserStore.state.username}`] = `${getCaretPosition(elem)}`;
+                elem.dataset[`cursor`] = `${AppUserStore.state.username},${getCaretPosition(elem)}`;
             }
             
             if (!selection.isCollapsed && isEditor) {

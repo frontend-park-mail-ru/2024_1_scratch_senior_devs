@@ -31,9 +31,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
         noteNotFound: false
     };
 
-    // TODO: вынести в отдельный модуль (скелетон)
-    private socket
-
     constructor() {
         super();
         this.registerEvents();
@@ -168,13 +165,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
         const baseUrl = isDebug ? 'ws://localhost:8080/api/' : 'wss://you-note.ru/api/';
 
-        this.socket = new WebSocket(baseUrl + `note/${note.id}/subscribe_on_updates`, [AppUserStore.state.JWT.split(" ").at(-1)])
+        let socket = new WebSocket(baseUrl + `note/${note.id}/subscribe_on_updates`, [AppUserStore.state.JWT.split(" ").at(-1)])
 
-        this.socket.onopen = () => {
-            console.log("socket.onopen")
-        }
-
-        this.socket.onmessage = (event) => {
+        socket.onmessage = (event) => {
             let data = JSON.parse(event.data)
             console.log("Message from server ", data);
 
