@@ -282,7 +282,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 
-            this.socket.send("heasdfasdf")
+            // this.socket.send("heasdfasdf")
 
         } catch {
             AppToasts.error('Что-то пошло не так');
