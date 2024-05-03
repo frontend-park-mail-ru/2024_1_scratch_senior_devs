@@ -31,6 +31,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
         noteNotFound: false
     };
 
+    // TODO: вынести в отдельный модуль (скелетон)
     private socket
 
     constructor() {
@@ -173,8 +174,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
             console.log("socket.onopen")
         }
 
-        this.socket.onmessage = () => {
-            console.log("socket.onmessage")
+        this.socket.onmessage = (event) => {
+            console.log("Message from server ", event.data);
         }
 
         // TODO: пробегаться не по блокам а по children
@@ -281,8 +282,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
             const {csrf} = await AppNoteRequests.Update(data, AppUserStore.state.JWT, AppUserStore.state.csrf);
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
-
-            // this.socket.send("heasdfasdf")
 
         } catch {
             AppToasts.error('Что-то пошло не так');
