@@ -85,7 +85,7 @@ export class Editor {
 
         document.onselectionchange = () => {
             const isInEditor = (node: Node) => {
-                if (node.nodeType === Node.ELEMENT_NODE && (node as HTMLElement).contentEditable === 'true') {
+                if (node.nodeType === Node.ELEMENT_NODE && (node as HTMLElement).contentEditable === 'true' && !(node as HTMLElement).classList.contains("note-title")) {
                     return true
                 } else if (node.parentElement == null) {
                     return false

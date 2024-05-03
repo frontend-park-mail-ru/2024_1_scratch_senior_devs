@@ -4,11 +4,14 @@ import {AppDispatcher} from '../dispatcher';
 export const NoteStoreActions = {
     SET_NOTE: "SET_NOTE",
     CHANGE_TITLE: 'CHANGE_TITLE',
-    CHANGE_CONTENT: 'CHANGE_CONTENT'
+    CHANGE_CONTENT: 'CHANGE_CONTENT',
+    OPEN_DROPDOWN: "OPEN_DROPDOWN",
+    CLOSE_DROPDOWN: "CLOSE_DROPDOWN"
 };
 
 export type NoteStoreState = {
-    note: any
+    note: any,
+    dropdownOpen: boolean
 }
 
 export type CursorPosition = {
@@ -25,6 +28,7 @@ export type DropdownPosition = {
 
 class NoteStore extends BaseStore<NoteStoreState> {
     state = {
+        dropdownOpen: false,
         note: {
             title: '',
             blocks: Array<any>()
@@ -97,6 +101,20 @@ class NoteStore extends BaseStore<NoteStoreState> {
     private changeContent = (content: any) => {
         this.state.note.blocks = content
         this.saveNote();
+    }
+
+    private openDropdown = () => {
+        this.SetState(state => ({
+            ...state,
+            dropdownOpen: true
+        }))
+    }
+
+    private closeDropdown = () => {
+        this.SetState(state => ({
+            ...state,
+            dropdownOpen: false
+        }))
     }
 }
 

@@ -2,12 +2,11 @@ import {Component} from "@veglem/screact/dist/component";
 import {VDomNode} from "@veglem/screact/dist/vdom";
 import "./Editor.sass"
 import {Editor} from "./Editor";
-import {insertBlockPlugin} from "./Plugin";
 import {Dropdown} from "../Dropdown/Dropdown";
 import {AppNoteStore, NoteStoreState} from "../../modules/stores/NoteStore";
 import {Tippy} from "../Tippy/Tippy";
 
-type editorState = {
+type EditorState = {
     tippyOpen: boolean,
     tippyPos: {
         left: number,
@@ -20,7 +19,7 @@ type editorState = {
     }
 }
 
-export class EditorWrapper extends Component<any, any> {
+export class EditorWrapper extends Component<any, EditorState> {
     state = {
         tippyOpen: false,
         tippyPos: {
@@ -61,6 +60,11 @@ export class EditorWrapper extends Component<any, any> {
             this.props.onChangeContent,
             {open: this.openTippy, close: this.closeTippy}
         );
+
+        this.setState(state => ({
+            ...state,
+            dropdownOpen: store.dropdownOpen
+        }))
     }
 
     syncTitle = (title) => {

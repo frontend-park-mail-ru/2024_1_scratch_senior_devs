@@ -63,6 +63,12 @@ class UserStore extends BaseStore<UserStoreState>{
         this.state.JWT = window.localStorage.getItem('Authorization');
         this.state.csrf = window.localStorage.getItem('x-csrf-token');
         this.registerEvents();
+
+        window.addEventListener("storage", e => {
+            if (e.key == "x-csrf-token") {
+                this.state.csrf = window.localStorage.getItem('x-csrf-token');
+            }
+        })
     }
 
     /**

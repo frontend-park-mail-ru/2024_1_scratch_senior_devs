@@ -34,6 +34,32 @@ class NotesStore extends BaseStore<NotesStoreState> {
     constructor() {
         super();
         this.registerEvents();
+
+        window.addEventListener("storage", e => {
+            console.log("storage.change123")
+            console.log(e.key)
+
+            if (e.key == "selectedNote") {
+                console.log("storage.change")
+
+                let note = JSON.parse(localStorage.getItem("selectedNote"))
+                console.log(note)
+
+                if (note && this.state.selectedNote && this.state.selectedNote.id == note.id) {
+                    console.log("sync note")
+                    const test = this.state.selectedNote
+                    test.data = {
+                        title: note.note.title,
+                        content: note.note.blocks
+                    }
+                    console.log(test)
+                    this.SetState(state => ({
+                        ...state,
+                        selectedNote: test
+                    }))
+                }
+            }
+        })
     }
 
     private registerEvents(){
@@ -111,6 +137,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     closeNote () {
+        localStorage.setItem("selectedNote", null)
+
         this.SetState(state => ({
             ...state,
             selectedNote: undefined
@@ -145,13 +173,11 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             // this.state.selectedNoteChildren = this.state.selectedNoteChildren.map(subnote => subnote.id != note.id ? subnote : data)
 
-
         } catch {
             this.SetState(state => ({
                 ...state,
                 selectedNoteChildren: state.selectedNoteChildren.filter(note => note.id != noteId)
             }))
-
         }
     }
 
@@ -287,6 +313,11 @@ class NotesStore extends BaseStore<NotesStoreState> {
             const {csrf} = await AppNoteRequests.Update(data, AppUserStore.state.JWT, AppUserStore.state.csrf);
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+
+            console.log("saveNote")
+            console.log(data)
+
+            localStorage.setItem("selectedNote", JSON.stringify(data))
 
         } catch {
             AppToasts.error('Что-то пошло не так');
