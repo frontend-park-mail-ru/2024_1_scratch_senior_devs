@@ -5,6 +5,8 @@ import {Editor} from "./Editor";
 import {Dropdown} from "../Dropdown/Dropdown";
 import {AppNoteStore, NoteStoreState} from "../../modules/stores/NoteStore";
 import {Tippy} from "../Tippy/Tippy";
+import YoutubeDialog, {YoutubeDialogForm} from "../YoutubeDialog/YoutubeDialog";
+import {Modal} from "../Modal/Modal";
 
 type EditorState = {
     tippyOpen: boolean,
@@ -17,6 +19,7 @@ type EditorState = {
         left: number,
         top: number
     }
+    youtube: boolean
 }
 
 export class EditorWrapper extends Component<any, EditorState> {
@@ -30,7 +33,8 @@ export class EditorWrapper extends Component<any, EditorState> {
         dropdownPos: {
             left: 0,
             top: 0
-        }
+        },
+        youtube: false
     }
 
     constructor() {
@@ -99,6 +103,20 @@ export class EditorWrapper extends Component<any, EditorState> {
         }))
     }
 
+    openYoutube = (elem: HTMLElement) => {
+        this.setState(state => ({
+            ...state,
+            youtube: true,
+        }))
+    }
+
+    closeYoutube = () => {
+        this.setState(state => ({
+            ...state,
+            youtube: false
+        }))
+    }
+
     openTippy = (elem: HTMLElement) => {
         this.setState(state => ({
             ...state,
@@ -141,12 +159,15 @@ export class EditorWrapper extends Component<any, EditorState> {
                     style={`left: ${this.state.dropdownPos.left}px; top: ${this.state.dropdownPos.top}px;`}
                     onClose={this.closeDropdown}
                     open={this.state.dropdownOpen}
+                    openYoutubeDialog={this.openYoutube}
                 />
 
                 <Tippy style={`left: ${this.state.tippyPos.left}px; top: ${this.state.tippyPos.top}px;`}
                     open={this.state.tippyOpen}
                        onClose={this.closeTippy}
                 />
+
+                <Modal open={this.state.youtube} content={<YoutubeDialogForm handleClose={this.closeYoutube}/>} handleClose={this.closeYoutube}/>
 
                 <div className="note-editor-content">
                     <div className="note-title" contentEditable={true} oninput={this.onChangeTitle} ref={ref => this.noteTitleRef = ref}></div>
