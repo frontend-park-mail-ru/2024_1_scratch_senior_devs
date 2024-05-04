@@ -57,7 +57,7 @@ export class NotesPage extends ScReact.Component<any, any> {
             const notes = AppNotesStore.state.notes;
             notes.forEach((note, index) => {
                 if (note.id == this.state.selectedNote?.id) {
-                    notes[index].data.title = AppNoteStore.state.note.title == "" ? "Пустая заметка" : AppNoteStore.state.note.title;
+                    notes[index].data.title = parseNoteTitle(AppNoteStore.state.note.title);
                     notes[index].update_time = new Date()
                 }
             });
@@ -83,7 +83,7 @@ export class NotesPage extends ScReact.Component<any, any> {
 
             if (store.selectedNote != undefined) {
                 document.title = parseNoteTitle(store.selectedNote.data.title);
-                this.updateNotesTitles()
+                // this.updateNotesTitles()
             }
 
             return {

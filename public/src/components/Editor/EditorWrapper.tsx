@@ -67,7 +67,7 @@ export class EditorWrapper extends Component<any, EditorState> {
         }))
     }
 
-    syncTitle = (title) => {
+    syncTitle = (title:string) => {
         console.log("syncTitle")
         this.noteTitleRef.innerText = title
 

@@ -187,6 +187,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
         let socket = new WebSocket(baseUrl + `note/${note.id}/subscribe_on_updates`, [AppUserStore.state.JWT.split(" ").at(-1)])
 
         socket.onmessage = (event) => {
+            console.log("socket.onmessage")
+
             let data = JSON.parse(event.data)
 
             if (data.username == AppUserStore.state.username) {
