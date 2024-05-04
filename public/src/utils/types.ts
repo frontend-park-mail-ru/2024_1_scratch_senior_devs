@@ -10,6 +10,11 @@ export type NoteType = {
     update_time: string
 }
 
+export type NoteDataType = {
+    title: string
+    content: any[],
+}
+
 export type SubNoteType = {
     id: string,
     title: string

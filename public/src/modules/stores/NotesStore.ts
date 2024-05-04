@@ -3,7 +3,7 @@ import {AppNoteRequests} from '../api';
 import {AppUserStore, UserActions} from './UserStore';
 import {AppDispatcher} from '../dispatcher';
 import {AppToasts} from '../toasts';
-import {NoteType} from "../../utils/types";
+import {NoteDataType, NoteType} from "../../utils/types";
 import {decode, parseNoteTitle} from "../utils";
 import {isDebug} from "../../utils/consts";
 
@@ -195,24 +195,28 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 return
             }
 
-            const note = decode(data.message_info) as NoteType
+            const noteData = decode(data.message_info) as NoteDataType
 
-            console.log(note)
+            console.log(noteData)
 
-            // console.log(this.state.selectedNote.data.content)
-            // console.log(note.content)
-            //
-            // JSON.stringify(decode(data.message_info).content) == JSON.stringify(this.state.selectedNote.data.content))
-            //
-            // const updatedNote = this.state.selectedNote
-            // updatedNote.data = decode(data.message_info)
-            //
-            // console.log("Updated note ", updatedNote);
-            //
-            // this.SetState(state => ({
-            //     ...state,
-            //     selectedNote: updatedNote
-            // }));
+            console.log(this.state.selectedNote.data.content)
+            console.log(noteData.content)
+
+            console.log(JSON.stringify(noteData.content) == JSON.stringify(this.state.selectedNote.data.content))
+
+            if (JSON.stringify(noteData) == JSON.stringify(this.state.selectedNote.data)) {
+                return
+            }
+
+            const updatedNote = this.state.selectedNote
+            updatedNote.data = noteData
+
+            console.log("Updated note ", updatedNote);
+
+            this.SetState(state => ({
+                ...state,
+                selectedNote: updatedNote
+            }));
         }
 
         // TODO: пробегаться не по блокам а по children
