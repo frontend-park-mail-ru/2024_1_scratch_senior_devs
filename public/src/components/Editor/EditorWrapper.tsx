@@ -83,14 +83,16 @@ export class EditorWrapper extends Component<any, EditorState> {
     }
 
     openDropdown = (elem: HTMLElement) => {
-        console.log("openDropdown")
+        const editor = document.querySelector(".note-editor-wrapper")
+        const offsetBottom = editor.clientHeight - elem.getBoundingClientRect().top
+        const dropdownOffsetTop = offsetBottom < 225 ? -225 : 20
 
         this.setState(state => ({
             ...state,
             dropdownOpen: true,
             dropdownPos: {
                 left: elem.offsetLeft + 20,
-                top: elem.offsetTop + 20
+                top: elem.offsetTop + dropdownOffsetTop
             }
         }))
     }

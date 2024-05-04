@@ -115,11 +115,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
     render() {
         const isSubNote = this.state.selectedNote?.parent != "00000000-0000-0000-0000-000000000000" ? "hidden" : ""
-
         const isOwner = this.state.selectedNote?.owner_id == AppUserStore.state.user_id
-
-        console.log("render")
-        console.log(isOwner)
 
         return (
             <div className={'note-editor-wrapper ' + (this.props.open ? 'active' : '')}>

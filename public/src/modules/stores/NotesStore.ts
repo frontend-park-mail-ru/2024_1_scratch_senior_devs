@@ -188,6 +188,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
         this.ws = new WebSocketConnection(`note/${note.id}/subscribe_on_updates`)
 
+
+
         this.ws.onMessage((event) => {
             console.log("socket.onmessage")
 
