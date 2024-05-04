@@ -166,15 +166,12 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
                     <EditorWrapper
                         onChangeTitle={(value: string) => {
-                            
-                            
                             this.props.onChangeTitle(value);
                             this.onChangeNote();
                             AppDispatcher.dispatch(NoteStoreActions.CHANGE_TITLE, value)
                         }}
                         onChangeContent={(content) => {
-                            
-                            
+                            console.log("onChangeContent")
                             this.props.onChangeNote()
                             this.onChangeNote()
                             AppDispatcher.dispatch(NoteStoreActions.CHANGE_CONTENT, content)
