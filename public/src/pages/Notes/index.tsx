@@ -53,6 +53,8 @@ export class NotesPage extends ScReact.Component<any, any> {
     }
 
     updateNotesTitles = () => {
+        console.log("updateNotesTitles")
+
         setTimeout(()=> {
             const notes = AppNotesStore.state.notes;
             notes.forEach((note, index) => {
@@ -83,7 +85,8 @@ export class NotesPage extends ScReact.Component<any, any> {
 
             if (store.selectedNote != undefined) {
                 document.title = parseNoteTitle(store.selectedNote.data.title);
-                // this.updateNotesTitles()
+
+                this.state.selectedNote && this.updatePreviewNoteTitle(store.selectedNote.data.title)
             }
 
             return {
@@ -130,7 +133,6 @@ export class NotesPage extends ScReact.Component<any, any> {
     };
 
     createObserver() {
-        
         const observer = new IntersectionObserver(
             function (entries, observer) {
                 entries.forEach((entry) => {
@@ -156,11 +158,15 @@ export class NotesPage extends ScReact.Component<any, any> {
     };
 
     onSearchBarStartTyping = () => {
-        // TODO: AppDispatcher.dispatch(NoteStoreActions.REMOVE_CURSOR)
         AppDispatcher.dispatch(NotesActions.START_FETCHING)
     }
 
     onChangeSelectedNoteTitle = (title:string) => {
+        this.updatePreviewNoteTitle(title)
+        this.updateNotesTitles()
+    };
+
+    updatePreviewNoteTitle = (title:string) => {
         const selectedNote = document.getElementById(this.state.selectedNote.id);
 
         if (selectedNote) {
@@ -168,12 +174,9 @@ export class NotesPage extends ScReact.Component<any, any> {
             noteTitle.innerHTML = title.length > 0 ? truncate(title, 20) : "Пустая заметка";
             document.title = noteTitle.innerHTML
         }
-
-        this.updateNotesTitles()
-    };
+    }
 
     onChangeSelectedNoteContent = () => {
-        
         this.updateNotesTitles()
     }
 
