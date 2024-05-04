@@ -7,7 +7,8 @@ export type NoteType = {
         title: string
         content: any[],
     },
-    update_time: string
+    update_time: string,
+    owner_id: string
 }
 
 export type NoteDataType = {
