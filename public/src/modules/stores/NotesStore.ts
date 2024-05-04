@@ -6,6 +6,7 @@ import {AppToasts} from '../toasts';
 import {NoteDataType, NoteType} from "../../utils/types";
 import {decode, parseNoteTitle} from "../utils";
 import {isDebug} from "../../utils/consts";
+import {WebSocketConnection} from "../websocket";
 
 export type NotesStoreState = {
     notes: NoteType[],
@@ -182,11 +183,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
             selectedNoteChildren: note.children
         }));
 
-        const baseUrl = isDebug ? 'ws://localhost:8080/api/' : 'wss://you-note.ru/api/';
+        let socket = new WebSocketConnection(`note/${note.id}/subscribe_on_updates`)
 
-        let socket = new WebSocket(baseUrl + `note/${note.id}/subscribe_on_updates`, [AppUserStore.state.JWT.split(" ").at(-1)])
-
-        socket.onmessage = (event) => {
+        socket.onMessage = (event) => {
             console.log("socket.onmessage")
 
             let data = JSON.parse(event.data)

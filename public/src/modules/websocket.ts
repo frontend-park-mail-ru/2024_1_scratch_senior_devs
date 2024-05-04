@@ -1,3 +1,8 @@
+import {isDebug} from "../utils/consts";
+import {AppUserStore} from "./stores/UserStore";
+
+const baseUrl = isDebug ? 'ws://localhost:8080/api/' : 'wss://you-note.ru/api/';
+
 export class WebSocketConnection {
     private url
     private socket
@@ -14,20 +19,16 @@ export class WebSocketConnection {
         this.socket.close();
     }
 
-    open(url) {
+    open(url:string) {
         if (this.socket.readyState === WebSocket.OPEN || this.socket.readyState === WebSocket.CONNECTING) {
             return;
         }
 
-        this.socket = new WebSocket(url);
+        this.socket = new WebSocket(baseUrl + url,[AppUserStore.state.JWT.split(" ").at(-1)]);
     }
 
     onMessage(event) {
         console.log('WebSocket message received:', event.data);
-    }
-
-    setOnMessageMethod(callback) {
-        this.socket.onmessage = callback;
     }
 
     onError(event) {
@@ -38,7 +39,7 @@ export class WebSocketConnection {
         console.log('WebSocket connection closed:', event);
         setTimeout(() => {
             this.socket = new WebSocket(this.url);
-        }, 5000); // Попытка повторного подключения через 5 секунд
+        }, 5000);
     }
 
     sendMessage(message) {
