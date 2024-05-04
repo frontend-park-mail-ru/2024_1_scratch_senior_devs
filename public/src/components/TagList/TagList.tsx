@@ -2,7 +2,7 @@ import {ScReact} from "@veglem/screact";
 import {Img} from "../Image/Image";
 import {AppToasts} from "../../modules/toasts";
 import "./TagList.sass"
-import {AppNotesStore, NotesActions, NotesStoreState} from "../../modules/stores/NotesStore";
+import {AppNotesStore, NotesActions} from "../../modules/stores/NotesStore";
 import {AppDispatcher} from "../../modules/dispatcher";
 
 type TagListState = {
@@ -34,7 +34,7 @@ export class TagList extends ScReact.Component<any, TagListState> {
 
     handleClickOutside = (e) => {
         if (this.state.open && !this.openBtnRef.contains(e.target) && !e.target.matches(".tags-wrapper,.tags-wrapper *")) {
-            // this.toggleOpen();
+            this.toggleOpen();
         }
     }
 
@@ -89,6 +89,8 @@ export class TagList extends ScReact.Component<any, TagListState> {
 
             AppDispatcher.dispatch(NotesActions.CREATE_TAG, this.state.value)
 
+            this.props.onChange([...this.props.tags, this.state.value])
+
             this.setState(state => ({
                 ...state,
                 value: ""
@@ -96,8 +98,9 @@ export class TagList extends ScReact.Component<any, TagListState> {
         }
     }
 
-    deleteTag = (tag:string) => {
-        AppDispatcher.dispatch(NotesActions.REMOVE_TAG, tag)
+    deleteTag = (tagname:string) => {
+        AppDispatcher.dispatch(NotesActions.REMOVE_TAG, tagname)
+        this.props.onChange(this.props.tags.filter(tag => tag != tagname))
     }
 
     toggleOpen = () => {

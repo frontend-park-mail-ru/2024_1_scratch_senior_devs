@@ -52,8 +52,8 @@ export class EditorWrapper extends Component<any, EditorState> {
     }
 
     updateState = (store:NoteStoreState) => {
-        console.log("updateState")
-        console.log(store.note)
+        
+        
         this.syncTitle(store.note.title)
 
         this.self.innerHTML = ""
@@ -72,7 +72,7 @@ export class EditorWrapper extends Component<any, EditorState> {
     }
 
     syncTitle = (title:string) => {
-        console.log("syncTitle")
+        
         this.noteTitleRef.textContent = title
 
         if (this.noteTitleRef.textContent.length == 0) {
@@ -139,7 +139,7 @@ export class EditorWrapper extends Component<any, EditorState> {
     }
     
     onChangeTitle = () => {
-        console.log("onChangeTitle")
+        
 
         if (this.noteTitleRef.textContent.length == 0) {
             this.noteTitleRef.dataset.placeholder = 'Введите название';

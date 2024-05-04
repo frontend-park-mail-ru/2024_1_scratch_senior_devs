@@ -760,7 +760,7 @@ export const fromJson = (props: PluginProps) => {
     if (`cursor${AppUserStore.state.username}` in props) {
         // const regex = /([a-zA]+)-([\d]+)/;
         // const matches = regex.exec(props.cursor as string);
-        console.log("user: ", props[`cursor${AppUserStore.state.username}`]);
+        
 
         if (props[`cursor${AppUserStore.state.username}`] === '0') {
             setTimeout(() => {
@@ -923,7 +923,7 @@ const RenderAttach = (attach_filename, attach_id) => {
     closeBtn.onclick = (e) => {
         // TODO: удалять аттач
         e.stopPropagation()
-        console.log("delete attach")
+        
     }
 
     closeAttachBtnContainer.appendChild(closeBtn)

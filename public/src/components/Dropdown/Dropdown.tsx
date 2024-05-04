@@ -121,7 +121,7 @@ export class Dropdown extends ScReact.Component<any, any> {
                         AppDispatcher.dispatch(UserActions.UPDATE_CSRF, response.headers.get('x-csrf-token'))
                         // AppUserStore.state.csrf = response.headers.get('x-csrf-token');
                         response.json().then(respJson => {
-                            console.log('File Name:',file.name);
+                            
                             insertBlockPlugin('file', respJson.id, file.name);
                         })
                     })

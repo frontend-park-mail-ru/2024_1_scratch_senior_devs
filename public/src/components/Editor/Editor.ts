@@ -66,7 +66,7 @@ export class Editor {
                 schema.push(toJson(node));
             })
 
-            console.log(schema)
+            
             onChange(schema)
         });
 

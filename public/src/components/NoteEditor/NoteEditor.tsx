@@ -139,7 +139,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
                             <span className="back-label">Заметки</span>
                         </div>
                         <div className={isSubNote ? "hidden" : ""}>
-                            {isOwner ? <TagList tags={this.state.selectedNote?.tags} /> : ""}
+                            {isOwner ? <TagList tags={this.state.selectedNote?.tags} onChange={this.props.onChangeTags} /> : ""}
                         </div>
                     </div>
                     <div className="right-container">
@@ -173,7 +173,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
                             AppDispatcher.dispatch(NoteStoreActions.CHANGE_TITLE, value)
                         }}
                         onChangeContent={(content) => {
-                            console.log("onChangeContent")
+                            
                             this.props.onChangeNote()
                             this.onChangeNote()
                             AppDispatcher.dispatch(NoteStoreActions.CHANGE_CONTENT, content)

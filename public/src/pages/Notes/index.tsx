@@ -81,9 +81,13 @@ export class NotesPage extends ScReact.Component<any, any> {
                 this.createObserver();
             }
 
-            if (store.selectedNote != undefined) {
+
+            if (store.selectedNote) {
                 document.title = parseNoteTitle(store.selectedNote.data.title);
-                this.state.selectedNote && this.updatePreviewNoteTitle(store.selectedNote.data.title)
+
+                if (this.state.selectedNote) {
+                    this.updatePreviewNoteTitle(store.selectedNote.data.title)
+                }
             }
 
             return {
@@ -177,6 +181,30 @@ export class NotesPage extends ScReact.Component<any, any> {
         this.updateNotesTitles()
     }
 
+    onChangeTags = (tags:string[]) => {
+        const selectedNote = document.getElementById(this.state.selectedNote.id);
+
+        if (selectedNote) {
+            const tagsContainer = selectedNote.querySelector('.note-tags-container');
+
+            tagsContainer.innerHTML = ""
+
+            tags.slice(0, 2).forEach(tagname => {
+                const tag = document.createElement("span")
+                tag.innerHTML = tagname
+                tag.className = "note-tag"
+                tagsContainer.appendChild(tag)
+            })
+
+            if (tags.length > 2) {
+                const tag = document.createElement("span")
+                tag.innerHTML = `+${tags.length - 2}`
+                tag.className = "note-tag"
+                tagsContainer.appendChild(tag)
+            }
+        }
+    }
+
     selectTag = (tag:string) => {
         if (this.state.selectedTags.includes(tag)) {
             this.setState(state => ({
@@ -214,7 +242,8 @@ export class NotesPage extends ScReact.Component<any, any> {
                                 ))
                                 :
                                 !this.state.fetching ?
-                                    <h3 className="notes-not-found-label">Список заметок пуст</h3> : ""}
+                                    <h3 className="notes-not-found-label">Список заметок пуст</h3> : ""
+                        }
                     </div>
                 </aside>
 
@@ -222,6 +251,7 @@ export class NotesPage extends ScReact.Component<any, any> {
                             setClose={this.closeEditor}
                             onChangeNote={this.onChangeSelectedNoteContent}
                             onChangeTitle={this.onChangeSelectedNoteTitle}
+                            onChangeTags={this.onChangeTags}
                 />
 
             </div>

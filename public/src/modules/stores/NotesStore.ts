@@ -6,6 +6,7 @@ import {AppToasts} from '../toasts';
 import {NoteDataType, NoteType} from "../../utils/types";
 import {decode, parseNoteTitle} from "../utils";
 import {WebSocketConnection} from "../websocket";
+import {AppNoteStore} from "./NoteStore";
 
 export type NotesStoreState = {
     notes: NoteType[],
@@ -132,9 +133,17 @@ class NotesStore extends BaseStore<NotesStoreState> {
     closeNote () {
         localStorage.setItem("selectedNote", null)
 
-        this.SetState(state => ({
-            ...state,
-            selectedNote: undefined
+        const notes = this.state.notes;
+        notes.forEach((note, index) => {
+            if (note.id == this.state.selectedNote.id) {
+                notes[index] = this.state.selectedNote;
+            }
+        });
+
+        this.SetState(s=>({
+            ...s,
+            selectedNote: undefined,
+            notes: notes
         }));
 
         this.ws?.close()
@@ -303,8 +312,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 
-            console.log("saveNote")
-            console.log(data)
+            
+            
 
             localStorage.setItem("selectedNote", JSON.stringify(data))
 
@@ -382,8 +391,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     async fetchImage({blockId, imageId}) {
-        const url = await AppNoteRequests.GetImage(imageId, AppUserStore.state.JWT, AppUserStore.state.csrf);
-
+        await AppNoteRequests.GetImage(imageId, AppUserStore.state.JWT, AppUserStore.state.csrf);
     }
 
     async uploadFile({noteId, file, fileName}) {
@@ -392,15 +400,10 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, response.headers.get('x-csrf-token'));
 
-            if (response.status == 200) {
-                const body = await response.json();
-                const attachId = body.path.split('.')[0];
-
-
-            } else {
+            if (response.status != 200) {
                 AppToasts.error('Не удалось прикрепить файл ' + file.name);
-
             }
+
         } catch {
             AppToasts.error('Что-то пошло не так');
         }
@@ -419,14 +422,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     async createTag(tag:string) {
-        console.log("createTag")
-        console.log(tag)
-
         const {note, status, csrf} = await AppNoteRequests.AddTag(this.state.selectedNote.id, tag, AppUserStore.state.JWT, AppUserStore.state.csrf)
-
-        console.log(status)
-        console.log(note)
-        console.log(this.state.selectedNote)
 
         AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 
@@ -437,17 +433,14 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     async removeTag(tag:string) {
-        console.log("removeTag")
-        console.log(tag)
-
         const {note, status, csrf} = await AppNoteRequests.RemoveTag(this.state.selectedNote.id, tag, AppUserStore.state.JWT, AppUserStore.state.csrf)
 
         AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 
-        // this.SetState(state => ({
-        //     ...state,
-        //     selectedNote: note
-        // }))
+        this.SetState(state => ({
+            ...state,
+            selectedNote: note
+        }))
     }
 
     addCollaborator = async ({note_id, username}) => {

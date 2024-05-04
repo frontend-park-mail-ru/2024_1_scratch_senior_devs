@@ -256,7 +256,7 @@ class UserStore extends BaseStore<UserStoreState>{
         try {
             const res = await AppAuthRequests.CheckUser(this.state.JWT);
 
-            console.log(res)
+            
 
             this.SetState(state => ({
                 ...state,

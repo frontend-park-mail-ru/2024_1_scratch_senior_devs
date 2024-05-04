@@ -512,7 +512,7 @@ class NoteRequests {
             }
         });
 
-        console.log(response.body)
+        
 
         if (response.status == 200) {
             response.body.data = decode(response.body.data)
