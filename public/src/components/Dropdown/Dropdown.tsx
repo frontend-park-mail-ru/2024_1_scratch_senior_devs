@@ -106,17 +106,23 @@ export class Dropdown extends ScReact.Component<any, any> {
             fileInput.type = 'file';
             fileInput.hidden = true;
             fileInput.accept = ".mp4,.mp3,.wav,.gif,.jpeg,.webp,.jpg,.png,.mp4, .pdf"
-            this.ref.append(fileInput);
             fileInput.onchange = (e) => {
                 fileInput.remove();
                 const file = (e.target as HTMLInputElement).files[0]
                 if (file.size < MAX_ATTACH_SIZE) {
-                    AppDispatcher.dispatch(NotesActions.UPLOAD_FILE, {
-                        file: file,
-                        noteId: AppNotesStore.state.selectedNote.id,
-                        blockId: this.props.blockId,
-                        fileName: (e.target as HTMLInputElement).files[0].name
-                    });
+                    // AppDispatcher.dispatch(NotesActions.UPLOAD_FILE, {
+                    //     file: file,
+                    //     noteId: AppNotesStore.state.selectedNote.id,
+                    //     blockId: this.props.blockId,
+                    //     fileName: (e.target as HTMLInputElement).files[0].name
+                    // });
+                    AppNoteRequests.UploadFile(AppNotesStore.state.selectedNote.id, file, AppUserStore.state.JWT, AppUserStore.state.csrf).then(response => {
+                        AppUserStore.state.csrf = response.headers.get('x-csrf-token');
+                        response.json().then(respJson => {
+                            console.log('File Name:',file.name);
+                            insertBlockPlugin('file', respJson.id, file.name);
+                        })
+                    })
                     // AppDispatcher.dispatch(NoteStoreActions.REMOVE_CURSOR);
                 } else {
                     AppToasts.error('Файл слишком большой');

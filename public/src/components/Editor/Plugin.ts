@@ -2,9 +2,10 @@ import exp from "node:constants";
 import {AppUserStore} from "../../modules/stores/UserStore";
 import {App} from "../../App";
 import {data} from "autoprefixer";
-import {setCursorAtNodePosition} from "../../modules/utils";
-import {AppNotesStore} from "../../modules/stores/NotesStore";
+import {setCursorAtNodePosition, truncate} from "../../modules/utils";
+import {AppNotesStore, NotesActions} from "../../modules/stores/NotesStore";
 import {AppNoteRequests} from "../../modules/api";
+import {AppDispatcher} from "../../modules/dispatcher";
 
 interface EditorPlugin {
     pluginName: string;
@@ -594,6 +595,86 @@ export const defaultPlugins: EditorPlugin[] = [
         insertNode: (innerContent) => {
             document.execCommand('italic', false, null);
             return null;
+        }
+    },
+    {
+        pluginName: 'span',
+        type: "inline",
+        content: "inline",
+        checkPlugin: (node: Node) => {
+            return node.nodeType === node.ELEMENT_NODE && (node as HTMLElement).tagName === 'SPAN'
+        },
+        toJson: (node: Node) => {
+            const children: PluginProps[] = [];
+            (node as HTMLElement).childNodes.forEach(child => {
+                children.push(toJson(child));
+            })
+            return {
+                pluginName: 'span',
+                children: children
+            };
+        },
+        fromJson: (props: PluginProps) => {
+            const children: Node[] = [];
+            props.children.forEach(value => {
+                children.push(fromJson(value));
+            });
+            const div = document.createElement('span');
+            children.forEach(child => {
+                div.append(child);
+            })
+            return div;
+        },
+        insertNode: undefined,
+        onInsert: (node: Node) => {
+            const first = node.firstChild;
+            (node as HTMLElement).replaceWith(first);
+            document.getSelection().setPosition(first, 1);
+        }
+    },
+    {
+        pluginName: "file",
+        type: "block",
+        content: "none",
+        checkPlugin: (node: Node) => {
+            return node.nodeType === node.ELEMENT_NODE &&
+                (node as HTMLElement).tagName === "BUTTON" &&
+                'fileid' in (node as HTMLElement).dataset &&
+                'filename' in (node as HTMLElement).dataset;
+        },
+        toJson: (node: Node) => {
+            return {
+                pluginName: 'file',
+                fileId: (node as HTMLImageElement).dataset.fleid,
+                fileName: (node as HTMLImageElement).dataset.flename
+            }
+        },
+        fromJson: (props: PluginProps) => {
+            const btn = document.createElement('button');
+            btn.contentEditable = 'false';
+
+            btn.dataset.fileid = props['fileId'] as string;
+            btn.dataset.filename = props['fileName'] as string;
+
+            btn.innerHTML = truncate(props['fileName'] as string, 18);
+
+            btn.onclick = () => {
+                AppNoteRequests.GetFile(props['fileId'] as string, props['fileName'] as string, AppUserStore.state.JWT, AppUserStore.state.csrf).then()
+            }
+            return btn;
+        },
+        insertNode: (innerContent, ...args) => {
+            const btn = document.createElement('button');
+            btn.contentEditable = 'false';
+            btn.dataset.fileid = args[0][0];
+            btn.dataset.filename = args[0][1];
+
+            btn.innerHTML = truncate(args[0][1] as string, 18);
+
+            btn.onclick = () => {
+                AppNoteRequests.GetFile(args[0][0] as string, args[0][1] as string, AppUserStore.state.JWT, AppUserStore.state.csrf).then()
+            }
+            return btn;
         }
     }
 ]
