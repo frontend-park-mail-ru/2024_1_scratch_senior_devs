@@ -198,6 +198,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
             let updatedNote = this.state.selectedNote
             updatedNote.data = decode(data.message_info)
 
+            console.log(this.state.selectedNote)
+            console.log(updatedNote.data.content == this.state.selectedNote.content)
+
             console.log("Updated note ", updatedNote);
 
             this.SetState(state => ({
@@ -459,9 +462,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     addCollaborator = async ({note_id, username}) => {
-        
         try {
-
             const {status, csrf} = await AppNoteRequests.AddCollaborator(note_id, username, AppUserStore.state.JWT, AppUserStore.state.csrf)
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);

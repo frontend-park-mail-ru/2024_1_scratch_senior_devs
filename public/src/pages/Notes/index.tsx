@@ -53,8 +53,6 @@ export class NotesPage extends ScReact.Component<any, any> {
     }
 
     updateNotesTitles = () => {
-        console.log("updateNotesTitles")
-
         setTimeout(()=> {
             const notes = AppNotesStore.state.notes;
             notes.forEach((note, index) => {
@@ -85,7 +83,6 @@ export class NotesPage extends ScReact.Component<any, any> {
 
             if (store.selectedNote != undefined) {
                 document.title = parseNoteTitle(store.selectedNote.data.title);
-
                 this.state.selectedNote && this.updatePreviewNoteTitle(store.selectedNote.data.title)
             }
 
