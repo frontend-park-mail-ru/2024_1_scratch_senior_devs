@@ -8,7 +8,7 @@ import {Button} from '../../components/Button/Button';
 import {Img} from '../../components/Image/Image';
 import {AppNoteStore} from '../../modules/stores/NoteStore';
 import {Loader} from '../../components/Loader/Loader';
-import {scrollToTop, truncate} from '../../modules/utils';
+import {parseNoteTitle, scrollToTop, truncate} from '../../modules/utils';
 import {Note} from "../../components/Note/Note";
 import {TagsFilter} from "../../components/TagsFilter/TagsFilter";
 
@@ -53,13 +53,10 @@ export class NotesPage extends ScReact.Component<any, any> {
     }
 
     updateNotesTitles = () => {
-        
-
         setTimeout(()=> {
             const notes = AppNotesStore.state.notes;
             notes.forEach((note, index) => {
                 if (note.id == this.state.selectedNote?.id) {
-                    
                     notes[index].data.title = AppNoteStore.state.note.title == "" ? "Пустая заметка" : AppNoteStore.state.note.title;
                     notes[index].update_time = new Date()
                 }
@@ -85,7 +82,8 @@ export class NotesPage extends ScReact.Component<any, any> {
             }
 
             if (store.selectedNote != undefined) {
-                document.title = store.selectedNote.data.title ? store.selectedNote.data.title : "Пустая заметка";
+                document.title = parseNoteTitle(store.selectedNote.data.title);
+                this.updateNotesTitles()
             }
 
             return {
