@@ -177,9 +177,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     selectNote (note:NoteType) {
-        console.log("selectNote")
-        console.log(note)
-
         this.SetState(state => ({
             ...state,
             selectedNote: note,
@@ -188,24 +185,13 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
         this.ws = new WebSocketConnection(`note/${note.id}/subscribe_on_updates`)
 
-
-
         this.ws.onMessage((event) => {
-            console.log("socket.onmessage")
-
             let data = JSON.parse(event.data)
-
             if (data.username == AppUserStore.state.username) {
                 return
             }
 
             const noteData = decode(data.message_info) as NoteDataType
-
-            console.log(this.state.selectedNote.data.content)
-            console.log(noteData.content)
-
-            console.log(JSON.stringify(noteData.content) == JSON.stringify(this.state.selectedNote.data.content))
-
             if (JSON.stringify(noteData) == JSON.stringify(this.state.selectedNote.data)) {
                 return
             }
@@ -213,20 +199,11 @@ class NotesStore extends BaseStore<NotesStoreState> {
             const updatedNote = this.state.selectedNote
             updatedNote.data = noteData
 
-            console.log("Updated note ", updatedNote);
-
             this.SetState(state => ({
                 ...state,
                 selectedNote: updatedNote
             }));
         })
-
-        // TODO: пробегаться не по блокам а по children
-        // note.data.content.forEach(async (item) => {
-        //     if (item.type == "note" && item.attributes) {
-        //         await this.fetchSubNote(item.attributes.note.id, item.id)
-        //     }
-        // })
     }
 
     async openNote(id:string) {
@@ -430,7 +407,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     async downloadFile({id, name}) {
-        await AppNoteRequests.GetFile(id, name, AppUserStore.state.JWT, AppUserStore.state.csrf);
+        await AppNoteRequests.DownloadFile(id, name, AppUserStore.state.JWT, AppUserStore.state.csrf);
     }
 
     startFetching() {

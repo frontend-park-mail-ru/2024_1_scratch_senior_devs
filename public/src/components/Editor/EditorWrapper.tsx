@@ -5,7 +5,7 @@ import {Editor} from "./Editor";
 import {Dropdown} from "../Dropdown/Dropdown";
 import {AppNoteStore, NoteStoreState} from "../../modules/stores/NoteStore";
 import {Tippy} from "../Tippy/Tippy";
-import YoutubeDialog, {YoutubeDialogForm} from "../YoutubeDialog/YoutubeDialog";
+import {YoutubeDialogForm} from "../YoutubeDialog/YoutubeDialog";
 import {Modal} from "../Modal/Modal";
 
 type EditorState = {

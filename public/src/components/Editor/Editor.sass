@@ -45,13 +45,54 @@
 			color: $text-secondary-color
 			cursor: text
 
-	.note-editor__body
-		display: flex
-		flex-direction: column
-		position: relative
+	.note-body
+		.attach-wrapper
+			display: flex
+			justify-content: flex-start
+			outline: none
+			border: none
+			background: transparent
+			padding: 0
 
-		div[cursor]
-			color: red
+			.attach-container
+				background: $modal-background
+				padding: 8px 64px 8px 16px
+				border-radius: 16px
+				display: flex
+				align-items: center
+				gap: 10px
+				text-decoration: none
+				position: relative
+				cursor: pointer
+				transition: 0.2s ease
+
+				&:hover
+					opacity: 0.9
+
+				.file-extension-label
+					background: #546189
+					color: #fff
+					border-radius: 8px
+					height: 40px
+					padding: 4px
+					display: flex
+					justify-content: center
+					align-items: center
+
+				.file-name
+					color: $text-main-color
+
+				.close-attach-btn-container
+					background: #546189
+					padding: 8px
+					border-radius: 50%
+					position: absolute
+					right: 15px
+
+					.close-attach-btn
+						filter: invert(80%)
+						width: 20px
+						height: 20px
 
 		.placeholder
 			color: $text-secondary-color
@@ -60,9 +101,3 @@
 			left: 30px
 			font-size: 28px
 			font-weight: bold
-
-		.drag-area
-			height: 5px
-
-			&.active
-				background: blue

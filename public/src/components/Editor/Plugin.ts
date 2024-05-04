@@ -650,31 +650,10 @@ export const defaultPlugins: EditorPlugin[] = [
             }
         },
         fromJson: (props: PluginProps) => {
-            const btn = document.createElement('button');
-            btn.contentEditable = 'false';
-
-            btn.dataset.fileid = props['fileId'] as string;
-            btn.dataset.filename = props['fileName'] as string;
-
-            btn.innerHTML = truncate(props['fileName'] as string, 18);
-
-            btn.onclick = () => {
-                AppNoteRequests.GetFile(props['fileId'] as string, props['fileName'] as string, AppUserStore.state.JWT, AppUserStore.state.csrf).then()
-            }
-            return btn;
+            return RenderAttach(props['fileName'],  props['fileId']);
         },
         insertNode: (innerContent, ...args) => {
-            const btn = document.createElement('button');
-            btn.contentEditable = 'false';
-            btn.dataset.fileid = args[0][0];
-            btn.dataset.filename = args[0][1];
-
-            btn.innerHTML = truncate(args[0][1] as string, 18);
-
-            btn.onclick = () => {
-                AppNoteRequests.GetFile(args[0][0] as string, args[0][1] as string, AppUserStore.state.JWT, AppUserStore.state.csrf).then()
-            }
-            return btn;
+            return RenderAttach(args[0][1],  args[0][0]);
         }
     },
     {
@@ -911,4 +890,51 @@ document.onselectionchange = () => {
 interface TextProps extends PluginProps {
     pluginName: "text" | "textBlock"
     content: string
+}
+
+const RenderAttach = (attach_filename, attach_id) => {
+    const attachWrapper = document.createElement('button');
+    attachWrapper.className = "attach-wrapper"
+    attachWrapper.contentEditable = 'false';
+    attachWrapper.dataset.fileid = attach_id; // id аттача
+    attachWrapper.dataset.filename = attach_filename; // название аттачи
+
+    const attachContainer = document.createElement("div")
+    attachContainer.className = "attach-container"
+
+    const fileExtensionLabel = document.createElement("div")
+    fileExtensionLabel.className = "file-extension-label"
+    fileExtensionLabel.innerHTML = attach_filename.split('.').at(-1)
+
+    const fileName = document.createElement("span")
+    fileName.className = "file-name"
+    fileName.innerHTML = truncate(attach_filename, 18)
+
+    attachContainer.appendChild(fileExtensionLabel)
+    attachContainer.appendChild(fileName)
+
+    const closeAttachBtnContainer = document.createElement("div")
+    closeAttachBtnContainer.className = "close-attach-btn-container"
+
+    const closeBtn = document.createElement("img")
+    closeBtn.src = "./src/assets/close.svg"
+    closeBtn.className = "close-attach-btn"
+
+    closeBtn.onclick = (e) => {
+        // TODO: удалять аттач
+        e.stopPropagation()
+        console.log("delete attach")
+    }
+
+    closeAttachBtnContainer.appendChild(closeBtn)
+
+    attachContainer.appendChild(closeAttachBtnContainer)
+
+    attachWrapper.appendChild(attachContainer)
+
+    attachWrapper.onclick = () => {
+        AppNoteRequests.DownloadFile(attach_id as string, attach_filename, AppUserStore.state.JWT, AppUserStore.state.csrf).then()
+    }
+
+    return attachWrapper;
 }

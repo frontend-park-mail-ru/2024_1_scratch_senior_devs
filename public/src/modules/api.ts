@@ -386,9 +386,6 @@ class NoteRequests {
     };
 
     AddSubNote = async (id:string, jwt:string, csrf:string) => {
-        
-        
-
         const response = await Ajax.Post(this.baseUrl + '/' + id + "/add_subnote", {
             headers: {
                 'Authorization': jwt,
@@ -466,7 +463,7 @@ class NoteRequests {
         return URL.createObjectURL(blob);
     };
 
-    GetFile = async (id:string, fileName:string, jwt:string, csrf:string) => {
+    DownloadFile = async (id:string, fileName:string, jwt:string, csrf:string) => {
         const options: RequestInit = {
             method: RequestMethods.GET,
             mode: 'cors',
