@@ -498,17 +498,57 @@ class NoteRequests {
             }
         });
 
-        
-
         return {
             status: response.status,
             csrf: response.headers['x-csrf-token']
         }
     }
-    //
-    // SubscribeToUpdates = async (id:string) => {
-    //     const response = await Ajax.Get(this.baseUrl + "/" + id + "/")
-    // }
+
+    AddTag = async (note_id: string, tag: string,  jwt:string, csrf:string)=> {
+        const response = await Ajax.Post(this.baseUrl + '/' + note_id + '/add_tag/', {
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            },
+            body: {
+                "tag_name": tag
+            }
+        });
+
+        console.log(response.body)
+
+        if (response.status == 200) {
+            response.body.data = decode(response.body.data)
+        }
+
+        return {
+            note: response.body,
+            status: response.status,
+            csrf: response.headers['x-csrf-token']
+        }
+    }
+
+    RemoveTag = async (note_id: string, tag: string,  jwt:string, csrf:string)=> {
+        const response = await Ajax.Post(this.baseUrl + '/' + note_id + '/delete_tag/', {
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            },
+            body: {
+                "tag_name": tag
+            }
+        });
+
+        if (response.status == 200) {
+            response.body.data = decode(response.body.data)
+        }
+
+        return {
+            note: response.body,
+            status: response.status,
+            csrf: response.headers['x-csrf-token']
+        }
+    }
 }
 
 export const AppAuthRequests = new AuthRequests();

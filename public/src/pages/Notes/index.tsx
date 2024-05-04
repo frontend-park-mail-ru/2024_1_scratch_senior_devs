@@ -6,7 +6,7 @@ import {AppNotesStore, NotesActions, NotesStoreState} from '../../modules/stores
 import {AppDispatcher} from '../../modules/dispatcher';
 import {Button} from '../../components/Button/Button';
 import {Img} from '../../components/Image/Image';
-import {AppNoteStore, NoteStoreActions} from '../../modules/stores/NoteStore';
+import {AppNoteStore} from '../../modules/stores/NoteStore';
 import {Loader} from '../../components/Loader/Loader';
 import {scrollToTop, truncate} from '../../modules/utils';
 import {Note} from "../../components/Note/Note";
@@ -16,7 +16,6 @@ export class NotesPage extends ScReact.Component<any, any> {
     state = {
         notes: [],
         selectedNote: undefined,
-        selectedNoteTags: [],
         tags: ["Работа", "ВУЗ", "Технопарк", "Учеба", "Зал", "Дача", "Кино", "Спортзал", "Офис", "Сериалы", "Работа", "ВУЗ", "Технопарк", "Учеба", "Зал", "Дача", "Кино", "Спортзал", "Офис", "Сериалы"],
         selectedTags: [],
         editorOpen: false,
@@ -92,7 +91,6 @@ export class NotesPage extends ScReact.Component<any, any> {
             return {
                 ...state,
                 selectedNote: store.selectedNote,
-                selectedNoteTags: store.selectedNoteTags,
                 editorOpen: store.selectedNote != undefined,
                 notes: store.notes,
                 fetching: store.fetching
@@ -214,8 +212,7 @@ export class NotesPage extends ScReact.Component<any, any> {
                         {
                             this.state.notes.length > 0 ?
                                 this.state.notes.map(note => (
-                                    <Note selected={this.state.selectedNote?.id == note.id} note={note}
-                                          tags={this.state.selectedNoteTags.length > 0 ? this.state.selectedNoteTags : ["Учеба", "Работа", "ВУЗ"]}/>
+                                    <Note selected={this.state.selectedNote?.id == note.id} note={note}/>
                                 ))
                                 :
                                 !this.state.fetching ?

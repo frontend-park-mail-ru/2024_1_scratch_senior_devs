@@ -62,8 +62,6 @@ export class NoteEditor extends ScReact.Component<any, any> {
             selectedNote: store.selectedNote
         }));
 
-        
-
         if (this.state.selectedNote) {
             AppDispatcher.dispatch(NoteStoreActions.SET_NOTE, {
                 title: this.state.selectedNote.data.title,
@@ -139,7 +137,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
                             <span className="back-label">Заметки</span>
                         </div>
                         <div className={isSubNote ? "hidden" : ""}>
-                            <TagList onAddTag={this.props.onAddTag}/>
+                            <TagList tags={this.state.selectedNote?.tags} />
                         </div>
                     </div>
                     <div className="right-container">
@@ -148,9 +146,9 @@ export class NoteEditor extends ScReact.Component<any, any> {
                             <Tooltip icon="check.svg" label="Сохранено"/>
                         </div>
 
-                        <div className={isSubNote ? "hidden" : ""}>
-                            <Tooltip label="В избранное" icon={this.state.favourite ? "star-filled.svg" : "star.svg"} onClick={this.addToFavoriteBtn}/>
-                        </div>
+                        {/*<div className={isSubNote ? "hidden" : ""}>*/}
+                        {/*    <Tooltip label="В избранное" icon={this.state.favourite ? "star-filled.svg" : "star.svg"} onClick={this.addToFavoriteBtn}/>*/}
+                        {/*</div>*/}
 
                         <div className={!isSubNote ? "hidden" : ""}>
                             <Tooltip label="Вернуться" icon="arrow-up.svg" onClick={this.openParentNote}/>

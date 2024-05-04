@@ -6,14 +6,13 @@ import {AppNotesStore, NotesActions, NotesStoreState} from "../../modules/stores
 import {AppDispatcher} from "../../modules/dispatcher";
 
 type TagListState = {
-    tags: string[],
+    selectedTag: string | null,
     value: string,
     open: boolean
 }
 
 export class TagList extends ScReact.Component<any, TagListState> {
     state = {
-        tags: [],
         selectedTag: null,
         value: "",
         open: false
@@ -27,15 +26,6 @@ export class TagList extends ScReact.Component<any, TagListState> {
 
     componentDidMount() {
         document.addEventListener('click', this.handleClickOutside, false);
-
-        this.setState(state => {
-            return {
-                ...state,
-                tags: AppNotesStore.state.selectedNoteTags
-            };
-        });
-
-        AppNotesStore.SubscribeToStore(this.updateState)
     }
 
     componentWillUnmount() {
@@ -47,17 +37,6 @@ export class TagList extends ScReact.Component<any, TagListState> {
             // this.toggleOpen();
         }
     }
-
-    updateState = (store:NotesStoreState) => {
-        
-        
-        this.setState(state => {
-            return {
-                ...state,
-                tags: store.selectedNoteTags
-            };
-        });
-    };
 
     setValue = (e) => {
         this.setState(state => ({
@@ -78,7 +57,7 @@ export class TagList extends ScReact.Component<any, TagListState> {
                 if (!this.state.value) {
                     this.setState(state => ({
                         ...state,
-                        selectedTag: this.state.tags.at(-1)
+                        selectedTag: this.props.tags.at(-1)
                     }))
                 }
             }
@@ -103,15 +82,12 @@ export class TagList extends ScReact.Component<any, TagListState> {
                 return
             }
 
-            if (this.state.tags.includes(this.state.value)) {
+            if (this.props.tags.includes(this.state.value)) {
                 AppToasts.error(`Такой тэг уже существует`)
                 return
             }
 
-            AppDispatcher.dispatch(NotesActions.CREATE_TAG, {
-                note: AppNotesStore.state.selectedNote,
-                tag: this.state.value
-            })
+            AppDispatcher.dispatch(NotesActions.CREATE_TAG, this.state.value)
 
             this.setState(state => ({
                 ...state,
@@ -132,6 +108,12 @@ export class TagList extends ScReact.Component<any, TagListState> {
     }
 
     render() {
+        if (!this.props.tags) {
+            return (
+                <div></div>
+            )
+        }
+
         return (
             <div className={"tag-list " + (this.state.open ? "open" : "")}>
 
@@ -144,7 +126,7 @@ export class TagList extends ScReact.Component<any, TagListState> {
 
                     <div className="tag-items">
 
-                        {this.state.tags.map(tag => (
+                        {this.props.tags.map(tag => (
                             <div className={"tag-item " + (this.state.selectedTag == tag ? "selected" : "")}>
                                 <span>{tag}</span>
                                 <Img src="delete.svg" className="delete-tag-btn" onClick={() => this.deleteTag(tag)}/>

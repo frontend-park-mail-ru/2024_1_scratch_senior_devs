@@ -10,8 +10,7 @@ import {isDebug} from "../../utils/consts";
 export type NotesStoreState = {
     notes: NoteType[],
     selectedNote: NoteType,
-    selectedNoteChildren: any[],
-    selectedNoteTags: any[],
+    selectedNoteChildren: any[]
     query: string,
     offset: number,
     count: number,
@@ -23,7 +22,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
         notes: [],
         selectedNote: undefined,
         selectedNoteChildren: [],
-        selectedNoteTags: [],
         query: '',
         offset: 0,
         count: 10,
@@ -36,26 +34,19 @@ class NotesStore extends BaseStore<NotesStoreState> {
         this.registerEvents();
 
         window.addEventListener("storage", e => {
-            console.log("storage.change123")
-            console.log(e.key)
-
             if (e.key == "selectedNote") {
-                console.log("storage.change")
-
                 let note = JSON.parse(localStorage.getItem("selectedNote"))
-                console.log(note)
 
                 if (note && this.state.selectedNote && this.state.selectedNote.id == note.id) {
-                    console.log("sync note")
-                    const test = this.state.selectedNote
-                    test.data = {
+                    const updatedNote = this.state.selectedNote
+                    updatedNote.data = {
                         title: note.note.title,
                         content: note.note.blocks
                     }
-                    console.log(test)
+
                     this.SetState(state => ({
                         ...state,
-                        selectedNote: test
+                        selectedNote: updatedNote
                     }))
                 }
             }
@@ -182,11 +173,13 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     selectNote (note:NoteType) {
+        console.log("selectNote")
+        console.log(note)
+
         this.SetState(state => ({
             ...state,
             selectedNote: note,
-            selectedNoteChildren: note.children,
-            selectedNoteTags: ["Работа", "Учеба", "Технопарк", "ВУЗ"] // TODO
+            selectedNoteChildren: note.children
         }));
 
         const baseUrl = isDebug ? 'ws://localhost:8080/api/' : 'wss://you-note.ru/api/';
@@ -197,6 +190,10 @@ class NotesStore extends BaseStore<NotesStoreState> {
             // TODO: не обновлять заметку если отредачил ее сам
 
             let data = JSON.parse(event.data)
+
+            if (data.username == AppUserStore.state.username) {
+                return
+            }
 
             let updatedNote = this.state.selectedNote
             updatedNote.data = decode(data.message_info)
@@ -429,20 +426,34 @@ class NotesStore extends BaseStore<NotesStoreState> {
         }));
     }
 
-    createTag(data) {
-        this.SetState(state => ({
-            ...state,
-            selectedNoteTags: [...state.selectedNoteTags, data.tag]
-        }))
+    async createTag(tag:string) {
+        console.log("createTag")
+        console.log(tag)
 
-       //  this.state.selectedNoteTags =  [...this.state.selectedNoteTags, data.tag]
+        const {note, status, csrf} = await AppNoteRequests.AddTag(this.state.selectedNote.id, tag, AppUserStore.state.JWT, AppUserStore.state.csrf)
+
+        console.log(status)
+        console.log(note)
+        console.log(this.state.selectedNote)
+
+        AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+
+        // this.SetState(state => ({
+        //     ...state,
+        //     selectedNote: note
+        // }))
     }
 
-    removeTag(tag) {
-        this.SetState(state => ({
-            ...state,
-            selectedNoteTags: state.selectedNoteTags.filter(t => t != tag)
-        }))
+    async removeTag(tag:string) {
+        console.log("removeTag")
+        console.log(tag)
+
+        const {note, status, csrf} = AppNoteRequests.RemoveTag(this.state.selectedNote.id, tag, AppUserStore.state.JWT, AppUserStore.state.csrf)
+
+        // this.SetState(state => ({
+        //     ...state,
+        //     selectedNote: note
+        // }))
     }
 
     addCollaborator = async ({note_id, username}) => {
