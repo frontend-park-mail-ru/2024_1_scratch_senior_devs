@@ -30,6 +30,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
         noteNotFound: false
     };
 
+    private ws
+
     constructor() {
         super();
         this.registerEvents();
@@ -135,6 +137,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
             ...state,
             selectedNote: undefined
         }));
+
+        this.ws.close()
     }
 
     async fetchNote (id:string) {
@@ -183,9 +187,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
             selectedNoteChildren: note.children
         }));
 
-        let socket = new WebSocketConnection(`note/${note.id}/subscribe_on_updates`)
+        this.ws = new WebSocketConnection(`note/${note.id}/subscribe_on_updates`)
 
-        socket.onMessage = (event) => {
+        this.ws.onMessage = (event) => {
             console.log("socket.onmessage")
 
             let data = JSON.parse(event.data)

@@ -9,10 +9,10 @@ export class WebSocketConnection {
 
     constructor(url:string) {
         this.url = url;
-        this.socket = new WebSocket(baseUrl + url);
+        console.log(baseUrl)
+        this.socket = new WebSocket(baseUrl + url,[AppUserStore.state.JWT.split(" ").at(-1)]);
         this.socket.onmessage = this.onMessage.bind(this);
         this.socket.onerror = this.onError.bind(this);
-        this.socket.onclose = this.onClose.bind(this);
     }
 
     close() {
@@ -33,13 +33,6 @@ export class WebSocketConnection {
 
     onError(event) {
         console.log('WebSocket error:', event);
-    }
-
-    onClose(event) {
-        console.log('WebSocket connection closed:', event);
-        setTimeout(() => {
-            this.socket = new WebSocket(this.url);
-        }, 5000);
     }
 
     sendMessage(message) {
