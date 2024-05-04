@@ -9,7 +9,7 @@ export class WebSocketConnection {
 
     constructor(url:string) {
         this.url = url;
-        this.socket = new WebSocket(url);
+        this.socket = new WebSocket(baseUrl + url);
         this.socket.onmessage = this.onMessage.bind(this);
         this.socket.onerror = this.onError.bind(this);
         this.socket.onclose = this.onClose.bind(this);
