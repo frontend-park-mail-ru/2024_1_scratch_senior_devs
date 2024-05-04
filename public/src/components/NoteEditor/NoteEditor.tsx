@@ -143,7 +143,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
                             <span className="back-label">Заметки</span>
                         </div>
                         <div className={isSubNote ? "hidden" : ""}>
-                            <TagList tags={this.state.selectedNote?.tags} />
+                            {isOwner ? <TagList tags={this.state.selectedNote?.tags} /> : ""}
                         </div>
                     </div>
                     <div className="right-container">
@@ -160,7 +160,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
                             <Tooltip label="Вернуться" icon="arrow-up.svg" onClick={this.openParentNote}/>
                         </div>
 
-                        <NoteMenu deleteNote={this.openDeleteNoteModal} inviteUser={this.openInviteUserModal}/>
+                        {isOwner ? <NoteMenu deleteNote={this.openDeleteNoteModal} inviteUser={this.openInviteUserModal}/> : "" }
 
                         <div className="close-editor-btn-container" onclick={this.closeEditor}>
                             <Img src="close.svg" className="icon close-editor-icon"/>
