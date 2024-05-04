@@ -9,10 +9,7 @@ export class WebSocketConnection {
 
     constructor(url:string) {
         this.url = url;
-        console.log(baseUrl)
         this.socket = new WebSocket(baseUrl + url,[AppUserStore.state.JWT.split(" ").at(-1)]);
-        this.socket.onmessage = this.onMessage.bind(this);
-        this.socket.onerror = this.onError.bind(this);
     }
 
     close() {
@@ -27,19 +24,13 @@ export class WebSocketConnection {
         this.socket = new WebSocket(baseUrl + url,[AppUserStore.state.JWT.split(" ").at(-1)]);
     }
 
-    onMessage(event) {
-        console.log('WebSocket message received:', event.data);
-    }
-
-    onError(event) {
-        console.log('WebSocket error:', event);
+    onMessage(callback) {
+        this.socket.onmessage = callback;
     }
 
     sendMessage(message) {
         if (this.socket.readyState === WebSocket.OPEN) {
             this.socket.send(message);
-        } else {
-            console.log('WebSocket connection is not open. Cannot send message.');
         }
     }
 }

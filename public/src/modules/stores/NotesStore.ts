@@ -5,7 +5,6 @@ import {AppDispatcher} from '../dispatcher';
 import {AppToasts} from '../toasts';
 import {NoteDataType, NoteType} from "../../utils/types";
 import {decode, parseNoteTitle} from "../utils";
-import {isDebug} from "../../utils/consts";
 import {WebSocketConnection} from "../websocket";
 
 export type NotesStoreState = {
@@ -199,8 +198,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
             }
 
             const noteData = decode(data.message_info) as NoteDataType
-
-            console.log(noteData)
 
             console.log(this.state.selectedNote.data.content)
             console.log(noteData.content)
