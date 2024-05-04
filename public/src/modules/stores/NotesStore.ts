@@ -195,19 +195,24 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 return
             }
 
-            console.log(this.state.selectedNote.data.content)
-            console.log(decode(data.message_info).content)
-            console.log(JSON.stringify(decode(data.message_info).content) == JSON.stringify(this.state.selectedNote.data.content))
+            const note = decode(data.message_info) as NoteType
 
-            const updatedNote = this.state.selectedNote
-            updatedNote.data = decode(data.message_info)
+            console.log(note)
 
-            console.log("Updated note ", updatedNote);
-
-            this.SetState(state => ({
-                ...state,
-                selectedNote: updatedNote
-            }));
+            // console.log(this.state.selectedNote.data.content)
+            // console.log(note.content)
+            //
+            // JSON.stringify(decode(data.message_info).content) == JSON.stringify(this.state.selectedNote.data.content))
+            //
+            // const updatedNote = this.state.selectedNote
+            // updatedNote.data = decode(data.message_info)
+            //
+            // console.log("Updated note ", updatedNote);
+            //
+            // this.SetState(state => ({
+            //     ...state,
+            //     selectedNote: updatedNote
+            // }));
         }
 
         // TODO: пробегаться не по блокам а по children
