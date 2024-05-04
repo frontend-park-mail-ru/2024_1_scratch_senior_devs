@@ -199,7 +199,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             updatedNote.data = decode(data.message_info)
 
             console.log(this.state.selectedNote)
-            console.log(updatedNote.data.content == this.state.selectedNote.content)
+            console.log(JSON.stringify(updatedNote.data.content) == JSON.stringify(this.state.selectedNote.content))
 
             console.log("Updated note ", updatedNote);
 
