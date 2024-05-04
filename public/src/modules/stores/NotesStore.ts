@@ -5,7 +5,6 @@ import {AppDispatcher} from '../dispatcher';
 import {AppToasts} from '../toasts';
 import {NoteDataType, NoteType} from "../../utils/types";
 import {decode, parseNoteTitle} from "../utils";
-import {isDebug} from "../../utils/consts";
 import {WebSocketConnection} from "../websocket";
 
 export type NotesStoreState = {
@@ -138,7 +137,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             selectedNote: undefined
         }));
 
-        this.ws.close()
+        this.ws?.close()
     }
 
     async fetchNote (id:string) {
@@ -187,40 +186,38 @@ class NotesStore extends BaseStore<NotesStoreState> {
             selectedNoteChildren: note.children
         }));
 
-        this.ws = new WebSocketConnection(`note/${note.id}/subscribe_on_updates`)
-
-        this.ws.onMessage = (event) => {
-            console.log("socket.onmessage")
-
-            let data = JSON.parse(event.data)
-
-            if (data.username == AppUserStore.state.username) {
-                return
-            }
-
-            const noteData = decode(data.message_info) as NoteDataType
-
-            console.log(noteData)
-
-            console.log(this.state.selectedNote.data.content)
-            console.log(noteData.content)
-
-            console.log(JSON.stringify(noteData.content) == JSON.stringify(this.state.selectedNote.data.content))
-
-            if (JSON.stringify(noteData) == JSON.stringify(this.state.selectedNote.data)) {
-                return
-            }
-
-            const updatedNote = this.state.selectedNote
-            updatedNote.data = noteData
-
-            console.log("Updated note ", updatedNote);
-
-            this.SetState(state => ({
-                ...state,
-                selectedNote: updatedNote
-            }));
-        }
+        // this.ws = new WebSocketConnection(`note/${note.id}/subscribe_on_updates`)
+        //
+        // this.ws.onMessage = (event) => {
+        //     console.log("socket.onmessage")
+        //
+        //     let data = JSON.parse(event.data)
+        //
+        //     if (data.username == AppUserStore.state.username) {
+        //         return
+        //     }
+        //
+        //     const noteData = decode(data.message_info) as NoteDataType
+        //
+        //     console.log(this.state.selectedNote.data.content)
+        //     console.log(noteData.content)
+        //
+        //     console.log(JSON.stringify(noteData.content) == JSON.stringify(this.state.selectedNote.data.content))
+        //
+        //     if (JSON.stringify(noteData) == JSON.stringify(this.state.selectedNote.data)) {
+        //         return
+        //     }
+        //
+        //     const updatedNote = this.state.selectedNote
+        //     updatedNote.data = noteData
+        //
+        //     console.log("Updated note ", updatedNote);
+        //
+        //     this.SetState(state => ({
+        //         ...state,
+        //         selectedNote: updatedNote
+        //     }));
+        // }
 
         // TODO: пробегаться не по блокам а по children
         // note.data.content.forEach(async (item) => {
