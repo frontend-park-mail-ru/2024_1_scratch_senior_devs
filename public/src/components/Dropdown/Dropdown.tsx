@@ -8,7 +8,7 @@ import {MAX_ATTACH_SIZE} from '../../utils/consts';
 import {AppToasts} from '../../modules/toasts';
 import {insertBlockPlugin} from "../Editor/Plugin";
 import {AppNoteRequests} from "../../modules/api";
-import {AppUserStore} from "../../modules/stores/UserStore";
+import {AppUserStore, UserActions} from "../../modules/stores/UserStore";
 
 export class Dropdown extends ScReact.Component<any, any> {
     state = {
@@ -81,7 +81,8 @@ export class Dropdown extends ScReact.Component<any, any> {
                 const file = (e.target as HTMLInputElement).files[0]
                 if (file.size < MAX_ATTACH_SIZE) {
                     AppNoteRequests.UploadFile(AppNotesStore.state.selectedNote.id, file, AppUserStore.state.JWT, AppUserStore.state.csrf).then(response => {
-                        AppUserStore.state.csrf = response.headers.get('x-csrf-token');
+                        // AppUserStore.state.csrf = response.headers.get('x-csrf-token');
+                        AppDispatcher.dispatch(UserActions.UPDATE_CSRF, response.headers.get('x-csrf-token'))
                         response.json().then(respJson => {
                             insertBlockPlugin('img', respJson.id);
                         })
@@ -117,7 +118,8 @@ export class Dropdown extends ScReact.Component<any, any> {
                     //     fileName: (e.target as HTMLInputElement).files[0].name
                     // });
                     AppNoteRequests.UploadFile(AppNotesStore.state.selectedNote.id, file, AppUserStore.state.JWT, AppUserStore.state.csrf).then(response => {
-                        AppUserStore.state.csrf = response.headers.get('x-csrf-token');
+                        AppDispatcher.dispatch(UserActions.UPDATE_CSRF, response.headers.get('x-csrf-token'))
+                        // AppUserStore.state.csrf = response.headers.get('x-csrf-token');
                         response.json().then(respJson => {
                             console.log('File Name:',file.name);
                             insertBlockPlugin('file', respJson.id, file.name);
@@ -135,8 +137,8 @@ export class Dropdown extends ScReact.Component<any, any> {
 
         } else if (id === "note") {
 
-            AppDispatcher.dispatch(NotesActions.CREATE_SUB_NOTE)
-
+            // AppDispatcher.dispatch(NotesActions.CREATE_SUB_NOTE)
+            //todo:  insertBlockPlugin('subnote', noteid)
         }
 
 

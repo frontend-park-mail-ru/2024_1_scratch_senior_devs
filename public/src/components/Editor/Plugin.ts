@@ -645,8 +645,8 @@ export const defaultPlugins: EditorPlugin[] = [
         toJson: (node: Node) => {
             return {
                 pluginName: 'file',
-                fileId: (node as HTMLImageElement).dataset.fleid,
-                fileName: (node as HTMLImageElement).dataset.flename
+                fileId: (node as HTMLElement).dataset.fileid,
+                fileName: (node as HTMLElement).dataset.filename
             }
         },
         fromJson: (props: PluginProps) => {
@@ -676,7 +676,71 @@ export const defaultPlugins: EditorPlugin[] = [
             }
             return btn;
         }
-    }
+    },
+    {
+        pluginName: "subnote",
+        type: "block",
+        content: "none",
+        checkPlugin: (node: Node) => {
+            return node.nodeType === node.ELEMENT_NODE &&
+                (node as HTMLElement).tagName === "BUTTON" &&
+                'noteid' in (node as HTMLElement).dataset;
+        },
+        toJson: (node: Node) => {
+            return {
+                pluginName: 'subnote',
+                noteId: (node as HTMLImageElement).dataset.fleid
+            }
+        },
+        fromJson: (props: PluginProps) => {
+            const btn = document.createElement('button');
+            btn.contentEditable = 'false';
+
+            btn.dataset.note = props['noteId'] as string;
+
+            btn.onclick = () => {
+                // AppNoteRequests.GetFile(props['fileId'] as string, props['fileName'] as string, AppUserStore.state.JWT, AppUserStore.state.csrf).then()
+            }
+            return btn;
+        },
+        insertNode: (innerContent, ...args) => {
+            const btn = document.createElement('button');
+            btn.contentEditable = 'false';
+            btn.dataset.noteid = args[0][0];
+
+            btn.onclick = () => {
+                // AppNoteRequests.GetFile(args[0][0] as string, args[0][1] as string, AppUserStore.state.JWT, AppUserStore.state.csrf).then()
+            }
+            return btn;
+        }
+    },
+    {
+        pluginName: "youtube",
+        type: "block",
+        content: "none",
+        checkPlugin: (node: Node) => {
+            return node.nodeType === node.ELEMENT_NODE &&
+                (node as HTMLElement).tagName === "IFRAME";
+        },
+        toJson: (node: Node) => {
+            return {
+                pluginName: 'youtube',
+                src: (node as HTMLImageElement).src
+            }
+        },
+        fromJson: (props: PluginProps) => {
+            const img = document.createElement('iframe');
+            img.contentEditable = 'false';
+            img.src = props.src as string;
+            return img;
+        },
+        insertNode: (innerContent, ...args) => {
+            const img = document.createElement('iframe');
+            img.contentEditable = 'false';
+            img.src = args[0];
+            return img;
+        }
+    },
 ]
 
 export const toJson = (node: Node): PluginProps => {
