@@ -529,7 +529,7 @@ class NoteRequests {
     }
 
     RemoveTag = async (note_id: string, tag: string,  jwt:string, csrf:string)=> {
-        const response = await Ajax.Post(this.baseUrl + '/' + note_id + '/delete_tag/', {
+        const response = await Ajax.Delete(this.baseUrl + '/' + note_id + '/delete_tag/', {
             headers: {
                 'Authorization': jwt,
                 'x-csrf-token': csrf
