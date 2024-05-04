@@ -86,7 +86,7 @@ export class NotesPage extends ScReact.Component<any, any> {
             if (store.selectedNote != undefined) {
                 document.title = parseNoteTitle(store.selectedNote.data.title);
 
-                // this.state.selectedNote && this.updatePreviewNoteTitle(store.selectedNote.data.title)
+                this.state.selectedNote && this.updatePreviewNoteTitle(store.selectedNote.data.title)
             }
 
             return {
