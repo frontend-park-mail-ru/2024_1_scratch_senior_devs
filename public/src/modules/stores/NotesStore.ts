@@ -188,7 +188,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
         this.ws = new WebSocketConnection(`note/${note.id}/subscribe_on_updates`)
 
-        this.ws.onMessage = (event) => {
+        this.ws.onMessage((event) => {
             console.log("socket.onmessage")
 
             let data = JSON.parse(event.data)
@@ -217,7 +217,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 ...state,
                 selectedNote: updatedNote
             }));
-        }
+        })
 
         // TODO: пробегаться не по блокам а по children
         // note.data.content.forEach(async (item) => {
