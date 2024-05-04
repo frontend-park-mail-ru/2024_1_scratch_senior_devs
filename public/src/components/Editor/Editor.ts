@@ -60,16 +60,12 @@ export class Editor {
 
         parent.append(this.editable);
 
-
-
         this.observer = new MutationObserver(() => {
             const schema = [];
             this.editable.childNodes.forEach(node => {
                 schema.push(toJson(node));
             })
 
-            // TODO: вызывать callback сохранения заметки
-            //
             console.log(schema)
             onChange(schema)
         });

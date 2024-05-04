@@ -69,7 +69,7 @@ export class EditorWrapper extends Component<any, EditorState> {
 
     syncTitle = (title:string) => {
         console.log("syncTitle")
-        this.noteTitleRef.innerText = title
+        this.noteTitleRef.textContent = title
 
         if (this.noteTitleRef.textContent.length == 0) {
             this.noteTitleRef.dataset.placeholder = 'Введите название';
