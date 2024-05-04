@@ -11,6 +11,7 @@ export type UserStoreState = {
     otpDialogOpen: boolean,
     qr: string,
     qrOpen: boolean,
+    user_id: string,
     username: string,
     avatarUrl: string,
     isAuth: boolean,
@@ -45,8 +46,9 @@ class UserStore extends BaseStore<UserStoreState>{
         otpDialogOpen: false,
         qr: undefined,
         qrOpen: false,
-        username: '',
-        avatarUrl: '',
+        user_id: null,
+        username: null,
+        avatarUrl: null,
         isAuth: undefined,
         errorLoginForm: undefined,
         errorRegisterForm: undefined,
@@ -144,6 +146,7 @@ class UserStore extends BaseStore<UserStoreState>{
                     ...state,
                     JWT: res.headers.authorization,
                     csrf: res.headers['x-csrf-token'],
+                    user_id: res.body.id,
                     username: res.body.username,
                     avatarUrl: res.body.image_path,
                     otpEnabled: res.body.second_factor,
@@ -224,11 +227,11 @@ class UserStore extends BaseStore<UserStoreState>{
         try {
             const res = await AppAuthRequests.SignUp(credentials);
 
-            // TODO
             this.SetState(s => {
                 return {
                     ...s,
                     isAuth: true,
+                    user_id: res.id,
                     username: res.username,
                     avatarUrl: res.image_path,
                     JWT: res.jwt,
@@ -238,25 +241,7 @@ class UserStore extends BaseStore<UserStoreState>{
             localStorage.setItem('Authorization', this.state.JWT);
             this.updateCSRF(this.state.csrf);
             AppRouter.go('/notes');
-
-
-            // this.SetState(s => {
-            //     return {
-            //         ...s,
-            //         isAuth: true,
-            //         username: res.username,
-            //         avatarUrl: res.image_path,
-            //         JWT: res.jwt,
-            //         csrf: res.csrf
-            //     }
-            // })
-            // localStorage.setItem("Authorization", this.state.JWT)
-            // this.updateCSRF(this.state.csrf)
-            // AppRouter.go("/notes")
-
         } catch (err) {
-            
-
             this.SetState(state => ({
                 ...state,
                 errorRegisterForm: 'Этот логин уже занят'
@@ -271,9 +256,12 @@ class UserStore extends BaseStore<UserStoreState>{
         try {
             const res = await AppAuthRequests.CheckUser(this.state.JWT);
 
+            console.log(res)
+
             this.SetState(state => ({
                 ...state,
                 isAuth: true,
+                user_id: res.id,
                 username: res.username,
                 avatarUrl: res.image_path,
                 otpEnabled: res.otp
