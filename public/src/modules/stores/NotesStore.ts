@@ -187,8 +187,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
         let socket = new WebSocket(baseUrl + `note/${note.id}/subscribe_on_updates`, [AppUserStore.state.JWT.split(" ").at(-1)])
 
         socket.onmessage = (event) => {
-            // TODO: не обновлять заметку если отредачил ее сам
-
             let data = JSON.parse(event.data)
 
             if (data.username == AppUserStore.state.username) {
@@ -438,17 +436,19 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
         AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 
-        // this.SetState(state => ({
-        //     ...state,
-        //     selectedNote: note
-        // }))
+        this.SetState(state => ({
+            ...state,
+            selectedNote: note
+        }))
     }
 
     async removeTag(tag:string) {
         console.log("removeTag")
         console.log(tag)
 
-        const {note, status, csrf} = AppNoteRequests.RemoveTag(this.state.selectedNote.id, tag, AppUserStore.state.JWT, AppUserStore.state.csrf)
+        const {note, status, csrf} = await AppNoteRequests.RemoveTag(this.state.selectedNote.id, tag, AppUserStore.state.JWT, AppUserStore.state.csrf)
+
+        AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 
         // this.SetState(state => ({
         //     ...state,
