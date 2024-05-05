@@ -933,6 +933,7 @@ const RenderSubNote = (subNoteId:string) => {
     noteIcon.src = "./src/assets/note.svg"
     noteIcon.className = "subnote-icon"
 
+    // TODO: не рендерить кнопку удаления подзаметки, если юзер не является овнером родительской заметки
     const deleteSubnoteBtnContainer = document.createElement("div")
     deleteSubnoteBtnContainer.className = "delete-subnote-btn-container"
 
@@ -964,6 +965,7 @@ const RenderSubNote = (subNoteId:string) => {
         }
 
         subNoteTitle.innerHTML = parseNoteTitle(result.data.title)
+
     }).catch(() => {
         subNoteTitle.innerHTML = "Заметка не найдена"
         subNoteWrapper.dataset.deleted = "true"

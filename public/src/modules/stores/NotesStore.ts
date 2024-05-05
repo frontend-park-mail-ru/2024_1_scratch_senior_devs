@@ -1,18 +1,17 @@
 import {BaseStore} from './BaseStore';
-import {AppNoteRequests} from '../api';
+import {AppNoteRequests, AppTagRequests} from '../api';
 import {AppUserStore, UserActions} from './UserStore';
 import {AppDispatcher} from '../dispatcher';
 import {AppToasts} from '../toasts';
 import {NoteDataType, NoteType} from "../../utils/types";
 import {decode, parseNoteTitle} from "../utils";
 import {WebSocketConnection} from "../websocket";
-import {AppNoteStore} from "./NoteStore";
 import {insertBlockPlugin} from "../../components/Editor/Plugin";
 
 export type NotesStoreState = {
     notes: NoteType[],
     selectedNote: NoteType,
-    selectedNoteChildren: any[]
+    tags: string[],
     query: string,
     offset: number,
     count: number,
@@ -22,8 +21,9 @@ export type NotesStoreState = {
 class NotesStore extends BaseStore<NotesStoreState> {
     state = {
         notes: [],
+        tags: [],
+        selectedTags: [],
         selectedNote: undefined,
-        selectedNoteChildren: [],
         query: '',
         offset: 0,
         count: 10,
@@ -117,7 +117,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 case NotesActions.ADD_COLLABORATOR:
                     await this.addCollaborator(action.payload)
                     break
-                case NotesActions.GET_TAGS:
+                case NotesActions.FETCH_TAGS:
                     await this.fetchTags()
                     break
             }
@@ -165,36 +165,14 @@ class NotesStore extends BaseStore<NotesStoreState> {
         }
     }
 
-    async fetchSubNote (noteId) {
-        try {
-            const note = await AppNoteRequests.Get(noteId, AppUserStore.state.JWT);
-
-            const data = {
-                id: noteId,
-                title: parseNoteTitle(note.data.title)
-            }
-
-            this.SetState(state => ({
-                ...state,
-                selectedNoteChildren: state.selectedNoteChildren.map(subnote => subnote.id != note.id ? subnote : data)
-            }))
-
-            // this.state.selectedNoteChildren = this.state.selectedNoteChildren.map(subnote => subnote.id != note.id ? subnote : data)
-
-        } catch {
-            this.SetState(state => ({
-                ...state,
-                selectedNoteChildren: state.selectedNoteChildren.filter(note => note.id != noteId)
-            }))
-        }
-    }
-
     selectNote (note:NoteType) {
         this.SetState(state => ({
             ...state,
             selectedNote: note,
             selectedNoteChildren: note.children
         }));
+
+        this.ws?.close()
 
         this.ws = new WebSocketConnection(`note/${note.id}/subscribe_on_updates`)
 
@@ -239,11 +217,13 @@ class NotesStore extends BaseStore<NotesStoreState> {
         return this.state;
     }
 
-    async searchNotes (query:string) {
+    async searchNotes ({query, selectedTags}) {
         this.SetState(state => ({
             ...state,
+            fetching: true,
             notes: [],
             offset: 0,
+            selectedTags: selectedTags,
             query: query
         }));
 
@@ -264,7 +244,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
             const params:Record<string,any> = {
                 title: this.state.query,
                 offset: this.state.offset,
-                count: this.state.count
+                count: this.state.count,
+                tags: this.state.selectedTags.join("|")
             };
 
             let notes:NoteType[] = await AppNoteRequests.GetAll(AppUserStore.state.JWT, params);
@@ -363,15 +344,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 
-            const subNote = {
-                id: subnote_id,
-                title: "Новая заметка"
-            }
-
-            this.state.selectedNoteChildren = [...this.state.selectedNoteChildren, subNote]
-
-            console.log(subnote_id)
-
             insertBlockPlugin('subnote', subnote_id);
 
         } catch (e) {
@@ -389,7 +361,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             if (response.status == 200) {
                 const body = await response.json();
                 const attachId = body.path.split('.')[0];
-                const url = await AppNoteRequests.GetImage(attachId, AppUserStore.state.JWT, AppUserStore.state.csrf);
+                await AppNoteRequests.GetImage(attachId, AppUserStore.state.JWT, AppUserStore.state.csrf);
 
             } else {
                 AppToasts.error('Не удалось загрузить изображение ' + file.name);
@@ -399,7 +371,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
         }
     }
 
-    async fetchImage({blockId, imageId}) {
+    async fetchImage({imageId}) {
         await AppNoteRequests.GetImage(imageId, AppUserStore.state.JWT, AppUserStore.state.csrf);
     }
 
@@ -439,6 +411,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
             ...state,
             selectedNote: note
         }))
+
+        await this.fetchTags()
     }
 
     async removeTag(tag:string) {
@@ -450,6 +424,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
             ...state,
             selectedNote: note
         }))
+
+        await this.fetchTags()
     }
 
     addCollaborator = async ({note_id, username}) => {
@@ -471,8 +447,12 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
     fetchTags = async () => {
         try {
-            const response = await AppNoteRequests.GetTags(AppUserStore.state.JWT)
+            const response = await AppTagRequests.GetAll(AppUserStore.state.JWT)
 
+            this.SetState(state => ({
+                ...state,
+                tags: response.body.tags
+            }))
 
         } catch {
             AppToasts.error("Что-то пошло не так")
@@ -502,7 +482,7 @@ export const NotesActions = {
     CREATE_TAG: "CREATE_TAG",
     REMOVE_TAG: "REMOVE_TAG",
     ADD_COLLABORATOR: "ADD_COLLABORATOR",
-    GET_TAGS: "GET_TAGS"
+    FETCH_TAGS: "FETCH_TAGS"
 };
 
 export const AppNotesStore = new NotesStore();

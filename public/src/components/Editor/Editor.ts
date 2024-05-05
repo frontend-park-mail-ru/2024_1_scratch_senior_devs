@@ -24,6 +24,10 @@ export class Editor {
                 dropdown: {open: (elem: HTMLElement) => void, close: () => void },
                 onChange: (schema: PluginProps[]) => void,
                 tippy: {open: (elem: HTMLElement) => void, close: () => void}) {
+
+        // TODO: при наборе символов в поисковую строку фокусится редактор заметки (отключить)
+
+
         this.dropdownCallbacks = dropdown;
         this.tippyCallbacks = tippy;
         this.addPlugins();

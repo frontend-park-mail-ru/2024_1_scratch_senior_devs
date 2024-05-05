@@ -16,10 +16,11 @@ export class NotesPage extends ScReact.Component<any, any> {
     state = {
         notes: [],
         selectedNote: undefined,
-        tags: ["Работа", "ВУЗ", "Технопарк", "Учеба", "Зал", "Дача", "Кино", "Спортзал", "Офис", "Сериалы", "Работа", "ВУЗ", "Технопарк", "Учеба", "Зал", "Дача", "Кино", "Спортзал", "Офис", "Сериалы"],
+        tags: [],
         selectedTags: [],
         editorOpen: false,
-        fetching: false
+        fetching: false,
+        query: ""
     };
 
     private notesContainerRef
@@ -35,6 +36,7 @@ export class NotesPage extends ScReact.Component<any, any> {
 
         this.setState(state => ({
             ...state,
+            tags: this.props.tags,
             notes: this.props.notes
         }));
 
@@ -92,6 +94,7 @@ export class NotesPage extends ScReact.Component<any, any> {
             return {
                 ...state,
                 selectedNote: store.selectedNote,
+                tags: store.tags,
                 editorOpen: store.selectedNote != undefined,
                 notes: store.notes,
                 fetching: store.fetching
@@ -148,10 +151,6 @@ export class NotesPage extends ScReact.Component<any, any> {
         const lastNote = this.notesContainerRef.lastChild;
         lastNote && observer.observe(lastNote);
     }
-
-    searchNotes = (value:string) => {
-        AppDispatcher.dispatch(NotesActions.SEARCH_NOTES, value);
-    };
 
     createNewNote = () => {
         AppDispatcher.dispatch(NotesActions.CREATE_NEW_NOTE, true);
@@ -216,6 +215,24 @@ export class NotesPage extends ScReact.Component<any, any> {
                 selectedTags: [...state.selectedTags, tag]
             }))
         }
+
+        this.searchNotes()
+    }
+
+    onSearchBarChange = (value:string) => {
+        this.setState(state => ({
+            ...state,
+            query: value
+        }))
+
+        this.searchNotes()
+    }
+
+    searchNotes = () => {
+        AppDispatcher.dispatch(NotesActions.SEARCH_NOTES, {
+            query: this.state.query,
+            selectedTags: this.state.selectedTags
+        })
     }
 
     render() {
@@ -223,7 +240,7 @@ export class NotesPage extends ScReact.Component<any, any> {
             <div className={'notes-page-wrapper ' + (this.state.editorOpen ? 'active' : '')} >
                 <aside>
                     <div className="top-panel">
-                        <SearchBar onStartTyping={this.onSearchBarStartTyping} onChange={this.searchNotes}/>
+                        <SearchBar onStartTyping={this.onSearchBarStartTyping} onChange={this.onSearchBarChange}/>
                         <div className="add-note-btn-container" onclick={this.createNewNote}>
                             <Button label="Новая заметка" className="add-note-btn"/>
                             <div className="add-note-icon-wrapper">
@@ -231,7 +248,7 @@ export class NotesPage extends ScReact.Component<any, any> {
                             </div>
                         </div>
                     </div>
-                    {this.state.tags.length > 0 ? <TagsFilter tags={this.state.tags} selectedTags={this.state.selectedTags} selectTag={this.selectTag}/> : "" }
+                    {this.state.tags.length > 0 ? <TagsFilter tags={this.state.tags} selectedTags={this.state.selectedTags} selectTag={this.selectTag} /> : "" }
                     <div className="notes-container" onclick={this.handleSelectNote} ref={ref => this.notesContainerRef = ref}>
                         <Loader active={this.state.fetching}/>
                         {

@@ -2,7 +2,6 @@ import {AppUserStore, UserStoreState} from '../../modules/stores/UserStore';
 import {AppNotesStore} from '../../modules/stores/NotesStore';
 import {AppRouter} from '../../modules/router';
 import {AppNoteRequests} from '../../modules/api';
-import {AppToasts} from '../../modules/toasts';
 
 export const NotesLoader = async (path:string) => {
     const p = new Promise((resolve, reject) => {
@@ -11,7 +10,7 @@ export const NotesLoader = async (path:string) => {
         if (isAuth !== undefined) {
             if (isAuth) {
                 AppNotesStore.init().then((store) => {
-                    resolve({notes: store.notes});
+                    resolve({notes: store.notes, tags: store.tags});
                 });
             } else {
                 AppRouter.go('/');
@@ -22,8 +21,6 @@ export const NotesLoader = async (path:string) => {
         }
 
         const callback = (state: UserStoreState) => {
-            
-
             isAuth = state.isAuth;
 
             AppUserStore.UnSubscribeToStore(callback);
@@ -33,7 +30,7 @@ export const NotesLoader = async (path:string) => {
                     if (path?.includes('notes/')) {
                         const noteId = window.location.pathname.split('/').at(-1);
                         AppNoteRequests.Get(noteId, AppUserStore.state.JWT).then(note => {
-                            resolve({notes: store.notes, note: note});
+                            resolve({notes: store.notes, note: note, tags: store.tags});
                         }).catch(() => {
                             // AppToasts.error('Заметка не найдена');
                             // history.pushState(null, '', '/notes');
@@ -43,7 +40,7 @@ export const NotesLoader = async (path:string) => {
                             reject()
                         });
                     } else {
-                        resolve({notes: store.notes});
+                        resolve({notes: store.notes, tags: store.tags});
                     }
                 });
             } else {

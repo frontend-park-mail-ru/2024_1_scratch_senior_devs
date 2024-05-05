@@ -104,7 +104,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
     }
 
     addToFavoriteBtn = () => {
-        // TODO
+        // TODO: 4 модуль
         
         AppToasts.success("Заметка добавлена в избранное")
         this.setState(state => ({

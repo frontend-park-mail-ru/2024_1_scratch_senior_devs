@@ -271,9 +271,6 @@ class ProfileRequests {
     };
 }
 
-
-
-
 class NoteRequests {
     private baseUrl = '/note';
 
@@ -546,19 +543,18 @@ class NoteRequests {
             csrf: response.headers['x-csrf-token']
         }
     }
+}
 
-    GetTags = async (jwt:string) => {
+class TagRequests {
+    GetAll = async (jwt:string) => {
         const response = await Ajax.Get('/tags' , {
             headers: {
                 'Authorization': jwt
             },
         });
 
-        console.log(response.status)
-        console.log(response.body)
-
         if (response.status === 200) {
-            return response.body;
+            return response;
         }
 
         throw Error(response.body.message);
@@ -568,5 +564,7 @@ class NoteRequests {
 export const AppAuthRequests = new AuthRequests();
 
 export const AppNoteRequests = new NoteRequests();
+
+export const AppTagRequests = new TagRequests();
 
 export const AppProfileRequests = new ProfileRequests();

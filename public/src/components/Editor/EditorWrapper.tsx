@@ -52,8 +52,6 @@ export class EditorWrapper extends Component<any, EditorState> {
     }
 
     updateState = (store:NoteStoreState) => {
-        
-        
         this.syncTitle(store.note.title)
 
         this.self.innerHTML = ""
