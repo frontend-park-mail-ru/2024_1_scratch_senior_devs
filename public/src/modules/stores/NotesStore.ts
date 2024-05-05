@@ -4,10 +4,9 @@ import {AppUserStore, UserActions} from './UserStore';
 import {AppDispatcher} from '../dispatcher';
 import {AppToasts} from '../toasts';
 import {NoteDataType, NoteType} from "../../utils/types";
-import {decode, parseNoteTitle} from "../utils";
+import {decode} from "../utils";
 import {WebSocketConnection} from "../websocket";
 import {insertBlockPlugin} from "../../components/Editor/Plugin";
-import {AppNoteStore} from "./NoteStore";
 
 export type NotesStoreState = {
     notes: NoteType[],
@@ -135,17 +134,21 @@ class NotesStore extends BaseStore<NotesStoreState> {
         }));
     }
 
-    closeNote () {
-        localStorage.setItem("selectedNote", null)
-
-        this.closeWS()
-
+    syncNotes = () => {
         const notes = this.state.notes;
         notes.forEach((note, index) => {
             if (note.id == this.state.selectedNote.id) {
                 notes[index] = this.state.selectedNote;
             }
         });
+    }
+
+    closeNote () {
+        localStorage.setItem("selectedNote", null)
+
+        this.closeWS()
+
+        this.syncNotes()
 
         this.SetState(s=>({
             ...s,
@@ -156,7 +159,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
     async fetchNote (id:string) {
         try {
-
             const note = await AppNoteRequests.Get(id, AppUserStore.state.JWT);
 
             this.selectNote(note);
@@ -167,9 +169,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     closeWS = () => {
-        console.log("closeWS")
-        console.log(this.state.selectedNote)
-
         if (this.ws && this.state.selectedNote) {
             this.ws.sendMessage(JSON.stringify({
                 type: "closed",
@@ -183,16 +182,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     selectNote (note:NoteType) {
-        console.log("selectNote")
-        console.log(note)
-
         if (this.state.selectedNote) {
-            const notes = this.state.notes;
-            notes.forEach((note, index) => {
-                if (note.id == this.state.selectedNote.id) {
-                    notes[index] = this.state.selectedNote;
-                }
-            });
+            this.syncNotes()
         }
 
         this.closeWS()
