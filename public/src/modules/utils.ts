@@ -1,3 +1,6 @@
+import {AppNotesStore} from "./stores/NotesStore";
+import {NoteType} from "../utils/types";
+
 /**
  * Обрезает переданную строку, если она длиннее, чем n символов
  * @param str {string} исходная строка
@@ -19,6 +22,12 @@ export function decode(raw: string): object {
     return JSON.parse(new TextDecoder().decode(bytes));
 }
 
+/**
+ * Возвращает true если заметка является подзаметкой
+ */
+export const isSubNote = (note:NoteType): boolean => {
+    return note.parent != "00000000-0000-0000-0000-000000000000"
+}
 
 /**
  * Определеяет максимальную задержку в ожидании ответа от сервера
@@ -168,3 +177,4 @@ export const getCaretPosition = (editableDiv) => {
 
     return clonedRange.toString().length;
 }
+

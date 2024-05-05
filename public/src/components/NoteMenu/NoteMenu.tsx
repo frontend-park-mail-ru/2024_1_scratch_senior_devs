@@ -1,6 +1,8 @@
 import {ScReact} from "@veglem/screact";
 import "./NoteMenu.sass"
 import {Img} from "../Image/Image";
+import {AppNotesStore} from "../../modules/stores/NotesStore";
+import {isSubNote} from "../../modules/utils";
 
 export class NoteMenu extends ScReact.Component<any, any> {
     state = {
@@ -51,10 +53,10 @@ export class NoteMenu extends ScReact.Component<any, any> {
                     </div>
                 </div>
                 <div className="options" ref={ref => this.noteMenuRef = ref}>
-                    <div className="options-item" onclick={this.inviteUser}>
+                    {!isSubNote(AppNotesStore.state.selectedNote.parent) ? <div className="options-item" onclick={this.inviteUser}>
                         <Img src="invite.png" className="icon"/>
                         <span>Пригласить людей</span>
-                    </div>
+                    </div> : ""}
                     <div className="options-item" onclick={this.deleteNote}>
                         <Img src="trash.svg" className="icon"/>
                         <span>Удалить заметку</span>
