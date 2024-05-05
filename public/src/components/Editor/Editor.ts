@@ -26,7 +26,7 @@ export class Editor {
                 tippy: {open: (elem: HTMLElement) => void, close: () => void}) {
 
         // TODO: при наборе символов в поисковую строку фокусится редактор заметки (отключить)
-
+        console.log("Editor Constuctor")
 
         this.dropdownCallbacks = dropdown;
         this.tippyCallbacks = tippy;
@@ -66,9 +66,9 @@ export class Editor {
         parent.append(this.editable);
 
         this.observer = new MutationObserver((records) => {
-            if (records.every((record) => {return record.type === 'attributes'})) {
-                return;
-            }
+            // if (records.every((record) => {return record.type === 'attributes'})) {
+            //     return;
+            // }
             if (records.some(record => {return record.type === 'characterData'})) {
                 selectionCallback();
             }
@@ -77,9 +77,17 @@ export class Editor {
                 this.editable.childNodes.forEach(node => {
                     schema.push(toJson(node));
                 })
+
+                if (schema.length > 0 && (schema[schema.length - 1] as PluginProps).pluginName !== 'div' ||
+                    ((schema[schema.length - 1] as PluginProps).pluginName === 'div' &&
+                    (schema[schema.length - 1] as PluginProps).children?.[0]?.pluginName !== 'br')) {
+                    const div = document.createElement('div');
+                    div.append(document.createElement('br'));
+                    this.editable.append(div);
+                }
                 console.log(schema)
                 onChange(schema)
-            }, 10)
+            })
 
         });
 
@@ -155,6 +163,14 @@ export class Editor {
                 this.tippyCallbacks.close();
             }
         }
+    }
+
+    getSchema = () => {
+        const schema = [];
+        this.editable.childNodes.forEach(node => {
+            schema.push(toJson(node));
+        })
+        return schema;
     }
 
     addPlugins = () => {

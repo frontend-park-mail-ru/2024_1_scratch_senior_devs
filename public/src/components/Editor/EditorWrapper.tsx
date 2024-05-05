@@ -7,6 +7,7 @@ import {AppNoteStore, NoteStoreState} from "../../modules/stores/NoteStore";
 import {Tippy} from "../Tippy/Tippy";
 import {YoutubeDialogForm} from "../YoutubeDialog/YoutubeDialog";
 import {Modal} from "../Modal/Modal";
+import {isEqual} from "@veglem/screact/dist/isEqual";
 
 type EditorState = {
     tippyOpen: boolean,
@@ -54,19 +55,22 @@ export class EditorWrapper extends Component<any, EditorState> {
     updateState = (store:NoteStoreState) => {
         this.syncTitle(store.note.title)
 
-        this.self.innerHTML = ""
-        this.editor = new Editor(
-            store.note.blocks,
-            this.self,
-            {open: this.openDropdown, close: this.closeDropdown},
-            this.props.onChangeContent,
-            {open: this.openTippy, close: this.closeTippy}
-        );
+        if (!isEqual(this.editor?.getSchema(), AppNoteStore.state.note.blocks)) {
+            console.log(this.editor?.getSchema(), AppNoteStore.state.note.blocks)
+            this.self.innerHTML = ""
+            this.editor = new Editor(
+                store.note.blocks,
+                this.self,
+                {open: this.openDropdown, close: this.closeDropdown},
+                this.props.onChangeContent,
+                {open: this.openTippy, close: this.closeTippy}
+            );
+        }
 
-        this.setState(state => ({
-            ...state,
-            dropdownOpen: store.dropdownOpen
-        }))
+        // this.setState(state => ({
+        //     ...state,
+        //     dropdownOpen: store.dropdownOpen
+        // }))
     }
 
     syncTitle = (title:string) => {

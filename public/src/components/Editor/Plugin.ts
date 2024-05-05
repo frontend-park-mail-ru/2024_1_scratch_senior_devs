@@ -731,6 +731,16 @@ export const toJson = (node: Node): PluginProps => {
 }
 
 export const fromJson = (props: PluginProps) => {
+    const isInEditor = (node: Node) => {
+        if (node.nodeType === Node.ELEMENT_NODE && (node as HTMLElement).contentEditable === 'true' && (node as HTMLElement).parentElement.classList.contains("note-body")) {
+            return true
+        } else if (node.parentElement == null) {
+            return false
+        } else {
+            return isInEditor(node.parentElement);
+        }
+    }
+
     let plugin: EditorPlugin;
     defaultPlugins.forEach(value => {
         if (value.pluginName === props.pluginName) {
