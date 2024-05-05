@@ -117,6 +117,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 case NotesActions.ADD_COLLABORATOR:
                     await this.addCollaborator(action.payload)
                     break
+                case NotesActions.GET_TAGS:
+                    await this.fetchTags()
+                    break
             }
         });
     }
@@ -232,6 +235,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
     async init () {
         await this.fetchNotes(true);
+        await this.fetchTags()
         return this.state;
     }
 
@@ -464,6 +468,16 @@ class NotesStore extends BaseStore<NotesStoreState> {
             AppToasts.error("Что-то пошло не так")
         }
     }
+
+    fetchTags = async () => {
+        try {
+            const response = await AppNoteRequests.GetTags(AppUserStore.state.JWT)
+
+
+        } catch {
+            AppToasts.error("Что-то пошло не так")
+        }
+    }
 }
 
 export const NotesActions = {
@@ -487,7 +501,8 @@ export const NotesActions = {
     CREATE_SUB_NOTE: "CREATE_SUB_NOTE",
     CREATE_TAG: "CREATE_TAG",
     REMOVE_TAG: "REMOVE_TAG",
-    ADD_COLLABORATOR: "ADD_COLLABORATOR"
+    ADD_COLLABORATOR: "ADD_COLLABORATOR",
+    GET_TAGS: "GET_TAGS"
 };
 
 export const AppNotesStore = new NotesStore();

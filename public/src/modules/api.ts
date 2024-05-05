@@ -546,6 +546,23 @@ class NoteRequests {
             csrf: response.headers['x-csrf-token']
         }
     }
+
+    GetTags = async (jwt:string) => {
+        const response = await Ajax.Get('/tags' , {
+            headers: {
+                'Authorization': jwt
+            },
+        });
+
+        console.log(response.status)
+        console.log(response.body)
+
+        if (response.status === 200) {
+            return response.body;
+        }
+
+        throw Error(response.body.message);
+    }
 }
 
 export const AppAuthRequests = new AuthRequests();
