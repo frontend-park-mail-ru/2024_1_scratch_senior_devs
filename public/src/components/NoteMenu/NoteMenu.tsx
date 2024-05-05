@@ -53,7 +53,7 @@ export class NoteMenu extends ScReact.Component<any, any> {
                     </div>
                 </div>
                 <div className="options" ref={ref => this.noteMenuRef = ref}>
-                    {!isSubNote(AppNotesStore.state.selectedNote.parent) ? <div className="options-item" onclick={this.inviteUser}>
+                    {!isSubNote(AppNotesStore.state.selectedNote) ? <div className="options-item" onclick={this.inviteUser}>
                         <Img src="invite.png" className="icon"/>
                         <span>Пригласить людей</span>
                     </div> : ""}
