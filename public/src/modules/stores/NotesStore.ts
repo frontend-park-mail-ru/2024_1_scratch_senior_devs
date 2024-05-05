@@ -138,14 +138,14 @@ class NotesStore extends BaseStore<NotesStoreState> {
     closeNote () {
         localStorage.setItem("selectedNote", null)
 
+        this.closeWS()
+
         const notes = this.state.notes;
         notes.forEach((note, index) => {
             if (note.id == this.state.selectedNote.id) {
                 notes[index] = this.state.selectedNote;
             }
         });
-
-        this.closeWS()
 
         this.SetState(s=>({
             ...s,
