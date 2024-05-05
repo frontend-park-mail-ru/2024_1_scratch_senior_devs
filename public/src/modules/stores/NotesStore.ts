@@ -207,7 +207,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
             }))
         })
 
-
         this.ws.onMessage((event) => {
             let data = JSON.parse(event.data)
             if (data.username == AppUserStore.state.username) {
@@ -316,6 +315,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
             this.closeNote();
 
             history.pushState(null, null, '/notes');
+
+            await this.fetchTags()
 
             AppToasts.info('Заметка успешно удалена');
 
