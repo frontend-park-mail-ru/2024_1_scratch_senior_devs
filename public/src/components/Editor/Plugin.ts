@@ -925,7 +925,7 @@ const RenderSubNote = (subNoteId:string) => {
     subNoteWrapper.className = "subnote-wrapper"
 
     subNoteWrapper.contentEditable = 'false';
-    subNoteWrapper.dataset.noteid = subNoteId;
+    // subNoteWrapper.dataset.noteid = subNoteId;
 
     const subNoteTitle = document.createElement("span")
     subNoteTitle.className = "subnote-title"
@@ -969,7 +969,7 @@ const RenderSubNote = (subNoteId:string) => {
             subNoteTitle.innerHTML = 'Подзаметка'
         }
 
-        subNoteWrapper.dataset.title = parseNoteTitle(result.data.title)
+        //subNoteWrapper.dataset.title = parseNoteTitle(result.data.title)
         subNoteTitle.innerHTML = parseNoteTitle(result.data.title)
 
     }).catch(() => {

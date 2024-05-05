@@ -70,7 +70,6 @@ export class EditorWrapper extends Component<any, EditorState> {
     }
 
     syncTitle = (title:string) => {
-        
         this.noteTitleRef.textContent = title
 
         if (this.noteTitleRef.textContent.length == 0) {
@@ -137,8 +136,6 @@ export class EditorWrapper extends Component<any, EditorState> {
     }
     
     onChangeTitle = () => {
-        
-
         if (this.noteTitleRef.textContent.length == 0) {
             this.noteTitleRef.dataset.placeholder = 'Введите название';
         } else {

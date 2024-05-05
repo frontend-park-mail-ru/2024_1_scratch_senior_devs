@@ -145,13 +145,14 @@ class NotesStore extends BaseStore<NotesStoreState> {
             }
         });
 
+        this.closeWS()
+
         this.SetState(s=>({
             ...s,
             selectedNote: undefined,
             notes: notes
         }));
 
-        this.ws?.close()
     }
 
     async fetchNote (id:string) {
@@ -166,16 +167,39 @@ class NotesStore extends BaseStore<NotesStoreState> {
         }
     }
 
+    closeWS = () => {
+        if (this.ws) {
+            this.ws.sendMessage(JSON.stringify({
+                type: "closed",
+                note_id: this.state.selectedNote.id,
+                user_id: AppUserStore.state.user_id
+            }))
+
+            this.ws.close()
+        }
+    }
+
     selectNote (note:NoteType) {
+        console.log("selectNote")
+        console.log(note)
+
+        this.closeWS()
+
         this.SetState(state => ({
             ...state,
             selectedNote: note,
             selectedNoteChildren: note.children
         }));
 
-        this.ws?.close()
-
         this.ws = new WebSocketConnection(`note/${note.id}/subscribe_on_updates`)
+
+        this.ws.sendMessage(JSON.stringify({
+            type: "opened",
+            note_id: note.id,
+            user_id: AppUserStore.state.user_id,
+            username: AppUserStore.state.username,
+            image_path: AppUserStore.state.avatarUrl
+        }))
 
         this.ws.onMessage((event) => {
             let data = JSON.parse(event.data)
@@ -298,9 +322,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
             const {csrf} = await AppNoteRequests.Update(data, AppUserStore.state.JWT, AppUserStore.state.csrf);
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
-
-            
-            
 
             localStorage.setItem("selectedNote", JSON.stringify(data))
 
