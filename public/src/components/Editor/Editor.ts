@@ -158,6 +158,7 @@ export class Editor {
 
         document.onselectionchange = debounce(selectionCallback, 500)
 
+        // TODO: убрать задержку при закрытии всплывашки, но оставить задержку при открытии
         // document.onclick = (e) => {
         //     if (!document.querySelector(".tippy-container").contains(e.target as Node)) {
         //         this.tippyCallbacks.close();
