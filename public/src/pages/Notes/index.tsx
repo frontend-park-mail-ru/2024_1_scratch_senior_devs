@@ -181,27 +181,30 @@ export class NotesPage extends ScReact.Component<any, any> {
     }
 
     onChangeTags = (tags:string[]) => {
-        const selectedNote = document.getElementById(this.state.selectedNote.id);
+        AppNotesStore.state.selectedNote.tags = tags
+        AppDispatcher.dispatch(NotesActions.SYNC_NOTES)
 
-        if (selectedNote) {
-            const tagsContainer = selectedNote.querySelector('.note-tags-container');
-
-            tagsContainer.innerHTML = ""
-
-            tags.slice(0, 2).forEach(tagname => {
-                const tag = document.createElement("span")
-                tag.innerHTML = tagname
-                tag.className = "note-tag"
-                tagsContainer.appendChild(tag)
-            })
-
-            if (tags.length > 2) {
-                const tag = document.createElement("span")
-                tag.innerHTML = `+${tags.length - 2}`
-                tag.className = "note-tag"
-                tagsContainer.appendChild(tag)
-            }
-        }
+        // const selectedNote = document.getElementById(this.state.selectedNote.id);
+        //
+        // if (selectedNote) {
+        //     const tagsContainer = selectedNote.querySelector('.note-tags-container');
+        //
+        //     tagsContainer.innerHTML = ""
+        //
+        //     tags.slice(0, 2).forEach(tagname => {
+        //         const tag = document.createElement("span")
+        //         tag.innerHTML = tagname
+        //         tag.className = "note-tag"
+        //         tagsContainer.appendChild(tag)
+        //     })
+        //
+        //     if (tags.length > 2) {
+        //         const tag = document.createElement("span")
+        //         tag.innerHTML = `+${tags.length - 2}`
+        //         tag.className = "note-tag"
+        //         tagsContainer.appendChild(tag)
+        //     }
+        // }
     }
 
     selectTag = (tag:string) => {

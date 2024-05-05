@@ -120,6 +120,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 case NotesActions.FETCH_TAGS:
                     await this.fetchTags()
                     break
+                case NotesActions.SYNC_NOTES:
+                    this.syncNotes()
+                    break
             }
         });
     }
@@ -525,7 +528,8 @@ export const NotesActions = {
     CREATE_TAG: "CREATE_TAG",
     REMOVE_TAG: "REMOVE_TAG",
     ADD_COLLABORATOR: "ADD_COLLABORATOR",
-    FETCH_TAGS: "FETCH_TAGS"
+    FETCH_TAGS: "FETCH_TAGS",
+    SYNC_NOTES: "SYNC_NOTES"
 };
 
 export const AppNotesStore = new NotesStore();

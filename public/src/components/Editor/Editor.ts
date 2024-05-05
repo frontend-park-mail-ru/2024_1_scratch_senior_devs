@@ -26,7 +26,7 @@ export class Editor {
                 tippy: {open: (elem: HTMLElement) => void, close: () => void}) {
 
         // TODO: при наборе символов в поисковую строку фокусится редактор заметки (отключить)
-        console.log("Editor Constuctor")
+        
 
         this.dropdownCallbacks = dropdown;
         this.tippyCallbacks = tippy;
@@ -85,7 +85,7 @@ export class Editor {
                     div.append(document.createElement('br'));
                     this.editable.append(div);
                 }
-                console.log(schema)
+                
                 onChange(schema)
             })
 
