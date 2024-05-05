@@ -60,26 +60,36 @@ export class Editor {
 
         parent.append(this.editable);
 
-        this.observer = new MutationObserver(() => {
-            const schema = [];
-            this.editable.childNodes.forEach(node => {
-                schema.push(toJson(node));
-            })
+        this.observer = new MutationObserver((records) => {
+            if (records.every((record) => {return record.type === 'attributes'})) {
+                return;
+            }
+            if (records.some(record => {return record.type === 'characterData'})) {
+                selectionCallback();
+            }
+            setTimeout(() => {
+                const schema = [];
+                this.editable.childNodes.forEach(node => {
+                    schema.push(toJson(node));
+                })
+                console.log(schema)
+                onChange(schema)
+            }, 10)
 
-            
-            onChange(schema)
         });
 
         this.observer.observe(this.editable, {
             childList: true,
             characterData: true,
             characterDataOldValue: true,
-            // attributes: true,
-            // attributeOldValue: true,
+            attributes: true,
+            attributeOldValue: true,
             subtree: true
         });
 
-        document.onselectionchange = () => {
+        document.onselectionchange = () => {selectionCallback()}
+
+        const selectionCallback = () => {
             const isInEditor = (node: Node) => {
                 if (node.nodeType === Node.ELEMENT_NODE && (node as HTMLElement).contentEditable === 'true' && !(node as HTMLElement).classList.contains("note-title")) {
                     return true
@@ -122,6 +132,8 @@ export class Editor {
                 // const fakeCaret = document.createElement("div")
                 // fakeCaret.className = "fake-caret"
                 // elem.append(fakeCaret)
+            } else {
+                scanTree(this.editable);
             }
             
             if (!selection.isCollapsed && isEditor) {

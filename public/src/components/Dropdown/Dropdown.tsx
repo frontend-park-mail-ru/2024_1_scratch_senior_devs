@@ -137,7 +137,7 @@ export class Dropdown extends ScReact.Component<any, any> {
 
         } else if (id === "note") {
 
-            // AppDispatcher.dispatch(NotesActions.CREATE_SUB_NOTE)
+            AppDispatcher.dispatch(NotesActions.CREATE_SUB_NOTE)
             //todo:  insertBlockPlugin('subnote', noteid)
         }
 

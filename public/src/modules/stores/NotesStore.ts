@@ -7,6 +7,7 @@ import {NoteDataType, NoteType} from "../../utils/types";
 import {decode, parseNoteTitle} from "../utils";
 import {WebSocketConnection} from "../websocket";
 import {AppNoteStore} from "./NoteStore";
+import {insertBlockPlugin} from "../../components/Editor/Plugin";
 
 export type NotesStoreState = {
     notes: NoteType[],
@@ -364,6 +365,10 @@ class NotesStore extends BaseStore<NotesStoreState> {
             }
 
             this.state.selectedNoteChildren = [...this.state.selectedNoteChildren, subNote]
+
+            console.log(subnote_id)
+
+            insertBlockPlugin('subnote', subnote_id);
 
         } catch (e) {
             

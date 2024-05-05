@@ -668,17 +668,27 @@ export const defaultPlugins: EditorPlugin[] = [
         toJson: (node: Node) => {
             return {
                 pluginName: 'subnote',
-                noteId: (node as HTMLImageElement).dataset.fleid
+                noteId: (node as HTMLImageElement).dataset.noteid
             }
         },
         fromJson: (props: PluginProps) => {
             const btn = document.createElement('button');
             btn.contentEditable = 'false';
 
-            btn.dataset.note = props['noteId'] as string;
+            btn.dataset.noteid = props['noteId'] as string;
+
+            btn.innerHTML = "Подзаметка";
+
+            AppNoteRequests.Get(props['noteId'] as string, AppUserStore.state.JWT).then(result => {
+                console.log(result)
+                if (result.data.title == null) {
+                    btn.innerHTML = 'Подзаметка'
+                }
+                btn.innerHTML = result.data.title
+            });
 
             btn.onclick = () => {
-                // AppNoteRequests.GetFile(props['fileId'] as string, props['fileName'] as string, AppUserStore.state.JWT, AppUserStore.state.csrf).then()
+                AppDispatcher.dispatch(NotesActions.OPEN_NOTE, props['noteId'] as string)
             }
             return btn;
         },
@@ -687,8 +697,20 @@ export const defaultPlugins: EditorPlugin[] = [
             btn.contentEditable = 'false';
             btn.dataset.noteid = args[0][0];
 
+            btn.innerHTML = "Подзаметка";
+
+            AppNoteRequests.Get(args[0][0] as string, AppUserStore.state.JWT).then(result => {
+                console.log(result)
+                if (result.data.title == null) {
+                    btn.innerHTML = 'Подзаметка'
+                }
+                btn.innerHTML = result.data.title
+            });
+
+            console.log(args[0][0])
+
             btn.onclick = () => {
-                // AppNoteRequests.GetFile(args[0][0] as string, args[0][1] as string, AppUserStore.state.JWT, AppUserStore.state.csrf).then()
+                AppDispatcher.dispatch(NotesActions.OPEN_NOTE, args[0][0])
             }
             return btn;
         }
@@ -738,8 +760,6 @@ export const toJson = (node: Node): PluginProps => {
     const json = plugin.toJson(node);
     if (node.nodeType === Node.ELEMENT_NODE) {
         for (const dataKey in (node as HTMLElement).dataset) {
-            // const regex = /cursor-([a-zA-Z]+)/
-            // const matches = regex.exec(dataKey);
             if (dataKey.startsWith('cursor')) {
                 json[dataKey] = (node as HTMLElement).dataset[dataKey];
             }
@@ -922,6 +942,7 @@ const RenderAttach = (attach_filename, attach_id) => {
 
     closeBtn.onclick = (e) => {
         // TODO: удалять аттач
+        attachWrapper.remove();
         e.stopPropagation()
         
     }
