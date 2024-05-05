@@ -81,7 +81,6 @@ export class NotesPage extends ScReact.Component<any, any> {
                 this.createObserver();
             }
 
-
             if (store.selectedNote) {
                 document.title = parseNoteTitle(store.selectedNote.data.title);
 

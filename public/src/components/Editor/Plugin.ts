@@ -2,10 +2,11 @@ import exp from "node:constants";
 import {AppUserStore} from "../../modules/stores/UserStore";
 import {App} from "../../App";
 import {data} from "autoprefixer";
-import {setCursorAtNodePosition, truncate} from "../../modules/utils";
+import {parseNoteTitle, setCursorAtNodePosition, truncate} from "../../modules/utils";
 import {AppNotesStore, NotesActions} from "../../modules/stores/NotesStore";
 import {AppNoteRequests} from "../../modules/api";
 import {AppDispatcher} from "../../modules/dispatcher";
+import subNote from "../SubNote/SubNote";
 
 interface EditorPlugin {
     pluginName: string;
@@ -650,7 +651,7 @@ export const defaultPlugins: EditorPlugin[] = [
             }
         },
         fromJson: (props: PluginProps) => {
-            return RenderAttach(props['fileName'],  props['fileId']);
+            return RenderAttach(props['fileName'] as string,  props['fileId'] as string);
         },
         insertNode: (innerContent, ...args) => {
             return RenderAttach(args[0][1],  args[0][0]);
@@ -672,47 +673,10 @@ export const defaultPlugins: EditorPlugin[] = [
             }
         },
         fromJson: (props: PluginProps) => {
-            const btn = document.createElement('button');
-            btn.contentEditable = 'false';
-
-            btn.dataset.noteid = props['noteId'] as string;
-
-            btn.innerHTML = "Подзаметка";
-
-            AppNoteRequests.Get(props['noteId'] as string, AppUserStore.state.JWT).then(result => {
-                console.log(result)
-                if (result.data.title == null) {
-                    btn.innerHTML = 'Подзаметка'
-                }
-                btn.innerHTML = result.data.title
-            });
-
-            btn.onclick = () => {
-                AppDispatcher.dispatch(NotesActions.OPEN_NOTE, props['noteId'] as string)
-            }
-            return btn;
+            return RenderSubNote(props['noteId'] as string);
         },
         insertNode: (innerContent, ...args) => {
-            const btn = document.createElement('button');
-            btn.contentEditable = 'false';
-            btn.dataset.noteid = args[0][0];
-
-            btn.innerHTML = "Подзаметка";
-
-            AppNoteRequests.Get(args[0][0] as string, AppUserStore.state.JWT).then(result => {
-                console.log(result)
-                if (result.data.title == null) {
-                    btn.innerHTML = 'Подзаметка'
-                }
-                btn.innerHTML = result.data.title
-            });
-
-            console.log(args[0][0])
-
-            btn.onclick = () => {
-                AppDispatcher.dispatch(NotesActions.OPEN_NOTE, args[0][0])
-            }
-            return btn;
+            return RenderSubNote(args[0][0]);
         }
     },
     {
@@ -912,7 +876,7 @@ interface TextProps extends PluginProps {
     content: string
 }
 
-const RenderAttach = (attach_filename, attach_id) => {
+const RenderAttach = (attach_filename:string, attach_id:string) => {
     const attachWrapper = document.createElement('button');
     attachWrapper.className = "attach-wrapper"
     attachWrapper.contentEditable = 'false';
@@ -941,10 +905,8 @@ const RenderAttach = (attach_filename, attach_id) => {
     closeBtn.className = "close-attach-btn"
 
     closeBtn.onclick = (e) => {
-        // TODO: удалять аттач
-        attachWrapper.remove();
         e.stopPropagation()
-        
+        attachWrapper.remove();
     }
 
     closeAttachBtnContainer.appendChild(closeBtn)
@@ -958,4 +920,37 @@ const RenderAttach = (attach_filename, attach_id) => {
     }
 
     return attachWrapper;
+}
+
+const RenderSubNote = (subNoteId:string) => {
+    const subNoteWrapper = document.createElement("button")
+    subNoteWrapper.className = "subnote-wrapper"
+
+    subNoteWrapper.contentEditable = 'false';
+    subNoteWrapper.dataset.noteid = subNoteId;
+
+    const subNoteTitle = document.createElement("span")
+    subNoteTitle.className = "subnote-title"
+
+    const closeBtn = document.createElement("img")
+    closeBtn.src = "./src/assets/note.svg"
+    closeBtn.className = "subnote-icon"
+
+    subNoteWrapper.appendChild(subNoteTitle)
+    subNoteWrapper.appendChild(closeBtn)
+
+    AppNoteRequests.Get(subNoteId, AppUserStore.state.JWT).then(result => {
+        console.log(result)
+        if (result.data.title == null) {
+            subNoteTitle.innerHTML = 'Подзаметка'
+        }
+
+        subNoteTitle.innerHTML = parseNoteTitle(result.data.title)
+    });
+
+    subNoteWrapper.onclick = () => {
+        AppDispatcher.dispatch(NotesActions.OPEN_NOTE, subNoteId)
+    }
+
+    return subNoteWrapper
 }

@@ -46,6 +46,31 @@
 			cursor: text
 
 	.note-body
+
+		.subnote-wrapper
+			display: flex
+			background: $modal-background
+			padding: 8px 16px
+			border-radius: 16px
+			align-items: center
+			gap: 10px
+			transition: 0.2s ease
+			border: 1px solid #2b3b55
+			margin: 2px
+
+			&:hover
+				cursor: pointer
+				box-shadow: 0 0 2px $primary-color, 0 0 6px $primary-color
+
+			span
+				transition: 0.5s
+				user-select: none
+
+			img
+				width: 16px
+				height: 24px
+				filter: invert(80%)
+
 		.attach-wrapper
 			display: flex
 			justify-content: flex-start
