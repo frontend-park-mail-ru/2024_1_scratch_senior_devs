@@ -197,13 +197,16 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
         this.ws = new WebSocketConnection(`note/${note.id}/subscribe_on_updates`)
 
-        this.ws.sendMessage(JSON.stringify({
-            type: "opened",
-            note_id: note.id,
-            user_id: AppUserStore.state.user_id,
-            username: AppUserStore.state.username,
-            image_path: AppUserStore.state.avatarUrl
-        }))
+        this.ws.onOpen(() => {
+            this.ws.sendMessage(JSON.stringify({
+                type: "opened",
+                note_id: note.id,
+                user_id: AppUserStore.state.user_id,
+                username: AppUserStore.state.username,
+                image_path: AppUserStore.state.avatarUrl
+            }))
+        })
+
 
         this.ws.onMessage((event) => {
             let data = JSON.parse(event.data)

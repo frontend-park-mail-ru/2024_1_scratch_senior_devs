@@ -28,7 +28,14 @@ export class WebSocketConnection {
         this.socket.onmessage = callback;
     }
 
+    onOpen(callback) {
+        this.socket.onopen = callback;
+    }
+
     sendMessage(message) {
+        console.log("sendMessage")
+        console.log(message)
+        console.log(this.socket.readyState === WebSocket.OPEN)
         if (this.socket.readyState === WebSocket.OPEN) {
             this.socket.send(message);
         }
