@@ -48,12 +48,9 @@
 	.note-body
 
 		.subnote-wrapper
-			display: flex
 			background: $modal-background
 			padding: 8px 16px
 			border-radius: 16px
-			align-items: center
-			gap: 10px
 			transition: 0.2s ease
 			border: 1px solid #2b3b55
 			margin: 15px 2px
@@ -62,32 +59,35 @@
 				cursor: pointer
 				box-shadow: 0 0 2px $primary-color, 0 0 6px $primary-color
 
-			span
-				transition: 0.5s
-				user-select: none
+			.subnote-container
+				display: flex
+				gap: 10px
+				align-items: center
 
-			.subnote-icon
-				width: 16px
-				height: 24px
-				filter: invert(80%)
+				span
+					transition: 0.5s
+					user-select: none
 
-			.delete-subnote-btn-container
-				background: #546189
-				padding: 8px
-				border-radius: 50%
-				transition: 0.3s
-
-				&:hover
-					opacity: 0.8
-
-				.delete-subnote-btn
+				.subnote-icon
+					width: 16px
+					height: 24px
 					filter: invert(80%)
-					width: 20px
-					height: 20px
+
+				.delete-subnote-btn-container
+					background: #546189
+					padding: 8px
+					border-radius: 50%
+					transition: 0.3s
+
+					&:hover
+						opacity: 0.8
+
+					.delete-subnote-btn
+						filter: invert(80%)
+						width: 20px
+						height: 20px
 
 		.attach-wrapper
-			display: flex
-			justify-content: flex-start
 			outline: none
 			border: none
 			background: transparent
@@ -104,6 +104,7 @@
 				position: relative
 				cursor: pointer
 				transition: 0.2s ease
+				margin-right: 2px
 
 				&:hover
 					opacity: 0.9

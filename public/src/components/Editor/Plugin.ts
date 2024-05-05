@@ -927,6 +927,9 @@ const RenderSubNote = (subNoteId:string) => {
     subNoteWrapper.contentEditable = 'false';
     subNoteWrapper.dataset.noteid = subNoteId;
 
+    const subNoteContainer = document.createElement("div")
+    subNoteContainer.className = "subnote-container"
+
     const subNoteTitle = document.createElement("span")
     subNoteTitle.className = "subnote-title"
     // subNoteTitle.innerHTML = subNoteWrapper.dataset.title
@@ -935,20 +938,20 @@ const RenderSubNote = (subNoteId:string) => {
     noteIcon.src = "./src/assets/note.svg"
     noteIcon.className = "subnote-icon"
 
-    subNoteWrapper.appendChild(noteIcon)
-    subNoteWrapper.appendChild(subNoteTitle)
+    subNoteContainer.appendChild(noteIcon)
+    subNoteContainer.appendChild(subNoteTitle)
 
     const isOwner= AppNotesStore.state.selectedNote.owner_id == AppUserStore.state.user_id
 
     if (isOwner) {
-        const deleteSubnoteBtnContainer = document.createElement("div")
-        deleteSubnoteBtnContainer.className = "delete-subnote-btn-container"
+        const deleteSubNoteBtnContainer = document.createElement("div")
+        deleteSubNoteBtnContainer.className = "delete-subnote-btn-container"
 
-        const deleteSubnoteBtn = document.createElement("img")
-        deleteSubnoteBtn.src = "./src/assets/trash.svg"
-        deleteSubnoteBtn.className = "delete-subnote-btn"
+        const deleteSubNoteBtn = document.createElement("img")
+        deleteSubNoteBtn.src = "./src/assets/trash.svg"
+        deleteSubNoteBtn.className = "delete-subnote-btn"
 
-        deleteSubnoteBtnContainer.onclick = (e) => {
+        deleteSubNoteBtnContainer.onclick = (e) => {
             e.stopPropagation()
             subNoteWrapper.remove();
 
@@ -960,9 +963,11 @@ const RenderSubNote = (subNoteId:string) => {
             }
         }
 
-        deleteSubnoteBtnContainer.appendChild(deleteSubnoteBtn)
-        subNoteWrapper.appendChild(deleteSubnoteBtnContainer)
+        deleteSubNoteBtnContainer.appendChild(deleteSubNoteBtn)
+        subNoteContainer.appendChild(deleteSubNoteBtnContainer)
     }
+
+    subNoteWrapper.appendChild(subNoteContainer)
 
     AppNoteRequests.Get(subNoteId, AppUserStore.state.JWT).then(result => {
         if (result.data.title == null) {
