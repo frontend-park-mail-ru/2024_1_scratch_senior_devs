@@ -33,13 +33,10 @@
 		display: flex
 		flex-direction: column
 		align-items: center
-		min-width: 325px
-		max-width: 450px
+		min-width: 350px
+		width: 475px
 		gap: 15px
 		max-height: 90vh
-
-		@media screen and (max-width: $md)
-			min-width: 375px
 
 		@media screen and (max-width: $sm)
 			min-width: 100%
@@ -132,9 +129,6 @@
 
 	&.active
 		aside
-			@media screen and (min-width: $lg)
-				max-width: 375px
-
 			@media screen and (min-width: $lg)
 				.top-panel
 					.add-note-btn-container

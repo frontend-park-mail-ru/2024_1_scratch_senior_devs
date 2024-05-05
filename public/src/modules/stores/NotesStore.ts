@@ -421,6 +421,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 }))
 
                 await this.fetchTags()
+
             } else if (status == 409) {
                 AppToasts.info('Максимальное кол-во тэгов - 10');
             }
