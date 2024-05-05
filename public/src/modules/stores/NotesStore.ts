@@ -348,7 +348,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 insertBlockPlugin('subnote', subnote_id);
             } else if (status == 404) {
                 AppToasts.info("Максимальная вложенность заметок - 3")
-            }else if (status == 409) {
+            } else if (status == 409) {
                 AppToasts.info("Максимальное кол-во подзаметок - 10")
             }
 

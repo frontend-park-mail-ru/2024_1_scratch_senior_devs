@@ -971,9 +971,15 @@ const RenderSubNote = (subNoteId:string) => {
         subNoteWrapper.dataset.deleted = "true"
     });
 
+    let loading = true
+
+    setTimeout(() => {
+        loading = false
+    }, 500)
+
     subNoteWrapper.onclick = () => {
         if (!subNoteWrapper.dataset.deleted) {
-            AppDispatcher.dispatch(NotesActions.OPEN_NOTE, subNoteId)
+            !loading && AppDispatcher.dispatch(NotesActions.OPEN_NOTE, subNoteId)
         } else {
             AppToasts.error("Заметка не найдена")
         }
