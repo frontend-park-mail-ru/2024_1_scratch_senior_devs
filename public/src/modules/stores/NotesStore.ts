@@ -282,14 +282,14 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 
+            if (!redirect) {
+                return
+            }
+
             this.SetState(state => ({
                 ...state,
                 notes: state.notes.filter(item => item.id !== id)
             }));
-
-            if (!redirect) {
-                return
-            }
 
             if (this.state.selectedNote.parent != "00000000-0000-0000-0000-000000000000") {
                 await this.openNote(this.state.selectedNote.parent)

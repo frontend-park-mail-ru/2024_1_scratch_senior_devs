@@ -1,12 +1,8 @@
-import exp from "node:constants";
 import {AppUserStore} from "../../modules/stores/UserStore";
-import {App} from "../../App";
-import {data} from "autoprefixer";
 import {parseNoteTitle, setCursorAtNodePosition, truncate} from "../../modules/utils";
-import {AppNotesStore, NotesActions} from "../../modules/stores/NotesStore";
+import {NotesActions} from "../../modules/stores/NotesStore";
 import {AppNoteRequests} from "../../modules/api";
 import {AppDispatcher} from "../../modules/dispatcher";
-import subNote from "../SubNote/SubNote";
 
 interface EditorPlugin {
     pluginName: string;
@@ -932,20 +928,40 @@ const RenderSubNote = (subNoteId:string) => {
     const subNoteTitle = document.createElement("span")
     subNoteTitle.className = "subnote-title"
 
-    const closeBtn = document.createElement("img")
-    closeBtn.src = "./src/assets/note.svg"
-    closeBtn.className = "subnote-icon"
+    const noteIcon = document.createElement("img")
+    noteIcon.src = "./src/assets/note.svg"
+    noteIcon.className = "subnote-icon"
 
+    const deleteSubnoteBtnContainer = document.createElement("div")
+    deleteSubnoteBtnContainer.className = "delete-subnote-btn-container"
+
+    const deleteSubnoteBtn = document.createElement("img")
+    deleteSubnoteBtn.src = "./src/assets/trash.svg"
+    deleteSubnoteBtn.className = "delete-subnote-btn"
+
+    deleteSubnoteBtnContainer.onclick = (e) => {
+        e.stopPropagation()
+        subNoteWrapper.remove();
+        AppDispatcher.dispatch(NotesActions.DELETE_NOTE, {
+            id: subNoteId,
+            redirect: false
+        })
+    }
+
+    deleteSubnoteBtnContainer.appendChild(deleteSubnoteBtn)
+
+    subNoteWrapper.appendChild(noteIcon)
     subNoteWrapper.appendChild(subNoteTitle)
-    subNoteWrapper.appendChild(closeBtn)
+    subNoteWrapper.appendChild(deleteSubnoteBtnContainer)
 
     AppNoteRequests.Get(subNoteId, AppUserStore.state.JWT).then(result => {
-        console.log(result)
         if (result.data.title == null) {
             subNoteTitle.innerHTML = 'Подзаметка'
         }
 
         subNoteTitle.innerHTML = parseNoteTitle(result.data.title)
+    }).catch(() => {
+        subNoteTitle.innerHTML = "Заметка не найдена"
     });
 
     subNoteWrapper.onclick = () => {

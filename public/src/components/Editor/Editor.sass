@@ -66,10 +66,24 @@
 				transition: 0.5s
 				user-select: none
 
-			img
+			.subnote-icon
 				width: 16px
 				height: 24px
 				filter: invert(80%)
+
+			.delete-subnote-btn-container
+				background: #546189
+				padding: 8px
+				border-radius: 50%
+				transition: 0.3s
+
+				&:hover
+					opacity: 0.8
+
+				.delete-subnote-btn
+					filter: invert(80%)
+					width: 20px
+					height: 20px
 
 		.attach-wrapper
 			display: flex
@@ -81,7 +95,7 @@
 
 			.attach-container
 				background: $modal-background
-				padding: 8px 64px 8px 16px
+				padding: 8px 16px
 				border-radius: 16px
 				display: flex
 				align-items: center
@@ -111,8 +125,10 @@
 					background: #546189
 					padding: 8px
 					border-radius: 50%
-					position: absolute
-					right: 15px
+					transition: 0.3s
+
+					&:hover
+						opacity: 0.8
 
 					.close-attach-btn
 						filter: invert(80%)
