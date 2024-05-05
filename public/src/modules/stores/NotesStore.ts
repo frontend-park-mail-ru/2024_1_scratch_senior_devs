@@ -168,7 +168,10 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     closeWS = () => {
-        if (this.ws) {
+        console.log("closeWS")
+        console.log(this.state.selectedNote)
+
+        if (this.ws && this.state.selectedNote) {
             this.ws.sendMessage(JSON.stringify({
                 type: "closed",
                 note_id: this.state.selectedNote.id,
