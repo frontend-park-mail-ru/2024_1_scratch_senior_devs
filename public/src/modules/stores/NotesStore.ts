@@ -179,6 +179,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             }))
 
             this.ws.close()
+            this.ws = null
         }
     }
 
