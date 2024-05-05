@@ -3,6 +3,7 @@ import {parseNoteTitle, setCursorAtNodePosition, truncate} from "../../modules/u
 import {NotesActions} from "../../modules/stores/NotesStore";
 import {AppNoteRequests} from "../../modules/api";
 import {AppDispatcher} from "../../modules/dispatcher";
+import {AppToasts} from "../../modules/toasts";
 
 interface EditorPlugin {
     pluginName: string;
@@ -942,10 +943,13 @@ const RenderSubNote = (subNoteId:string) => {
     deleteSubnoteBtnContainer.onclick = (e) => {
         e.stopPropagation()
         subNoteWrapper.remove();
-        AppDispatcher.dispatch(NotesActions.DELETE_NOTE, {
-            id: subNoteId,
-            redirect: false
-        })
+
+        if (!subNoteWrapper.dataset.deleted) {
+            AppDispatcher.dispatch(NotesActions.DELETE_NOTE, {
+                id: subNoteId,
+                redirect: false
+            })
+        }
     }
 
     deleteSubnoteBtnContainer.appendChild(deleteSubnoteBtn)
@@ -962,10 +966,15 @@ const RenderSubNote = (subNoteId:string) => {
         subNoteTitle.innerHTML = parseNoteTitle(result.data.title)
     }).catch(() => {
         subNoteTitle.innerHTML = "Заметка не найдена"
+        subNoteWrapper.dataset.deleted = "true"
     });
 
     subNoteWrapper.onclick = () => {
-        AppDispatcher.dispatch(NotesActions.OPEN_NOTE, subNoteId)
+        if (!subNoteWrapper.dataset.deleted) {
+            AppDispatcher.dispatch(NotesActions.OPEN_NOTE, subNoteId)
+        } else {
+            AppToasts.error("Заметка не найдена")
+        }
     }
 
     return subNoteWrapper
