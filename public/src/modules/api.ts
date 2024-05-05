@@ -514,14 +514,17 @@ class NoteRequests {
             }
         });
 
-        
-
         if (response.status == 200) {
             response.body.data = decode(response.body.data)
+
+            return {
+                note: response.body,
+                status: response.status,
+                csrf: response.headers['x-csrf-token']
+            }
         }
 
         return {
-            note: response.body,
             status: response.status,
             csrf: response.headers['x-csrf-token']
         }

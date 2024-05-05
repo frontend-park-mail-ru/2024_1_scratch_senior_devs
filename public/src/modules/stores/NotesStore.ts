@@ -409,16 +409,24 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     async createTag(tag:string) {
-        const {note, status, csrf} = await AppNoteRequests.AddTag(this.state.selectedNote.id, tag, AppUserStore.state.JWT, AppUserStore.state.csrf)
+        try {
+            const {note, status, csrf} = await AppNoteRequests.AddTag(this.state.selectedNote.id, tag, AppUserStore.state.JWT, AppUserStore.state.csrf)
 
-        AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 
-        this.SetState(state => ({
-            ...state,
-            selectedNote: note
-        }))
+            if (status == 200) {
+                this.SetState(state => ({
+                    ...state,
+                    selectedNote: note
+                }))
 
-        await this.fetchTags()
+                await this.fetchTags()
+            } else if (status == 409) {
+                AppToasts.info('Максимальное кол-во тэгов - 10');
+            }
+        } catch {
+            AppToasts.error('Что-то пошло не так');
+        }
     }
 
     async removeTag(tag:string) {
