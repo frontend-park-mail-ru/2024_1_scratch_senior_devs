@@ -929,6 +929,7 @@ const RenderSubNote = (subNoteId:string) => {
 
     const subNoteTitle = document.createElement("span")
     subNoteTitle.className = "subnote-title"
+    subNoteTitle.innerHTML = subNoteWrapper.dataset.title
 
     const noteIcon = document.createElement("img")
     noteIcon.src = "./src/assets/note.svg"
@@ -968,6 +969,7 @@ const RenderSubNote = (subNoteId:string) => {
             subNoteTitle.innerHTML = 'Подзаметка'
         }
 
+        subNoteWrapper.dataset.title = parseNoteTitle(result.data.title)
         subNoteTitle.innerHTML = parseNoteTitle(result.data.title)
 
     }).catch(() => {

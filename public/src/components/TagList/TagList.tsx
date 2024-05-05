@@ -20,6 +20,7 @@ export class TagList extends ScReact.Component<any, TagListState> {
 
     private MIN_TAG_LENGTH = 2
     private MAX_TAG_LENGTH = 12
+    private MAX_TAG_COUNT = 10
 
     private inputRef
     private openBtnRef
@@ -84,6 +85,11 @@ export class TagList extends ScReact.Component<any, TagListState> {
 
             if (this.props.tags.includes(this.state.value)) {
                 AppToasts.error(`Такой тэг уже существует`)
+                return
+            }
+
+            if (this.props.tags.length >= this.MAX_TAG_COUNT) {
+                AppToasts.info(`Максимальное кол-во тэгов - 10`)
                 return
             }
 
