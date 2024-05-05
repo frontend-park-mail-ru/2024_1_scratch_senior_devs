@@ -48,7 +48,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
     };
 
     closeEditor = () => {
-        // this.saveNote();
+        this.saveNote();
         this.props.setClose();
         setTimeout(() => AppDispatcher.dispatch(NotesActions.CLOSE_NOTE), 300);
     };

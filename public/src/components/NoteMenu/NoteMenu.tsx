@@ -38,7 +38,6 @@ export class NoteMenu extends ScReact.Component<any, any> {
         this.props.deleteNote()
     }
 
-
     inviteUser = () => {
         this.toggleMenu()
         this.props.inviteUser()

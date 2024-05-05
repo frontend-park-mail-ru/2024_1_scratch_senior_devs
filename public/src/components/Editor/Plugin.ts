@@ -996,7 +996,7 @@ const RenderSubNote = (subNoteId:string) => {
 
     setTimeout(() => {
         loading = false
-    }, 500)
+    }, 1000)
 
     subNoteWrapper.onclick = () => {
         if (!subNoteWrapper.dataset.deleted) {
