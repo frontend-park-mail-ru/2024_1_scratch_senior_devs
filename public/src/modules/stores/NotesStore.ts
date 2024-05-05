@@ -7,6 +7,7 @@ import {NoteDataType, NoteType} from "../../utils/types";
 import {decode, parseNoteTitle} from "../utils";
 import {WebSocketConnection} from "../websocket";
 import {insertBlockPlugin} from "../../components/Editor/Plugin";
+import {AppNoteStore} from "./NoteStore";
 
 export type NotesStoreState = {
     notes: NoteType[],
@@ -334,7 +335,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     async createSubNote() {
-
         if (!this.state.selectedNote) {
             return
         }
@@ -344,7 +344,13 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 
-            insertBlockPlugin('subnote', subnote_id);
+            if (status == 200) {
+                insertBlockPlugin('subnote', subnote_id);
+            } else if (status == 404) {
+                AppToasts.info("Максимальная вложенность заметок - 3")
+            }else if (status == 409) {
+                AppToasts.info("Максимальное кол-во подзаметок - 10")
+            }
 
         } catch (e) {
             

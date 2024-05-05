@@ -409,13 +409,18 @@ class NoteRequests {
             }
         });
 
-        
+
 
         if (response.status == 200) {
             return {
                 status: response.status,
                 csrf: response.headers['x-csrf-token'],
                 subnote_id: response.body.id
+            }
+        } else {
+            return {
+                status: response.status,
+                csrf: response.headers['x-csrf-token']
             }
         }
 
