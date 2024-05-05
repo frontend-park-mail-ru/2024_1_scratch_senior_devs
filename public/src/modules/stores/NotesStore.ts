@@ -149,8 +149,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
         this.SetState(s=>({
             ...s,
-            selectedNote: undefined,
-            notes: notes
+            selectedNote: undefined
         }));
 
     }
@@ -186,6 +185,15 @@ class NotesStore extends BaseStore<NotesStoreState> {
     selectNote (note:NoteType) {
         console.log("selectNote")
         console.log(note)
+
+        if (this.state.selectedNote) {
+            const notes = this.state.notes;
+            notes.forEach((note, index) => {
+                if (note.id == this.state.selectedNote.id) {
+                    notes[index] = this.state.selectedNote;
+                }
+            });
+        }
 
         this.closeWS()
 
