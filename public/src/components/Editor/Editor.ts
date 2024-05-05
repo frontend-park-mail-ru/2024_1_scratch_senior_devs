@@ -158,11 +158,11 @@ export class Editor {
 
         document.onselectionchange = debounce(selectionCallback, 500)
 
-        document.onclick = (e) => {
-            if (!document.querySelector(".tippy-container").contains(e.target as Node)) {
-                this.tippyCallbacks.close();
-            }
-        }
+        // document.onclick = (e) => {
+        //     if (!document.querySelector(".tippy-container").contains(e.target as Node)) {
+        //         this.tippyCallbacks.close();
+        //     }
+        // }
     }
 
     getSchema = () => {
