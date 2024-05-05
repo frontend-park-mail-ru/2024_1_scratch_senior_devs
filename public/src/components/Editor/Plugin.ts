@@ -1,9 +1,10 @@
 import {AppUserStore} from "../../modules/stores/UserStore";
 import {parseNoteTitle, setCursorAtNodePosition, truncate} from "../../modules/utils";
-import {NotesActions} from "../../modules/stores/NotesStore";
+import {AppNotesStore, NotesActions} from "../../modules/stores/NotesStore";
 import {AppNoteRequests} from "../../modules/api";
 import {AppDispatcher} from "../../modules/dispatcher";
 import {AppToasts} from "../../modules/toasts";
+import {AppNoteStore} from "../../modules/stores/NoteStore";
 
 interface EditorPlugin {
     pluginName: string;
@@ -933,31 +934,34 @@ const RenderSubNote = (subNoteId:string) => {
     noteIcon.src = "./src/assets/note.svg"
     noteIcon.className = "subnote-icon"
 
-    // TODO: не рендерить кнопку удаления подзаметки, если юзер не является овнером родительской заметки
-    const deleteSubnoteBtnContainer = document.createElement("div")
-    deleteSubnoteBtnContainer.className = "delete-subnote-btn-container"
-
-    const deleteSubnoteBtn = document.createElement("img")
-    deleteSubnoteBtn.src = "./src/assets/trash.svg"
-    deleteSubnoteBtn.className = "delete-subnote-btn"
-
-    deleteSubnoteBtnContainer.onclick = (e) => {
-        e.stopPropagation()
-        subNoteWrapper.remove();
-
-        if (!subNoteWrapper.dataset.deleted) {
-            AppDispatcher.dispatch(NotesActions.DELETE_NOTE, {
-                id: subNoteId,
-                redirect: false
-            })
-        }
-    }
-
-    deleteSubnoteBtnContainer.appendChild(deleteSubnoteBtn)
-
     subNoteWrapper.appendChild(noteIcon)
     subNoteWrapper.appendChild(subNoteTitle)
-    subNoteWrapper.appendChild(deleteSubnoteBtnContainer)
+
+    const isOwner= AppNotesStore.state.selectedNote.owner_id == AppUserStore.state.user_id
+
+    if (isOwner) {
+        const deleteSubnoteBtnContainer = document.createElement("div")
+        deleteSubnoteBtnContainer.className = "delete-subnote-btn-container"
+
+        const deleteSubnoteBtn = document.createElement("img")
+        deleteSubnoteBtn.src = "./src/assets/trash.svg"
+        deleteSubnoteBtn.className = "delete-subnote-btn"
+
+        deleteSubnoteBtnContainer.onclick = (e) => {
+            e.stopPropagation()
+            subNoteWrapper.remove();
+
+            if (!subNoteWrapper.dataset.deleted) {
+                AppDispatcher.dispatch(NotesActions.DELETE_NOTE, {
+                    id: subNoteId,
+                    redirect: false
+                })
+            }
+        }
+
+        deleteSubnoteBtnContainer.appendChild(deleteSubnoteBtn)
+        subNoteWrapper.appendChild(deleteSubnoteBtnContainer)
+    }
 
     AppNoteRequests.Get(subNoteId, AppUserStore.state.JWT).then(result => {
         if (result.data.title == null) {
