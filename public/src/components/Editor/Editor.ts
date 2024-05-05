@@ -10,6 +10,7 @@ import {
 } from "./Plugin";
 import {AppUserStore} from "../../modules/stores/UserStore";
 import {getCaretPosition} from "../../modules/utils";
+import {debounce} from "../../utils/debauncer";
 
 export class Editor {
     private readonly editable: HTMLElement;
@@ -87,8 +88,6 @@ export class Editor {
             subtree: true
         });
 
-        document.onselectionchange = () => {selectionCallback()}
-
         const selectionCallback = () => {
             const isInEditor = (node: Node) => {
                 if (node.nodeType === Node.ELEMENT_NODE && (node as HTMLElement).contentEditable === 'true' && !(node as HTMLElement).classList.contains("note-title")) {
@@ -129,17 +128,26 @@ export class Editor {
 
                 elem.dataset[`cursor${AppUserStore.state.username}`] = `${getCaretPosition(elem)}`;
 
+                // TODO: отоброажать курсоры пользователей при редактировании одной заметки
                 // const fakeCaret = document.createElement("div")
                 // fakeCaret.className = "fake-caret"
                 // elem.append(fakeCaret)
+
             } else {
                 scanTree(this.editable);
             }
-            
+
             if (!selection.isCollapsed && isEditor) {
                 this.tippyCallbacks.open(selection.anchorNode.parentElement);
             } else {
-                
+                this.tippyCallbacks.close();
+            }
+        }
+
+        document.onselectionchange = debounce(selectionCallback, 500)
+
+        document.onclick = (e) => {
+            if (!document.querySelector(".tippy-container").contains(e.target as Node)) {
                 this.tippyCallbacks.close();
             }
         }
