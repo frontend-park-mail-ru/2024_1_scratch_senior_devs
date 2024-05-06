@@ -704,6 +704,75 @@ export const defaultPlugins: EditorPlugin[] = [
             return img;
         }
     },
+    {
+        pluginName: 'font',
+        type: "inline",
+        content: "inline",
+        checkPlugin: (node: Node) => {
+            return node.nodeType === node.ELEMENT_NODE && (node as HTMLElement).tagName === 'FONT'
+        },
+        toJson: (node: Node) => {
+            const children: PluginProps[] = [];
+            (node as HTMLElement).childNodes.forEach(child => {
+                children.push(toJson(child));
+            })
+            return {
+                pluginName: 'font',
+                children: children,
+                color: (node as HTMLElement).style.color
+            };
+        },
+        fromJson: (props: PluginProps) => {
+            const children: Node[] = [];
+            props.children.forEach(value => {
+                children.push(fromJson(value));
+            });
+            const div = document.createElement('font');
+            children.forEach(child => {
+                div.append(child);
+            })
+            div.style.color = props.color as string;
+            return div;
+        },
+        insertNode: undefined,
+    },
+    {
+        pluginName: 'background',
+        type: "inline",
+        content: "inline",
+        checkPlugin: (node: Node) => {
+            return node.nodeType === node.ELEMENT_NODE && (node as HTMLElement).tagName === 'SPAN' && (node as HTMLElement).style.backgroundColor != null
+        },
+        toJson: (node: Node) => {
+            const children: PluginProps[] = [];
+            (node as HTMLElement).childNodes.forEach(child => {
+                children.push(toJson(child));
+            })
+            return {
+                pluginName: 'background',
+                children: children,
+                background: (node as HTMLElement).style.backgroundColor
+            };
+        },
+        fromJson: (props: PluginProps) => {
+            const children: Node[] = [];
+            props.children.forEach(value => {
+                children.push(fromJson(value));
+            });
+            const div = document.createElement('span');
+            children.forEach(child => {
+                div.append(child);
+            })
+            div.style.backgroundColor = props.background as string;
+            return div;
+        },
+        insertNode: undefined,
+        onInsert: (node: Node) => {
+            const first = node.firstChild;
+            (node as HTMLElement).replaceWith(first);
+            document.getSelection().setPosition(first, 1);
+        }
+    },
 ]
 
 export const toJson = (node: Node): PluginProps => {
