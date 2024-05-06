@@ -85,7 +85,7 @@ export class Editor {
                     div.append(document.createElement('br'));
                     this.editable.append(div);
                 }
-                
+                console.log(schema)
                 onChange(schema)
             })
 
