@@ -16,6 +16,8 @@ export class Collaborators extends ScReact.Component<any, any> {
     }
 
     updateState = (store:NotesStoreState) => {
+        console.log("updateState")
+        console.log(store.selectedNoteCollaborators)
         this.setState(state => ({
             ...state,
             collaborators: store.selectedNoteCollaborators
@@ -27,7 +29,7 @@ export class Collaborators extends ScReact.Component<any, any> {
             <div>
                 <h3>Collaborators</h3>
                 {this.state.collaborators.map(collaborator => (
-                    <h2>{collaborator}</h2>
+                    <h2>{collaborator.username}</h2>
                 ))}
             </div>
         )
