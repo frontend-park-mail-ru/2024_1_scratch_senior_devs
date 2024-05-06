@@ -36,7 +36,7 @@ export const ValidatePassword = (value:string):ValidationResultType   => {
 };
 
 
-export const ValidateLogin = (value):ValidationResult => {
+export const ValidateLogin = (value:string):ValidationResultType => {
     for (let index = 0; index < value.length; ++index){
         if (!(value.charCodeAt(index) >= 97 && value.charCodeAt(index) <= 122 ||
             value.charCodeAt(index) >= 64 && value.charCodeAt(index) <= 90 ||

@@ -4,16 +4,24 @@ import {Img} from '../Image/Image';
 import {AppNotesStore, NotesActions, NotesStoreState} from '../../modules/stores/NotesStore';
 import {AppDispatcher} from '../../modules/dispatcher';
 import {SwipeArea} from '../SwipeArea/SwipeArea';
-import {Editor} from '../Editor/Editor';
-import {AppNoteStore} from '../../modules/stores/NoteStore';
+import {AppNoteStore, NoteStoreActions} from '../../modules/stores/NoteStore';
 import {Modal} from '../Modal/Modal';
 import {DeleteNoteDialog} from '../DeleteNoteDialog/DeleteNoteDialog';
+import NoteMenu from "../NoteMenu/NoteMenu";
+import {InviteUserModal} from "../InviteUserModal/InviteUserModal";
+import {Tooltip} from "../Tooltip/Tooltip";
+import {AppToasts} from "../../modules/toasts";
+import {TagList} from "../TagList/TagList";
+import {EditorWrapper} from "../Editor/EditorWrapper";
+import {AppUserStore} from "../../modules/stores/UserStore";
 
 export class NoteEditor extends ScReact.Component<any, any> {
     state = {
         selectedNote: undefined,
         content: undefined,
-        deleteNoteModalOpen: false
+        deleteNoteModalOpen: false,
+        inviteUserModalOpen: false,
+        favourite: false // TODO
     };
 
     private savingLabelRef;
@@ -27,17 +35,16 @@ export class NoteEditor extends ScReact.Component<any, any> {
         if (this.state.selectedNote) {
             AppDispatcher.dispatch(NotesActions.SAVE_NOTE,  {
                 id: this.state.selectedNote.id,
-                note: AppNoteStore.state.note
+                note: AppNoteStore.state.note,
+                parent: this.state.selectedNote.data.parent
             });
         }
 
-        this.savingLabelRef.innerHTML = window.navigator.onLine ? 'Сохранено' : 'Не удалось сохранить';
-        this.savingLabelRef.style.opacity = 1;
+        this.savingLabelRef.classList.add("active");
     };
 
     onChangeNote = () => {
-        this.savingLabelRef.innerHTML = '';
-        this.savingLabelRef.style.opacity = 0;
+        this.savingLabelRef.classList.remove("active")
     };
 
     closeEditor = () => {
@@ -47,31 +54,34 @@ export class NoteEditor extends ScReact.Component<any, any> {
     };
 
     updateState = (store:NotesStoreState) => {
-        console.log('NoteEditor.updateState');
-
         if (store.selectedNote != this.state.selectedNote) {
-            this.savingLabelRef.innerHTML = '';
+            this.savingLabelRef.classList.remove("active")
         }
 
-        this.setState(state => {
-            return {
-                ...state,
-                selectedNote: store.selectedNote
-            };
-        });
+        this.setState(state => ({
+            ...state,
+            selectedNote: store.selectedNote
+        }));
 
         if (this.state.selectedNote) {
-            AppNoteStore.SetNote({
+            AppDispatcher.dispatch(NoteStoreActions.SET_NOTE, {
                 title: this.state.selectedNote.data.title,
                 blocks: this.state.selectedNote.data.content
-            });
+            })
         }
     };
 
-    deleteNote = () => {
+    openDeleteNoteModal = () => {
         this.setState(state => ({
             ...state,
             deleteNoteModalOpen: true
+        }))
+    };
+
+    openInviteUserModal = () => {
+        this.setState(state => ({
+            ...state,
+            inviteUserModalOpen: true
         }))
     };
 
@@ -82,13 +92,45 @@ export class NoteEditor extends ScReact.Component<any, any> {
         }))
     }
 
+    closeInviteUserModal = () => {
+        this.setState(state => ({
+            ...state,
+            inviteUserModalOpen: false
+        }))
+    }
+
+    openParentNote = () => {
+        AppDispatcher.dispatch(NotesActions.OPEN_NOTE, this.state.selectedNote.parent)
+    }
+
+    addToFavoriteBtn = () => {
+        // TODO: 4 модуль
+        
+        AppToasts.success("Заметка добавлена в избранное")
+        this.setState(state => ({
+            ...state,
+            favourite: !state.favourite
+        }))
+    }
+
     render() {
+        const isSubNote = this.state.selectedNote?.parent != "00000000-0000-0000-0000-000000000000" ? "hidden" : ""
+        const isOwner = this.state.selectedNote?.owner_id == AppUserStore.state.user_id
+
         return (
             <div className={'note-editor-wrapper ' + (this.props.open ? 'active' : '')}>
 
                 <SwipeArea enable={this.props.open} right={this.closeEditor} target=".note-editor-wrapper"/>
 
-                <Modal open={this.state.deleteNoteModalOpen} handleClose={this.closeDeleteModalDialog} content={<DeleteNoteDialog handleClose={this.closeDeleteModalDialog} />} />
+                <Modal open={this.state.deleteNoteModalOpen}
+                       handleClose={this.closeDeleteModalDialog}
+                       content={<DeleteNoteDialog handleClose={this.closeDeleteModalDialog}/>}
+                />
+
+                <Modal open={this.state.inviteUserModalOpen}
+                       handleClose={this.closeInviteUserModal}
+                       content={<InviteUserModal handleClose={this.closeInviteUserModal} open={this.state.inviteUserModalOpen}/>}
+                />
 
                 <div className="top-panel">
                     <div className="left-container">
@@ -96,27 +138,44 @@ export class NoteEditor extends ScReact.Component<any, any> {
                             <Img src="left-chevron.svg" className="back-icon"/>
                             <span className="back-label">Заметки</span>
                         </div>
+                        <div className={isSubNote ? "hidden" : ""}>
+                            {isOwner ? <TagList tags={this.state.selectedNote?.tags} onChange={this.props.onChangeTags} /> : ""}
+                        </div>
                     </div>
                     <div className="right-container">
-                        <div className="note-save-indicator">
-                            <span ref={ref => this.savingLabelRef = ref}></span>
+
+                        <div className="note-save-indicator" ref={ref => this.savingLabelRef = ref}>
+                            <Tooltip icon="check.svg" label="Сохранено"/>
                         </div>
-                        <Img src="trash.svg" className="icon delete-note-icon" onClick={this.deleteNote}/>
-                        <Img src="close.svg" className="icon close-editor-icon" onClick={this.closeEditor}/>
+
+                        {/*<div className={isSubNote ? "hidden" : ""}>*/}
+                        {/*    <Tooltip label="В избранное" icon={this.state.favourite ? "star-filled.svg" : "star.svg"} onClick={this.addToFavoriteBtn}/>*/}
+                        {/*</div>*/}
+
+                        <div className={!isSubNote ? "hidden" : ""}>
+                            <Tooltip label="Вернуться" icon="arrow-up.svg" onClick={this.openParentNote}/>
+                        </div>
+
+                        {isOwner ? <NoteMenu deleteNote={this.openDeleteNoteModal} inviteUser={this.openInviteUserModal}/> : "" }
+
+                        <div className="close-editor-btn-container" onclick={this.closeEditor}>
+                            <Img src="close.svg" className="icon close-editor-icon"/>
+                        </div>
                     </div>
                 </div>
 
                 <div className="bottom-panel">
 
-                    <Editor
-                        onChangeTitle={(value:string) => {
-                            console.log('onChangeTitle');
+                    <EditorWrapper
+                        onChangeTitle={(value: string) => {
                             this.props.onChangeTitle(value);
                             this.onChangeNote();
+                            AppDispatcher.dispatch(NoteStoreActions.CHANGE_TITLE, value)
                         }}
-                        onChangeContent={() => {
+                        onChangeContent={(content) => {
                             this.props.onChangeNote()
                             this.onChangeNote()
+                            AppDispatcher.dispatch(NoteStoreActions.CHANGE_CONTENT, content)
                         }}
                     />
 

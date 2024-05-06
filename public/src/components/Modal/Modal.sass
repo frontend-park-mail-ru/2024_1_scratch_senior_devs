@@ -11,10 +11,12 @@
 	align-items: center
 	transition: top 0ms ease-in-out 300ms
 	z-index: 10
+	pointer-events: none
 
 	&.active
 		top: 0
 		transition: top 0ms ease-in-out 0ms
+		pointer-events: auto
 
 		.overlay
 			opacity: 1
@@ -66,17 +68,17 @@
 				transform: scale(1.2)
 				opacity: 0
 
-		.close-modal-btn
-			position: absolute
-			top: 16px
-			right: 16px
-			width: 24px
-			height: 24px
-			cursor: pointer
-			filter: invert(80%)
-			transition: 0.3s
-			opacity: 0.8
+	.close-modal-btn
+		position: absolute
+		top: 16px
+		right: 16px
+		width: 24px
+		height: 24px
+		cursor: pointer
+		filter: invert(80%)
+		transition: 0.3s
+		opacity: 0.8
 
-			&:hover
-				opacity: 1
+		&:hover
+			opacity: 1
 

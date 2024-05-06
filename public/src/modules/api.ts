@@ -4,10 +4,7 @@ import {
     UserRegisterCredentialsType,
     UserUpdatePasswordCredentialsType
 } from './stores/UserStore';
-import {AppToasts} from './toasts';
-import {Exception} from 'sass';
-
-export const isDebug = process.env.NODE_ENV === 'development';
+import {isDebug} from "../utils/consts";
 
 const baseUrl = isDebug ? 'http://localhost:8080/api' : 'https://you-note.ru/api';
 
@@ -267,18 +264,12 @@ class ProfileRequests {
             }
         });
 
-        console.log('UpdatePassword');
-        console.log(response.headers);
-
         return {
             status: response.status,
             csrf: response.headers['x-csrf-token']
         };
     };
 }
-
-
-
 
 class NoteRequests {
     private baseUrl = '/note';
@@ -317,7 +308,7 @@ class NoteRequests {
         throw Error(response.body.message);
     };
 
-    Delete = async (id: number, jwt: string, csrf:string) => {
+    Delete = async (id: string, jwt: string, csrf:string) => {
         const response = await Ajax.Delete(this.baseUrl + '/' + id + '/delete', {
             headers: {
                 'Authorization': jwt,
@@ -336,8 +327,6 @@ class NoteRequests {
     };
 
     Update = async({id, note}, jwt: string, csrf:string)=> {
-        console.log('Update');
-
         const response = await Ajax.Post(this.baseUrl + '/' + id + '/edit', {
             headers: {
                 'Authorization': jwt,
@@ -364,16 +353,23 @@ class NoteRequests {
                 'x-csrf-token': csrf
             },
             body: {
+                children: [],
                 data: {
+                    title: '',
                     content: [
                         {
-                            'id': '1',
-                            'type': 'div',
-                            'content': [
+                            pluginName: "textBlock",
+                            content: "Hello You-note"
+                        },
+                        {
+                            pluginName: "div",
+                            children: [
+                                {
+                                    pluginName: "br"
+                                }
                             ]
                         }
-                    ],
-                    title: ''
+                    ]
                 }
             }
         });
@@ -384,6 +380,47 @@ class NoteRequests {
         }
 
         throw new Error();
+    };
+
+    AddSubNote = async (id:string, jwt:string, csrf:string) => {
+        const response = await Ajax.Post(this.baseUrl + '/' + id + "/add_subnote", {
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            },
+            body: {
+                data: {
+                    title: '',
+                    content: [
+                        {
+                            pluginName: "textBlock",
+                            content: "Hello You-note"
+                        },
+                        {
+                            pluginName: "div",
+                            children: [
+                                {
+                                    pluginName: "br"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        });
+
+        if (response.status == 200) {
+            return {
+                status: response.status,
+                csrf: response.headers['x-csrf-token'],
+                subnote_id: response.body.id
+            }
+        }
+
+        return {
+            status: response.status,
+            csrf: response.headers['x-csrf-token']
+        }
     };
 
     UploadFile = async (id:string, file:File, jwt:string, csrf:string) => {
@@ -424,7 +461,7 @@ class NoteRequests {
         return URL.createObjectURL(blob);
     };
 
-    GetFile = async (id:string, fileName:string, jwt:string, csrf:string) => {
+    DownloadFile = async (id:string, fileName:string, jwt:string, csrf:string) => {
         const options: RequestInit = {
             method: RequestMethods.GET,
             mode: 'cors',
@@ -444,10 +481,94 @@ class NoteRequests {
 
         return url;
     };
+
+    AddCollaborator = async (id: string, username:string, jwt:string, csrf:string) => {
+        const response = await Ajax.Post(this.baseUrl + '/' + id + '/add_collaborator/', {
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            },
+            body: {
+                "username": username
+            }
+        });
+
+        return {
+            status: response.status,
+            csrf: response.headers['x-csrf-token']
+        }
+    }
+
+    AddTag = async (note_id: string, tag: string,  jwt:string, csrf:string)=> {
+        const response = await Ajax.Post(this.baseUrl + '/' + note_id + '/add_tag/', {
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            },
+            body: {
+                "tag_name": tag
+            }
+        });
+
+        if (response.status == 200) {
+            response.body.data = decode(response.body.data)
+
+            return {
+                note: response.body,
+                status: response.status,
+                csrf: response.headers['x-csrf-token']
+            }
+        }
+
+        return {
+            status: response.status,
+            csrf: response.headers['x-csrf-token']
+        }
+    }
+
+    RemoveTag = async (note_id: string, tag: string,  jwt:string, csrf:string)=> {
+        const response = await Ajax.Delete(this.baseUrl + '/' + note_id + '/delete_tag/', {
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            },
+            body: {
+                "tag_name": tag
+            }
+        });
+
+        if (response.status == 200) {
+            response.body.data = decode(response.body.data)
+        }
+
+        return {
+            note: response.body,
+            status: response.status,
+            csrf: response.headers['x-csrf-token']
+        }
+    }
+}
+
+class TagRequests {
+    GetAll = async (jwt:string) => {
+        const response = await Ajax.Get('/tags' , {
+            headers: {
+                'Authorization': jwt
+            },
+        });
+
+        if (response.status === 200) {
+            return response;
+        }
+
+        throw Error(response.body.message);
+    }
 }
 
 export const AppAuthRequests = new AuthRequests();
 
 export const AppNoteRequests = new NoteRequests();
+
+export const AppTagRequests = new TagRequests();
 
 export const AppProfileRequests = new ProfileRequests();

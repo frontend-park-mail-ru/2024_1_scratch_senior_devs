@@ -2,10 +2,10 @@ import {ScReact} from '@veglem/screact';
 import {Input} from '../Input/Input';
 import {Button} from '../Button/Button';
 import './YoutubeDialog.sass';
-import {AppNoteStore, NoteStoreActions} from '../../modules/stores/NoteStore';
-import {AppDispatcher} from '../../modules/dispatcher';
+
 import {parseYoutubeLink} from '../../modules/utils';
 import {AppToasts} from '../../modules/toasts';
+import {insertBlockPlugin} from "../Editor/Plugin";
 
 export class YoutubeDialogForm extends ScReact.Component<any, any> {
     state = {
@@ -38,6 +38,7 @@ export class YoutubeDialogForm extends ScReact.Component<any, any> {
     };
 
     handleChange = (value:string) => {
+
         this.setValue(value);
 
         if (parseYoutubeLink(value)) {
@@ -59,26 +60,25 @@ export class YoutubeDialogForm extends ScReact.Component<any, any> {
     };
 
     insertVideo = (video_id:string) => {
-        const block = AppNoteStore.state.note.blocks[AppNoteStore.state.dropdownPos.blockId];
-        block.type = 'div';
-        block.content = undefined;
-        block.attributes = {};
-        block.attributes['youtube'] = 'https://www.youtube.com/embed/' + video_id;
-        AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
-            blockId: AppNoteStore.state.dropdownPos.blockId,
-            newBlock: block
-        });
+        // const block = AppNoteStore.state.note.blocks[AppNoteStore.state["dropdownPos"].blockId];
+        // block.type = 'iframe';
+        // block.content = undefined;
+        // block.attributes = {
+        //     youtube: 'https://www.youtube.com/embed/' + video_id,
+        //     width: "560",
+        //     height: "315",
+        //     className: "youtube-player",
+        //     src: 'https://www.youtube.com/embed/' + video_id,
+        //     sandbox: "allow-same-origin allow-scripts"
+        // };
+        // AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
+        //     blockId: AppNoteStore.state.dropdownPos.blockId,
+        //     newBlock: block
+        // });
+
+        insertBlockPlugin('youtube', 'https://www.youtube.com/embed/' + video_id)
 
         this.props.handleClose()
-
-        setTimeout(() => {
-            this.setState(state => ({
-                ...state,
-                value: '',
-                validationResult: null,
-                errorMessage: ''
-            }));
-        }, 300);
     };
 
     render() {

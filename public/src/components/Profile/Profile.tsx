@@ -107,7 +107,7 @@ export class Profile extends ScReact.Component<any, any> {
                     </div>
                 </div>
 
-                <Modal open={this.state.updatePasswordFormOpen} content={<UpdatePasswordForm/>} handleClose={this.closeChangePasswordForm}/>
+                <Modal open={this.state.updatePasswordFormOpen} content={<UpdatePasswordForm handleClose={this.closeChangePasswordForm}/>} handleClose={this.closeChangePasswordForm}/>
 
             </div>
         );
