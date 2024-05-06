@@ -1,6 +1,7 @@
 import {ScReact} from "@veglem/screact";
 import "./Collaborators.sass"
 import {AppNotesStore, NotesStoreState} from "../../modules/stores/NotesStore";
+import {imagesUlr} from "../../modules/api";
 
 export class Collaborators extends ScReact.Component<any, any> {
     state = {
@@ -26,10 +27,12 @@ export class Collaborators extends ScReact.Component<any, any> {
 
     render() {
         return (
-            <div>
-                <h3>Collaborators</h3>
+            <div className="collaborators-list-wrapper">
                 {this.state.collaborators.map(collaborator => (
-                    <h2>{collaborator.username}</h2>
+                    <div className="collaborator">
+                        <h2 className="collaborator-username" >{collaborator.username}</h2>
+                        <img src={imagesUlr + collaborator.avatar} className="collaborator-avatar"  alt=""/>
+                    </div>
                 ))}
             </div>
         )

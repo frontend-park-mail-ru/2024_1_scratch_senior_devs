@@ -233,7 +233,17 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 }))
 
             } else if (data.type == "closed") {
-                // TODO
+                const collaborator = {
+                    id: data.user_id,
+                    username: data.username,
+                    avatar: data.image_path
+                }
+
+                this.SetState(state => ({
+                    ...state,
+                    selectedNoteCollaborators: state.selectedNoteCollaborators.filter(cb => cb != collaborator)
+                }))
+
             } else if (data.type == "updated") {
                 const noteData = decode(data.message_info) as NoteDataType
                 if (JSON.stringify(noteData) == JSON.stringify(this.state.selectedNote.data)) {
