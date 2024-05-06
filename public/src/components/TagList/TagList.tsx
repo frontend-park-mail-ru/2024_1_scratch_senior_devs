@@ -32,11 +32,13 @@ export class TagList extends ScReact.Component<any, TagListState> {
     }
 
     componentWillUnmount() {
-        document.removeEventListener('click', this.handleClickOutside, true);
+        document.removeEventListener('click', this.handleClickOutside);
         AppNotesStore.UnSubscribeToStore(this.updateState)
     }
 
     handleClickOutside = (e) => {
+        console.log("handleClickOutside")
+        console.log(this.state.open)
         if (this.state.open && !this.openBtnRef.contains(e.target) && !e.target.matches(".tags-wrapper,.tags-wrapper *")) {
             this.toggleOpen();
         }
@@ -131,6 +133,7 @@ export class TagList extends ScReact.Component<any, TagListState> {
 
     handleSelectTag = (tagname:string) => {
         if (this.props.tags.includes(tagname)) {
+            // TODO
             this.deleteTag(tagname)
         } else {
             this.addTag(tagname)

@@ -134,37 +134,40 @@ export class NoteEditor extends ScReact.Component<any, any> {
                 />
 
                 <div className="top-panel">
-                    <div className="left-container">
+
+                    <div className="close-editor-label-wrapper">
                         <div className="close-editor-label-container" onclick={this.closeEditor}>
                             <Img src="left-chevron.svg" className="back-icon"/>
-                            <span className="back-label">Заметки</span>
-                        </div>
-                        <div className={isSubNote ? "hidden" : ""}>
-                            {isOwner ? <TagList tags={this.state.selectedNote?.tags} onChange={this.props.onChangeTags} /> : ""}
+                            <span className="back-label" >Заметки</span>
                         </div>
                     </div>
-                    <div className="right-container">
 
-                        <Collaborators/>
-
-                        <div className="note-save-indicator" ref={ref => this.savingLabelRef = ref}>
-                            <Tooltip icon="check.svg" label="Сохранено"/>
-                        </div>
-
-                        {/*<div className={isSubNote ? "hidden" : ""}>*/}
-                        {/*    <Tooltip label="В избранное" icon={this.state.favourite ? "star-filled.svg" : "star.svg"} onClick={this.addToFavoriteBtn}/>*/}
-                        {/*</div>*/}
-
-                        <div className={!isSubNote ? "hidden" : ""}>
-                            <Tooltip label="Вернуться" icon="arrow-up.svg" onClick={this.openParentNote}/>
-                        </div>
-
-                        {isOwner ? <NoteMenu deleteNote={this.openDeleteNoteModal} inviteUser={this.openInviteUserModal}/> : "" }
-
-                        <div className="close-editor-btn-container" onclick={this.closeEditor}>
-                            <Img src="close.svg" className="icon close-editor-icon"/>
-                        </div>
+                    <div className={isSubNote ? "tag-list-wrapper hidden" : "tag-list-wrapper"}>
+                        {isOwner ?
+                            <TagList tags={this.state.selectedNote?.tags} onChange={this.props.onChangeTags}/> : ""}
                     </div>
+
+                    <Collaborators/>
+
+                    <div className="note-save-indicator" ref={ref => this.savingLabelRef = ref}>
+                        <Tooltip icon="check.svg" label="Сохранено"/>
+                    </div>
+
+                    {/*<div className={isSubNote ? "hidden" : ""}>*/}
+                    {/*    <Tooltip label="В избранное" icon={this.state.favourite ? "star-filled.svg" : "star.svg"} onClick={this.addToFavoriteBtn}/>*/}
+                    {/*</div>*/}
+
+                    <div className={!isSubNote ? "hidden" : ""}>
+                        <Tooltip label="Вернуться" icon="arrow-up.svg" onClick={this.openParentNote}/>
+                    </div>
+
+                    {isOwner ? <NoteMenu deleteNote={this.openDeleteNoteModal}
+                                         inviteUser={this.openInviteUserModal}/> : ""}
+
+                    <div className="close-editor-btn-container" onclick={this.closeEditor}>
+                        <Img src="close.svg" className="icon close-editor-icon"/>
+                    </div>
+
                 </div>
 
                 <div className="bottom-panel">

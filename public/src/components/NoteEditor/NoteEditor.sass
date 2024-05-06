@@ -43,8 +43,10 @@
 
 	.top-panel
 		display: flex
-		justify-content: space-between
+		justify-content: flex-end
+		align-items: center
 		min-height: 48px
+		position: relative
 
 		.hidden
 			display: none
@@ -52,25 +54,37 @@
 		@media screen and (max-width: $sm)
 			padding: 0 20px
 
-		.left-container
-			display: flex
-			align-items: center
+		.tag-list-wrapper
 			flex: 1
-			padding-left: 20px
+			display: flex
 
 			@media screen and (max-width: $lg)
-				justify-content: space-between
-				padding-left: 0
+				flex: 0 1 auto
+				order: 1
+
+		.note-menu
+			@media screen and (max-width: $lg)
+				order: 2
+
+		.close-editor-label-wrapper
+			display: none
+			position: absolute
+			left: 0
+			top: 0
+			height: 100%
+
+			@media screen and (max-width: $lg)
+				display: flex
+
+			@media screen and (max-width: $sm)
+				left: 20px
 
 			.close-editor-label-container
-				display: none
-				align-items: center
-				justify-content: center
-				gap: 4px
+				display: flex
 				cursor: pointer
-
-				@media screen and (max-width: $lg)
-					display: flex
+				justify-content: center
+				align-items: center
+				gap: 4px
 
 				.back-icon
 					width: 9px
@@ -80,47 +94,46 @@
 					font-size: 18px
 					color: $text-secondary-color
 
-		.right-container
-			display: flex
-			align-items: center
-			gap: 12px
+		.note-save-indicator
+			display: none
+			animation: closeAnim 0.25s
 
-			.note-save-indicator
+			&.active
+				display: flex
+				animation: showAnim 0.25s
+
+			@media screen and (max-width: $lg)
+				order: 0
+
+		.add-to-favorite-btn-container
+			padding: 8px
+			border-radius: 8px
+			cursor: pointer
+			position: relative
+			flex: 1
+
+			&:hover
+				background: rgba(0, 0, 0, 0.15)
+
+			.add-to-favorite-btn
+				width: 24px
+				height: 24px
+				transition: 0.3s
+				filter: invert(80%)
+
+				&:hover
+					opacity: 1
+
+		.close-editor-btn-container
+			padding: 8px
+			border-radius: 8px
+			cursor: pointer
+
+			&:hover
+				background: rgba(0,0,0,0.15)
+
+			@media screen and (max-width: $lg)
 				display: none
-				animation: closeAnim 0.25s
-
-				&.active
-					display: flex
-					animation: showAnim 0.25s
-
-			.add-to-favorite-btn-container
-				padding: 8px
-				border-radius: 8px
-				cursor: pointer
-				position: relative
-
-				&:hover
-					background: rgba(0, 0, 0, 0.15)
-
-				.add-to-favorite-btn
-					width: 24px
-					height: 24px
-					transition: 0.3s
-					filter: invert(80%)
-
-					&:hover
-						opacity: 1
-
-			.close-editor-btn-container
-				padding: 8px
-				border-radius: 8px
-				cursor: pointer
-
-				&:hover
-					background: rgba(0,0,0,0.15)
-
-				@media screen and (max-width: $lg)
-					display: none
 
 		.icon
 			width: 24px
