@@ -1,6 +1,144 @@
-.drag-area
-  width: 100%
-  height: 4px
+@import "/public/src/utils/variables.sass"
+@import "/public/src/utils/mixins.sass"
 
-//.drag-area
-//  border: 1px solid blue
+[contenteditable]
+	outline: none
+	color: white
+
+[data-selected='true']::marker
+	content: '☑ '
+
+[data-selected='false']::marker
+	content: '☐ '
+
+[data-selected='true']
+	text-decoration: line-through
+
+[data-selected='false']
+	text-decoration: none
+
+.note-editor
+	overflow-y: auto
+	height: 100%
+	font-size: 18px
+	color: $text-main-color
+	display: flex
+	flex-direction: column
+	gap: 10px
+	position: relative
+	padding-right: 20px
+
+	@include scrollbar
+
+	.buttons-container
+		display: flex
+
+	.note-title
+		width: 100%
+		font-size: 28px
+		color: $text-main-color
+		font-weight: bold
+		margin-bottom: 5px
+
+		&:before
+			content: attr(data-placeholder)
+			color: $text-secondary-color
+			cursor: text
+
+	.note-body
+		.subnote-wrapper
+			background: $modal-background
+			padding: 8px 16px
+			border-radius: 16px
+			transition: 0.2s ease
+			border: 1px solid #2b3b55
+			margin: 15px 2px
+
+			&:hover
+				cursor: pointer
+				box-shadow: 0 0 2px $primary-color, 0 0 6px $primary-color
+
+			.subnote-container
+				display: flex
+				gap: 10px
+				align-items: center
+
+				span
+					transition: 0.5s
+					user-select: none
+
+				.subnote-icon
+					width: 16px
+					height: 24px
+					filter: invert(80%)
+
+				.delete-subnote-btn-container
+					background: #546189
+					padding: 8px
+					border-radius: 50%
+					transition: 0.3s
+
+					&:hover
+						opacity: 0.8
+
+					.delete-subnote-btn
+						filter: invert(80%)
+						width: 20px
+						height: 20px
+
+		.attach-wrapper
+			outline: none
+			border: none
+			background: transparent
+			padding: 0
+
+			.attach-container
+				background: $modal-background
+				padding: 8px 16px
+				border-radius: 16px
+				display: flex
+				align-items: center
+				gap: 10px
+				text-decoration: none
+				position: relative
+				cursor: pointer
+				transition: 0.2s ease
+				margin-right: 2px
+
+				&:hover
+					opacity: 0.9
+
+				.file-extension-label
+					background: #546189
+					color: #fff
+					border-radius: 8px
+					height: 40px
+					padding: 4px
+					display: flex
+					justify-content: center
+					align-items: center
+
+				.file-name
+					color: $text-main-color
+
+				.close-attach-btn-container
+					background: #546189
+					padding: 8px
+					border-radius: 50%
+					transition: 0.3s
+
+					&:hover
+						opacity: 0.8
+
+					.close-attach-btn
+						filter: invert(80%)
+						width: 20px
+						height: 20px
+
+		.placeholder
+			color: $text-secondary-color
+			position: absolute
+			top: 0
+			left: 30px
+			font-size: 28px
+			font-weight: bold

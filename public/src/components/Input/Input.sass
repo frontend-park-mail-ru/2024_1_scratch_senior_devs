@@ -53,7 +53,7 @@
 				&:before
 					transform: scaleX(0)
 
-		.input-container__label
+		.label
 			position: absolute
 			font-size: 16px
 			color: #fff
@@ -62,13 +62,14 @@
 			top: 14px
 			z-index: -1
 
+
 		&:not(.success,.error)
 			input:focus
 				~ .underline
 					&:before
 						transform: scaleX(1)
 
-		.input-container__underline
+		.underline
 			position: absolute
 			bottom: 0
 			height: 2px
@@ -97,6 +98,8 @@
 
 		input
 			&[type=password]
+				padding-right: 50px
+
 				~ .password-toggle-btn-container
 					.show-btn
 						opacity: 1
@@ -116,7 +119,7 @@
 						opacity: 1
 						transform: scale(1)
 						
-		.password-toggle
+		.password-toggle-btn
 			position: absolute
 			width: 24px
 			height: 24px
@@ -130,7 +133,7 @@
 				filter: invert(75%)
 
 	.errors-container
-		height: 40px
+		height: 45px
 		color: $error-color
 		font-size: 12px
 		padding: 0 10px

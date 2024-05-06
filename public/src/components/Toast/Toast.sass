@@ -37,7 +37,7 @@
 		100%
 			transform: translateX(calc(100% + 30px))
 
-.toast__content
+.toast-content
 	.toast-icon
 		height: 30px
 		width: 30px
@@ -46,17 +46,23 @@
 		display: flex
 		flex-direction: column
 
-		.content__title
+		.title
 			font-size: 20px
 			color: $text-main-color
 			font-weight: 600
 
-		.content__message
+		.message
 			font-size: 14px
 			color: $text-main-color
 
 .toast
-	.toast__close-btn
+
+	&.hide
+		.progress
+			&:before
+				right: 100%
+
+	.toast-close-btn
 		position: absolute
 		top: 10px
 		right: 15px
@@ -69,7 +75,7 @@
 		&:hover
 			opacity: 1
 
-	.toast__progress-bar
+	.progress
 		position: absolute
 		bottom: 0
 		left: 0

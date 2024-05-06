@@ -1,16 +1,14 @@
 import {ScReact} from '@veglem/screact';
 import './SearchBar.sass';
-import {AppDispatcher} from '../../modules/dispatcher';
-import {NotesActions} from '../../modules/stores/NotesStore';
 
-export class SearchBar extends ScReact.Component<any, any> {
+class SearchBar extends ScReact.Component<any, any> {
     state = {
         timer: null
     };
 
     handleChange = (e) => {
         if (this.props.onChange) {
-            AppDispatcher.dispatch(NotesActions.START_FETCHING);
+            this.props.onStartTyping && this.props.onStartTyping();
             clearTimeout(this.state.timer);
             this.state.timer = setTimeout(() => { this.props.onChange(e.target.value); }, 250);
         }
@@ -18,10 +16,12 @@ export class SearchBar extends ScReact.Component<any, any> {
 
     render() {
         return (
-            <div className="search-bar">
-                <input type="text" className="search-bar__input" placeholder="Поиск..." oninput={this.handleChange} />
-                <img src="/src/assets/search.svg" alt="" className="search-bar__icon"/>
+            <div className="search">
+                <input type="text" className="search-input" placeholder="Поиск..." oninput={this.handleChange} />
+                <img src="/src/assets/search.svg" alt="" className="search-icon"/>
             </div>
         );
     }
 }
+
+export default SearchBar

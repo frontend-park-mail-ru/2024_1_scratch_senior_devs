@@ -57,6 +57,11 @@ export class Toasts extends ScReact.Component<any, ToastState> {
             })
         }));
 
+        this.state.toasts = this.state.toasts.map(toast => {
+            toast.offset += 100;
+            return toast;
+        })
+
         const toast = {
             open: true,
             type: type,
@@ -69,6 +74,7 @@ export class Toasts extends ScReact.Component<any, ToastState> {
             ...state,
             toasts: state.toasts.concat(toast)
         }));
+        this.state.toasts = this.state.toasts.concat(toast)
 
         setTimeout(() => {
             this.closeToast(toast.id);
@@ -133,11 +139,11 @@ export class Toasts extends ScReact.Component<any, ToastState> {
         ));
 
         return (
-            <div>
+            <div className="toasts-wrapper">
                 {toasts}
             </div>
         );
     }
 }
 
-export let AppToasts = undefined;
+export let AppToasts:Toasts = undefined;

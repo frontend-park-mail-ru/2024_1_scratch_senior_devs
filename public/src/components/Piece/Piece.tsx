@@ -27,7 +27,7 @@ export class Piece extends Component<PieceProps, PieceState> {
         if (piece.attributes != null) {
             piece.attributes.style = '';
             if ('bold' in piece.attributes && piece.attributes.bold === true) {
-                piece.attributes.style += 'font-style: bold; ';
+                piece.attributes.style += 'font-weight: bold; ';
             }
             if ('underline' in piece.attributes && piece.attributes.underline === true ||
                 'lineThrough' in piece.attributes && piece.attributes.lineThrough === true) {

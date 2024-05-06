@@ -1,0 +1,120 @@
+@import "/public/src/utils/variables.sass"
+@import "/public/src/utils/animations.sass"
+
+$dot-size: 4px
+$dots-button-size: $dot-size * 10
+$dots-color: #c0c0c0
+$hover-color: rgba(0,0,0,0.2)
+
+.note-menu
+	position: relative
+	z-index: 2
+
+	&.open
+		.dots-wrapper
+			background: $hover-color
+
+		.options
+			display: flex
+			animation: showAnim 0.2s ease-in-out
+			opacity: 1
+
+	.dots-wrapper
+		border-radius: 8px
+		cursor: pointer
+		padding: 20px
+		overflow: hidden
+		position: relative
+		transition: all .2s ease-in
+
+		&:hover
+			background: $hover-color
+
+		.dots
+			background-color: $dots-color
+			border-radius: 50%
+			height: $dot-size
+			left: 50%
+			position: absolute
+			top: 50%
+			transform: translateX((calc(-1 * $dot-size / 2))) translateY(calc(-1 * $dot-size / 2))
+			width: $dot-size
+
+			&:before, &:after
+				background-color: inherit
+				border-radius: inherit
+				content: ""
+				height: 100%
+				left: 0
+				position: absolute
+				width: 100%
+
+			&:before
+				left: calc(-1 * $dots-button-size / 5)
+
+			&:after
+				left: calc($dots-button-size / 5)
+
+			.click-element
+				background: rgba(255,255,255, 0)
+				display: block
+				border-radius: 50%
+				height: $dot-size
+				position: absolute
+				width: $dot-size
+
+	.options
+		width: 210px
+		position: absolute
+		background: $note-menu-background
+		flex-direction: column
+		top: 50px
+		right: 0
+		border-radius: 8px
+		box-shadow: $box-shadow-primary
+		display: none
+		opacity: 0
+		animation: closeAnim 0.2s ease-in-out
+
+		&::before
+			content: ''
+			border: 7.5px solid transparent
+			border-top-width: 0
+			border-bottom-color: $tooltip-background
+			z-index: 1001
+			right: 13.5px
+			top: 0
+			transform: translate(0%, -100%)
+			text-transform: none
+			font-size: .9em
+			line-height: 1
+			user-select: none
+			pointer-events: none
+			position: absolute
+
+		.options-item
+			display: flex
+			align-items: center
+			gap: 10px
+			padding: 16px
+			cursor: pointer
+			width: 100%
+			justify-content: center
+			transition: 0.15s ease-in
+			border-radius: 8px
+
+			&:first-child
+				border-radius: 8px 8px 0 0
+
+			&:last-child
+				border-radius: 0 0 8px 8px
+
+			&:hover
+				background: $note-menu-background--darker
+
+			img
+				user-select: none
+
+			span
+				color: $text-secondary-color
+				user-select: none
