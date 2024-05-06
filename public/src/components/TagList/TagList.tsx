@@ -34,6 +34,7 @@ export class TagList extends ScReact.Component<any, TagListState> {
 
     componentWillUnmount() {
         document.removeEventListener('click', this.handleClickOutside, true);
+        AppNotesStore.UnSubscribeToStore(this.updateState)
     }
 
     handleClickOutside = (e) => {
