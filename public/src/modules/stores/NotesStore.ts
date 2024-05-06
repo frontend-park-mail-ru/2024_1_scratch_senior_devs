@@ -218,10 +218,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             if (data.username == AppUserStore.state.username) {
                 return
             }
-
             
-            
-
             if (data.type == "opened") {
                 const collaborator = {
                     id: data.user_id,
