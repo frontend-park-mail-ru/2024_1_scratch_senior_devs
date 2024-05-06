@@ -596,41 +596,41 @@ export const defaultPlugins: EditorPlugin[] = [
             return null;
         }
     },
-    // {
-    //     pluginName: 'span',
-    //     type: "inline",
-    //     content: "inline",
-    //     checkPlugin: (node: Node) => {
-    //         return node.nodeType === node.ELEMENT_NODE && (node as HTMLElement).tagName === 'SPAN' && (node as HTMLElement).style.backgroundColor == ""
-    //     },
-    //     toJson: (node: Node) => {
-    //         const children: PluginProps[] = [];
-    //         (node as HTMLElement).childNodes.forEach(child => {
-    //             children.push(toJson(child));
-    //         })
-    //         return {
-    //             pluginName: 'span',
-    //             children: children
-    //         };
-    //     },
-    //     fromJson: (props: PluginProps) => {
-    //         const children: Node[] = [];
-    //         props.children.forEach(value => {
-    //             children.push(fromJson(value));
-    //         });
-    //         const div = document.createElement('span');
-    //         children.forEach(child => {
-    //             div.append(child);
-    //         })
-    //         return div;
-    //     },
-    //     insertNode: undefined,
-    //     onInsert: (node: Node) => {
-    //         const first = node.firstChild;
-    //         (node as HTMLElement).replaceWith(first);
-    //         document.getSelection().setPosition(first, 1);
-    //     }
-    // },
+    {
+        pluginName: 'span',
+        type: "inline",
+        content: "inline",
+        checkPlugin: (node: Node) => {
+            return node.nodeType === node.ELEMENT_NODE && (node as HTMLElement).tagName === 'SPAN' && (node as HTMLElement).style.backgroundColor == ""
+        },
+        toJson: (node: Node) => {
+            const children: PluginProps[] = [];
+            (node as HTMLElement).childNodes.forEach(child => {
+                children.push(toJson(child));
+            })
+            return {
+                pluginName: 'span',
+                children: children
+            };
+        },
+        fromJson: (props: PluginProps) => {
+            const children: Node[] = [];
+            props.children.forEach(value => {
+                children.push(fromJson(value));
+            });
+            const div = document.createElement('span');
+            children.forEach(child => {
+                div.append(child);
+            })
+            return div;
+        },
+        insertNode: undefined,
+        onInsert: (node: Node) => {
+            const first = node.firstChild;
+            (node as HTMLElement).replaceWith(first);
+            document.getSelection().setPosition(first, 1);
+        }
+    },
     {
         pluginName: "file",
         type: "block",
@@ -741,7 +741,7 @@ export const defaultPlugins: EditorPlugin[] = [
         type: "inline",
         content: "inline",
         checkPlugin: (node: Node) => {
-            return node.nodeType === node.ELEMENT_NODE && (node as HTMLElement).tagName === 'SPAN'
+            return node.nodeType === node.ELEMENT_NODE && (node as HTMLElement).tagName === 'SPAN' && (node as HTMLElement).style.backgroundColor != ""
         },
         toJson: (node: Node) => {
             const children: PluginProps[] = [];
@@ -767,11 +767,6 @@ export const defaultPlugins: EditorPlugin[] = [
             return div;
         },
         insertNode: undefined,
-        onInsert: (node: Node) => {
-            const first = node.firstChild;
-            (node as HTMLElement).replaceWith(first);
-            document.getSelection().setPosition(first, 1);
-        }
     },
 ]
 
