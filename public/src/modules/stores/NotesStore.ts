@@ -219,8 +219,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 return
             }
 
-            console.log(data.type)
-            console.log(data)
+            
+            
 
             if (data.type == "opened") {
                 const collaborator = {

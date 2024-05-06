@@ -17,8 +17,8 @@ export class Collaborators extends ScReact.Component<any, any> {
     }
 
     updateState = (store:NotesStoreState) => {
-        console.log("updateState")
-        console.log(store.selectedNoteCollaborators)
+        
+        
         this.setState(state => ({
             ...state,
             collaborators: store.selectedNoteCollaborators
