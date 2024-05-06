@@ -2,7 +2,7 @@ import {ScReact} from "@veglem/screact";
 import {Img} from "../Image/Image";
 import {AppToasts} from "../../modules/toasts";
 import "./TagList.sass"
-import {AppNotesStore, NotesActions} from "../../modules/stores/NotesStore";
+import {AppNotesStore, NotesActions, NotesStoreState} from "../../modules/stores/NotesStore";
 import {AppDispatcher} from "../../modules/dispatcher";
 
 type TagListState = {
@@ -15,7 +15,8 @@ export class TagList extends ScReact.Component<any, TagListState> {
     state = {
         selectedTag: null,
         value: "",
-        open: false
+        open: false,
+        tags: [...AppNotesStore.state.tags]
     }
 
     private MIN_TAG_LENGTH = 2
@@ -27,6 +28,8 @@ export class TagList extends ScReact.Component<any, TagListState> {
 
     componentDidMount() {
         document.addEventListener('click', this.handleClickOutside, false);
+
+        AppNotesStore.SubscribeToStore(this.updateState)
     }
 
     componentWillUnmount() {
@@ -37,6 +40,13 @@ export class TagList extends ScReact.Component<any, TagListState> {
         if (this.state.open && !this.openBtnRef.contains(e.target) && !e.target.matches(".tags-wrapper,.tags-wrapper *")) {
             this.toggleOpen();
         }
+    }
+
+    updateState = (store:NotesStoreState) => {
+        this.setState(state => ({
+            ...state,
+            tags: store.tags
+        }))
     }
 
     setValue = (e) => {
@@ -65,13 +75,13 @@ export class TagList extends ScReact.Component<any, TagListState> {
         }
 
         if (e.key == "Enter") {
-            this.addTag()
+            this.handleAddTag()
         }
 
         this.inputRef.value = e.target.value
     }
 
-    addTag = () => {
+    handleAddTag = () => {
         if (this.state.value.length > 0) {
             if (this.state.value.length < this.MIN_TAG_LENGTH) {
                 AppToasts.error(`Тэг не может быть короче ${this.MIN_TAG_LENGTH} символов`)
@@ -93,15 +103,18 @@ export class TagList extends ScReact.Component<any, TagListState> {
                 return
             }
 
-            AppDispatcher.dispatch(NotesActions.CREATE_TAG, this.state.value)
-
-            this.props.onChange([...this.props.tags, this.state.value])
+            this.addTag(this.state.value)
 
             this.setState(state => ({
                 ...state,
                 value: ""
             }))
         }
+    }
+
+    addTag = (tag:string) => {
+        AppDispatcher.dispatch(NotesActions.CREATE_TAG, tag)
+        this.props.onChange([...this.props.tags, tag])
     }
 
     deleteTag = (tagname:string) => {
@@ -114,6 +127,14 @@ export class TagList extends ScReact.Component<any, TagListState> {
             ...state,
             open: !state.open
         }))
+    }
+
+    handleSelectTag = (tagname:string) => {
+        if (this.props.tags.includes(tagname)) {
+            this.deleteTag(tagname)
+        } else {
+            this.addTag(tagname)
+        }
     }
 
     render() {
@@ -148,6 +169,17 @@ export class TagList extends ScReact.Component<any, TagListState> {
 
                         <input type="text" placeholder="Введите тэг" value={this.state.value} oninput={this.setValue} onkeyup={this.onInput} ref={ref => this.inputRef = ref}/>
 
+                    </div>
+
+                    <div className="global-tags-wrapper">
+                        <h3>Все тэги</h3>
+                        <div className="global-tags-container">
+                            {this.state.tags.map(tag => (
+                                <div className={"tag-item " + (this.props.tags.includes(tag) ? "selected" : "")} onclick={() => this.handleSelectTag(tag)}>
+                                    <span>{tag}</span>
+                                </div>
+                            ))}
+                        </div>
                     </div>
 
                 </div>
