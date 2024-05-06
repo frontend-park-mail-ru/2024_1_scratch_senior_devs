@@ -1,9 +1,9 @@
-export type ValidationResult = {
+export type ValidationResultType = {
     message?: string,
     result: boolean
 }
 
-export const ValidatePassword = (value:string):ValidationResult   => {
+export const ValidatePassword = (value:string):ValidationResultType   => {
     for (let index = 0; index < value.length; ++index){
         if (!(value.charCodeAt(index) >= 97 && value.charCodeAt(index) <= 122 ||
             value.charCodeAt(index) >= 64 && value.charCodeAt(index) <= 90 ||
@@ -61,6 +61,6 @@ export const ValidateLogin = (value):ValidationResult => {
     return ValidationResult(true);
 };
 
-const ValidationResult = (result:boolean, message:string = null):ValidationResult => {
+const ValidationResult = (result:boolean, message:string = null):ValidationResultType => {
     return {result, message};
 };
