@@ -601,7 +601,7 @@ export const defaultPlugins: EditorPlugin[] = [
         type: "inline",
         content: "inline",
         checkPlugin: (node: Node) => {
-            return node.nodeType === node.ELEMENT_NODE && (node as HTMLElement).tagName === 'SPAN'
+            return node.nodeType === node.ELEMENT_NODE && (node as HTMLElement).tagName === 'SPAN' && (node as HTMLElement).style.backgroundColor == null
         },
         toJson: (node: Node) => {
             const children: PluginProps[] = [];
