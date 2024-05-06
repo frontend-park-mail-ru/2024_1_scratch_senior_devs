@@ -7,6 +7,7 @@ import {CollaboratorType, NoteDataType, NoteType} from "../../utils/types";
 import {decode} from "../utils";
 import {WebSocketConnection} from "../websocket";
 import {insertBlockPlugin} from "../../components/Editor/Plugin";
+import {AppNoteStore} from "./NoteStore";
 
 export type NotesStoreState = {
     notes: NoteType[],
@@ -84,7 +85,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
                     await this.deleteNote(action.payload);
                     break;
                 case NotesActions.SAVE_NOTE:
-                    await this.saveNote(action.payload);
+                    await this.saveNote();
                     break;
                 case NotesActions.CREATE_NEW_NOTE:
                     await this.createNewNote();
@@ -359,8 +360,16 @@ class NotesStore extends BaseStore<NotesStoreState> {
         }
     }
 
-    async saveNote(data) {
+    async saveNote() {
         try {
+
+            const data = {
+                id: this.state.selectedNote.id,
+                note: AppNoteStore.state.note,
+                parent: this.state.selectedNote.data.parent
+
+            }
+
             const {csrf} = await AppNoteRequests.Update(data, AppUserStore.state.JWT, AppUserStore.state.csrf);
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);

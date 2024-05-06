@@ -34,11 +34,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
     saveNote = () => {
         if (this.state.selectedNote) {
-            AppDispatcher.dispatch(NotesActions.SAVE_NOTE,  {
-                id: this.state.selectedNote.id,
-                note: AppNoteStore.state.note,
-                parent: this.state.selectedNote.data.parent
-            });
+            AppDispatcher.dispatch(NotesActions.SAVE_NOTE);
         }
 
         this.savingLabelRef.classList.add("active");

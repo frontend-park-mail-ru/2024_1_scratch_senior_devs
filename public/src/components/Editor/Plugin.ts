@@ -1051,11 +1051,7 @@ const RenderSubNote = (subNoteId:string) => {
         //subNoteWrapper.dataset.title = parseNoteTitle(result.data.title)
         subNoteTitle.innerHTML = parseNoteTitle(result.data.title)
 
-        AppDispatcher.dispatch(NotesActions.SAVE_NOTE, {
-            id: AppNotesStore.state.selectedNote.id,
-            note: AppNoteStore.state.note,
-            parent: AppNotesStore.state.selectedNote.data.parent
-        })
+        AppDispatcher.dispatch(NotesActions.SAVE_NOTE)
 
     }).catch(() => {
         subNoteTitle.innerHTML = "Заметка не найдена"
