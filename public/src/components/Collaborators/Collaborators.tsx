@@ -30,8 +30,10 @@ export class Collaborators extends ScReact.Component<any, any> {
             <div className="collaborators-list-wrapper">
                 {this.state.collaborators.map(collaborator => (
                     <div className="collaborator">
-                        <h2 className="collaborator-username" >{collaborator.username}</h2>
-                        <img src={imagesUlr + collaborator.avatar} className="collaborator-avatar"  alt=""/>
+                        <img src={imagesUlr + collaborator.avatar} className="collaborator-avatar" alt=""/>
+                        <div className={"collaborator-info"}>
+                            <span>{collaborator.username}</span>
+                        </div>
                     </div>
                 ))}
             </div>
