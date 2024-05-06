@@ -1,4 +1,5 @@
 @import "/public/src/utils/variables.sass"
+@import "/public/src/utils/animations.sass"
 
 .collaborators-list-wrapper
 	display: flex
@@ -6,10 +7,11 @@
 
 	.collaborator
 		position: relative
+		animation: showAnim 0.3s
 
 		&:hover
 			.collaborator-avatar
-				opacity: 1
+				opacity: 0.8
 
 			.collaborator-info
 				display: flex
@@ -34,7 +36,7 @@
 			background: $tooltip-background
 			color: $text-secondary-color
 			z-index: 1000
-			top: 100%
+			top: calc(100% + 10px)
 			left: 50%
 			transform: translate(-50%, 5px)
 
@@ -63,3 +65,4 @@
 			border-radius: 50%
 			cursor: pointer
 			opacity: 0.5
+			transition: 0.3s
