@@ -56,6 +56,12 @@
 			color: $text-main-color
 
 .toast
+
+	&.hide
+		.progress
+			&:before
+				right: 100%
+
 	.toast-close-btn
 		position: absolute
 		top: 10px

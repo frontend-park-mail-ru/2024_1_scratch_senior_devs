@@ -1,6 +1,5 @@
 import {ScReact} from '@veglem/screact';
 import './Background.sass';
-import {NotesPage} from '../../pages/Notes';
 
 export class Background extends ScReact.Component<any, any> {
     render() {

@@ -3,9 +3,9 @@ const CACHE_NAME = 'app-cache';
 const assetUrls = [
     '/',
     '/index.html',
-    '/main.css',
+    // '/main.css',
     '/main.js',
-    '/assets/'
+    '/assets'
 ];
 
 self.addEventListener('install', async () => {

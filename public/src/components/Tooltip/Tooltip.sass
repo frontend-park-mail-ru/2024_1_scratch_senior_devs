@@ -1,0 +1,54 @@
+@import "/public/src/utils/variables.sass"
+@import "/public/src/utils/animations.sass"
+
+.tooltip-wrapper
+	padding: 8px
+	border-radius: 8px
+	cursor: pointer
+	position: relative
+
+	&:hover
+		background: rgba(0, 0, 0, 0.15)
+
+		.tooltip-container
+			display: flex
+			opacity: 1
+			animation: showAnim 0.3s
+
+	.tooltip-container
+		text-transform: none
+		font-size: 14px
+		line-height: 1
+		user-select: none
+		pointer-events: none
+		position: absolute
+		display: none
+		opacity: 0
+		animation: closeAnim 0.3s
+		text-align: center
+		white-space: nowrap
+		padding: 1ch 1.5ch
+		border-radius: 8px
+		box-shadow: $box-shadow-primary
+		background: $tooltip-background
+		color: $text-secondary-color
+		z-index: 1000
+		top: 100%
+		left: 50%
+		transform: translate(-50%, 5px)
+
+		&::before
+			content: ''
+			border: 7.5px solid transparent
+			border-top-width: 0
+			border-bottom-color: $tooltip-background
+			z-index: 1001
+			top: 0
+			right: 50%
+			transform: translate(50%, -100%)
+			text-transform: none
+			font-size: .9em
+			line-height: 1
+			user-select: none
+			pointer-events: none
+			position: absolute

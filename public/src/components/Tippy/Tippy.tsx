@@ -2,9 +2,9 @@ import {ScReact} from '@veglem/screact';
 import './Tippy.sass';
 import {Img} from '../Image/Image';
 import {ColorPicker} from '../ColorPicker/ColorPicker';
-import {LinkInput} from '../LinkInput/LinkInput';
 import {AppDispatcher} from '../../modules/dispatcher';
 import {NoteStoreActions} from '../../modules/stores/NoteStore';
+import {LinkInput} from "../LinkInput/LinkInput";
 
 export class Tippy extends ScReact.Component<any, any> {
     state = {
@@ -17,16 +17,17 @@ export class Tippy extends ScReact.Component<any, any> {
     private toggleBtnRef: any;
 
     componentDidMount() {
-        document.addEventListener('click', this.handleClickOutside, true);
+        // document.addEventListener('click', this.handleClickOutside, true);
     }
 
     componentWillUnmount() {
-        document.removeEventListener('click', this.handleClickOutside, true);
+        // document.removeEventListener('click', this.handleClickOutside, true);
     }
 
     handleClickOutside = (e) => {
         if (this.props.open && !this.tippyRef.contains(e.target)) {
             this.closeColorPicker();
+            
             this.props.onClose();
         }
     };
@@ -39,23 +40,6 @@ export class Tippy extends ScReact.Component<any, any> {
     };
 
     handleEnterLink = (link:string) => {
-        console.log('handleEnterLink');
-        console.log(link);
-
-        // TODO
-        // AppDispatcher.dispatch(
-        //     NoteStoreActions.CHANGE_PIECE_ATTRIBUTES,
-        //     {
-        //         blockId: Number(this.options.blockId),
-        //         anchorId: Number(this.options.anchorId),
-        //         focusId: Number(this.options.focusId),
-        //         anchorPos: Number(this.options.anchorPos),
-        //         focusPos: Number(this.options.focusPos),
-        //         attribute: item.type,
-        //         value: "value" in item ? item.value : undefined
-        //     }
-        // )
-
         this.setState(state => ({
             ...state,
             linkInputOpen: false
@@ -81,20 +65,21 @@ export class Tippy extends ScReact.Component<any, any> {
     };
 
     handleSelect = (item) => {
-        console.log('handleSelect');
-        console.log(item.type);
-        AppDispatcher.dispatch(
-            NoteStoreActions.CHANGE_PIECE_ATTRIBUTES,
-            {
-                blockId: Number(this.options.blockId),
-                anchorId: Number(this.options.anchorId),
-                focusId: Number(this.options.focusId),
-                anchorPos: Number(this.options.anchorPos),
-                focusPos: Number(this.options.focusPos),
-                attribute: item.type,
-                value: 'value' in item ? item.value : undefined
-            }
-        );
+
+        if (item.type === 'bold') {
+            document.execCommand('bold', false, null);
+        }
+        if (item.type === 'italic') {
+            document.execCommand('italic', false, null);
+        }
+        if (item.type === 'underline') {
+            document.execCommand('underline', false, null);
+        }
+        if (item.type === 'lineThrough') {
+            document.execCommand('strikeThrough', false, null);
+        }
+        
+
         this.closeColorPicker();
         this.props.onClose();
     };
@@ -138,17 +123,15 @@ export class Tippy extends ScReact.Component<any, any> {
             }
         ];
 
-        this.props.optionsSetter(this.setOptions);
-
         return (
-            <div className={'tippy-container ' + (this.props.open ? 'open' : '')} ref={(val) => this.tippyRef = val} id={'tippy'}>
+            <div className={'tippy-container ' + (this.props.open ? 'open' : '')} ref={(val) => this.tippyRef = val} style={this.props.style} id={'tippy'}>
 
-                {/*<div className="first-container" onclick={this.toggleLinkInput}  ref={ref => {this.toggleLinkInputRef = ref;}}>*/}
-                {/*    <Img src="link.svg" className="link-icon" />*/}
-                {/*    <span className="link-label">Ссылка</span>*/}
-                {/*</div>*/}
+                <div className="first-container" onclick={this.toggleLinkInput}  ref={ref => {this.toggleLinkInputRef = ref;}}>
+                    <Img src="link.svg" className="link-icon" />
+                    <span className="link-label">Ссылка</span>
+                </div>
 
-                {/*<LinkInput open={this.state.linkInputOpen} onSubmit={this.handleEnterLink} toggleBtn={this.toggleLinkInputRef}/>*/}
+                <LinkInput open={this.state.linkInputOpen} onSubmit={this.handleEnterLink} toggleBtn={this.toggleLinkInputRef}/>
 
                 <div className="second-container">
                     {data.map(item => (
