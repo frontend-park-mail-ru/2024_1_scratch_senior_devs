@@ -409,22 +409,18 @@ class NoteRequests {
             }
         });
 
-
-
         if (response.status == 200) {
             return {
                 status: response.status,
                 csrf: response.headers['x-csrf-token'],
                 subnote_id: response.body.id
             }
-        } else {
-            return {
-                status: response.status,
-                csrf: response.headers['x-csrf-token']
-            }
         }
 
-        throw new Error();
+        return {
+            status: response.status,
+            csrf: response.headers['x-csrf-token']
+        }
     };
 
     UploadFile = async (id:string, file:File, jwt:string, csrf:string) => {

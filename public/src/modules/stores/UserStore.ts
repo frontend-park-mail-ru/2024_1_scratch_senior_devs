@@ -205,8 +205,8 @@ class UserStore extends BaseStore<UserStoreState>{
 
             AppRouter.go('/');
 
-        } catch (err) {
-            
+        } catch {
+            AppToasts.error('Что-то пошло не так');
         }
     }
 

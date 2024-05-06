@@ -2,7 +2,6 @@ import {ScReact} from '@veglem/screact';
 import './Note.sass';
 import {formatDate, parseNoteTitle, truncate} from "../../modules/utils";
 import {NoteType} from "../../utils/types";
-import {AppNotesStore} from "../../modules/stores/NotesStore";
 
 const MAX_NOTE_CONTENT_PREVIEW_LENGTH = 25;
 const MAX_TAGS_PREVIEW_COUNT = 2;
