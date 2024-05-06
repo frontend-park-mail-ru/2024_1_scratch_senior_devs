@@ -9,9 +9,9 @@ export class ShiningButton extends ScReact.Component<any, any> {
 
     render() {
         return (
-            <div className="shining_btn" onclick={this.handleClick}>
-                <div className="shining_btn__glow"></div>
-                <div className="shining_btn__border">
+            <div className="shining-button-container" onclick={this.handleClick}>
+                <div className="shining-button-glow"></div>
+                <div className="shining-button">
                     <span>{this.props.label}</span>
                 </div>
             </div>

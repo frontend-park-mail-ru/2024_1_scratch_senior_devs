@@ -83,31 +83,31 @@ export class Profile extends ScReact.Component<any, any> {
 
     render() {
         return (
-            <div className={'user-profiler ' + (this.state.open ? 'open' : '')}>
-                <div className="toggle-profile" onclick={this.toggleOpen}>
-                    <div className="toggle-profile__slider toggle-profile__slider-one"></div>
-                    <div className="toggle-profile__slider toggle-profile__slider-two"></div>
-                    <div className="toggle-profile__slider toggle-profile__slider-three"></div>
+            <div className={'user-profile-wrapper ' + (this.state.open ? 'open' : '')}>
+                <div className="toggle-profile-button" onclick={this.toggleOpen}>
+                    <div className="slider one"></div>
+                    <div className="slider two"></div>
+                    <div className="slider three"></div>
                 </div>
                 <div className="panel">
                     <div className="popup-content">
 
                        <ProfileAvatar avatarUrl={this.props.avatarUrl}/>
 
-                        <span className="popup-content__username">{AppUserStore.state.username}</span>
+                        <span className="username">{AppUserStore.state.username}</span>
 
-                        <Link className="popup-content__link" label="Изменить пароль" onClick={this.openModal}/>
+                        <Link label="Изменить пароль" onClick={this.openModal}/>
 
                         <ToggleButton label="Двухфакторная аутентификация" value={this.props.otpEnabled} onToggle={this.toggleTwoFactorAuthorization}/>
 
                         <Modal open={this.state.qrOpen} content={<QRModal image={this.props.qr}/>} handleClose={this.closeQR}/>
 
-                        <Button label="Выйти" className="popup-content__logout-btn" onClick={this.handleLogout}/>
+                        <Button label="Выйти" className="logout-btn" onClick={this.handleLogout}/>
 
                     </div>
                 </div>
 
-                <Modal open={this.state.updatePasswordFormOpen} content={<UpdatePasswordForm/>} handleClose={this.closeChangePasswordForm}/>
+                <Modal open={this.state.updatePasswordFormOpen} content={<UpdatePasswordForm handleClose={this.closeChangePasswordForm}/>} handleClose={this.closeChangePasswordForm}/>
 
             </div>
         );

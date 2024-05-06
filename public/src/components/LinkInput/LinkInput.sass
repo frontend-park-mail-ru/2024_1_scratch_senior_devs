@@ -1,7 +1,7 @@
 @import "/public/src/utils/variables.sass"
 @import "/public/src/utils/animations.sass"
 
-.link-input
+.link-input-container
 	position: absolute
 	top: calc(100% + 10px)
 	left: 0
@@ -20,20 +20,20 @@
 		display: flex
 		animation: showAnim 0.3s
 
-	.link-input__input
+	.link-input
 		outline: none
 		border: none
 		height: 100%
 		background: transparent
-		color: $text-main-color--darker
+		color: $text-secondary-color
 		width: 190px
 		font-size: 16px
 
 		&::placeholder
-			color: $text-main-color--darker
+			color: $text-secondary-color
 			font-size: 16px
 
-	.link-input__btn
+	.link-btn
 		width: 40px
 		height: 32px
 		outline: none
@@ -49,6 +49,6 @@
 		&:hover
 			opacity: 0.9
 
-		.link-input__icon-success
+		.success-icon
 			width: 16px
 			height: 16px

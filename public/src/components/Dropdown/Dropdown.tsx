@@ -2,8 +2,13 @@ import {ScReact} from '@veglem/screact';
 import './Dropdown.sass';
 import {Img} from '../Image/Image';
 import {AppDispatcher} from '../../modules/dispatcher';
-import {NoteStoreActions} from '../../modules/stores/NoteStore';
+import {AppNoteStore, NoteStoreActions} from '../../modules/stores/NoteStore';
 import {AppNotesStore, NotesActions} from '../../modules/stores/NotesStore';
+import {MAX_ATTACH_SIZE} from '../../utils/consts';
+import {AppToasts} from '../../modules/toasts';
+import {insertBlockPlugin} from "../Editor/Plugin";
+import {AppNoteRequests} from "../../modules/api";
+import {AppUserStore, UserActions} from "../../modules/stores/UserStore";
 
 export class Dropdown extends ScReact.Component<any, any> {
     state = {
@@ -35,8 +40,6 @@ export class Dropdown extends ScReact.Component<any, any> {
     };
 
     handleOnHover = (id:string) => {
-        console.log('handleOnHover ' + id);
-
         this.setState(state => ({
             ...state,
             selected: id
@@ -44,81 +47,100 @@ export class Dropdown extends ScReact.Component<any, any> {
     };
 
     handleOnClick = (id:string) => {
-        console.log('handleOnClick ' + id);
-
         let tag = id;
         let attr = null;
         let content = [];
-        if (id === 'bullet-list') {
-            attr = {};
-            attr.ul = true;
-            tag = 'div';
+
+        // TODO
+        if (id === "h1") {
+            insertBlockPlugin('header', 'h1')
+        } else if (id === "h2") {
+            insertBlockPlugin('header', 'h2')
+        } else if (id === "h3") {
+            insertBlockPlugin('header', 'h2')
+        } else if (id === 'bullet-list') {
+            insertBlockPlugin('ul')
         } else if (id === 'numbered-list') {
-            attr = {};
-            attr.ol = true;
-            tag = 'div';
+            insertBlockPlugin('ol')
+        } else if (id === 'todo-list') {
+            insertBlockPlugin('todo')
         } else if (id === 'image') {
-            tag = 'img';
+
+            // TODO
+
             const fileInput = document.createElement('input');
             fileInput.type = 'file';
-            fileInput.accept = '.jpg,.png';
+            fileInput.accept = '.jpg,.png,.jpeg';
             fileInput.hidden = true;
-            this.ref.append(fileInput);
+
+            // this.ref.append(fileInput);
+
             fileInput.onchange = (e: InputEvent) => {
-                console.log('onchange');
-                console.log(e);
                 fileInput.remove();
-                AppDispatcher.dispatch(NotesActions.UPLOAD_IMAGE, {
-                    file: (e.target as HTMLInputElement).files[0],
-                    noteId: AppNotesStore.state.selectedNote.id,
-                    blockId: this.props.blockId
-                });
+
+                const file = (e.target as HTMLInputElement).files[0]
+                if (file.size < MAX_ATTACH_SIZE) {
+                    AppNoteRequests.UploadFile(AppNotesStore.state.selectedNote.id, file, AppUserStore.state.JWT, AppUserStore.state.csrf).then(response => {
+                        // AppUserStore.state.csrf = response.headers.get('x-csrf-token');
+                        AppDispatcher.dispatch(UserActions.UPDATE_CSRF, response.headers.get('x-csrf-token'))
+                        response.json().then(respJson => {
+                            insertBlockPlugin('img', respJson.id);
+                        })
+                    })
+
+                    // AppDispatcher.dispatch(NotesActions.UPLOAD_IMAGE, {
+                    //     file: file,
+                    //     noteId: AppNotesStore.state.selectedNote.id,
+                    //     blockId: this.props.blockId
+                    // });
+                    // AppDispatcher.dispatch(NoteStoreActions.REMOVE_CURSOR, {});
+                } else {
+                    AppToasts.error('Фото слишком большое');
+                }
             };
             fileInput.click();
-            attr = {};
-            attr.src = '';
-            content = undefined;
+
         } else if (id === 'document') {
-            tag = 'div';
+            // TODO
+
             const fileInput = document.createElement('input');
             fileInput.type = 'file';
             fileInput.hidden = true;
-            // fileInput.accept = ".jpg,.png"
-            this.ref.append(fileInput);
+            fileInput.accept = ".mp4,.mp3,.wav,.gif,.jpeg,.webp,.jpg,.png,.mp4, .pdf"
             fileInput.onchange = (e) => {
-                console.log('onchange');
-                console.log(e);
                 fileInput.remove();
-                AppDispatcher.dispatch(NotesActions.UPLOAD_FILE, {
-                    file: (e.target as HTMLInputElement).files[0],
-                    noteId: AppNotesStore.state.selectedNote.id,
-                    blockId: this.props.blockId,
-                    fileName: (e.target as HTMLInputElement).files[0].name
-                });
+                const file = (e.target as HTMLInputElement).files[0]
+                if (file.size < MAX_ATTACH_SIZE) {
+                    // AppDispatcher.dispatch(NotesActions.UPLOAD_FILE, {
+                    //     file: file,
+                    //     noteId: AppNotesStore.state.selectedNote.id,
+                    //     blockId: this.props.blockId,
+                    //     fileName: (e.target as HTMLInputElement).files[0].name
+                    // });
+                    AppNoteRequests.UploadFile(AppNotesStore.state.selectedNote.id, file, AppUserStore.state.JWT, AppUserStore.state.csrf).then(response => {
+                        AppDispatcher.dispatch(UserActions.UPDATE_CSRF, response.headers.get('x-csrf-token'))
+                        // AppUserStore.state.csrf = response.headers.get('x-csrf-token');
+                        response.json().then(respJson => {
+                            
+                            insertBlockPlugin('file', respJson.id, file.name);
+                        })
+                    })
+                    // AppDispatcher.dispatch(NoteStoreActions.REMOVE_CURSOR);
+                } else {
+                    AppToasts.error('Файл слишком большой');
+                }
             };
             fileInput.click();
-            attr = {};
-            attr.file = '';
-            attr.fileName = '';
-            content = undefined;
+
         } else if (id === 'youtube') {
-            console.log('Select youtube');
             this.props.openYoutubeDialog();
+
+        } else if (id === "note") {
+
+            AppDispatcher.dispatch(NotesActions.CREATE_SUB_NOTE)
+            //todo:  insertBlockPlugin('subnote', noteid)
         }
 
-        AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK_TYPE, {
-            blockId: this.props.blockId,
-            tag: tag,
-            attributes: attr,
-            content: content
-        });
-
-        // moveCursorUpAndDown(this.props.blockId)
-
-        AppDispatcher.dispatch(NoteStoreActions.MOVE_CURSOR, {
-            blockId: this.props.blockId,
-            pos: 0
-        });
 
         this.props.onClose();
     };
@@ -161,18 +183,24 @@ export class Dropdown extends ScReact.Component<any, any> {
                 title: 'Видео',
                 desc: 'Вставьте ссылку на видео из ютуба'
             },
+            {
+                id: 'note',
+                icon: 'note.svg',
+                title: 'Подзаметка',
+                desc: 'Создайте подзаметку'
+            },
             // {
             //     id: "text",
             //     icon: "text.svg",
             //     title: "Текст",
             //     desc: "Просто текст"
             // },
-            // {
-            //     id: "todo",
-            //     icon: "todo.svg",
-            //     title: "To-do список",
-            //     desc: "Отслеживайте ваши задачи"
-            // },
+            {
+                id: "todo-list",
+                icon: "todo.svg",
+                title: "To-do список",
+                desc: "Отслеживайте ваши задачи"
+            },
             {
                 id: 'bullet-list',
                 icon: 'bullet-list.svg',
@@ -191,7 +219,10 @@ export class Dropdown extends ScReact.Component<any, any> {
             <div className={'dropdown ' + (this.props.open ? '' : 'close')} style={this.props.style} ref={ref => this.ref = ref}>
                 <div className="listbox">
                     {data.map(item => (
-                        <div className={'list-item ' + (this.state.selected == item.id ? 'selected' : '')} onmouseenter={() => this.handleOnHover(item.id)} onclick={() => this.handleOnClick(item.id)}>
+                        <div className={'list-item ' + (this.state.selected == item.id ? 'selected' : '')} onmouseenter={() => this.handleOnHover(item.id)} onclick={(e) => {
+                            this.handleOnClick(item.id)
+                            e.preventDefault();
+                        }}>
                             <div className="icon-container">
                                 <Img src={item.icon} />
                             </div>

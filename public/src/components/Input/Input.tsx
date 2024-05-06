@@ -8,7 +8,8 @@ type InputState = {
     isPassword?: boolean,
     placeholder?: string,
     icon?: string,
-    hasIcon?: boolean
+    hasIcon?: boolean,
+    underline: boolean
 }
 
 type InputProps = {
@@ -18,13 +19,17 @@ type InputProps = {
     type?: string,
     placeholder: string,
     icon?: string,
-    onChange: (value:string) => void
+    underline?: boolean
+    onChange: (value:string) => void,
 }
 
 export class Input extends ScReact.Component<InputProps, InputState>{
+    // @ts-ignore
     state:InputState = {
 
     };
+
+    private inputRef
 
     componentDidMount() {
         this.setState(state => ({
@@ -33,7 +38,8 @@ export class Input extends ScReact.Component<InputProps, InputState>{
             placeholder: this.props.placeholder ? this.props.placeholder : '',
             isPassword: this.props.type == 'password',
             icon: this.props.icon ? this.props.icon : '',
-            hasIcon: this.props.icon != undefined
+            hasIcon: this.props.icon != undefined,
+            underline: this.props.underline  != undefined ? this.props.underline : true
         }));
     }
 
@@ -45,22 +51,24 @@ export class Input extends ScReact.Component<InputProps, InputState>{
     };
 
     handleChange = (e) => {
+        e.preventDefault()
+        
         this.props.onChange && this.props.onChange(e.target.value);
+        this.inputRef.value = this.props.value
     };
 
     render() {
         return (
             <div className="input-wrapper">
-
                 <div className={'input-container ' + (this.props.validationResult ? 'success' : '') + (this.props.error  ? 'error' : '') + (this.state.hasIcon  ? ' has-icon' : '')}>
-                    <input type={this.state.type} placeholder=" " value={this.props.value} oninput={this.handleChange}/>
-                    <div className="input-container__label">{this.state.placeholder}</div>
-                    <div className="input-container__underline"></div>
+                    <input type={this.state.type} placeholder=" " value={this.props.value} oninput={this.handleChange} ref={ref => this.inputRef = ref}/>
+                    <div className="label">{this.state.placeholder}</div>
+                    <div className="underline"></div>
 
                     {this.state.isPassword ?
-                        <div className="password-toggle" onclick={this.toggleInputType}>
-                            <img className="password-toggle__btn password-toggle__btn-show-btn" src="/src/assets/eye-slash.svg" alt=""/>
-                            <img className="password-toggle__btn password-toggle__btn-hide-btn" src="/src/assets/eye.svg" alt=""/>
+                        <div className="password-toggle-btn-container" onclick={this.toggleInputType}>
+                            <img className="password-toggle-btn show-btn" src="/src/assets/eye-slash.svg" alt=""/>
+                            <img className="password-toggle-btn hide-btn" src="/src/assets/eye.svg" alt=""/>
                         </div> : ''
                     }
 

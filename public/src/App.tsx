@@ -6,14 +6,14 @@ import {AppToasts} from './modules/toasts';
 
 export class App extends ScReact.Component<any, any> {
     componentDidMount() {
-        console.log("App.ComponentDidMount");
+        
 
         window.addEventListener('online', () =>
-            AppToasts.info("Соединение восстановлено")
+            AppToasts.info('Соединение восстановлено')
         );
 
         window.addEventListener('offline', () =>
-            AppToasts.info("Потеряно соединение с интернетом")
+            AppToasts.info('Потеряно соединение с интернетом')
         );
     }
 

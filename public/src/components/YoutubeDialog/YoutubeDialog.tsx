@@ -2,16 +2,16 @@ import {ScReact} from '@veglem/screact';
 import {Input} from '../Input/Input';
 import {Button} from '../Button/Button';
 import './YoutubeDialog.sass';
-import {AppNoteStore, NoteStoreActions} from "../../modules/stores/NoteStore";
-import {AppDispatcher} from "../../modules/dispatcher";
+
 import {parseYoutubeLink} from '../../modules/utils';
 import {AppToasts} from '../../modules/toasts';
+import {insertBlockPlugin} from "../Editor/Plugin";
 
 export class YoutubeDialogForm extends ScReact.Component<any, any> {
     state = {
         value: '',
         validationResult: null,
-        errorMessage: ""
+        errorMessage: ''
     };
 
     setValue = (value:string) => {
@@ -27,59 +27,59 @@ export class YoutubeDialogForm extends ScReact.Component<any, any> {
             validationResult: false,
             errorMessage: value
         }));
-    }
+    };
 
     cleanError = () => {
         this.setState(state => ({
             ...state,
             validationResult: true,
-            errorMessage: ""
+            errorMessage: ''
         }));
-    }
+    };
 
     handleChange = (value:string) => {
-        this.setValue(value)
+
+        this.setValue(value);
 
         if (parseYoutubeLink(value)) {
-            this.cleanError()
+            this.cleanError();
         } else {
-            this.setError("Некорректная ссылка")
+            this.setError('Некорректная ссылка');
         }
-    }
+    };
 
     handleSubmit = (e) => {
         e.preventDefault();
-        const video_id = parseYoutubeLink(this.state.value)
+        const video_id = parseYoutubeLink(this.state.value);
         if (video_id) {
-            this.insertVideo(video_id)
+            this.insertVideo(video_id);
         } else {
-            this.setError("Некорректная ссылка")
-            AppToasts.error("Некорректная ссылка")
+            this.setError('Некорректная ссылка');
+            AppToasts.error('Некорректная ссылка');
         }
     };
 
     insertVideo = (video_id:string) => {
-        const block = AppNoteStore.state.note.blocks[AppNoteStore.state.dropdownPos.blockId]
-        block.type = "div"
-        block.content = undefined;
-        block.attributes = {};
-        block.attributes['youtube'] = "https://www.youtube.com/embed/" + video_id;
-        AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
-            blockId: AppNoteStore.state.dropdownPos.blockId,
-            newBlock: block
-        });
+        // const block = AppNoteStore.state.note.blocks[AppNoteStore.state["dropdownPos"].blockId];
+        // block.type = 'iframe';
+        // block.content = undefined;
+        // block.attributes = {
+        //     youtube: 'https://www.youtube.com/embed/' + video_id,
+        //     width: "560",
+        //     height: "315",
+        //     className: "youtube-player",
+        //     src: 'https://www.youtube.com/embed/' + video_id,
+        //     sandbox: "allow-same-origin allow-scripts"
+        // };
+        // AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
+        //     blockId: AppNoteStore.state.dropdownPos.blockId,
+        //     newBlock: block
+        // });
 
-        AppDispatcher.dispatch(NoteStoreActions.CLOSE_YOUTUBE_DIALOG)
+        insertBlockPlugin('youtube', 'https://www.youtube.com/embed/' + video_id)
 
-        setTimeout(() => {
-            this.setState(state => ({
-                ...state,
-                value: "",
-                validationResult: null,
-                errorMessage: ""
-            }));
-        }, 300)
-    }
+        this.props.handleClose()
+    };
 
     render() {
         return (

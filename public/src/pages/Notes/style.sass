@@ -1,20 +1,27 @@
 @import "/public/src/utils/variables.sass"
+@import "/public/src/utils/animations.sass"
+@import "/public/src/utils/mixins.sass"
 
-.notes-page
+.notes-page-wrapper
 	width: 100%
 	height: 100vh
 	display: flex
 	justify-content: center
 	gap: 25px
-	padding: 125px 15% 75px
+	padding: 100px 15% 75px
 	background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%)
 	position: relative
 
-	@media screen and (max-width: $xl)
-		padding: 125px 10% 75px
+	@media screen and (max-width: $sm)
+		min-height: 100vh
+		height: auto
+		padding: 0 5% 50px
+
+	@media screen and (max-width: $xxl)
+		padding: 75px 5%
 
 	@media screen and (max-width: $lg)
-		padding: 0 5%
+		padding: 0 5% 50px
 
 	&.active
 		@media screen and (min-width: $lg)
@@ -26,12 +33,10 @@
 		display: flex
 		flex-direction: column
 		align-items: center
-		min-width: 325px
-		max-width: 450px
+		min-width: 350px
+		width: 475px
 		gap: 15px
-
-		@media screen and (max-width: $md)
-			min-width: 375px
+		max-height: 90vh
 
 		@media screen and (max-width: $sm)
 			min-width: 100%
@@ -45,13 +50,13 @@
 			align-items: center
 			gap: 15px
 			width: 100%
-			padding-right: 5px
+			padding: 0 10px 0 5px
 
 			.search
 				display: flex
 				flex: 1
 
-			.add-note
+			.add-note-btn-container
 				width: 160px
 				height: 100%
 				display: flex
@@ -61,16 +66,20 @@
 				@media screen and (max-width: $sm)
 					width: 40px
 
-				.add-note__btn
+				.add-note-btn
 					height: 100%
 					width: 220px
 					background: rgba(27, 39, 53, 0.3)
 					color: #f4f6f9
 
+					&:hover
+						background: rgba(27, 39, 53, 0.8)
+						transform: scale(1)
+
 					@media screen and (max-width: $sm)
 						display: none
 
-				.add-note__icon-container
+				.add-note-icon-wrapper
 					display: none
 					padding: 8px
 					background: rgba(27, 39, 53, 0.3)
@@ -79,9 +88,9 @@
 					cursor: pointer
 
 					&:hover
-						transform: scale(1.1)
+						opacity: 0.8
 
-					.add-note__icon-container__icon
+					.add-note-icon
 						width: 24px
 						height: 24px
 
@@ -97,80 +106,36 @@
 			overflow-y: auto
 			flex: 1
 			width: 100%
-			padding: 10px 15px 5px 5px
+			padding: 5px 15px 5px 5px
+			height: 100%
 
 			&::-webkit-scrollbar-track
-				box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.2)
-				border-radius: 10px
 				margin-top: 10px
 
-			&::-webkit-scrollbar
-				width: 6px
+			@include scrollbar
 
-				@media screen and (max-width: $md)
-					width: 4px
+			.loader
+				margin: 25px
 
-			&::-webkit-scrollbar-thumb
-				border-radius: 10px
-				box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1)
-				background: $scrollbar-main-color
-
-			.not-found-label
+			.notes-not-found-label
 				margin-top: 25px
-				color: $text-main-color
+				color: $text-secondary-color
 				text-align: center
+				font-weight: bold
+				font-size: 24px
 
-			.notes-container__note-container
-				display: flex
-				flex-direction: column
-				gap: 10px
-				background: rgba(27, 39, 53, 0.3)
-				border-radius: 15px
-				padding: 15px 60px 40px 15px
-				width: 100%
-				cursor: pointer
-				transition: 0.5s
-				position: relative
-				scroll-margin: 20px
-
-				&:hover
-					background: rgba(27, 39, 53, 0.8)
-
-				h3
-					color: $text-main-color
-
-				p
-					color: $text-main-color--darker
-
-				@media screen and (min-width: $lg)
-					&.selected
-						box-shadow: 0 0 3px $primary-color, 0 0 10px $primary-color
-
-				.update-time
-					position: absolute
-					right: 10px
-					bottom: 10px
-					color: $text-main-color--darker
+			@media screen and (max-width: $sm)
+				height: 25vh
 
 	&.active
 		aside
 			@media screen and (min-width: $lg)
-				max-width: 375px
-
-			@media screen and (min-width: $lg)
 				.top-panel
-					.add-note
+					.add-note-btn-container
 						width: 40px
 
-						.add-note__btn
+						.add-note-btn
 							display: none
 
-						.add-note__icon
+						.add-note-icon-wrapper
 							display: flex
-
-@keyframes fadeIn
-	from
-		opacity: 0
-
-	to
-		opacity: 1

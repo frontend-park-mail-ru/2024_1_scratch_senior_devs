@@ -1,6 +1,6 @@
 @import "/public/src/utils/variables.sass"
 
-.modal
+.modal-wrapper
 	position: fixed
 	top: -110vh
 	left: 0
@@ -10,20 +10,22 @@
 	justify-content: center
 	align-items: center
 	transition: top 0ms ease-in-out 300ms
-	z-index: 1000
+	z-index: 10
+	pointer-events: none
 
 	&.active
 		top: 0
 		transition: top 0ms ease-in-out 0ms
+		pointer-events: auto
 
-		.modal__overlay
+		.overlay
 			opacity: 1
 
-		.modal__content
+		.modal-content
 			animation: 0.3s superScaleIn ease-in-out
 			opacity: 1
 
-	.modal__overlay
+	.overlay
 		position: absolute
 		top: 0
 		left: 0
@@ -33,7 +35,7 @@
 		opacity: 0
 		transition: all 300ms ease-in-out
 
-	.modal__content
+	.modal-content
 		position: absolute
 		background: $modal-background
 		border-radius: 20px
@@ -66,17 +68,17 @@
 				transform: scale(1.2)
 				opacity: 0
 
-		.modal__close-btn
-			position: absolute
-			top: 16px
-			right: 16px
-			width: 24px
-			height: 24px
-			cursor: pointer
-			filter: invert(80%)
-			transition: 0.3s
-			opacity: 0.8
+	.close-modal-btn
+		position: absolute
+		top: 16px
+		right: 16px
+		width: 24px
+		height: 24px
+		cursor: pointer
+		filter: invert(80%)
+		transition: 0.3s
+		opacity: 0.8
 
-			&:hover
-				opacity: 1
+		&:hover
+			opacity: 1
 

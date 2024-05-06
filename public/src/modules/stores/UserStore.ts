@@ -11,6 +11,7 @@ export type UserStoreState = {
     otpDialogOpen: boolean,
     qr: string,
     qrOpen: boolean,
+    user_id: string,
     username: string,
     avatarUrl: string,
     isAuth: boolean,
@@ -45,8 +46,9 @@ class UserStore extends BaseStore<UserStoreState>{
         otpDialogOpen: false,
         qr: undefined,
         qrOpen: false,
-        username: '',
-        avatarUrl: '',
+        user_id: null,
+        username: null,
+        avatarUrl: null,
         isAuth: undefined,
         errorLoginForm: undefined,
         errorRegisterForm: undefined,
@@ -63,6 +65,12 @@ class UserStore extends BaseStore<UserStoreState>{
         this.state.JWT = window.localStorage.getItem('Authorization');
         this.state.csrf = window.localStorage.getItem('x-csrf-token');
         this.registerEvents();
+
+        window.addEventListener("storage", e => {
+            if (e.key == "x-csrf-token") {
+                this.state.csrf = window.localStorage.getItem('x-csrf-token');
+            }
+        })
     }
 
     /**
@@ -138,6 +146,7 @@ class UserStore extends BaseStore<UserStoreState>{
                     ...state,
                     JWT: res.headers.authorization,
                     csrf: res.headers['x-csrf-token'],
+                    user_id: res.body.id,
                     username: res.body.username,
                     avatarUrl: res.body.image_path,
                     otpEnabled: res.body.second_factor,
@@ -161,8 +170,8 @@ class UserStore extends BaseStore<UserStoreState>{
             }
 
         } catch (err) {
-            console.log("err")
-            console.log(err)
+            
+            
             this.SetState(state => ({
                 ...state,
                 errorLoginForm: 'Неправильный логин, пароль или код'
@@ -196,8 +205,8 @@ class UserStore extends BaseStore<UserStoreState>{
 
             AppRouter.go('/');
 
-        } catch (err) {
-            console.log(err);
+        } catch {
+            AppToasts.error('Что-то пошло не так');
         }
     }
 
@@ -218,11 +227,11 @@ class UserStore extends BaseStore<UserStoreState>{
         try {
             const res = await AppAuthRequests.SignUp(credentials);
 
-            // TODO
             this.SetState(s => {
                 return {
                     ...s,
                     isAuth: true,
+                    user_id: res.id,
                     username: res.username,
                     avatarUrl: res.image_path,
                     JWT: res.jwt,
@@ -232,25 +241,7 @@ class UserStore extends BaseStore<UserStoreState>{
             localStorage.setItem('Authorization', this.state.JWT);
             this.updateCSRF(this.state.csrf);
             AppRouter.go('/notes');
-
-
-            // this.SetState(s => {
-            //     return {
-            //         ...s,
-            //         isAuth: true,
-            //         username: res.username,
-            //         avatarUrl: res.image_path,
-            //         JWT: res.jwt,
-            //         csrf: res.csrf
-            //     }
-            // })
-            // localStorage.setItem("Authorization", this.state.JWT)
-            // this.updateCSRF(this.state.csrf)
-            // AppRouter.go("/notes")
-
         } catch (err) {
-            console.log(err);
-
             this.SetState(state => ({
                 ...state,
                 errorRegisterForm: 'Этот логин уже занят'
@@ -265,9 +256,12 @@ class UserStore extends BaseStore<UserStoreState>{
         try {
             const res = await AppAuthRequests.CheckUser(this.state.JWT);
 
+            
+
             this.SetState(state => ({
                 ...state,
                 isAuth: true,
+                user_id: res.id,
                 username: res.username,
                 avatarUrl: res.image_path,
                 otpEnabled: res.otp
@@ -343,7 +337,7 @@ class UserStore extends BaseStore<UserStoreState>{
                     errorUpdatePasswordForm: 'Неправильный пароль'
                 }));
             } else {
-                AppToasts.error("Что-то пошло не так");
+                AppToasts.error('Что-то пошло не так');
             }
         }
     }
@@ -376,7 +370,7 @@ class UserStore extends BaseStore<UserStoreState>{
                 otpEnabled: enabled
             }));
         } catch {
-            AppToasts.error("Что-то пошло не так");
+            AppToasts.error('Что-то пошло не так');
         }
     }
 
@@ -406,6 +400,10 @@ class UserStore extends BaseStore<UserStoreState>{
     }
 
     private updateCSRF(token:string) {
+        if(!token) {
+            return
+        }
+
         localStorage.setItem('x-csrf-token', token);
 
         this.SetState(state => ({

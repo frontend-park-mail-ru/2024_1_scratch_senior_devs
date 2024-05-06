@@ -1,6 +1,6 @@
 @import "/public/src/utils/variables.sass"
 
-.progress-bar
+.progress-wrapper
 	width: 100px
 	height: 100px
 	transform: scale(0)
@@ -10,7 +10,7 @@
 	right: 0
 	z-index: 100
 
-	.progress-bar__inner
+	.inner
 		position: absolute
 		width: 90px
 		height: 90px
@@ -23,8 +23,8 @@
 		transition: 1s ease
 		transition-delay: 1.5s
 
-	.progress-bar__circle
-		.progress-bar__container
+	.circle
+		.bar
 			position: absolute
 			width: 100%
 			height: 100%
@@ -41,19 +41,19 @@
 				clip: rect(0px, 50px, 100px, 0px)
 				z-index: 1
 
-		.progress-bar__container-left
-			.progress-bar__progress
+		.left
+			.progress
 				transition: 0.5s linear
 				transition-delay: 0.5s
 
-		.progress-bar__container-right
+		.right
 			transform: rotate(180deg)
 
-			.progress-bar__progress
+			.progress
 				transition: 0.5s linear
 				transition-delay: 1s
 
-	.progress-bar__checkmark
+	.checkmark
 		position: absolute
 		width: 100%
 		height: 100%
@@ -87,19 +87,19 @@
 	&.active
 		transform: scale(1)
 
-		.progress-bar__inner
+		.inner
 			transform: translate(-50%, -50%) scale(0)
 
-		.progress-bar__circle
-			.progress-bar__container-left
-				.progress-bar__progress
+		.circle
+			.left
+				.progress
 					transform: rotate(180deg)
 
-			.progress-bar__container-right
-				.progress-bar__progress
+			.right
+				.progress
 					transform: rotate(180deg)
 
-		.progress-bar__checkmark
+		.checkmark
 			span
 				&:first-child
 					transform: rotate(45deg) scaleX(1)

@@ -1,7 +1,7 @@
 @import "/public/src/utils/variables.sass"
 @import "/public/src/utils/animations.sass"
 
-.color-picker
+.color-picker-container
 	position: absolute
 	top: calc(100% + 10px)
 	right: -115px
@@ -42,23 +42,23 @@
 		gap: 5px
 		padding: 5px 0
 
-	.background-picker
-		.background-picker__items
-			.background-picker__item
-				.background-picker__icon-container
+	.background-color-picker-container
+		.items
+			.item
+				.icon-container
 					span
 						color: $text-main-color
 
-	.background-picker__label
-		color: $text-main-color--darker
+	.label
+		color: $text-secondary-color
 		font-weight: 600
 		margin: 0 12px
 
-	.background-picker__items
+	.items
 		display: flex
 		flex-direction: column
 
-		.background-picker__item
+		.item
 			display: flex
 			align-items: center
 			gap: 8px
@@ -69,11 +69,11 @@
 			&:hover
 				background-color: hsl(217.2 32.6% 17.5%)
 
-			.background-picker__text
-				color: $text-main-color--darker
+			.text
+				color: $text-secondary-color
 				font-size: 14px
 
-			.background-picker__icon-container
+			.icon-container
 				padding: 2px 10px
 				background: $background-main-color
 				border-radius: 8px

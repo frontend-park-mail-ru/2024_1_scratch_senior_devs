@@ -1,3 +1,6 @@
+import {AppNotesStore} from "./stores/NotesStore";
+import {NoteType} from "../utils/types";
+
 /**
  * Обрезает переданную строку, если она длиннее, чем n символов
  * @param str {string} исходная строка
@@ -19,6 +22,12 @@ export function decode(raw: string): object {
     return JSON.parse(new TextDecoder().decode(bytes));
 }
 
+/**
+ * Возвращает true если заметка является подзаметкой
+ */
+export const isSubNote = (note:NoteType): boolean => {
+    return note.parent != "00000000-0000-0000-0000-000000000000"
+}
 
 /**
  * Определеяет максимальную задержку в ожидании ответа от сервера
@@ -110,11 +119,62 @@ export const crop = (url:string, aspectRatio=1):Promise<HTMLCanvasElement> => {
  * Возвращает null в случае, если ссылка некорректна
  */
 export const parseYoutubeLink = (url:string) => {
-    const check = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/
-    const match = check.exec(url)
+    const check = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/;
+    const match = check.exec(url);
     if (match != null && match.length > 0) {
-        return match[1]
+        return match[1];
     }
 
-    return null
+    return null;
+};
+
+
+/**
+ * Скроллит вверх к началу страницы
+ */
+export const scrollToTop = () => {
+    document.body.scrollTop = document.documentElement.scrollTop = 0
 }
+
+export const parseNoteTitle = (title:string) => {
+    return title ? title : "Пустая заметка"
+}
+
+export const setCursorAtNodePosition = (node, index) => {
+    let range = document.createRange();
+    let selection = window.getSelection();
+    let currentPos = 0;
+    let found = false;
+
+    function searchNode(node) {
+        if (node.nodeType === Node.TEXT_NODE) {
+            if (currentPos + node.length >= index) {
+                range.setStart(node, index - currentPos);
+                range.collapse(true);
+                found = true;
+            } else {
+                currentPos += node.length;
+            }
+        } else {
+            for (let child of node.childNodes) {
+                if (found) break;
+                searchNode(child);
+            }
+        }
+    }
+
+    searchNode(node);
+    selection.removeAllRanges();
+    selection.addRange(range);
+}
+
+export const getCaretPosition = (editableDiv) => {
+    const selection = window.getSelection();
+    const range = selection.getRangeAt(0);
+    const clonedRange = range.cloneRange();
+    clonedRange.selectNodeContents(editableDiv);
+    clonedRange.setEnd(range.endContainer, range.endOffset);
+
+    return clonedRange.toString().length;
+}
+

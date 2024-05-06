@@ -1,34 +1,42 @@
 import {ScReact} from '@veglem/screact';
 import './style.sass';
-import {SearchBar} from '../../components/SearchBar/SearchBar';
+import SearchBar from '../../components/SearchBar/SearchBar';
 import {NoteEditor} from '../../components/NoteEditor/NoteEditor';
 import {AppNotesStore, NotesActions, NotesStoreState} from '../../modules/stores/NotesStore';
 import {AppDispatcher} from '../../modules/dispatcher';
-import {Modal} from '../../components/Modal/Modal';
 import {Button} from '../../components/Button/Button';
 import {Img} from '../../components/Image/Image';
-import {DeleteNoteDialog} from '../../components/DeleteNoteDialog/DeleteNoteDialog';
 import {AppNoteStore} from '../../modules/stores/NoteStore';
 import {Loader} from '../../components/Loader/Loader';
-import {formatDate, truncate} from '../../modules/utils';
+import {parseNoteTitle, scrollToTop, truncate} from '../../modules/utils';
+import {Note} from "../../components/Note/Note";
+import {TagsFilter} from "../../components/TagsFilter/TagsFilter";
 
 export class NotesPage extends ScReact.Component<any, any> {
     state = {
         notes: [],
         selectedNote: undefined,
-        deleteNoteModal: false,
+        tags: [],
+        selectedTags: [],
         editorOpen: false,
-        fetching: false
+        fetching: false,
+        query: ""
     };
+
+    private notesContainerRef
 
     componentDidMount() {
         document.title = 'Заметки';
 
+        scrollToTop()
+
         AppNotesStore.SubscribeToStore(this.updateState);
-        AppNoteStore.AddSaver(this.updateNotesTitles);
+
+        // AppNoteStore.AddSaver(this.updateNotesTitles);
 
         this.setState(state => ({
             ...state,
+            tags: this.props.tags,
             notes: this.props.notes
         }));
 
@@ -41,45 +49,55 @@ export class NotesPage extends ScReact.Component<any, any> {
             AppDispatcher.dispatch(NotesActions.SELECT_NOTE, this.props.note);
         }
 
-        this.createObserver();
+        if (this.props.notes.length == 10) {
+            this.createObserver();
+        }
     }
 
     updateNotesTitles = () => {
-        console.log('updateNotesTitles');
         setTimeout(()=> {
-            console.log(AppNoteStore.state.note);
             const notes = AppNotesStore.state.notes;
             notes.forEach((note, index) => {
                 if (note.id == this.state.selectedNote?.id) {
-                    console.log('Yeeees');
-                    notes[index].data.title = AppNoteStore.state.note.title;
-                    console.log(notes);
+                    notes[index].data.title = parseNoteTitle(AppNoteStore.state.note.title);
+                    notes[index].update_time = new Date()
                 }
             });
+
             this.setState(s=>({
                 ...s,
                 notes: notes
             }));
+
         }, 10);
     };
 
     componentWillUnmount() {
         AppDispatcher.dispatch(NotesActions.EXIT);
         AppNotesStore.UnSubscribeToStore(this.updateState);
+        document.body.classList.remove('locked');
     }
 
     updateState = (store:NotesStoreState) => {
         this.setState(state => {
-            if (state.notes.length > 0 && state.notes.length < AppNotesStore.state.notes.length) {
+            if (state.notes.length > 0 && state.notes.length < store.notes.length) {
                 this.createObserver();
+            }
+
+            if (store.selectedNote) {
+                document.title = parseNoteTitle(store.selectedNote.data.title);
+
+                if (this.state.selectedNote) {
+                    this.updatePreviewNoteTitle(store.selectedNote.data.title)
+                }
             }
 
             return {
                 ...state,
                 selectedNote: store.selectedNote,
+                tags: store.tags,
                 editorOpen: store.selectedNote != undefined,
                 notes: store.notes,
-                deleteNoteModal: store.modalOpen,
                 fetching: store.fetching
             };
         });
@@ -90,8 +108,6 @@ export class NotesPage extends ScReact.Component<any, any> {
 
         if (e.target.matches('.note-container')) {
             id = e.target.id;
-        } else if (e.target.matches('.note-container *')) {
-            id = e.target.parentNode.id;
         }
 
         if (id && this.state.selectedNote?.id !== id) {
@@ -100,7 +116,10 @@ export class NotesPage extends ScReact.Component<any, any> {
                 editorOpen: true
             }));
 
-            AppDispatcher.dispatch(NotesActions.FETCH_NOTE, id);
+            document.body.classList.add('locked');
+
+            AppDispatcher.dispatch(NotesActions.OPEN_NOTE, id);
+
         }
     };
 
@@ -110,7 +129,11 @@ export class NotesPage extends ScReact.Component<any, any> {
             editorOpen: false
         }));
 
-        history.replaceState(null, null, '/notes');
+        document.title = 'Заметки';
+
+        history.pushState(null, null, '/notes');
+
+        document.body.classList.remove('locked');
     };
 
     createObserver() {
@@ -126,64 +149,131 @@ export class NotesPage extends ScReact.Component<any, any> {
                 });
             });
 
-        const lastNote = document.querySelector('.note-container:last-child');
+        const lastNote = this.notesContainerRef.lastChild;
         lastNote && observer.observe(lastNote);
     }
 
-    searchNotes = (value:string) => {
-        AppDispatcher.dispatch(NotesActions.SEARCH_NOTES, value);
-    };
-
     createNewNote = () => {
-        AppDispatcher.dispatch(NotesActions.CREATE_NEW_NOTE);
+        AppDispatcher.dispatch(NotesActions.CREATE_NEW_NOTE, true);
     };
 
-    private noteRefs = {};
+    onSearchBarStartTyping = () => {
+        AppDispatcher.dispatch(NotesActions.START_FETCHING)
+    }
 
-    saveSelectedNoteRef = (note, ref) => {
-        this.noteRefs[note.id] = ref;
+    onChangeSelectedNoteTitle = (title:string) => {
+        this.updatePreviewNoteTitle(title)
+        this.updateNotesTitles()
     };
 
-    onChangeSelectedNoteTitle = (title) => {
-        console.log('onChangeSelectedNoteTitle');
-        const selectedNote = this.noteRefs[this.state.selectedNote.id];
-        const noteTitle = selectedNote.querySelector('h3');
-        noteTitle.innerHTML = truncate(title, 20);
-    };
+    updatePreviewNoteTitle = (title:string) => {
+        const selectedNote = document.getElementById(this.state.selectedNote.id);
+
+        if (selectedNote) {
+            const noteTitle = selectedNote.querySelector('h3');
+            noteTitle.innerHTML = title.length > 0 ? truncate(title, 20) : "Пустая заметка";
+            document.title = noteTitle.innerHTML
+        }
+    }
+
+    onChangeSelectedNoteContent = () => {
+        this.updateNotesTitles()
+    }
+
+    onChangeTags = (tags:string[]) => {
+        AppNotesStore.state.selectedNote.tags = tags
+        AppDispatcher.dispatch(NotesActions.SYNC_NOTES)
+
+        // const selectedNote = document.getElementById(this.state.selectedNote.id);
+        //
+        // if (selectedNote) {
+        //     const tagsContainer = selectedNote.querySelector('.note-tags-container');
+        //
+        //     tagsContainer.innerHTML = ""
+        //
+        //     tags.slice(0, 2).forEach(tagname => {
+        //         const tag = document.createElement("span")
+        //         tag.innerHTML = tagname
+        //         tag.className = "note-tag"
+        //         tagsContainer.appendChild(tag)
+        //     })
+        //
+        //     if (tags.length > 2) {
+        //         const tag = document.createElement("span")
+        //         tag.innerHTML = `+${tags.length - 2}`
+        //         tag.className = "note-tag"
+        //         tagsContainer.appendChild(tag)
+        //     }
+        // }
+    }
+
+    selectTag = (tag:string) => {
+        if (this.state.selectedTags.includes(tag)) {
+            this.setState(state => ({
+                ...state,
+                selectedTags: state.selectedTags.filter(t => t != tag)
+            }))
+        } else {
+            this.setState(state => ({
+                ...state,
+                selectedTags: [...state.selectedTags, tag]
+            }))
+        }
+
+        this.searchNotes()
+    }
+
+    onSearchBarChange = (value:string) => {
+        this.setState(state => ({
+            ...state,
+            query: value
+        }))
+
+        this.searchNotes()
+    }
+
+    searchNotes = () => {
+        AppDispatcher.dispatch(NotesActions.SEARCH_NOTES, {
+            query: this.state.query,
+            selectedTags: this.state.selectedTags
+        })
+    }
 
     render() {
         return (
-            <div className={'notes-page ' + (this.state.editorOpen ? 'active' : '')} >
+            <div className={'notes-page-wrapper ' + (this.state.editorOpen ? 'active' : '')} >
                 <aside>
-                    <Modal open={this.state.deleteNoteModal} content={<DeleteNoteDialog />} handleClose={() => AppDispatcher.dispatch(NotesActions.CLOSE_DELETE_NOTE_DIALOG)} />
                     <div className="top-panel">
-                        <SearchBar onChange={this.searchNotes} />
-                        <div className="add-note" onclick={this.createNewNote}>
-                            <Button label="Новая заметка" className="add-note__btn" />
-                            <div className="add-note__icon-container">
-                                <Img src="plus.svg" className="add-note__icon-container__icon" />
+                        <SearchBar onStartTyping={this.onSearchBarStartTyping} onChange={this.onSearchBarChange}/>
+                        <div className="add-note-btn-container" onclick={this.createNewNote}>
+                            <Button label="Новая заметка" className="add-note-btn"/>
+                            <div className="add-note-icon-wrapper">
+                                <Img src="plus.svg" className="add-note-icon"/>
                             </div>
                         </div>
                     </div>
-                    <div className="notes-container" onclick={this.handleSelectNote}>
+                    {this.state.tags.length > 0 ? <TagsFilter tags={this.state.tags} selectedTags={this.state.selectedTags} selectTag={this.selectTag} /> : "" }
+                    <div className="notes-container" onclick={this.handleSelectNote} ref={ref => this.notesContainerRef = ref}>
                         <Loader active={this.state.fetching}/>
-                        {this.state.notes.map(note => (
-                            <div
-                                className={'notes-container__note-container notes-container__note-container-' + (this.state.selectedNote?.id == note.id ? 'selected' : '')}
-                                id={note.id}
-                                ref={ref => this.saveSelectedNoteRef(note, ref)}
-                            >
-                                <h3>{truncate(note.data.title, 20)}</h3>
-                                <p></p>
-                                <span className="notes-container__update-time-label">{formatDate(note.update_time)}</span>
-                            </div>
-                        ))}
+                        {
+                            this.state.notes.length > 0 ?
+                                this.state.notes.map(note => (
+                                    <Note selected={this.state.selectedNote?.id == note.id} note={note}/>
+                                ))
+                                :
+                                !this.state.fetching ?
+                                    <h3 className="notes-not-found-label">Список заметок пуст</h3> : ""
+                        }
                     </div>
                 </aside>
+
                 <NoteEditor open={this.state.editorOpen}
                             setClose={this.closeEditor}
+                            onChangeNote={this.onChangeSelectedNoteContent}
                             onChangeTitle={this.onChangeSelectedNoteTitle}
+                            onChangeTags={this.onChangeTags}
                 />
+
             </div>
         );
     }

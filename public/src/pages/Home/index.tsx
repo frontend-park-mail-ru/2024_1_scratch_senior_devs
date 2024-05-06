@@ -4,7 +4,7 @@ import './style.sass';
 import {AppRouter} from '../../modules/router';
 import {AppUserStore} from '../../modules/stores/UserStore';
 import {ShiningButton} from '../../components/ShiningButton/ShinigButton';
-import {Card} from '../../components/Card/Card';
+import {Img} from '../../components/Image/Image';
 
 export class HomePage extends ScReact.Component<any, any> {
     componentDidMount() {
@@ -31,7 +31,7 @@ export class HomePage extends ScReact.Component<any, any> {
     }
 
     handleButtonClick = () => {
-        const url = AppUserStore.state.isAuth ? '/notes' : '/login';
+        const url = AppUserStore.state.isAuth ? '/notes' : 'login';
         AppRouter.go(url);
     };
 
@@ -39,34 +39,34 @@ export class HomePage extends ScReact.Component<any, any> {
         return (
             <div className="home__wrapper">
                 <section className="hero">
-                    <div className="hero-body">
-                        <h1 className="hero-body__title">YouNote - современный сервис для ведения заметок</h1>
+                    <div className="hero__body">
+                        <h1 className="hero__body-title">YouNote - современный сервис для ведения заметок</h1>
                         <ShiningButton label="Попробовать" onClick={this.handleButtonClick}/>
                     </div>
                 </section>
                 <section className="about">
                     <h2 className="about__title">Функции и возможности</h2>
                     <div className="about__container">
-                        <Card
-                            icon="./src/assets/notes.png"
-                            title="Многофункциональность"
-                            description="Сервис может использоваться для любых задач: планирование досуга, ведение конспектов, организация командной работы"
-                        />
-                        <Card
-                            icon="./src/assets/accessibility.png"
-                            title="Доступность"
-                            description="Можно получить доступ к своим записям, имея под рукой любое устройство с доступом к интернет"
-                        />
-                        <Card
-                            icon="./src/assets/success.png"
-                            title="Удобство"
-                            description="Простой, минималистичный и интуитивно понятный интерфейс дает возможность комфортного ведения заметок любым пользователем"
-                        />
-                        <Card
-                            icon="./src/assets/personalization.png"
-                            title="Персонализация"
-                            description="Можно получить доступ к своим записям, имея под рукой любое устройство с доступом к интернет"
-                        />
+                        <div className="card">
+                            <Img src="notes.png"/>
+                            <h3>Многофункциональность</h3>
+                            <span>Сервис может использоваться для любых задач: планирование досуга, ведение конспектов, организация командной работы</span>
+                        </div>
+                        <div className="card">
+                            <Img src="accessibility.png"/>
+                            <h3>Доступность</h3>
+                            <span>Можно получить доступ к своим записям, имея под рукой любое устройство с доступом к интернет</span>
+                        </div>
+                        <div className="card">
+                            <Img src="success.png"/>
+                            <h3>Удобство</h3>
+                            <span>Простой, минималистичный и интуитивно понятный интерфейс дает возможность комфортного ведения заметок любым пользователем</span>
+                        </div>
+                        <div className="card">
+                            <Img src="personalization.png"/>
+                            <h3>Персонализация</h3>
+                            <span>Можно получить доступ к своим записям, имея под рукой любое устройство с доступом к интернет</span>
+                        </div>
                     </div>
                 </section>
             </div>

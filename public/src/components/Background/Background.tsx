@@ -1,22 +1,14 @@
 import {ScReact} from '@veglem/screact';
 import './Background.sass';
-import {NotesPage} from '../../pages/Notes';
 
 export class Background extends ScReact.Component<any, any> {
     render() {
-        if (this.props.currPage === NotesPage) {
-            return (
-                <div>
-                </div>
-            );
-        }
-
         return (
             <div className="background">
-                <div className="background__parallax"></div>
-                <div className="background__item background__item-stars"></div>
-                <div className="background__item background__item-stars2"></div>
-                <div className="background__item background__item-stars3"></div>
+                <div className="parallax-bg"></div>
+                <div id="stars"></div>
+                <div id="stars2"></div>
+                <div id="stars3"></div>
             </div>
         );
     }
