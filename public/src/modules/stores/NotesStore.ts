@@ -157,7 +157,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
         this.SetState(s=>({
             ...s,
-            selectedNote: undefined
+            selectedNote: undefined,
+            selectedNoteCollaborators: []
         }));
 
     }
@@ -196,7 +197,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
         this.SetState(state => ({
             ...state,
             selectedNote: note,
-            selectedNoteChildren: note.children
+            selectedNoteChildren: note.children,
+            selectedNoteCollaborators: []
         }));
 
         this.ws = new WebSocketConnection(`note/${note.id}/subscribe_on_updates`)
