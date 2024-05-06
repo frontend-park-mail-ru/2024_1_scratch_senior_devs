@@ -11,6 +11,12 @@ export type NoteType = {
     owner_id: string
 }
 
+export type CollaboratorType = {
+    id: string,
+    username: string,
+    avatar: string
+}
+
 export type NoteDataType = {
     title: string
     content: any[],

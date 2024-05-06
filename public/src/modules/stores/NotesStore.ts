@@ -3,7 +3,7 @@ import {AppNoteRequests, AppTagRequests} from '../api';
 import {AppUserStore, UserActions} from './UserStore';
 import {AppDispatcher} from '../dispatcher';
 import {AppToasts} from '../toasts';
-import {NoteDataType, NoteType} from "../../utils/types";
+import {CollaboratorType, NoteDataType, NoteType} from "../../utils/types";
 import {decode} from "../utils";
 import {WebSocketConnection} from "../websocket";
 import {insertBlockPlugin} from "../../components/Editor/Plugin";
@@ -11,6 +11,7 @@ import {insertBlockPlugin} from "../../components/Editor/Plugin";
 export type NotesStoreState = {
     notes: NoteType[],
     selectedNote: NoteType,
+    selectedNoteCollaborators: CollaboratorType[],
     tags: string[],
     query: string,
     offset: number,
@@ -24,6 +25,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
         tags: [],
         selectedTags: [],
         selectedNote: undefined,
+        selectedNoteCollaborators: [],
         query: '',
         offset: 0,
         count: 10,
@@ -216,12 +218,23 @@ class NotesStore extends BaseStore<NotesStoreState> {
             }
 
             console.log(data.type)
+            console.log(data)
 
             if (data.type == "opened") {
-                console.log(data)
+                const collaborator = {
+                    id: data.user_id,
+                    username: data.username,
+                    avatar: data.image_path
+                }
+
+                this.SetState(state => ({
+                    ...state,
+                    selectedNoteCollaborators: [...state.selectedNoteCollaborators, collaborator]
+                }))
+
             } else if (data.type == "closed") {
-                console.log(data)
-            } else {
+                // TODO
+            } else if (data.type == "updated") {
                 const noteData = decode(data.message_info) as NoteDataType
                 if (JSON.stringify(noteData) == JSON.stringify(this.state.selectedNote.data)) {
                     return

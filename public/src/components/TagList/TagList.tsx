@@ -28,7 +28,6 @@ export class TagList extends ScReact.Component<any, TagListState> {
 
     componentDidMount() {
         document.addEventListener('click', this.handleClickOutside, false);
-
         AppNotesStore.SubscribeToStore(this.updateState)
     }
 
@@ -113,9 +112,9 @@ export class TagList extends ScReact.Component<any, TagListState> {
         }
     }
 
-    addTag = (tag:string) => {
-        AppDispatcher.dispatch(NotesActions.CREATE_TAG, tag)
-        this.props.onChange([...this.props.tags, tag])
+    addTag = (tagname:string) => {
+        AppDispatcher.dispatch(NotesActions.CREATE_TAG, tagname)
+        this.props.onChange([...this.props.tags, tagname])
     }
 
     deleteTag = (tagname:string) => {

@@ -14,6 +14,7 @@ import {AppToasts} from "../../modules/toasts";
 import {TagList} from "../TagList/TagList";
 import {EditorWrapper} from "../Editor/EditorWrapper";
 import {AppUserStore} from "../../modules/stores/UserStore";
+import {Collaborators} from "../Collaborators/Collaborators";
 
 export class NoteEditor extends ScReact.Component<any, any> {
     state = {
@@ -143,6 +144,8 @@ export class NoteEditor extends ScReact.Component<any, any> {
                         </div>
                     </div>
                     <div className="right-container">
+
+                        <Collaborators/>
 
                         <div className="note-save-indicator" ref={ref => this.savingLabelRef = ref}>
                             <Tooltip icon="check.svg" label="Сохранено"/>
