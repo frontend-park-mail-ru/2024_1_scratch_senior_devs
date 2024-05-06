@@ -241,7 +241,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
                 this.SetState(state => ({
                     ...state,
-                    selectedNoteCollaborators: state.selectedNoteCollaborators.filter(cb => cb != collaborator)
+                    selectedNoteCollaborators: state.selectedNoteCollaborators.filter(cb => cb.id != collaborator.id)
                 }))
 
             } else if (data.type == "updated") {
