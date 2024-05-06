@@ -4,14 +4,14 @@ import './ColorPicker.sass';
 export class ColorPicker extends ScReact.Component<any, any> {
     handleSelectText = (item: { label: any; color: any; }) => {
         
-        
+        document.execCommand('foreColor', false, item.color)
         this.props.onSel('color', item.color);
         this.props.handleClose();
     };
 
     handleSelectBackground = (item: { label: any; color: any; }) => {
-        
-        
+
+        document.execCommand('backColor', false, item.color)
         this.props.onSel('backgroundColor', item.color);
         this.props.handleClose();
     };
