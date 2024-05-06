@@ -767,11 +767,6 @@ export const defaultPlugins: EditorPlugin[] = [
             return div;
         },
         insertNode: undefined,
-        onInsert: (node: Node) => {
-            const first = node.firstChild;
-            (node as HTMLElement).replaceWith(first);
-            document.getSelection().setPosition(first, 1);
-        }
     },
 ]
 
