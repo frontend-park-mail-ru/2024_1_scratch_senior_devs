@@ -719,7 +719,7 @@ export const defaultPlugins: EditorPlugin[] = [
             return {
                 pluginName: 'font',
                 children: children,
-                color: (node as HTMLElement).style.color
+                color: (node as HTMLFontElement).color
             };
         },
         fromJson: (props: PluginProps) => {
@@ -731,7 +731,7 @@ export const defaultPlugins: EditorPlugin[] = [
             children.forEach(child => {
                 div.append(child);
             })
-            div.style.color = props.color as string;
+            div.color = props.color as string;
             return div;
         },
         insertNode: undefined,
