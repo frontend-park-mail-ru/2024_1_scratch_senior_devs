@@ -217,18 +217,24 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             console.log(data.type)
 
-            const noteData = decode(data.message_info) as NoteDataType
-            if (JSON.stringify(noteData) == JSON.stringify(this.state.selectedNote.data)) {
-                return
+            if (data.type == "opened") {
+                console.log(data)
+            } else if (data.type == "closed") {
+                console.log(data)
+            } else {
+                const noteData = decode(data.message_info) as NoteDataType
+                if (JSON.stringify(noteData) == JSON.stringify(this.state.selectedNote.data)) {
+                    return
+                }
+
+                const updatedNote = this.state.selectedNote
+                updatedNote.data = noteData
+
+                this.SetState(state => ({
+                    ...state,
+                    selectedNote: updatedNote
+                }));
             }
-
-            const updatedNote = this.state.selectedNote
-            updatedNote.data = noteData
-
-            this.SetState(state => ({
-                ...state,
-                selectedNote: updatedNote
-            }));
         })
     }
 
