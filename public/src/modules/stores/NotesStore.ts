@@ -229,10 +229,12 @@ class NotesStore extends BaseStore<NotesStoreState> {
                     avatar: data.image_path
                 }
 
-                this.SetState(state => ({
-                    ...state,
-                    selectedNoteCollaborators: [...state.selectedNoteCollaborators, collaborator]
-                }))
+                if (!this.state.selectedNoteCollaborators.find(cb => cb.id == collaborator.id)) {
+                    this.SetState(state => ({
+                        ...state,
+                        selectedNoteCollaborators: [...state.selectedNoteCollaborators, collaborator]
+                    }))
+                }
 
             } else if (data.type == "closed") {
                 const collaborator = {
