@@ -215,6 +215,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 return
             }
 
+            console.log(data.type)
+
             const noteData = decode(data.message_info) as NoteDataType
             if (JSON.stringify(noteData) == JSON.stringify(this.state.selectedNote.data)) {
                 return

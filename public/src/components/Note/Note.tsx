@@ -19,9 +19,6 @@ export class Note extends ScReact.Component<NoteProps, any> {
     }
 
     componentDidUpdate() {
-        console.log("componentDidUpdate")
-        console.log(this.props.note.tags)
-
        this.renderTags()
     }
 
