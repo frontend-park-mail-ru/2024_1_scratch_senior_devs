@@ -1064,9 +1064,7 @@ const RenderSubNote = (subNoteId:string) => {
         //subNoteWrapper.dataset.title = parseNoteTitle(result.data.title)
         subNoteTitle.innerHTML = parseNoteTitle(result.data.title)
 
-        AppDispatcher.dispatch(NotesActions.SAVE_NOTE)
-
-    }).catch(() => {
+    }).catch((e) => {
         subNoteTitle.innerHTML = "Заметка не найдена"
         subNoteWrapper.dataset.deleted = "true"
     });

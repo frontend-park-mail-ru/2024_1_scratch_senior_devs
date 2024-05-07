@@ -37,8 +37,6 @@ export class TagList extends ScReact.Component<any, TagListState> {
     }
 
     handleClickOutside = (e) => {
-        console.log("handleClickOutside")
-        console.log(this.state.open)
         if (this.state.open && !this.openBtnRef.contains(e.target) && !e.target.matches(".tags-wrapper,.tags-wrapper *")) {
             this.toggleOpen();
         }
