@@ -6,7 +6,7 @@ import {AppNotesStore, NotesActions, NotesStoreState} from '../../modules/stores
 import {AppDispatcher} from '../../modules/dispatcher';
 import {Button} from '../../components/Button/Button';
 import {Img} from '../../components/Image/Image';
-import {AppNoteStore, NoteStoreActions} from '../../modules/stores/NoteStore';
+import {AppNoteStore} from '../../modules/stores/NoteStore';
 import {Loader} from '../../components/Loader/Loader';
 import {parseNoteTitle, scrollToTop, truncate} from '../../modules/utils';
 import {Note} from "../../components/Note/Note";
@@ -117,8 +117,6 @@ export class NotesPage extends ScReact.Component<any, any> {
             }));
 
             document.body.classList.add('locked');
-
-            AppDispatcher.dispatch(NoteStoreActions.PUSH_SAVE);
 
             AppDispatcher.dispatch(NotesActions.OPEN_NOTE, id);
 
