@@ -841,12 +841,14 @@ export const fromJson = (props: PluginProps) => {
         if (props[`cursor${AppUserStore.state.username}`] === '0') {
             setTimeout(() => {
                 setCursorAtNodePosition(node, 0);
+                (node as HTMLElement).focus();
                 // document.getSelection().setPosition(node, 0);
             })
 
         } else {
             setTimeout(() => {
                 setCursorAtNodePosition(node, Number(props[`cursor${AppUserStore.state.username}`]));
+                (node as HTMLElement).focus();
                 // document.getSelection().setPosition(node.firstChild, Number(props[`cursor${AppUserStore.state.username}`]));
             })
 
