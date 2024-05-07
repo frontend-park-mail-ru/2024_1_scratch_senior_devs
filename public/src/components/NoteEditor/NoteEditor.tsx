@@ -32,9 +32,9 @@ export class NoteEditor extends ScReact.Component<any, any> {
         AppNoteStore.AddSaver(this.saveNote);
     }
 
-    saveNote = () => {
+    saveNote = (data) => {
         if (this.state.selectedNote) {
-            AppDispatcher.dispatch(NotesActions.SAVE_NOTE);
+            AppDispatcher.dispatch(NotesActions.SAVE_NOTE, data);
         }
 
         this.savingLabelRef.classList.add("active");
@@ -45,7 +45,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
     };
 
     closeEditor = () => {
-        this.saveNote();
+        this.saveNote({id: AppNotesStore.state.selectedNote.id, parent: AppNotesStore.state.selectedNote.parent, note: AppNoteStore.state.note});
         this.props.setClose();
         setTimeout(() => AppDispatcher.dispatch(NotesActions.CLOSE_NOTE), 300);
     };

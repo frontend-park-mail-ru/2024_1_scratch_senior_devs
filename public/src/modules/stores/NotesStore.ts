@@ -85,7 +85,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
                     await this.deleteNote(action.payload);
                     break;
                 case NotesActions.SAVE_NOTE:
-                    await this.saveNote();
+                    await this.saveNote(action.payload);
                     break;
                 case NotesActions.CREATE_NEW_NOTE:
                     await this.createNewNote();
@@ -360,15 +360,15 @@ class NotesStore extends BaseStore<NotesStoreState> {
         }
     }
 
-    async saveNote() {
+    async saveNote(data) {
         try {
 
-            const data = {
-                id: this.state.selectedNote.id,
-                note: AppNoteStore.state.note,
-                parent: this.state.selectedNote.data.parent
-
-            }
+            // const data = {
+            //     id: this.state.selectedNote.id,
+            //     note: AppNoteStore.state.note,
+            //     parent: this.state.selectedNote.data.parent
+            //
+            // }
 
             const {csrf} = await AppNoteRequests.Update(data, AppUserStore.state.JWT, AppUserStore.state.csrf);
 

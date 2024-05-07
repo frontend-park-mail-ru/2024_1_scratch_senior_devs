@@ -37,7 +37,6 @@ export class Note extends ScReact.Component<NoteProps, any> {
             const span = document.createElement("span")
             span.className = "note-tag"
             span.textContent = `+${this.props.note.tags.length - MAX_TAGS_PREVIEW_COUNT}`
-
             this.tagsContainerRef.appendChild(span)
         }
     }
