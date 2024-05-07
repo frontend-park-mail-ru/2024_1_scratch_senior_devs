@@ -125,10 +125,12 @@ export class Editor {
             }
         }
 
-        document.onselectionchange = (e) => {
+        document.onselectionchange = ()  => {
+            debounce(selectionCallback, 500)
             this.addPlaceHolder();
         }
-        document.onselectionchange = debounce(selectionCallback, 500)
+
+
 
         // TODO: убрать задержку при закрытии всплывашки, но оставить задержку при открытии
         // document.onclick = (e) => {
