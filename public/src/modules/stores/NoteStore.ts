@@ -6,8 +6,7 @@ export const NoteStoreActions = {
     CHANGE_TITLE: 'CHANGE_TITLE',
     CHANGE_CONTENT: 'CHANGE_CONTENT',
     OPEN_DROPDOWN: "OPEN_DROPDOWN",
-    CLOSE_DROPDOWN: "CLOSE_DROPDOWN",
-    PUSH_SAVE: "PUSH_SAVE"
+    CLOSE_DROPDOWN: "CLOSE_DROPDOWN"
 };
 
 export type NoteStoreState = {
@@ -54,9 +53,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
                     break;
                 case NoteStoreActions.CHANGE_CONTENT:
                     this.changeContent(action.payload);
-                    break;
-                case NoteStoreActions.PUSH_SAVE:
-                    this.saveNote(true);
+                    break
             }
         });
     };

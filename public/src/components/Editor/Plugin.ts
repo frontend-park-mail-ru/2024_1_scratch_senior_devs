@@ -4,7 +4,7 @@ import {AppNotesStore, NotesActions} from "../../modules/stores/NotesStore";
 import {AppNoteRequests} from "../../modules/api";
 import {AppDispatcher} from "../../modules/dispatcher";
 import {AppToasts} from "../../modules/toasts";
-import {AppNoteStore, NoteStoreActions} from "../../modules/stores/NoteStore";
+import {AppNoteStore} from "../../modules/stores/NoteStore";
 
 interface EditorPlugin {
     pluginName: string;
@@ -1066,8 +1066,6 @@ const RenderSubNote = (subNoteId:string) => {
 
     subNoteWrapper.onclick = () => {
         if (!subNoteWrapper.dataset.deleted) {
-            !loading && AppDispatcher.dispatch(NoteStoreActions.PUSH_SAVE, {})
-
             !loading && AppDispatcher.dispatch(NotesActions.OPEN_NOTE, subNoteId)
         } else {
             AppToasts.error("Заметка не найдена")
