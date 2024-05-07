@@ -7,7 +7,7 @@ import {CollaboratorType, NoteDataType, NoteType} from "../../utils/types";
 import {decode} from "../utils";
 import {WebSocketConnection} from "../websocket";
 import {insertBlockPlugin} from "../../components/Editor/Plugin";
-import {AppNoteStore} from "./NoteStore";
+import {AppNoteStore, NoteStoreActions} from "./NoteStore";
 
 export type NotesStoreState = {
     notes: NoteType[],
@@ -188,9 +188,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
         }
     }
 
-    async selectNote (note:NoteType) {
+    selectNote (note:NoteType) {
         if (this.state.selectedNote) {
-            await this.saveNote();
+            // await this.saveNote();
             this.syncNotes()
         }
 
@@ -266,7 +266,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
     async openNote(id:string) {
         try {
-            await this.saveNote();
+            AppDispatcher.dispatch(NoteStoreActions.PUSH_SAVE);
 
             const note = await AppNoteRequests.Get(id, AppUserStore.state.JWT);
 
