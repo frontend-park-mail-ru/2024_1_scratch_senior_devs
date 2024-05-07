@@ -26,7 +26,6 @@ export class Editor {
                 tippy: {open: (elem: HTMLElement) => void, close: () => void}) {
 
         // TODO: при наборе символов в поисковую строку фокусится редактор заметки (отключить)
-        
 
         this.dropdownCallbacks = dropdown;
         this.tippyCallbacks = tippy;
@@ -125,12 +124,11 @@ export class Editor {
             }
         }
 
-        document.onselectionchange = ()  => {
-            debounce(selectionCallback, 500)
-            this.addPlaceHolder();
-        }
+        document.removeEventListener('selectionchange', this.addPlaceHolder)
+        document.removeEventListener('selectionchange', debounce(selectionCallback, 500))
 
-
+        document.addEventListener('selectionchange', this.addPlaceHolder)
+        document.addEventListener('selectionchange', debounce(selectionCallback, 500))
 
         // TODO: убрать задержку при закрытии всплывашки, но оставить задержку при открытии
         // document.onclick = (e) => {
