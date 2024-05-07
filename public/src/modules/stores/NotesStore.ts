@@ -40,24 +40,24 @@ class NotesStore extends BaseStore<NotesStoreState> {
         super();
         this.registerEvents();
 
-        window.addEventListener("storage", e => {
-            if (e.key == "selectedNote") {
-                let note = JSON.parse(localStorage.getItem("selectedNote"))
-
-                if (note && this.state.selectedNote && this.state.selectedNote.id == note.id) {
-                    const updatedNote = this.state.selectedNote
-                    updatedNote.data = {
-                        title: note.note.title,
-                        content: note.note.blocks
-                    }
-
-                    this.SetState(state => ({
-                        ...state,
-                        selectedNote: updatedNote
-                    }))
-                }
-            }
-        })
+        // window.addEventListener("storage", e => {
+        //     if (e.key == "selectedNote") {
+        //         let note = JSON.parse(localStorage.getItem("selectedNote"))
+        //
+        //         if (note && this.state.selectedNote && this.state.selectedNote.id == note.id) {
+        //             const updatedNote = this.state.selectedNote
+        //             updatedNote.data = {
+        //                 title: note.note.title,
+        //                 content: note.note.blocks
+        //             }
+        //
+        //             this.SetState(state => ({
+        //                 ...state,
+        //                 selectedNote: updatedNote
+        //             }))
+        //         }
+        //     }
+        // })
     }
 
     private registerEvents(){
@@ -230,7 +230,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
                     avatar: data.image_path
                 }
 
-                if (!this.state.selectedNoteCollaborators.find(cb => cb.id == collaborator.id)) {
+                if (collaborator.id != AppUserStore.state.user_id && !this.state.selectedNoteCollaborators.find(cb => cb.id == collaborator.id)) {
                     this.SetState(state => ({
                         ...state,
                         selectedNoteCollaborators: [...state.selectedNoteCollaborators, collaborator]

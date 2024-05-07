@@ -143,11 +143,11 @@ export class NoteEditor extends ScReact.Component<any, any> {
                             <TagList tags={this.state.selectedNote?.tags} onChange={this.props.onChangeTags}/> : ""}
                     </div>
 
-                    <Collaborators/>
-
                     <div className="note-save-indicator" ref={ref => this.savingLabelRef = ref}>
                         <Tooltip icon="check.svg" label="Сохранено"/>
                     </div>
+
+                    <Collaborators />
 
                     {/*<div className={isSubNote ? "hidden" : ""}>*/}
                     {/*    <Tooltip label="В избранное" icon={this.state.favourite ? "star-filled.svg" : "star.svg"} onClick={this.addToFavoriteBtn}/>*/}
