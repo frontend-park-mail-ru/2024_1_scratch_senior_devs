@@ -38,6 +38,8 @@ export class Editor {
         this.dropdownObserver = new MutationObserver((records) => {
             
             records.forEach(record => {
+
+
                 switch (record.type) {
                     case "childList":
                         if (record.addedNodes.length > 0) {
@@ -123,6 +125,9 @@ export class Editor {
             }
         }
 
+        document.onselectionchange = (e) => {
+            this.addPlaceHolder();
+        }
         document.onselectionchange = debounce(selectionCallback, 500)
 
         // TODO: убрать задержку при закрытии всплывашки, но оставить задержку при открытии
@@ -144,6 +149,8 @@ export class Editor {
                 this.editable.childNodes.forEach(node => {
                     schema.push(toJson(node));
                 })
+
+                this.addPlaceHolder();
 
                 if (schema.length > 0 && (schema[schema.length - 1] as PluginProps).pluginName !== 'div' ||
                     ((schema[schema.length - 1] as PluginProps).pluginName === 'div' &&
@@ -208,6 +215,30 @@ export class Editor {
                 lastChosenElement.node = node;
                 this.dropdownCallbacks.open(node as HTMLElement)
             }
+        }
+    }
+
+    private lastBlock: HTMLElement = null;
+
+    addPlaceHolder = () => {
+        const findBlock = (node: Node): HTMLElement => {
+            if (!node || !node.parentElement) {
+                return null;
+            }
+            if (node.parentElement.contentEditable === 'true' && node.parentElement.parentElement.classList.contains('note-body')) {
+                return node as HTMLElement;
+            } else {
+                return findBlock(node.parentElement);
+            }
+        }
+
+        const newBlock = findBlock(document.getSelection().anchorNode);
+
+        this.lastBlock?.classList.remove('placeholder');
+
+        if (newBlock.textContent === "") {
+            newBlock.classList.add('placeholder');
+            this.lastBlock = newBlock;
         }
     }
 }
