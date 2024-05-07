@@ -188,9 +188,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
         }
     }
 
-    async selectNote (note:NoteType) {
+    selectNote (note:NoteType) {
         if (this.state.selectedNote) {
-            await this.saveNote();
             this.syncNotes()
         }
 
