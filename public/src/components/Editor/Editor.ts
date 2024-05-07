@@ -181,6 +181,8 @@ export class Editor {
             ],
             subtree: true
         });
+
+        this.editable.focus()
     }
 
     getSchema = () => {
