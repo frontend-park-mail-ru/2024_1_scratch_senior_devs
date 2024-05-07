@@ -288,6 +288,7 @@ export const defaultPlugins: EditorPlugin[] = [
         },
         insertNode: (innerContent) => {
             const ul = document.createElement('ul');
+            ul.dataset.type = 'todo';
             const  li = document.createElement('li');
             li.dataset.selected = "false"
             if (innerContent == null || innerContent.length === 0) {
@@ -375,7 +376,19 @@ export const defaultPlugins: EditorPlugin[] = [
             }
             return li;
         },
-        insertNode: undefined
+        insertNode: undefined,
+        onInsert: node => {
+            (node as HTMLElement).onclick = () => {
+                if (document.getSelection().anchorOffset !== 0) {
+                    return;
+                }
+                if ((node as HTMLElement).dataset.selected === 'false') {
+                    (node as HTMLElement).dataset.selected = 'true';
+                } else {
+                    (node as HTMLElement).dataset.selected = 'false';
+                }
+            }
+        }
     },
     {
         pluginName: 'header',
