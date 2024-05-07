@@ -162,8 +162,8 @@ export class Editor {
             childList: true,
             characterData: true,
             characterDataOldValue: true,
-            attributes: true,
-            attributeOldValue: true,
+            // attributes: true,
+            // attributeOldValue: true,
             subtree: true
         });
     }
