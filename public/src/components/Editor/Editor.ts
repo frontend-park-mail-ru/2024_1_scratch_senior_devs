@@ -236,7 +236,7 @@ export class Editor {
 
         this.lastBlock?.classList.remove('blockplaceholder');
 
-        if (newBlock?.textContent != null && newBlock?.textContent === "") {
+        if (newBlock?.textContent === "") {
             newBlock.classList.add('blockplaceholder');
             this.lastBlock = newBlock;
         }
