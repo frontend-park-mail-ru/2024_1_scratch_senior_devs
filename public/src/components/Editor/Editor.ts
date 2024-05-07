@@ -162,8 +162,16 @@ export class Editor {
             childList: true,
             characterData: true,
             characterDataOldValue: true,
-            // attributes: true,
-            // attributeOldValue: true,
+            attributes: true,
+            attributeOldValue: true,
+            attributeFilter: [
+                "data-selected",
+                "data-imgid",
+                "data-fileid",
+                "data-filename",
+                "style",
+                "data-noteid"
+            ],
             subtree: true
         });
     }
