@@ -120,9 +120,8 @@ export class NotesPage extends ScReact.Component<any, any> {
 
             AppDispatcher.dispatch(NoteStoreActions.PUSH_SAVE);
 
-            setTimeout(() => {
-                AppDispatcher.dispatch(NotesActions.OPEN_NOTE, id);
-            })
+            AppDispatcher.dispatch(NotesActions.OPEN_NOTE, id);
+
         }
     };
 
