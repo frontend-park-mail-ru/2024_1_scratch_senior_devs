@@ -215,10 +215,11 @@ class NotesStore extends BaseStore<NotesStoreState> {
         })
 
         this.ws.onMessage((event) => {
+
             let data = JSON.parse(event.data)
-            if (data.username == AppUserStore.state.username) {
-                return
-            }
+            // if (data.username == AppUserStore.state.username) {
+            //     return
+            // }
 
             console.log(data)
             
@@ -251,9 +252,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
             } else if (data.type == "updated") {
                 const noteData = decode(data.message_info) as NoteDataType
 
-                // if (JSON.stringify(noteData) == JSON.stringify(this.state.selectedNote.data)) {
-                //     return
-                // }
+                if (JSON.stringify(noteData) == JSON.stringify(this.state.selectedNote.data)) {
+                    return
+                }
 
                 const updatedNote = this.state.selectedNote
                 updatedNote.data = noteData
