@@ -45,7 +45,7 @@ export class Toasts extends ScReact.Component<any, ToastState> {
     }
 
     error (message:string) {
-        this.setupToast(TOAST_TYPE.ERROR, message);
+        // this.setupToast(TOAST_TYPE.ERROR, message);
     }
 
     setupToast = (type:string, message:string) => {
