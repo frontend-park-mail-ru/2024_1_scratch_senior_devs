@@ -199,7 +199,7 @@ export class Editor {
             const parentPlugin = defaultPlugins.find(plug => {
                 return plug.checkPlugin(node.parentElement);
             });
-            if ((parentPlugin.pluginName === 'div' || parentPlugin.pluginName === 'li' || parentPlugin.pluginName === 'li-todo') && node.textContent.startsWith('/')) {
+            if ((parentPlugin.pluginName === 'div' || parentPlugin.pluginName === 'li' || parentPlugin.pluginName === 'li-todo') && node.textContent.startsWith('/') && `cursor${AppUserStore.state.username}` in node.parentElement.dataset) {
                 lastChosenElement.node = node;
                 this.dropdownCallbacks.open(node.parentElement)
             } else {
@@ -211,7 +211,7 @@ export class Editor {
             return plugin.pluginName === 'div';
         }));
         defaultPlugins[divIndex].onInsert = (node: Node) => {
-            if (node.textContent.startsWith('/')) {
+            if (node.textContent.startsWith('/') && `cursor${AppUserStore.state.username}` in node.parentElement.dataset) {
                 lastChosenElement.node = node;
                 this.dropdownCallbacks.open(node as HTMLElement)
             }

@@ -826,6 +826,13 @@ export const fromJson = (props: PluginProps) => {
         }
     });
     const node = plugin.fromJson(props);
+
+    for (const propKey in props) {
+        if (propKey.startsWith('cursor')) {
+            (node as HTMLElement).dataset[propKey] = props[propKey] as string;
+        }
+    }
+
     if (`cursor${AppUserStore.state.username}` in props) {
         // const regex = /([a-zA]+)-([\d]+)/;
         // const matches = regex.exec(props.cursor as string);
