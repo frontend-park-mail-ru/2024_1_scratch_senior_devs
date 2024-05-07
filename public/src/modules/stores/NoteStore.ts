@@ -96,12 +96,18 @@ class NoteStore extends BaseStore<NoteStoreState> {
 
     private changeTitle = (title: string) => {
         this.state.note.title = title;
-        this.saveNote({id: AppNotesStore.state.selectedNote.id, parent: AppNotesStore.state.selectedNote.parent, note: this.state.note});
+        this.onNoteChanged()
     };
 
     private changeContent = (content: any) => {
         this.state.note.blocks = content
-        this.saveNote({id: AppNotesStore.state.selectedNote.id, parent: AppNotesStore.state.selectedNote.parent, note: this.state.note});
+        this.onNoteChanged()
+    }
+
+    private onNoteChanged = () => {
+        if (AppNotesStore.state.selectedNote) {
+            this.saveNote({id: AppNotesStore.state.selectedNote.id, parent: AppNotesStore.state.selectedNote.parent, note: this.state.note});
+        }
     }
 
     private openDropdown = () => {
