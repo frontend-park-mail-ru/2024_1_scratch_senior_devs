@@ -183,6 +183,7 @@ export class Editor {
         });
 
         this.editable.focus()
+        this.editable.click()
     }
 
     getSchema = () => {
