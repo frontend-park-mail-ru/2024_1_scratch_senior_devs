@@ -211,7 +211,7 @@ export class Editor {
             return plugin.pluginName === 'div';
         }));
         defaultPlugins[divIndex].onInsert = (node: Node) => {
-            if (node.textContent.startsWith('/')) {
+            if (node.textContent.startsWith('/') && `cursor${AppUserStore.state.username}` in node.parentElement.dataset) {
                 lastChosenElement.node = node;
                 this.dropdownCallbacks.open(node as HTMLElement)
             }
