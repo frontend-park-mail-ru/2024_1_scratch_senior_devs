@@ -265,8 +265,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
     async openNote(id:string) {
         try {
-            await this.saveNote();
-
             const note = await AppNoteRequests.Get(id, AppUserStore.state.JWT);
 
             this.selectNote(note);
