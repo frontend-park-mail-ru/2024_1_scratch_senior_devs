@@ -20,7 +20,7 @@ export class NotesPage extends ScReact.Component<any, any> {
         selectedTags: [],
         editorOpen: false,
         fetching: false,
-        query: ""
+        query: "",
     };
 
     private notesContainerRef
