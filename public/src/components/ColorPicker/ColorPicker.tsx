@@ -90,15 +90,7 @@ export class ColorPicker extends ScReact.Component<any, any> {
                 {
                     label: 'Серый',
                     color: '#3a3a3a'
-                },
-                {
-                    label: 'Синий',
-                    color: '#1a3d5c'
-                },
-                {
-                    label: 'Синий',
-                    color: '#1a3d5c'
-                },
+                }
             ]
         };
 
