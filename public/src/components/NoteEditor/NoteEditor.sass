@@ -67,12 +67,18 @@
 			display: none
 
 		.tag-list-wrapper
-			flex: 1
-			display: flex
+			@media screen and (max-width: $xl)
+				display: none
 
-			@media screen and (max-width: $lg)
-				flex: 0 1 auto
-				order: 1
+		.emoji-picker-wrapper
+			@media screen and (max-width: $xl)
+				display: none
+
+		.background-picker-wrapper
+			flex: 1
+
+			@media screen and (max-width: $xl)
+				display: none
 
 		.note-menu
 			@media screen and (max-width: $lg)

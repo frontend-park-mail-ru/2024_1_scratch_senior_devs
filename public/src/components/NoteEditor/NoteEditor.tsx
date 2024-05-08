@@ -15,6 +15,8 @@ import {TagList} from "../TagList/TagList";
 import {EditorWrapper} from "../Editor/EditorWrapper";
 import {AppUserStore} from "../../modules/stores/UserStore";
 import {Collaborators} from "../Collaborators/Collaborators";
+import {EmojiPicker} from "../EmojiPicker/EmojiPicker";
+import {BackgroundPicker} from "../BackgroundPicker/BackgroundPicker";
 
 export class NoteEditor extends ScReact.Component<any, any> {
     state = {
@@ -57,8 +59,6 @@ export class NoteEditor extends ScReact.Component<any, any> {
         if (store.selectedNote != this.state.selectedNote) {
             this.savingLabelRef.classList.remove("active")
         }
-
-        console.log(store.fullScreen)
 
         this.setState(state => ({
             ...state,
@@ -117,12 +117,10 @@ export class NoteEditor extends ScReact.Component<any, any> {
     }
 
     openFullScreen = () => {
-        console.log("toggleFullScreen")
         AppDispatcher.dispatch(NotesActions.OPEN_FULLSCREEN)
     }
 
     closeFullScreen = () => {
-        console.log("toggleFullScreen")
         AppDispatcher.dispatch(NotesActions.CLOSE_FULLSCREEN)
     }
 
@@ -150,12 +148,20 @@ export class NoteEditor extends ScReact.Component<any, any> {
                     <div className="close-editor-label-wrapper">
                         <div className="close-editor-label-container" onclick={this.closeEditor}>
                             <Img src="left-chevron.svg" className="back-icon"/>
-                            <span className="back-label" >Заметки</span>
+                            <span className="back-label">Заметки</span>
                         </div>
                     </div>
 
-                    <div className={isSubNote ? "tag-list-wrapper hidden" : "tag-list-wrapper"}>
+                    <div className={"tag-list-wrapper " + (isSubNote ? "hidden" : "")}>
                         {isOwner ? <TagList tags={this.state.selectedNote?.tags} onChange={this.props.onChangeTags}/> : ""}
+                    </div>
+
+                    <div className={"emoji-picker-wrapper " + (isSubNote ? "hidden" : "")}>
+                        {isOwner ? <EmojiPicker /> : ""}
+                    </div>
+
+                    <div className={"background-picker-wrapper " + (isSubNote ? "hidden" : "")}>
+                        {isOwner ? <BackgroundPicker /> : ""}
                     </div>
 
                     <div className="note-save-indicator" ref={ref => this.savingLabelRef = ref}>
@@ -163,11 +169,13 @@ export class NoteEditor extends ScReact.Component<any, any> {
                     </div>
 
                     <div className="collaborators-container">
-                        <Collaborators />
+                        <Collaborators/>
                     </div>
 
                     <div className={isSubNote ? "hidden" : ""}>
-                        <Tooltip label="В избранное" className="add-to-favorite-btn" icon={this.state.favourite ? "star-filled.svg" : "star.svg"} onClick={this.addToFavoriteBtn}/>
+                        <Tooltip label="В избранное" className="add-to-favorite-btn"
+                                 icon={this.state.favourite ? "star-filled.svg" : "star.svg"}
+                                 onClick={this.addToFavoriteBtn}/>
                     </div>
 
                     <div className={!isSubNote ? "hidden" : ""}>
@@ -175,15 +183,17 @@ export class NoteEditor extends ScReact.Component<any, any> {
                     </div>
 
                     {isOwner ? <NoteMenu deleteNote={this.openDeleteNoteModal}
-                                         inviteUser={this.openInviteUserModal} /> : ""}
+                                         inviteUser={this.openInviteUserModal}/> : ""}
 
                     {!this.state.fullScreen ?
-                        <Tooltip icon="full-screen-open.svg" label="На весь экран" className="toggle-fullscreen-btn" onClick={this.openFullScreen} />
+                        <Tooltip icon="full-screen-open.svg" label="На весь экран" className="toggle-fullscreen-btn"
+                                 onClick={this.openFullScreen}/>
                         :
-                        <Tooltip icon="full-screen-close.svg" label="Уменьшить" className="toggle-fullscreen-btn" onClick={this.closeFullScreen} />
+                        <Tooltip icon="full-screen-close.svg" label="Уменьшить" className="toggle-fullscreen-btn"
+                                 onClick={this.closeFullScreen}/>
                     }
 
-                    <Tooltip icon="close.svg" label="Закрыть" className="close-editor-btn" onClick={this.closeEditor} />
+                    <Tooltip icon="close.svg" label="Закрыть" className="close-editor-btn" onClick={this.closeEditor}/>
 
                 </div>
 
