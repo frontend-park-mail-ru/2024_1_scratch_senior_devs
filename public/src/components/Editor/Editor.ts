@@ -237,10 +237,10 @@ export class Editor {
 
         const newBlock = findBlock(document.getSelection().anchorNode);
 
-        this.lastBlock?.classList.remove('blockplaceholder');
+        this.lastBlock?.classList.remove('placeholder');
 
         if (newBlock?.textContent === "") {
-            newBlock.classList.add('blockplaceholder');
+            newBlock.classList.add('placeholder');
             this.lastBlock = newBlock;
         }
     }
