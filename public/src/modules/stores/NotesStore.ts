@@ -217,11 +217,10 @@ class NotesStore extends BaseStore<NotesStoreState> {
         this.ws.onMessage((event) => {
 
             let data = JSON.parse(event.data)
+
             // if (data.username == AppUserStore.state.username) {
             //     return
             // }
-
-            console.log(data)
             
             if (data.type == "opened") {
                 const collaborator = {
@@ -367,18 +366,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
     async saveNote(data) {
         try {
 
-            // const data = {
-            //     id: this.state.selectedNote.id,
-            //     note: AppNoteStore.state.note,
-            //     parent: this.state.selectedNote.data.parent
-            //
-            // }
-
             const {csrf} = await AppNoteRequests.Update(data, AppUserStore.state.JWT, AppUserStore.state.csrf);
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
-
-            localStorage.setItem("selectedNote", JSON.stringify(data))
 
         } catch {
             AppToasts.error('Что-то пошло не так');
