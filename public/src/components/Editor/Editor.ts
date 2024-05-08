@@ -231,7 +231,7 @@ export class Editor {
             if (node.parentElement.contentEditable === 'true' &&
                 node.parentElement.parentElement.classList.contains('note-body') &&
                 node.nodeType === Node.ELEMENT_NODE &&
-                (node as HTMLElement).tagName === "div") {
+                (node as HTMLElement).tagName === "DIV") {
                 return node as HTMLElement;
             } else {
                 return findBlock(node.parentElement);
