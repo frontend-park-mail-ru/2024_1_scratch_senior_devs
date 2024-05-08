@@ -218,9 +218,10 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             let data = JSON.parse(event.data)
 
-            // if (data.username == AppUserStore.state.username) {
-            //     return
-            // }
+            // TODO: синхронизация между девайсами
+            if (data.username == AppUserStore.state.username) {
+                return
+            }
             
             if (data.type == "opened") {
                 const collaborator = {
