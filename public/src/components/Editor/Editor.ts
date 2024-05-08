@@ -228,7 +228,10 @@ export class Editor {
             if (!node || !node.parentElement) {
                 return null;
             }
-            if (node.parentElement.contentEditable === 'true' && node.parentElement.parentElement.classList.contains('note-body')) {
+            if (node.parentElement.contentEditable === 'true' &&
+                node.parentElement.parentElement.classList.contains('note-body') &&
+                node.nodeType === Node.ELEMENT_NODE &&
+                (node as HTMLElement).tagName === "div") {
                 return node as HTMLElement;
             } else {
                 return findBlock(node.parentElement);
