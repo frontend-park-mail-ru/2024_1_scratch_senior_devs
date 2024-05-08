@@ -20,7 +20,8 @@ export class NotesPage extends ScReact.Component<any, any> {
         selectedTags: [],
         editorOpen: false,
         fetching: false,
-        query: ""
+        query: "",
+        fullScreen: false
     };
 
     private notesContainerRef
@@ -98,7 +99,8 @@ export class NotesPage extends ScReact.Component<any, any> {
                 tags: store.tags,
                 editorOpen: store.selectedNote != undefined,
                 notes: store.notes,
-                fetching: store.fetching
+                fetching: store.fetching,
+                fullScreen: store.fullScreen
             };
         });
     };
@@ -183,28 +185,6 @@ export class NotesPage extends ScReact.Component<any, any> {
     onChangeTags = (tags:string[]) => {
         AppNotesStore.state.selectedNote.tags = tags
         AppDispatcher.dispatch(NotesActions.SYNC_NOTES)
-
-        // const selectedNote = document.getElementById(this.state.selectedNote.id);
-        //
-        // if (selectedNote) {
-        //     const tagsContainer = selectedNote.querySelector('.note-tags-container');
-        //
-        //     tagsContainer.innerHTML = ""
-        //
-        //     tags.slice(0, 2).forEach(tagname => {
-        //         const tag = document.createElement("span")
-        //         tag.innerHTML = tagname
-        //         tag.className = "note-tag"
-        //         tagsContainer.appendChild(tag)
-        //     })
-        //
-        //     if (tags.length > 2) {
-        //         const tag = document.createElement("span")
-        //         tag.innerHTML = `+${tags.length - 2}`
-        //         tag.className = "note-tag"
-        //         tagsContainer.appendChild(tag)
-        //     }
-        // }
     }
 
     selectTag = (tag:string) => {
@@ -241,7 +221,7 @@ export class NotesPage extends ScReact.Component<any, any> {
 
     render() {
         return (
-            <div className={'notes-page-wrapper ' + (this.state.editorOpen ? 'active' : '')} >
+            <div className={'notes-page-wrapper ' + (this.state.editorOpen ? ' active ' : '') + (this.state.fullScreen ? ' fullscreen ' : '')} >
                 <aside>
                     <div className="top-panel">
                         <SearchBar onStartTyping={this.onSearchBarStartTyping} onChange={this.onSearchBarChange}/>

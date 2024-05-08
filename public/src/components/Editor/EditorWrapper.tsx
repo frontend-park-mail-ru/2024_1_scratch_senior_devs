@@ -160,10 +160,6 @@ export class EditorWrapper extends Component<any, EditorState> {
     render(): VDomNode {
         return (
             <div className="note-editor">
-                <div className="buttons-container">
-
-                </div>
-
                 <Dropdown
                     style={`left: ${this.state.dropdownPos.left}px; top: ${this.state.dropdownPos.top}px;`}
                     onClose={this.closeDropdown}

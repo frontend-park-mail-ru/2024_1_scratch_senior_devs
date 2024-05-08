@@ -22,6 +22,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
         content: undefined,
         deleteNoteModalOpen: false,
         inviteUserModalOpen: false,
+        fullScreen: false,
         favourite: false // TODO
     };
 
@@ -45,6 +46,8 @@ export class NoteEditor extends ScReact.Component<any, any> {
     };
 
     closeEditor = () => {
+        AppDispatcher.dispatch(NotesActions.CLOSE_FULLSCREEN)
+
         this.saveNote({id: AppNotesStore.state.selectedNote.id, parent: AppNotesStore.state.selectedNote.parent, note: AppNoteStore.state.note});
         this.props.setClose();
         setTimeout(() => AppDispatcher.dispatch(NotesActions.CLOSE_NOTE), 300);
@@ -55,9 +58,12 @@ export class NoteEditor extends ScReact.Component<any, any> {
             this.savingLabelRef.classList.remove("active")
         }
 
+        console.log(store.fullScreen)
+
         this.setState(state => ({
             ...state,
-            selectedNote: store.selectedNote
+            selectedNote: store.selectedNote,
+            fullScreen: store.fullScreen
         }));
 
         if (this.state.selectedNote) {
@@ -110,12 +116,22 @@ export class NoteEditor extends ScReact.Component<any, any> {
         }))
     }
 
+    openFullScreen = () => {
+        console.log("toggleFullScreen")
+        AppDispatcher.dispatch(NotesActions.OPEN_FULLSCREEN)
+    }
+
+    closeFullScreen = () => {
+        console.log("toggleFullScreen")
+        AppDispatcher.dispatch(NotesActions.CLOSE_FULLSCREEN)
+    }
+
     render() {
         const isSubNote = this.state.selectedNote?.parent != "00000000-0000-0000-0000-000000000000" ? "hidden" : ""
         const isOwner = this.state.selectedNote?.owner_id == AppUserStore.state.user_id
 
         return (
-            <div className={'note-editor-wrapper ' + (this.props.open ? 'active' : '')}>
+            <div className={'note-editor-wrapper ' + (this.props.open ? ' active ' : '')  + (this.state.fullScreen ? ' fullscreen ' : '') }>
 
                 <SwipeArea enable={this.props.open} right={this.closeEditor} target=".note-editor-wrapper"/>
 
@@ -139,30 +155,35 @@ export class NoteEditor extends ScReact.Component<any, any> {
                     </div>
 
                     <div className={isSubNote ? "tag-list-wrapper hidden" : "tag-list-wrapper"}>
-                        {isOwner ?
-                            <TagList tags={this.state.selectedNote?.tags} onChange={this.props.onChangeTags}/> : ""}
+                        {isOwner ? <TagList tags={this.state.selectedNote?.tags} onChange={this.props.onChangeTags}/> : ""}
                     </div>
 
                     <div className="note-save-indicator" ref={ref => this.savingLabelRef = ref}>
                         <Tooltip icon="check.svg" label="Сохранено"/>
                     </div>
 
-                    <Collaborators />
+                    <div className="collaborators-container">
+                        <Collaborators />
+                    </div>
 
-                    {/*<div className={isSubNote ? "hidden" : ""}>*/}
-                    {/*    <Tooltip label="В избранное" icon={this.state.favourite ? "star-filled.svg" : "star.svg"} onClick={this.addToFavoriteBtn}/>*/}
-                    {/*</div>*/}
+                    <div className={isSubNote ? "hidden" : ""}>
+                        <Tooltip label="В избранное" className="add-to-favorite-btn" icon={this.state.favourite ? "star-filled.svg" : "star.svg"} onClick={this.addToFavoriteBtn}/>
+                    </div>
 
                     <div className={!isSubNote ? "hidden" : ""}>
                         <Tooltip label="Вернуться" icon="arrow-up.svg" onClick={this.openParentNote}/>
                     </div>
 
                     {isOwner ? <NoteMenu deleteNote={this.openDeleteNoteModal}
-                                         inviteUser={this.openInviteUserModal}/> : ""}
+                                         inviteUser={this.openInviteUserModal} /> : ""}
 
-                    <div className="close-editor-btn-container" onclick={this.closeEditor}>
-                        <Img src="close.svg" className="icon close-editor-icon"/>
-                    </div>
+                    {!this.state.fullScreen ?
+                        <Tooltip icon="full-screen-open.svg" label="На весь экран" className="toggle-fullscreen-btn" onClick={this.openFullScreen} />
+                        :
+                        <Tooltip icon="full-screen-close.svg" label="Уменьшить" className="toggle-fullscreen-btn" onClick={this.closeFullScreen} />
+                    }
+
+                    <Tooltip icon="close.svg" label="Закрыть" className="close-editor-btn" onClick={this.closeEditor} />
 
                 </div>
 

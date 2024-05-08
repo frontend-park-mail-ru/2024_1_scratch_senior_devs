@@ -34,9 +34,16 @@
 	flex-direction: column
 	gap: 10px
 	position: relative
-	padding-right: 20px
+	padding-left: 20px
+
+	@media screen and (max-width: $lg)
+		padding-left: 10px
 
 	@include scrollbar
+
+	&::-webkit-scrollbar-thumb
+		padding-top: 20px
+
 
 	.buttons-container
 		display: flex
@@ -62,13 +69,6 @@
 				color: rgba(255, 255, 255, 0.7)
 				cursor: text
 				animation: fadeIn 0.3s
-
-				@keyframes fadeIn
-					0%
-						opacity: 0
-
-					99%
-						opacity: 1
 
 		.subnote-wrapper
 			background: $modal-background

@@ -7,7 +7,6 @@ import {CollaboratorType, NoteDataType, NoteType} from "../../utils/types";
 import {decode} from "../utils";
 import {WebSocketConnection} from "../websocket";
 import {insertBlockPlugin} from "../../components/Editor/Plugin";
-import {AppNoteStore} from "./NoteStore";
 
 export type NotesStoreState = {
     notes: NoteType[],
@@ -17,7 +16,8 @@ export type NotesStoreState = {
     query: string,
     offset: number,
     count: number,
-    fetching: boolean
+    fetching: boolean,
+    fullScreen: boolean
 }
 
 class NotesStore extends BaseStore<NotesStoreState> {
@@ -31,7 +31,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
         offset: 0,
         count: 10,
         fetching: false,
-        noteNotFound: false
+        noteNotFound: false,
+        fullScreen: false
     };
 
     private ws
@@ -126,6 +127,12 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 case NotesActions.SYNC_NOTES:
                     this.syncNotes()
                     break
+                case NotesActions.OPEN_FULLSCREEN:
+                    this.openFullScreen()
+                    break
+                case NotesActions.CLOSE_FULLSCREEN:
+                    this.closeFullScreen()
+                    break
             }
         });
     }
@@ -218,7 +225,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             let data = JSON.parse(event.data)
 
-            // TODO: синхронизация между девайсами
+            // TODO: синхронизация между девайсами (сверять id девайса)
             if (data.username == AppUserStore.state.username) {
                 return
             }
@@ -540,6 +547,20 @@ class NotesStore extends BaseStore<NotesStoreState> {
             AppToasts.error("Что-то пошло не так")
         }
     }
+
+    openFullScreen = () => {
+        this.SetState(state => ({
+            ...state,
+            fullScreen: true
+        }))
+    }
+
+    closeFullScreen = () => {
+        this.SetState(state => ({
+            ...state,
+            fullScreen: false
+        }))
+    }
 }
 
 export const NotesActions = {
@@ -565,7 +586,9 @@ export const NotesActions = {
     REMOVE_TAG: "REMOVE_TAG",
     ADD_COLLABORATOR: "ADD_COLLABORATOR",
     FETCH_TAGS: "FETCH_TAGS",
-    SYNC_NOTES: "SYNC_NOTES"
+    SYNC_NOTES: "SYNC_NOTES",
+    OPEN_FULLSCREEN: "OPEN_FULLSCREEN",
+    CLOSE_FULLSCREEN: "CLOSE_FULLSCREEN",
 };
 
 export const AppNotesStore = new NotesStore();
