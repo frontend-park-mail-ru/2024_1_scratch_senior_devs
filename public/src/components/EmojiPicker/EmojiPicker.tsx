@@ -21,7 +21,7 @@ export class EmojiPicker extends ScReact.Component<any, any> {
             <div className="emoji-picker-container">
                 <div className="open-btn" onClick={this.toggleOpen} ref={ref => this.openBtnRef = ref}>
                     <Img src="emoji.svg" className="icon"/>
-                    <span>Иконки</span>
+                    <span>Иконка</span>
                 </div>
 
             </div>

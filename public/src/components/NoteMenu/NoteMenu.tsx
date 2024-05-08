@@ -52,13 +52,26 @@ export class NoteMenu extends ScReact.Component<any, any> {
                     </div>
                 </div>
                 <div className="options" ref={ref => this.noteMenuRef = ref}>
-                    {!isSubNote(AppNotesStore.state.selectedNote) ? <div className="options-item" onclick={this.inviteUser}>
-                        <Img src="invite.png" className="icon"/>
-                        <span>Пригласить людей</span>
-                    </div> : ""}
-                    <div className="options-item" onclick={this.deleteNote}>
+                    {!isSubNote(AppNotesStore.state.selectedNote) ?
+                        <div className="options-item" onClick={this.inviteUser}>
+                            <Img src="invite.png" className="icon"/>
+                            <span>Пригласить людей</span>
+                        </div> : ""}
+                    <div className="options-item" onClick={this.deleteNote}>
                         <Img src="trash.svg" className="icon"/>
                         <span>Удалить заметку</span>
+                    </div>
+                    <div className="options-item mobile-option">
+                        <Img src="tag.svg" className="icon"/>
+                        <span>Изменить тэги</span>
+                    </div>
+                    <div className="options-item mobile-option">
+                        <Img src="emoji.svg" className="icon"/>
+                        <span>Изменить иконку</span>
+                    </div>
+                    <div className="options-item mobile-option">
+                        <Img src="image.svg" className="icon"/>
+                        <span>Изменить шапку</span>
                     </div>
                 </div>
             </div>
