@@ -13,7 +13,10 @@ export class EmojiPicker extends ScReact.Component<any, any> {
         {
             id: "1F47B",
             name: "grinning face"
-        }
+        },{
+            id: "1F47C",
+            name: "grinning face"
+        },
     ]
 
     toggleOpen = () => {
@@ -21,6 +24,10 @@ export class EmojiPicker extends ScReact.Component<any, any> {
             ...state,
             open: !state.open
         }))
+    }
+
+    componentDidMount() {
+
     }
 
     render() {
@@ -44,8 +51,10 @@ export class EmojiPicker extends ScReact.Component<any, any> {
 
                     <div className="emoji-list__bottom-panel">
                         {this.emojiData.map(emoji => (
-                            <div className="emoji-list__item" data-emoji={emoji.id} data-name={emoji.name} key={emoji.id} style={"content: /" + (emoji.id) + ";"}>
-
+                            <div className="emoji-list__item" key={emoji.id}>
+                                <div className="emoji" >
+                                    {String.fromCodePoint(parseInt(emoji.id, 16))}
+                                </div>
                             </div>
                         ))}
                     </div>
