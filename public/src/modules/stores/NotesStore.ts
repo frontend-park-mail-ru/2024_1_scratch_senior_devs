@@ -133,6 +133,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 case NotesActions.CLOSE_FULLSCREEN:
                     this.closeFullScreen()
                     break
+                case NotesActions.UPDATE_NOTE_ICON:
+                    this.updateNoteIcon(action.payload)
+                    break
             }
         });
     }
@@ -561,6 +564,11 @@ class NotesStore extends BaseStore<NotesStoreState> {
             fullScreen: false
         }))
     }
+
+    updateNoteIcon = (icon) => {
+        console.log("updateNoteIcon")
+        console.log(icon)
+    }
 }
 
 export const NotesActions = {
@@ -589,6 +597,7 @@ export const NotesActions = {
     SYNC_NOTES: "SYNC_NOTES",
     OPEN_FULLSCREEN: "OPEN_FULLSCREEN",
     CLOSE_FULLSCREEN: "CLOSE_FULLSCREEN",
+    UPDATE_NOTE_ICON: "UPDATE_NOTE_ICON"
 };
 
 export const AppNotesStore = new NotesStore();

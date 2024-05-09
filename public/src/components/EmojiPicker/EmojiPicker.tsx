@@ -1,6 +1,7 @@
 import {ScReact} from "@veglem/screact";
 import {Img} from "../Image/Image";
 import "./EmojiPicker.sass"
+import {AppNotesStore} from "../../modules/stores/NotesStore";
 
 export class EmojiPicker extends ScReact.Component<any, any> {
     state = {
@@ -13,11 +14,130 @@ export class EmojiPicker extends ScReact.Component<any, any> {
         {
             id: "1F47B",
             name: "grinning face"
-        },{
+        },
+        {
+            id: "1F47C",
+            name: "grinning face"
+        },
+        {
+            id: "1F47C",
+            name: "grinning face"
+        },
+        {
+            id: "1F47C",
+            name: "grinning face"
+        },
+        {
+            id: "1F47C",
+            name: "grinning face"
+        },
+        {
+            id: "1F47C",
+            name: "grinning face"
+        },
+        {
+            id: "1F47C",
+            name: "grinning face"
+        },
+        {
+            id: "1F47C",
+            name: "grinning face"
+        },
+        {
+            id: "1F47C",
+            name: "grinning face"
+        },
+        {
+            id: "1F47C",
+            name: "grinning face"
+        },
+        {
+            id: "1F47C",
+            name: "grinning face"
+        },
+        {
+            id: "1F47C",
+            name: "grinning face"
+        },
+        {
+            id: "1F47C",
+            name: "grinning face"
+        },
+        {
+            id: "1F47C",
+            name: "grinning face"
+        },
+        {
+            id: "1F47C",
+            name: "grinning face"
+        },
+        {
+            id: "1F47C",
+            name: "grinning face"
+        },
+        {
+            id: "1F47C",
+            name: "grinning face"
+        },
+        {
+            id: "1F47C",
+            name: "grinning face"
+        },
+        {
+            id: "1F47C",
+            name: "grinning face"
+        },
+        {
+            id: "1F47C",
+            name: "grinning face"
+        },
+        {
+            id: "1F47C",
+            name: "grinning face"
+        },
+        {
+            id: "1F47C",
+            name: "grinning face"
+        },
+        {
+            id: "1F47C",
+            name: "grinning face"
+        },
+        {
+            id: "1F47C",
+            name: "grinning face"
+        },
+        {
+            id: "1F47C",
+            name: "grinning face"
+        },
+        {
+            id: "1F47C",
+            name: "grinning face"
+        },
+        {
+            id: "1F47C",
+            name: "grinning face"
+        },
+        {
             id: "1F47C",
             name: "grinning face"
         },
     ]
+
+    componentDidMount() {
+        document.addEventListener('click', this.handleClickOutside, false);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('click', this.handleClickOutside)
+    }
+
+    handleClickOutside = (e) => {
+        if (this.state.open && !this.openBtnRef.contains(e.target) && !e.target.matches(".emoji-picker-container, .emoji-picker-container *")) {
+            this.toggleOpen();
+        }
+    }
 
     toggleOpen = () => {
         this.setState(state => ({
@@ -26,8 +146,9 @@ export class EmojiPicker extends ScReact.Component<any, any> {
         }))
     }
 
-    componentDidMount() {
-
+    selectEmoji = (emoji) => {
+        console.log("selectEmoji")
+        console.log(emoji)
     }
 
     render() {
@@ -38,7 +159,7 @@ export class EmojiPicker extends ScReact.Component<any, any> {
                     <span>Иконка</span>
                 </div>
 
-                <div className="emoji-list__container">
+                <div className="emoji-list">
 
                     <div className="emoji-list__top-panel">
 
@@ -51,10 +172,8 @@ export class EmojiPicker extends ScReact.Component<any, any> {
 
                     <div className="emoji-list__bottom-panel">
                         {this.emojiData.map(emoji => (
-                            <div className="emoji-list__item" key={emoji.id}>
-                                <div className="emoji" >
-                                    {String.fromCodePoint(parseInt(emoji.id, 16))}
-                                </div>
+                            <div className="emoji-list__item" key={emoji.id} onclick={() => this.selectEmoji(emoji)}>
+                                {String.fromCodePoint(parseInt(emoji.id, 16))}
                             </div>
                         ))}
                     </div>

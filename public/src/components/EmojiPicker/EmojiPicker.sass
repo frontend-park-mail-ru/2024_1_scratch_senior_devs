@@ -1,5 +1,6 @@
 @import "/public/src/utils/animations.sass"
 @import "/public/src/utils/variables.sass"
+@import "/public/src/utils/mixins.sass"
 
 .emoji-picker-container
 
@@ -10,7 +11,7 @@
 		.open-btn
 			background: rgba(0, 0, 0, 0.15)
 
-		.emoji-list__container
+		.emoji-list
 			display: flex
 			animation: showAnim 0.3s
 
@@ -30,7 +31,7 @@
 			font-weight: bold
 			font-size: 16px
 
-	.emoji-list__container
+	.emoji-list
 		flex-direction: column
 		min-width: 210px
 		border-radius: 12px
@@ -42,10 +43,11 @@
 		box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px
 		border: 1px solid hsl(217.2 32.6% 25%)
 		animation: closeAnim 0.3s
-		padding: 20px
+		padding: 15px
 		min-height: 120px
+		gap: 15px
 
-		.emoji-list__top-panel
+		&__top-panel
 			width: 100%
 
 			.emoji-search-bar
@@ -72,15 +74,32 @@
 					color: $text-main-color
 					border-radius: 12px
 
-
-		.emoji-list__bottom-panel
+		&__bottom-panel
 			width: 100%
-			display: flex
+			display: grid
+			grid-template-columns: repeat(5, 0.15fr)
+			gap: 15px
+			justify-content: center
+			overflow-y: auto
+			max-height: 140px
+
+			@include scrollbar
+
+			&::-webkit-scrollbar
+				width: 4px
 
 			.emoji-list__item
 				width: 32px
 				height: 32px
+				display: flex
+				justify-content: center
+				align-items: center
+				font-size: 20px
+				border-radius: 8px
+				cursor: pointer
 
+				&:hover
+					background: rgba(0, 0, 0, 0.15)
 
 
 
