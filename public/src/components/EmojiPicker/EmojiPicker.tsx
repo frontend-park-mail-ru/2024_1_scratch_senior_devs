@@ -9,6 +9,13 @@ export class EmojiPicker extends ScReact.Component<any, any> {
 
     private openBtnRef
 
+    private emojiData = [
+        {
+            id: "1F47B",
+            name: "grinning face"
+        }
+    ]
+
     toggleOpen = () => {
         this.setState(state => ({
             ...state,
@@ -18,10 +25,31 @@ export class EmojiPicker extends ScReact.Component<any, any> {
 
     render() {
         return (
-            <div className="emoji-picker-container">
-                <div className="open-btn" onClick={this.toggleOpen} ref={ref => this.openBtnRef = ref}>
+            <div className={"emoji-picker-container " + (this.state.open ? "open" : "")}>
+                <div className="open-btn" onclick={this.toggleOpen} ref={ref => this.openBtnRef = ref}>
                     <Img src="emoji.svg" className="icon"/>
                     <span>Иконка</span>
+                </div>
+
+                <div className="emoji-list__container">
+
+                    <div className="emoji-list__top-panel">
+
+                        <div className="emoji-search-bar">
+                            <Img src="search.svg" className="search-icon" />
+                            <input type="text" placeholder="Поиск..." />
+                        </div>
+
+                    </div>
+
+                    <div className="emoji-list__bottom-panel">
+                        {this.emojiData.map(emoji => (
+                            <div className="emoji-list__item" data-emoji={emoji.id} data-name={emoji.name} key={emoji.id} style={"content: /" + (emoji.id) + ";"}>
+
+                            </div>
+                        ))}
+                    </div>
+
                 </div>
 
             </div>

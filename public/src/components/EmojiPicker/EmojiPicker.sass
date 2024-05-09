@@ -1,5 +1,18 @@
-.emoji-picker-wrapper
-	display: flex
+@import "/public/src/utils/animations.sass"
+@import "/public/src/utils/variables.sass"
+
+.emoji-picker-container
+
+	*
+		user-select: none
+
+	&.open
+		.open-btn
+			background: rgba(0, 0, 0, 0.15)
+
+		.emoji-list__container
+			display: flex
+			animation: showAnim 0.3s
 
 	.open-btn
 		display: flex
@@ -16,3 +29,53 @@
 			color: #c0c0c0
 			font-weight: bold
 			font-size: 16px
+
+	.emoji-list__container
+		flex-direction: column
+		min-width: 210px
+		border-radius: 12px
+		background: #18232f
+		position: absolute
+		top: calc(100% + 10px)
+		z-index: 100
+		display: none
+		box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px
+		border: 1px solid hsl(217.2 32.6% 25%)
+		animation: closeAnim 0.3s
+		padding: 20px
+		min-height: 120px
+
+		.emoji-list__top-panel
+			width: 100%
+
+			.emoji-search-bar
+				display: flex
+				position: relative
+				background: #131c25
+				width: 240px
+				align-items: center
+				border-radius: 12px
+
+				.search-icon
+					position: absolute
+					left: 8px
+					top: 12px
+					width: 16px
+					height: 16px
+
+				input
+					width: 100%
+					outline: none
+					border: none
+					background: transparent
+					padding: 8px 16px 8px 32px
+					color: $text-main-color
+					border-radius: 12px
+
+
+		.emoji-list__bottom-panel
+			width: 100%
+
+
+
+
