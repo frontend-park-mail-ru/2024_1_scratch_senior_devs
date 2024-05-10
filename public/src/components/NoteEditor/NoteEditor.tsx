@@ -116,6 +116,15 @@ export class NoteEditor extends ScReact.Component<any, any> {
         }))
     }
 
+    changeBackground = (bg:string) => {
+        console.log("changeBackground");
+        console.log(bg);
+
+        document.getElementById(AppNotesStore.state.selectedNote.id).style.backgroundImage = bg;
+
+        (document.querySelector(".note-background") as HTMLElement).style.background = bg
+    }
+
     openFullScreen = () => {
         AppDispatcher.dispatch(NotesActions.OPEN_FULLSCREEN)
     }
@@ -143,6 +152,10 @@ export class NoteEditor extends ScReact.Component<any, any> {
                        content={<InviteUserModal handleClose={this.closeInviteUserModal} open={this.state.inviteUserModalOpen}/>}
                 />
 
+                <div className="note-background">
+
+                </div>
+
                 <div className="top-panel">
 
                     <div className="close-editor-label-wrapper">
@@ -157,11 +170,15 @@ export class NoteEditor extends ScReact.Component<any, any> {
                     </div>
 
                     <div className={"emoji-picker-wrapper " + (isSubNote ? "hidden" : "")}>
-                        {isOwner ? <EmojiPicker /> : ""}
+                        {isOwner ? <EmojiPicker onChange={this.props.onChangeIcon} icon={this.state.selectedNote?.icon} /> : ""}
                     </div>
 
                     <div className={"background-picker-wrapper " + (isSubNote ? "hidden" : "")}>
-                        {isOwner ? <BackgroundPicker /> : ""}
+                        {isOwner ? <BackgroundPicker onChange={this.changeBackground} /> : ""}
+                    </div>
+
+                    <div className="empty">
+
                     </div>
 
                     <div className="note-save-indicator" ref={ref => this.savingLabelRef = ref}>

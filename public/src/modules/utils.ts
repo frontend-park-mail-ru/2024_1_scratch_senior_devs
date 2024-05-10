@@ -178,3 +178,7 @@ export const getCaretPosition = (editableDiv) => {
     return clonedRange.toString().length;
 }
 
+
+export const unicodeToChar = (code) => {
+    return String.fromCodePoint(parseInt(code, 16))
+}

@@ -8,7 +8,7 @@ import {Button} from '../../components/Button/Button';
 import {Img} from '../../components/Image/Image';
 import {AppNoteStore} from '../../modules/stores/NoteStore';
 import {Loader} from '../../components/Loader/Loader';
-import {parseNoteTitle, scrollToTop, truncate} from '../../modules/utils';
+import {parseNoteTitle, scrollToTop, truncate, unicodeToChar} from '../../modules/utils';
 import {Note} from "../../components/Note/Note";
 import {TagsFilter} from "../../components/TagsFilter/TagsFilter";
 
@@ -178,6 +178,20 @@ export class NotesPage extends ScReact.Component<any, any> {
         }
     }
 
+    updatePreviewNoteIcon = (icon:string) => {
+        const selectedNote = document.getElementById(this.state.selectedNote.id);
+
+        if (selectedNote) {
+            const noteEmoji = selectedNote.querySelector('.note-icon');
+            noteEmoji.innerHTML = unicodeToChar(icon)
+            AppDispatcher.dispatch(NotesActions.UPDATE_NOTE_ICON, icon)
+        }
+    }
+
+    onChangeSelectedNoteBackground = (background:string) => {
+
+    }
+
     onChangeSelectedNoteContent = () => {
         this.updateNotesTitles()
     }
@@ -252,6 +266,8 @@ export class NotesPage extends ScReact.Component<any, any> {
                             onChangeNote={this.onChangeSelectedNoteContent}
                             onChangeTitle={this.onChangeSelectedNoteTitle}
                             onChangeTags={this.onChangeTags}
+                            onChangeIcon={this.updatePreviewNoteIcon}
+                            onChangeBackground={this.onChangeSelectedNoteBackground}
                 />
 
             </div>

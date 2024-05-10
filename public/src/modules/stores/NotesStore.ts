@@ -136,6 +136,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 case NotesActions.UPDATE_NOTE_ICON:
                     this.updateNoteIcon(action.payload)
                     break
+                case NotesActions.UPDATE_NOTE_BACKGROUND:
+                    this.updateNoteBackground(action.payload)
+                    break
             }
         });
     }
@@ -565,9 +568,14 @@ class NotesStore extends BaseStore<NotesStoreState> {
         }))
     }
 
-    updateNoteIcon = (icon) => {
-        console.log("updateNoteIcon")
-        console.log(icon)
+    updateNoteIcon = (icon:string) => {
+        this.state.selectedNote.icon = icon
+        this.syncNotes()
+    }
+
+    updateNoteBackground = (background:string) => {
+        this.state.selectedNote.background = background
+        this.syncNotes()
     }
 }
 
@@ -597,7 +605,8 @@ export const NotesActions = {
     SYNC_NOTES: "SYNC_NOTES",
     OPEN_FULLSCREEN: "OPEN_FULLSCREEN",
     CLOSE_FULLSCREEN: "CLOSE_FULLSCREEN",
-    UPDATE_NOTE_ICON: "UPDATE_NOTE_ICON"
+    UPDATE_NOTE_ICON: "UPDATE_NOTE_ICON",
+    UPDATE_NOTE_BACKGROUND: "UPDATE_NOTE_BACKGROUND"
 };
 
 export const AppNotesStore = new NotesStore();

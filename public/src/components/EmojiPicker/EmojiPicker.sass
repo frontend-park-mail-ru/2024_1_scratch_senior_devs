@@ -11,7 +11,7 @@
 		.open-btn
 			background: rgba(0, 0, 0, 0.15)
 
-		.emoji-list
+		.emoji-list-container
 			display: flex
 			animation: showAnim 0.3s
 
@@ -31,7 +31,7 @@
 			font-weight: bold
 			font-size: 16px
 
-	.emoji-list
+	.emoji-list-container
 		flex-direction: column
 		min-width: 210px
 		border-radius: 12px
@@ -47,37 +47,11 @@
 		min-height: 120px
 		gap: 15px
 
-		&__top-panel
-			width: 100%
-
-			.emoji-search-bar
-				display: flex
-				position: relative
-				background: #131c25
-				width: 240px
-				align-items: center
-				border-radius: 12px
-
-				.search-icon
-					position: absolute
-					left: 8px
-					top: 12px
-					width: 16px
-					height: 16px
-
-				input
-					width: 100%
-					outline: none
-					border: none
-					background: transparent
-					padding: 8px 16px 8px 32px
-					color: $text-main-color
-					border-radius: 12px
-
-		&__bottom-panel
+		.emoji-list
 			width: 100%
 			display: grid
-			grid-template-columns: repeat(5, 0.15fr)
+			grid-template-columns: repeat(5, 0.2fr)
+			padding-right: 10px
 			gap: 15px
 			justify-content: center
 			overflow-y: auto
@@ -97,9 +71,10 @@
 				font-size: 20px
 				border-radius: 8px
 				cursor: pointer
+				transition: 0.15s
 
 				&:hover
-					background: rgba(0, 0, 0, 0.15)
+					background: rgba(0, 0, 0, 0.5)
 
 
 

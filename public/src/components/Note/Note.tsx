@@ -1,6 +1,6 @@
 import {ScReact} from '@veglem/screact';
 import './Note.sass';
-import {formatDate, parseNoteTitle, truncate} from "../../modules/utils";
+import {formatDate, parseNoteTitle, truncate, unicodeToChar} from "../../modules/utils";
 import {NoteType} from "../../utils/types";
 
 const MAX_NOTE_CONTENT_PREVIEW_LENGTH = 25;
@@ -42,9 +42,15 @@ export class Note extends ScReact.Component<NoteProps, any> {
     }
 
     render() {
+        console.log("render")
+        console.log(this.props.note.icon)
+
         return (
-            <div className={'note-container ' + (this.props.selected ? 'selected' : '')} id={this.props.note.id} >
-                <h3>{truncate(parseNoteTitle(this.props.note.data.title), MAX_NOTE_CONTENT_PREVIEW_LENGTH)}</h3>
+            <div className={'note-container ' + (this.props.selected ? 'selected' : '')} id={this.props.note.id}>
+                <div className="note-title__container">
+                    <span className="note-icon">{this.props.note.icon ? unicodeToChar(this.props.note.icon) : ""}</span>
+                    <h3 className="note-title">{truncate(parseNoteTitle(this.props.note.data.title), MAX_NOTE_CONTENT_PREVIEW_LENGTH)}</h3>
+                </div>
                 <div className="note-tags-container" ref={ref => this.tagsContainerRef = ref}></div>
                 <span className="update-time">{formatDate(this.props.note.update_time)}</span>
             </div>

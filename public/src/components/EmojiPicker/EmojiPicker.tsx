@@ -1,7 +1,6 @@
 import {ScReact} from "@veglem/screact";
 import {Img} from "../Image/Image";
 import "./EmojiPicker.sass"
-import {AppNotesStore} from "../../modules/stores/NotesStore";
 
 export class EmojiPicker extends ScReact.Component<any, any> {
     state = {
@@ -9,120 +8,31 @@ export class EmojiPicker extends ScReact.Component<any, any> {
     }
 
     private openBtnRef
+    private emojiContainer
 
     private emojiData = [
-        {
-            id: "1F47B",
-            name: "grinning face"
-        },
-        {
-            id: "1F47C",
-            name: "grinning face"
-        },
-        {
-            id: "1F47C",
-            name: "grinning face"
-        },
-        {
-            id: "1F47C",
-            name: "grinning face"
-        },
-        {
-            id: "1F47C",
-            name: "grinning face"
-        },
-        {
-            id: "1F47C",
-            name: "grinning face"
-        },
-        {
-            id: "1F47C",
-            name: "grinning face"
-        },
-        {
-            id: "1F47C",
-            name: "grinning face"
-        },
-        {
-            id: "1F47C",
-            name: "grinning face"
-        },
-        {
-            id: "1F47C",
-            name: "grinning face"
-        },
-        {
-            id: "1F47C",
-            name: "grinning face"
-        },
-        {
-            id: "1F47C",
-            name: "grinning face"
-        },
-        {
-            id: "1F47C",
-            name: "grinning face"
-        },
-        {
-            id: "1F47C",
-            name: "grinning face"
-        },
-        {
-            id: "1F47C",
-            name: "grinning face"
-        },
-        {
-            id: "1F47C",
-            name: "grinning face"
-        },
-        {
-            id: "1F47C",
-            name: "grinning face"
-        },
-        {
-            id: "1F47C",
-            name: "grinning face"
-        },
-        {
-            id: "1F47C",
-            name: "grinning face"
-        },
-        {
-            id: "1F47C",
-            name: "grinning face"
-        },
-        {
-            id: "1F47C",
-            name: "grinning face"
-        },
-        {
-            id: "1F47C",
-            name: "grinning face"
-        },
-        {
-            id: "1F47C",
-            name: "grinning face"
-        },
-        {
-            id: "1F47C",
-            name: "grinning face"
-        },
-        {
-            id: "1F47C",
-            name: "grinning face"
-        },
-        {
-            id: "1F47C",
-            name: "grinning face"
-        },
-        {
-            id: "1F47C",
-            name: "grinning face"
-        },
-        {
-            id: "1F47C",
-            name: "grinning face"
-        },
+        "1F602",
+        "1F923",
+        "1F44D",
+        "1F62D",
+        "1F64F",
+        "1F618",
+        "1F970",
+        "1F60D",
+        "1F60A",
+        "1F389",
+        "1F601",
+        "1F495",
+        "1F605",
+        "1F525",
+        "1F937",
+        "1F382",
+        "1F973",
+        "1F496",
+        "1F440",
+        "1F4AF",
+        "1F44C",
+        "1F4A9"
     ]
 
     componentDidMount() {
@@ -147,33 +57,28 @@ export class EmojiPicker extends ScReact.Component<any, any> {
     }
 
     selectEmoji = (emoji) => {
-        console.log("selectEmoji")
-        console.log(emoji)
+        this.props.onChange(emoji)
+        this.emojiContainer.innerHTML = String.fromCodePoint(parseInt(emoji, 16))
     }
 
     render() {
         return (
             <div className={"emoji-picker-container " + (this.state.open ? "open" : "")}>
                 <div className="open-btn" onclick={this.toggleOpen} ref={ref => this.openBtnRef = ref}>
-                    <Img src="emoji.svg" className="icon"/>
+
+                    <div className="emoji-container" ref={ref => this.emojiContainer = ref}>
+                        {this.props.icon ? <span>{String.fromCodePoint(parseInt(this.props.icon, 16))}</span> : <Img src="emoji.svg" className="icon"/>}
+                    </div>
+
                     <span>Иконка</span>
                 </div>
 
-                <div className="emoji-list">
+                <div className="emoji-list-container">
 
-                    <div className="emoji-list__top-panel">
-
-                        <div className="emoji-search-bar">
-                            <Img src="search.svg" className="search-icon" />
-                            <input type="text" placeholder="Поиск..." />
-                        </div>
-
-                    </div>
-
-                    <div className="emoji-list__bottom-panel">
+                    <div className="emoji-list">
                         {this.emojiData.map(emoji => (
-                            <div className="emoji-list__item" key={emoji.id} onclick={() => this.selectEmoji(emoji)}>
-                                {String.fromCodePoint(parseInt(emoji.id, 16))}
+                            <div className="emoji-list__item" key={emoji} onclick={() => this.selectEmoji(emoji)}>
+                                {String.fromCodePoint(parseInt(emoji, 16))}
                             </div>
                         ))}
                     </div>
