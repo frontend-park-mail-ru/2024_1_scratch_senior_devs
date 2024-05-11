@@ -42,9 +42,6 @@ export class Note extends ScReact.Component<NoteProps, any> {
     }
 
     render() {
-        console.log("render")
-        console.log(this.props.note.icon)
-
         return (
             <div className={'note-container ' + (this.props.selected ? 'selected' : '')} id={this.props.note.id}>
                 <div className="note-title__container">

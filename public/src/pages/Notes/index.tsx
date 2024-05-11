@@ -183,7 +183,8 @@ export class NotesPage extends ScReact.Component<any, any> {
 
         if (selectedNote) {
             const noteEmoji = selectedNote.querySelector('.note-icon');
-            noteEmoji.innerHTML = unicodeToChar(icon)
+
+            noteEmoji.innerHTML = icon ? unicodeToChar(icon) : ""
             AppDispatcher.dispatch(NotesActions.UPDATE_NOTE_ICON, icon)
         }
     }

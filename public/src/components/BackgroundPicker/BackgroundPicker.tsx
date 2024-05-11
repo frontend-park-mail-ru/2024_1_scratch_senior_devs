@@ -48,6 +48,10 @@ export class BackgroundPicker extends ScReact.Component<any, any> {
         this.props.onChange(bg)
     }
 
+    clearBackground = () => {
+        this.props.onChange(null)
+    }
+
     render() {
         return (
             <div className={"background-picker-container " + (this.state.open ? "open" : "")}>
@@ -57,6 +61,10 @@ export class BackgroundPicker extends ScReact.Component<any, any> {
                 </div>
 
                 <div className="background-list-container">
+
+                    <div className="background-list-container__top-panel">
+                        <span onclick={this.clearBackground}>Очистить</span>
+                    </div>
 
                     <div className="background-list">
                         {this.backgroundData.map(bg => (

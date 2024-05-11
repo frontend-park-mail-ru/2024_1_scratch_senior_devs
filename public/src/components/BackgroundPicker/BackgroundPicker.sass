@@ -21,6 +21,7 @@
 		padding: 8px 12px
 		border-radius: 8px
 		cursor: pointer
+		line-height: 28px
 
 		&:hover
 			background: rgba(0, 0, 0, 0.15)
@@ -36,7 +37,7 @@
 		border-radius: 12px
 		background: #18232f
 		position: absolute
-		top: calc(100% + 10px)
+		top: calc(100% + 5px)
 		z-index: 100
 		display: none
 		box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px
@@ -44,17 +45,35 @@
 		animation: closeAnim 0.3s
 		padding: 15px
 		min-height: 120px
-		gap: 15px
+		gap: 10px
+
+		&__top-panel
+			display: flex
+			width: 100%
+			justify-content: flex-end
+			padding-right: 10px
+
+			span
+				color: $text-secondary-color
+				cursor: pointer
+				padding: 4px 8px
+				border-radius: 8px
+				transition: 0.15s
+
+				&:hover
+					background: rgba(0, 0, 0, 0.3)
 
 		.background-list
 			width: 100%
 			display: grid
 			grid-template-columns: repeat(3, 0.33fr)
-			padding-right: 10px
+			padding: 10px
 			gap: 15px
 			justify-content: center
 			overflow-y: auto
 			max-height: 140px
+			background: #121b25
+			border-radius: 8px
 
 			@include scrollbar
 

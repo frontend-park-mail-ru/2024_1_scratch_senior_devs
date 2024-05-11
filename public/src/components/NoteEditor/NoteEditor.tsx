@@ -29,6 +29,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
     };
 
     private savingLabelRef;
+    private noteEditorHeader
 
     componentDidMount() {
         AppNotesStore.SubscribeToStore(this.updateState);
@@ -122,7 +123,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
         document.getElementById(AppNotesStore.state.selectedNote.id).style.backgroundImage = bg;
 
-        (document.querySelector(".note-background") as HTMLElement).style.background = bg
+        this.noteEditorHeader.style.background = bg
     }
 
     openFullScreen = () => {
@@ -152,7 +153,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
                        content={<InviteUserModal handleClose={this.closeInviteUserModal} open={this.state.inviteUserModalOpen}/>}
                 />
 
-                <div className="note-background">
+                <div className="note-background" ref={ref => this.noteEditorHeader = ref}>
 
                 </div>
 
@@ -190,7 +191,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
                     </div>
 
                     <div className={isSubNote ? "hidden" : ""}>
-                        <Tooltip label="В избранное" className="add-to-favorite-btn"
+                        <Tooltip label={this.state.favourite ? "Удалить из избранного" : "В избранное"} className="add-to-favorite-btn"
                                  icon={this.state.favourite ? "star-filled.svg" : "star.svg"}
                                  onClick={this.addToFavoriteBtn}/>
                     </div>
@@ -199,8 +200,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
                         <Tooltip label="Вернуться" icon="arrow-up.svg" onClick={this.openParentNote}/>
                     </div>
 
-                    {isOwner ? <NoteMenu deleteNote={this.openDeleteNoteModal}
-                                         inviteUser={this.openInviteUserModal}/> : ""}
+                    {isOwner ? <NoteMenu note={this.state.selectedNote} deleteNote={this.openDeleteNoteModal} inviteUser={this.openInviteUserModal}/> : ""}
 
                     {!this.state.fullScreen ?
                         <Tooltip icon="full-screen-open.svg" label="На весь экран" className="toggle-fullscreen-btn"

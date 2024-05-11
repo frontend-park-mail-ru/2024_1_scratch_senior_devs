@@ -22,9 +22,18 @@
 		padding: 8px 12px
 		border-radius: 8px
 		cursor: pointer
+		line-height: 28px
 
 		&:hover
 			background: rgba(0, 0, 0, 0.15)
+
+		.emoji-container
+			width: 28px
+			height: 28px
+			font-size: 20px
+			display: flex
+			align-items: center
+			justify-content: center
 
 		span
 			color: #c0c0c0
@@ -37,7 +46,7 @@
 		border-radius: 12px
 		background: #18232f
 		position: absolute
-		top: calc(100% + 10px)
+		top: calc(100% + 5px)
 		z-index: 100
 		display: none
 		box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px
@@ -45,17 +54,34 @@
 		animation: closeAnim 0.3s
 		padding: 15px
 		min-height: 120px
-		gap: 15px
+		gap: 10px
+
+		&__top-panel
+			display: flex
+			width: 100%
+			justify-content: flex-end
+
+			span
+				color: $text-secondary-color
+				cursor: pointer
+				padding: 4px 8px
+				border-radius: 8px
+				transition: 0.15s
+
+				&:hover
+					background: rgba(0, 0, 0, 0.3)
 
 		.emoji-list
 			width: 100%
 			display: grid
 			grid-template-columns: repeat(5, 0.2fr)
-			padding-right: 10px
+			padding: 5px 10px 5px 5px
 			gap: 15px
 			justify-content: center
 			overflow-y: auto
 			max-height: 140px
+			background: #121b25
+			border-radius: 8px
 
 			@include scrollbar
 
@@ -74,7 +100,7 @@
 				transition: 0.15s
 
 				&:hover
-					background: rgba(0, 0, 0, 0.5)
+					background: rgba(0, 0, 0, 0.3)
 
 
 
