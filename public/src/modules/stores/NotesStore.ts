@@ -4,7 +4,6 @@ import {AppUserStore, UserActions} from './UserStore';
 import {AppDispatcher} from '../dispatcher';
 import {AppToasts} from '../toasts';
 import {CollaboratorType, NoteDataType, NoteType} from "../../utils/types";
-import {decode} from "../utils";
 import {WebSocketConnection} from "../websocket";
 import {insertBlockPlugin} from "../../components/Editor/Plugin";
 
@@ -167,7 +166,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
         this.closeWS()
 
-        this.syncNotes()
+        // this.syncNotes()
 
         this.SetState(s=>({
             ...s,
@@ -263,7 +262,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 }))
 
             } else if (data.type == "updated") {
-                const noteData = decode(data.message_info) as NoteDataType
+                const noteData = JSON.parse(data.message_info) as NoteDataType
 
                 if (JSON.stringify(noteData) == JSON.stringify(this.state.selectedNote.data)) {
                     return

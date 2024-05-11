@@ -11,16 +11,6 @@ export function truncate(str: string, n: number): string{
     return (str.length > n) ? str.slice(0, n-1) + '...' : str;
 }
 
-/**
- * Декодирует строку из base64 в unicode
- * @param raw {string} закодированная строка
- * @returns {Object} декодированный объект
- */
-export function decode(raw: string): object {
-    const decoded = atob(raw);
-    const bytes = Uint8Array.from(decoded, (m) => m.codePointAt(0));
-    return JSON.parse(new TextDecoder().decode(bytes));
-}
 
 /**
  * Возвращает true если заметка является подзаметкой

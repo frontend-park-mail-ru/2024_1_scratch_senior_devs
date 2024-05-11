@@ -51,7 +51,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
     closeEditor = () => {
         AppDispatcher.dispatch(NotesActions.CLOSE_FULLSCREEN)
 
-        this.saveNote({id: AppNotesStore.state.selectedNote.id, parent: AppNotesStore.state.selectedNote.parent, note: AppNoteStore.state.note});
+        // this.saveNote({id: AppNotesStore.state.selectedNote.id, parent: AppNotesStore.state.selectedNote.parent, note: AppNoteStore.state.note});
         this.props.setClose();
         setTimeout(() => AppDispatcher.dispatch(NotesActions.CLOSE_NOTE), 300);
     };

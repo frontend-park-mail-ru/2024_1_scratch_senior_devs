@@ -1,4 +1,4 @@
-import {decode, downloadFile} from './utils';
+import {downloadFile} from './utils';
 import {
     UserLoginCredentialsType,
     UserRegisterCredentialsType,
@@ -284,7 +284,7 @@ class NoteRequests {
 
         if (response.status === 200) {
             for (const elem of response.body) {
-                elem.data = decode(elem.data);
+                elem.data = JSON.parse(elem.data);
             }
             return response.body;
         }
@@ -301,7 +301,7 @@ class NoteRequests {
         });
 
         if (response.status === 200) {
-            response.body.data = decode(response.body.data);
+            response.body.data = JSON.parse(response.body.data);
             return response.body;
         }
 
@@ -327,6 +327,8 @@ class NoteRequests {
     };
 
     Update = async({id, note}, jwt: string, csrf:string)=> {
+        console.log("Update")
+
         const response = await Ajax.Post(this.baseUrl + '/' + id + '/edit', {
             headers: {
                 'Authorization': jwt,
@@ -339,6 +341,8 @@ class NoteRequests {
                 }
             }
         });
+
+        console.log(response.status)
 
         return {
             status: response.status,
@@ -375,7 +379,7 @@ class NoteRequests {
         });
 
         if (response.status == 201) {
-            response.body.data = decode(response.body.data);
+            response.body.data = JSON.parse(response.body.data);
             return response;
         }
 
@@ -511,7 +515,7 @@ class NoteRequests {
         });
 
         if (response.status == 200) {
-            response.body.data = decode(response.body.data)
+            response.body.data = JSON.parse(response.body.data)
 
             return {
                 note: response.body,
@@ -538,7 +542,7 @@ class NoteRequests {
         });
 
         if (response.status == 200) {
-            response.body.data = decode(response.body.data)
+            response.body.data = JSON.parse(response.body.data)
         }
 
         return {
