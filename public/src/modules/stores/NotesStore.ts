@@ -138,6 +138,12 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 case NotesActions.UPDATE_NOTE_BACKGROUND:
                     this.updateNoteBackground(action.payload)
                     break
+                case NotesActions.CHANGE_TITLE:
+                    this.updateSelectedNoteTitle(action.payload)
+                    break
+                case NotesActions.CHANGE_CONTENT:
+                    this.updateSelectedNoteContent(action.payload)
+                    break
             }
         });
     }
@@ -554,10 +560,13 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     openFullScreen = () => {
+        console.log("openFullScreen")
+        console.log(this.state.selectedNote)
         this.SetState(state => ({
             ...state,
             fullScreen: true
         }))
+        console.log(this.state.selectedNote)
     }
 
     closeFullScreen = () => {
@@ -575,6 +584,14 @@ class NotesStore extends BaseStore<NotesStoreState> {
     updateNoteBackground = (background:string) => {
         this.state.selectedNote.background = background
         this.syncNotes()
+    }
+
+    updateSelectedNoteTitle = (title:string) => {
+        this.state.selectedNote.data.title = title
+    }
+
+    updateSelectedNoteContent = (content) => {
+        this.state.selectedNote.data.content = content
     }
 }
 
@@ -605,7 +622,9 @@ export const NotesActions = {
     OPEN_FULLSCREEN: "OPEN_FULLSCREEN",
     CLOSE_FULLSCREEN: "CLOSE_FULLSCREEN",
     UPDATE_NOTE_ICON: "UPDATE_NOTE_ICON",
-    UPDATE_NOTE_BACKGROUND: "UPDATE_NOTE_BACKGROUND"
+    UPDATE_NOTE_BACKGROUND: "UPDATE_NOTE_BACKGROUND",
+    CHANGE_TITLE: "CHANGE_TITLE",
+    CHANGE_CONTENT: "CHANGE_CONTENT"
 };
 
 export const AppNotesStore = new NotesStore();

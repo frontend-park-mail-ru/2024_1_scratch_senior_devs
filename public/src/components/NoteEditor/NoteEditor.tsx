@@ -57,6 +57,9 @@ export class NoteEditor extends ScReact.Component<any, any> {
     };
 
     updateState = (store:NotesStoreState) => {
+        console.log("updateState")
+        console.log(store.selectedNote)
+
         if (store.selectedNote != this.state.selectedNote) {
             this.savingLabelRef.classList.remove("active")
         }
@@ -221,11 +224,13 @@ export class NoteEditor extends ScReact.Component<any, any> {
                             this.props.onChangeTitle(value);
                             this.onChangeNote();
                             AppDispatcher.dispatch(NoteStoreActions.CHANGE_TITLE, value)
+                            AppDispatcher.dispatch(NotesActions.CHANGE_TITLE, value)
                         }}
                         onChangeContent={(content) => {
                             this.props.onChangeNote()
                             this.onChangeNote()
                             AppDispatcher.dispatch(NoteStoreActions.CHANGE_CONTENT, content)
+                            AppDispatcher.dispatch(NotesActions.CHANGE_CONTENT, content)
                         }}
                     />
 
