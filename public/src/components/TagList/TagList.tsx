@@ -37,7 +37,7 @@ export class TagList extends ScReact.Component<any, TagListState> {
     }
 
     handleClickOutside = (e) => {
-        if (this.state.open && !this.openBtnRef.contains(e.target) && !e.target.matches(".tags-wrapper,.tags-wrapper *")) {
+        if (this.state.open && !this.openBtnRef.contains(e.target) && !e.target.matches(".tags-wrapper,.tags-wrapper *") && !e.target.matches(".note-editor *")) {
             this.toggleOpen();
         }
     }
@@ -109,10 +109,13 @@ export class TagList extends ScReact.Component<any, TagListState> {
                 ...state,
                 value: ""
             }))
+
         }
     }
 
     addTag = (tagname:string) => {
+        console.log("addTag")
+        console.log(tagname)
         AppDispatcher.dispatch(NotesActions.CREATE_TAG, tagname)
         this.props.onChange([...this.props.tags, tagname])
     }
@@ -123,6 +126,7 @@ export class TagList extends ScReact.Component<any, TagListState> {
     }
 
     toggleOpen = () => {
+        console.log("toggleOpen")
         this.setState(state => ({
             ...state,
             open: !state.open
@@ -155,7 +159,7 @@ export class TagList extends ScReact.Component<any, TagListState> {
 
                 <div className="tags-wrapper">
 
-                    <div className="tag-items">
+                    <form className="tag-items" onsubmit={(e) => e.preventDefault()}>
 
                         {this.props.tags.map(tag => (
                             <div className={"tag-item " + (this.state.selectedTag == tag ? "selected" : "")}>
@@ -170,7 +174,7 @@ export class TagList extends ScReact.Component<any, TagListState> {
 
                         <input type="text" placeholder="Введите тэг" value={this.state.value} oninput={this.setValue} onkeyup={this.onInput} ref={ref => this.inputRef = ref}/>
 
-                    </div>
+                    </form>
 
                     <div className="global-tags-wrapper">
                         <h3>Все тэги</h3>

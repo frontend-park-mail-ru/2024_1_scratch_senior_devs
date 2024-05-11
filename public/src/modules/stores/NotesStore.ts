@@ -183,6 +183,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     async fetchNote (id:string) {
+        console.log("fetchNote")
         try {
             const note = await AppNoteRequests.Get(id, AppUserStore.state.JWT);
 
@@ -286,6 +287,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     async openNote(id:string) {
+        console.log("openNote")
+
         try {
             const note = await AppNoteRequests.Get(id, AppUserStore.state.JWT);
 
@@ -498,6 +501,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
             const {note, status, csrf} = await AppNoteRequests.AddTag(this.state.selectedNote.id, tag, AppUserStore.state.JWT, AppUserStore.state.csrf)
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+
+            console.log(note)
 
             if (status == 200) {
                 this.SetState(state => ({
