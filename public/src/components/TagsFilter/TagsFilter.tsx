@@ -17,7 +17,7 @@ type TagsFilterState = {
 export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterState> {
     state = {
         expanded: false,
-        menuOpen: true,
+        menuOpen: false,
         selectedTag: null
     }
 
