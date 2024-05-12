@@ -57,9 +57,6 @@ export class NoteEditor extends ScReact.Component<any, any> {
     };
 
     updateState = (store:NotesStoreState) => {
-        
-        
-
         if (store.selectedNote != this.state.selectedNote) {
             this.savingLabelRef.classList.remove("active")
         }
@@ -152,15 +149,15 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
                 <SwipeArea enable={this.props.open} right={this.closeEditor} target=".note-editor-wrapper"/>
 
-                <Modal open={this.state.deleteNoteModalOpen}
-                       handleClose={this.closeDeleteModalDialog}
-                       content={<DeleteNoteDialog onSuccess={this.deleteNote} handleClose={this.closeDeleteModalDialog}/>}
-                />
+                {/*<Modal open={this.state.deleteNoteModalOpen}*/}
+                {/*       handleClose={this.closeDeleteModalDialog}*/}
+                {/*       content={<DeleteNoteDialog onSuccess={this.deleteNote} handleClose={this.closeDeleteModalDialog}/>}*/}
+                {/*/>*/}
 
-                <Modal open={this.state.inviteUserModalOpen}
-                       handleClose={this.closeInviteUserModal}
-                       content={<InviteUserModal handleClose={this.closeInviteUserModal} open={this.state.inviteUserModalOpen}/>}
-                />
+                {/*<Modal open={this.state.inviteUserModalOpen}*/}
+                {/*       handleClose={this.closeInviteUserModal}*/}
+                {/*       content={<InviteUserModal handleClose={this.closeInviteUserModal} open={this.state.inviteUserModalOpen}/>}*/}
+                {/*/>*/}
 
                 <div className="note-background" ref={ref => this.noteEditorHeader = ref}>
 
@@ -175,17 +172,17 @@ export class NoteEditor extends ScReact.Component<any, any> {
                         </div>
                     </div>
 
-                    <div className={"tag-list-wrapper " + (isSubNote ? "hidden" : "")}>
-                        {isOwner ? <TagList tags={this.state.selectedNote?.tags} onChange={this.props.onChangeTags}/> : ""}
-                    </div>
+                    {/*<div className={"tag-list-wrapper " + (isSubNote ? "hidden" : "")}>*/}
+                    {/*    {isOwner ? <TagList tags={this.state.selectedNote?.tags} onChange={this.props.onChangeTags}/> : ""}*/}
+                    {/*</div>*/}
 
-                    <div className={"emoji-picker-wrapper " + (isSubNote ? "hidden" : "")}>
-                        {isOwner ? <EmojiPicker onChange={this.props.onChangeIcon} icon={this.state.selectedNote?.icon} /> : ""}
-                    </div>
+                    {/*<div className={"emoji-picker-wrapper " + (isSubNote ? "hidden" : "")}>*/}
+                    {/*    {isOwner ? <EmojiPicker onChange={this.props.onChangeIcon} icon={this.state.selectedNote?.icon} /> : ""}*/}
+                    {/*</div>*/}
 
-                    <div className={"background-picker-wrapper " + (isSubNote ? "hidden" : "")}>
-                        {isOwner ? <BackgroundPicker onChange={this.changeBackground} /> : ""}
-                    </div>
+                    {/*<div className={"background-picker-wrapper " + (isSubNote ? "hidden" : "")}>*/}
+                    {/*    {isOwner ? <BackgroundPicker onChange={this.changeBackground} /> : ""}*/}
+                    {/*</div>*/}
 
                     <div className="empty">
 
