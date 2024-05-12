@@ -4,6 +4,8 @@ import "./TagsFilter.sass"
 import {Modal} from "../Modal/Modal";
 import {DeleteTagDialog} from "../DeleteTagDialog/DeleteTagDialog";
 import {RenameTagModal} from "../RenameTagModal/RenameTagModal";
+import {AppDispatcher} from "../../modules/dispatcher";
+import {NotesActions} from "../../modules/stores/NotesStore";
 
 type TagsFilterProps = {
     tags: string[],
@@ -75,10 +77,7 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
     }
 
     deleteTag = () => {
-        console.log("deleteTag")
-        console.log(this.state.selectedTag)
-        // TODO
-
+        AppDispatcher.dispatch(NotesActions.DELETE_TAG, this.state.selectedTag)
     }
 
     renameTag = () => {

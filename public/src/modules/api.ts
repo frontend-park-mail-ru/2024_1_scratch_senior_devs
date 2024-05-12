@@ -554,8 +554,10 @@ class NoteRequests {
 }
 
 class TagRequests {
+    private baseUrl = '/tags';
+
     GetAll = async (jwt:string) => {
-        const response = await Ajax.Get('/tags' , {
+        const response = await Ajax.Get(this.baseUrl , {
             headers: {
                 'Authorization': jwt
             },
@@ -566,6 +568,42 @@ class TagRequests {
         }
 
         throw Error(response.body.message);
+    }
+
+    DeleteTag = async (tag: string,  jwt:string, csrf:string)=> {
+        const response = await Ajax.Delete(this.baseUrl + '/forget/', {
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            },
+            body: {
+                "tag_name": tag
+            }
+        });
+
+        return {
+            note: response.body,
+            status: response.status,
+            csrf: response.headers['x-csrf-token']
+        }
+    }
+
+    AddTag = async (tag: string,  jwt:string, csrf:string)=> {
+        const response = await Ajax.Post(this.baseUrl + '/remember/', {
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            },
+            body: {
+                "tag_name": tag
+            }
+        });
+
+        return {
+            note: response.body,
+            status: response.status,
+            csrf: response.headers['x-csrf-token']
+        }
     }
 }
 

@@ -25,7 +25,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
         notes: [],
         tags: [],
         selectedTags: [],
-        selectedNote: undefined,
+        selectedNote: null,
         selectedNoteCollaborators: [],
         query: '',
         offset: 0,
@@ -112,11 +112,17 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 case NotesActions.OPEN_NOTE:
                     await this.openNote(action.payload)
                     break
-                case NotesActions.CREATE_TAG:
+                case NotesActions.ADD_TAG_TO_NOTE:
                     await this.createTag(action.payload)
                     break
-                case NotesActions.REMOVE_TAG:
+                case NotesActions.REMOVE_TAG_FROM_NOTE:
                     await this.removeTag(action.payload)
+                    break
+                case NotesActions.DELETE_TAG:
+                    await this.deleteTag(action.payload)
+                    break
+                case NotesActions.ADD_TAG:
+                    await this.addTag(action.payload)
                     break
                 case NotesActions.ADD_COLLABORATOR:
                     await this.addCollaborator(action.payload)
@@ -240,7 +246,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             // TODO: синхронизация между девайсами (сверять id девайса)
             if (data.username == AppUserStore.state.username) {
-                return
+                // return
             }
             
             if (data.type == "opened") {
@@ -596,8 +602,40 @@ class NotesStore extends BaseStore<NotesStoreState> {
         this.state.selectedNote.data.title = title
     }
 
-    updateSelectedNoteContent = (content) => {
+    updateSelectedNoteContent = (content:Array<any>) => {
         this.state.selectedNote.data.content = content
+    }
+
+    deleteTag = async (tag:string) => {
+        try {
+            const {status, csrf} = await AppTagRequests.DeleteTag(tag, AppUserStore.state.JWT, AppUserStore.state.csrf)
+
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+
+            if (status == 204) {
+                AppToasts.success("Тэг успешно удален")
+                await this.fetchTags()
+            }
+        }
+        catch {
+            AppToasts.error("Что-то пошло не так")
+        }
+    }
+
+    addTag = async (tag:string) => {
+        try {
+            const {status, csrf} = await AppTagRequests.AddTag(tag, AppUserStore.state.JWT, AppUserStore.state.csrf)
+
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+
+            if (status == 204) {
+                AppToasts.success("Тэг успешно добавлен")
+                await this.fetchTags()
+            }
+        }
+        catch {
+            AppToasts.error("Что-то пошло не так")
+        }
     }
 }
 
@@ -620,8 +658,8 @@ export const NotesActions = {
     START_FETCHING: 'START_FETCHING',
     OPEN_NOTE: 'OPEN_NOTE',
     CREATE_SUB_NOTE: "CREATE_SUB_NOTE",
-    CREATE_TAG: "CREATE_TAG",
-    REMOVE_TAG: "REMOVE_TAG",
+    ADD_TAG_TO_NOTE: "ADD_TAG_TO_NOTE",
+    REMOVE_TAG_FROM_NOTE: "REMOVE_TAG_FROM_NOTE",
     ADD_COLLABORATOR: "ADD_COLLABORATOR",
     FETCH_TAGS: "FETCH_TAGS",
     SYNC_NOTES: "SYNC_NOTES",
@@ -630,7 +668,9 @@ export const NotesActions = {
     UPDATE_NOTE_ICON: "UPDATE_NOTE_ICON",
     UPDATE_NOTE_BACKGROUND: "UPDATE_NOTE_BACKGROUND",
     CHANGE_TITLE: "CHANGE_TITLE",
-    CHANGE_CONTENT: "CHANGE_CONTENT"
+    CHANGE_CONTENT: "CHANGE_CONTENT",
+    DELETE_TAG: "DELETE_TAG",
+    ADD_TAG: "ADD_TAG"
 };
 
 export const AppNotesStore = new NotesStore();

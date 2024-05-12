@@ -116,12 +116,12 @@ export class TagList extends ScReact.Component<any, TagListState> {
     addTag = (tagname:string) => {
         console.log("addTag")
         console.log(tagname)
-        AppDispatcher.dispatch(NotesActions.CREATE_TAG, tagname)
+        AppDispatcher.dispatch(NotesActions.ADD_TAG_TO_NOTE, tagname)
         this.props.onChange([...this.props.tags, tagname])
     }
 
     deleteTag = (tagname:string) => {
-        AppDispatcher.dispatch(NotesActions.REMOVE_TAG, tagname)
+        AppDispatcher.dispatch(NotesActions.REMOVE_TAG_FROM_NOTE, tagname)
         this.props.onChange(this.props.tags.filter(tag => tag != tagname))
     }
 
