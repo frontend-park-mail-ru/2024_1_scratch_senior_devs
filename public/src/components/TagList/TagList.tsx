@@ -114,8 +114,8 @@ export class TagList extends ScReact.Component<any, TagListState> {
     }
 
     addTag = (tagname:string) => {
-        console.log("addTag")
-        console.log(tagname)
+        
+        
         AppDispatcher.dispatch(NotesActions.ADD_TAG_TO_NOTE, tagname)
         this.props.onChange([...this.props.tags, tagname])
     }
@@ -126,7 +126,7 @@ export class TagList extends ScReact.Component<any, TagListState> {
     }
 
     toggleOpen = () => {
-        console.log("toggleOpen")
+        
         this.setState(state => ({
             ...state,
             open: !state.open

@@ -42,8 +42,8 @@ export class BackgroundPicker extends ScReact.Component<any, any> {
     }
 
     selectBackground = (bg) => {
-        console.log("selectBackground")
-        console.log(bg)
+        
+        
         // AppDispatcher.dispatch(NotesActions.UPDATE_NOTE_BACKGROUND, bg.id)
         this.props.onChange(bg)
     }

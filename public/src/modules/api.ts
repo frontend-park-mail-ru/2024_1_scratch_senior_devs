@@ -327,7 +327,7 @@ class NoteRequests {
     };
 
     Update = async({id, note}, jwt: string, csrf:string)=> {
-        console.log("Update")
+        
 
         const response = await Ajax.Post(this.baseUrl + '/' + id + '/edit', {
             headers: {
@@ -342,7 +342,7 @@ class NoteRequests {
             }
         });
 
-        console.log(response.status)
+        
 
         return {
             status: response.status,

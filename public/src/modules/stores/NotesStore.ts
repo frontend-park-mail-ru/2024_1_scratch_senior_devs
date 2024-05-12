@@ -190,7 +190,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     async fetchNote (id:string) {
-        console.log("fetchNote")
+        
         try {
             const note = await AppNoteRequests.Get(id, AppUserStore.state.JWT);
 
@@ -242,7 +242,11 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
         this.ws.onMessage((event) => {
 
+            console.log("onMessage")
+
             let data = JSON.parse(event.data)
+
+            console.log(data)
 
             // TODO: синхронизация между девайсами (сверять id девайса)
             if (data.username == AppUserStore.state.username) {
@@ -278,6 +282,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             } else if (data.type == "updated") {
                 const noteData = JSON.parse(data.message_info) as NoteDataType
 
+                console.log(JSON.stringify(noteData) == JSON.stringify(this.state.selectedNote.data))
                 if (JSON.stringify(noteData) == JSON.stringify(this.state.selectedNote.data)) {
                     return
                 }
@@ -285,6 +290,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 const updatedNote = this.state.selectedNote
                 updatedNote.data = noteData
 
+                console.log("updated state")
                 this.SetState(state => ({
                     ...state,
                     selectedNote: updatedNote
@@ -294,7 +300,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     async openNote(id:string) {
-        console.log("openNote")
+        
 
         try {
             const note = await AppNoteRequests.Get(id, AppUserStore.state.JWT);
@@ -509,7 +515,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 
-            console.log(note)
+            
 
             if (status == 200) {
                 this.SetState(state => ({
@@ -572,13 +578,13 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     openFullScreen = () => {
-        console.log("openFullScreen")
-        console.log(this.state.selectedNote)
+        
+        
         this.SetState(state => ({
             ...state,
             fullScreen: true
         }))
-        console.log(this.state.selectedNote)
+        
     }
 
     closeFullScreen = () => {

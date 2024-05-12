@@ -57,8 +57,8 @@ export class NoteEditor extends ScReact.Component<any, any> {
     };
 
     updateState = (store:NotesStoreState) => {
-        console.log("updateState")
-        console.log(store.selectedNote)
+        
+        
 
         if (store.selectedNote != this.state.selectedNote) {
             this.savingLabelRef.classList.remove("active")
@@ -121,8 +121,8 @@ export class NoteEditor extends ScReact.Component<any, any> {
     }
 
     changeBackground = (bg:string) => {
-        console.log("changeBackground");
-        console.log(bg);
+        
+        
 
         document.getElementById(AppNotesStore.state.selectedNote.id).style.backgroundImage = bg;
 

@@ -23,7 +23,7 @@ export class LinkInput extends ScReact.Component<any, any> {
 
     handleSubmit = () => {
         if (this.state.value) {
-            console.log(this.isUrlValid(this.state.value))
+            
             this.props.onSubmit(this.state.value);
             this.clearValue();
         }

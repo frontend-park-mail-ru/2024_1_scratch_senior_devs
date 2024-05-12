@@ -81,8 +81,8 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
     }
 
     renameTag = () => {
-        console.log("renameTag")
-        console.log(this.state.selectedTag)
+        
+        
         // TODO
     }
 
