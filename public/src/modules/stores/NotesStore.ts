@@ -241,14 +241,10 @@ class NotesStore extends BaseStore<NotesStoreState> {
         })
 
         this.ws.onMessage((event) => {
-
-            console.log("onMessage")
-
             let data = JSON.parse(event.data)
 
-            console.log(data)
-
             // TODO: синхронизация между девайсами (сверять id девайса)
+            // А нужна ли вообще проверка ?
             if (data.username == AppUserStore.state.username) {
                 // return
             }
@@ -282,7 +278,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
             } else if (data.type == "updated") {
                 const noteData = JSON.parse(data.message_info) as NoteDataType
 
-                console.log(JSON.stringify(noteData) == JSON.stringify(this.state.selectedNote.data))
                 if (JSON.stringify(noteData) == JSON.stringify(this.state.selectedNote.data)) {
                     return
                 }

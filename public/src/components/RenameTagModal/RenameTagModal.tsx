@@ -11,6 +11,13 @@ export class RenameTagModal extends ScReact.Component<any, any> {
         validationResult: false
     }
 
+    componentDidMount() {
+        this.setState(state => ({
+            ...state,
+            value: this.props.tag
+        }))
+    }
+
     handleSubmit = () => {
 
     }
@@ -30,7 +37,6 @@ export class RenameTagModal extends ScReact.Component<any, any> {
                 <Input
                     type="text"
                     placeholder="Введите новое название"
-                    icon="src/assets/password.png"
                     value={this.state.value}
                     onChange={this.setValue}
                     error={this.state.error}

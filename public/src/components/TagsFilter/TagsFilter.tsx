@@ -81,8 +81,6 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
     }
 
     renameTag = () => {
-        
-        
         // TODO
     }
 
@@ -129,7 +127,7 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
                 <Modal
                     open={this.state.renameTagModalOpen}
                     handleClose={this.closeRenameTagModal}
-                    content={<RenameTagModal handleClose={this.closeRenameTagModal} />}
+                    content={<RenameTagModal onSuccess={this.renameTag} tag={this.state.selectedTag} handleClose={this.closeRenameTagModal} />}
                 />
                 
                 <div className="filters-panel" onscroll={this.closeMenu}>
