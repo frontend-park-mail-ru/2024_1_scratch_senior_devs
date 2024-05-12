@@ -6,6 +6,7 @@ import {AppToasts} from '../toasts';
 import {CollaboratorType, NoteDataType, NoteType} from "../../utils/types";
 import {WebSocketConnection} from "../websocket";
 import {insertBlockPlugin} from "../../components/Editor/Plugin";
+import {NoteStoreActions} from "./NoteStore";
 
 export type NotesStoreState = {
     notes: NoteType[],
@@ -376,9 +377,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             history.pushState(null, null, '/notes');
 
-            await this.fetchTags()
-
             AppToasts.info('Заметка успешно удалена');
+
+            AppDispatcher.dispatch(NoteStoreActions.CLEAR_NOTE)
 
         } catch {
             AppToasts.error('Что-то пошло не так');

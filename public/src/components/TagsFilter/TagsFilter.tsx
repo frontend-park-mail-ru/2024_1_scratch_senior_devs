@@ -1,6 +1,9 @@
 import {ScReact} from "@veglem/screact";
 import {Img} from "../Image/Image";
 import "./TagsFilter.sass"
+import {Modal} from "../Modal/Modal";
+import {DeleteTagDialog} from "../DeleteTagDialog/DeleteTagDialog";
+import {RenameTagModal} from "../RenameTagModal/RenameTagModal";
 
 type TagsFilterProps = {
     tags: string[],
@@ -11,6 +14,8 @@ type TagsFilterProps = {
 type TagsFilterState = {
     expanded: boolean,
     menuOpen: boolean,
+    deleteTagDialogOpen: boolean,
+    renameTagModalOpen: boolean,
     selectedTag: string
 }
 
@@ -18,8 +23,12 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
     state = {
         expanded: false,
         menuOpen: false,
+        deleteTagDialogOpen: false,
+        renameTagModalOpen: false,
         selectedTag: null
     }
+
+    private menuRef
 
     componentDidMount() {
         document.addEventListener('click', this.handleClickOutside, false);
@@ -59,6 +68,9 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
             menuOpen: true
         }))
 
+        this.menuRef.style.left = e.target.offsetLeft + "px"
+        this.menuRef.style.top = (e.target.offsetTop - e.target.parentElement.scrollTop + 40) + "px"
+
         return false
     }
 
@@ -66,6 +78,41 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
         console.log("deleteTag")
         console.log(this.state.selectedTag)
         // TODO
+
+    }
+
+    renameTag = () => {
+        console.log("renameTag")
+        console.log(this.state.selectedTag)
+        // TODO
+    }
+
+    openDeleteTagModalDialog = () => {
+        this.setState(state => ({
+            ...state,
+            deleteTagDialogOpen: true
+        }))
+    }
+
+    closeDeleteTagDialog = () => {
+        this.setState(state => ({
+            ...state,
+            deleteTagDialogOpen: false
+        }))
+    }
+
+    openRenameTagModal= () => {
+        this.setState(state => ({
+            ...state,
+            renameTagModalOpen: true
+        }))
+    }
+
+    closeRenameTagModal = () => {
+        this.setState(state => ({
+            ...state,
+            renameTagModalOpen: false
+        }))
     }
 
     render() {
@@ -73,17 +120,30 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
 
         return (
             <div className="filters-wrapper">
-                <div className="filters-panel">
+
+                <Modal
+                    open={this.state.deleteTagDialogOpen}
+                    handleClose={this.closeDeleteTagDialog}
+                    content={<DeleteTagDialog onSuccess={this.deleteTag} handleClose={this.closeDeleteTagDialog} />}
+                />
+                
+                <Modal
+                    open={this.state.renameTagModalOpen}
+                    handleClose={this.closeRenameTagModal}
+                    content={<RenameTagModal handleClose={this.closeRenameTagModal} />}
+                />
+                
+                <div className="filters-panel" onscroll={this.closeMenu}>
                     <div className="tag-icon-container">
                         <Img src="tag.svg" className="icon"/>
                     </div>
 
-                    <div className={"tag-options-menu " + (this.state.menuOpen ? "open" : "")}>
-                        <div className="tag-options-menu__option" onclick={this.deleteTag}>
+                    <div className={"tag-options-menu " + (this.state.menuOpen ? "open" : "")} ref={ref => this.menuRef = ref}>
+                        <div className="tag-options-menu__option" onclick={this.openRenameTagModal}>
                             <Img src="edit.svg"/>
                             <span>Изменить</span>
                         </div>
-                        <div className="tag-options-menu__option" onclick={this.deleteTag}>
+                        <div className="tag-options-menu__option" onclick={this.openDeleteTagModalDialog}>
                             <Img src="trash.svg"/>
                             <span>Удалить</span>
                         </div>
@@ -95,7 +155,6 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
                             {tag}
                         </div>
                     ))}
-
 
                     {this.props.tags.length > 10 && !this.state.expanded ? <div className="tag"
                                                                                 onclick={this.toggleExpanded}>+{(this.props.tags.length - 10).toString()}</div> : ""}

@@ -3,6 +3,7 @@ import {AppDispatcher} from '../dispatcher';
 import {AppNotesStore} from "./NotesStore";
 
 export const NoteStoreActions = {
+    CLEAR_NOTE: "CLEAR_NOTE",
     SET_NOTE: "SET_NOTE",
     CHANGE_TITLE: 'CHANGE_TITLE',
     CHANGE_CONTENT: 'CHANGE_CONTENT',
@@ -54,6 +55,9 @@ class NoteStore extends BaseStore<NoteStoreState> {
                     break;
                 case NoteStoreActions.CHANGE_CONTENT:
                     this.changeContent(action.payload);
+                    break
+                case NoteStoreActions.CLEAR_NOTE:
+                    this.clearNote();
                     break
             }
         });
@@ -110,17 +114,13 @@ class NoteStore extends BaseStore<NoteStoreState> {
         }
     }
 
-    private openDropdown = () => {
+    private clearNote = () => {
         this.SetState(state => ({
             ...state,
-            dropdownOpen: true
-        }))
-    }
-
-    private closeDropdown = () => {
-        this.SetState(state => ({
-            ...state,
-            dropdownOpen: false
+            note: {
+                title: '',
+                blocks: Array<any>()
+            }
         }))
     }
 }

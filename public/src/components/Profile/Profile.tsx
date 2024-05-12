@@ -3,7 +3,7 @@ import './Profile.sass';
 import {Button} from '../Button/Button';
 import {AppUserStore, UserActions, UserStoreState} from '../../modules/stores/UserStore';
 import {AppDispatcher} from '../../modules/dispatcher';
-import {UpdatePasswordForm} from '../UpdatePassword/UpdatePassword';
+import {UpdatePasswordForm} from '../UpdatePasswordModal/UpdatePasswordModal';
 import {Link} from '../Link/Link';
 import {Modal} from '../Modal/Modal';
 import {ToggleButton} from '../ToggleButton/ToggleButton';

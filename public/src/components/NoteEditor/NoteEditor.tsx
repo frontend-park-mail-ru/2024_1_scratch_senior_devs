@@ -137,6 +137,12 @@ export class NoteEditor extends ScReact.Component<any, any> {
         AppDispatcher.dispatch(NotesActions.CLOSE_FULLSCREEN)
     }
 
+    deleteNote = () => {
+        AppDispatcher.dispatch(NotesActions.DELETE_NOTE, {
+            id: this.state.selectedNote.id
+        });
+    }
+
     render() {
         const isSubNote = this.state.selectedNote?.parent != "00000000-0000-0000-0000-000000000000" ? "hidden" : ""
         const isOwner = this.state.selectedNote?.owner_id == AppUserStore.state.user_id
@@ -148,7 +154,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
                 <Modal open={this.state.deleteNoteModalOpen}
                        handleClose={this.closeDeleteModalDialog}
-                       content={<DeleteNoteDialog handleClose={this.closeDeleteModalDialog}/>}
+                       content={<DeleteNoteDialog onSuccess={this.deleteNote} handleClose={this.closeDeleteModalDialog}/>}
                 />
 
                 <Modal open={this.state.inviteUserModalOpen}
