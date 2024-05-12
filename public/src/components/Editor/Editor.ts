@@ -182,7 +182,7 @@ export class Editor {
             subtree: true
         });
 
-        // this.editable.focus()
+        // this.editable.focus() // Вызывает на мобилке проблемы с фокусом при закрытии своей заметки
         this.editable.click()
     }
 
