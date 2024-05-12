@@ -246,7 +246,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             // TODO: синхронизация между девайсами (сверять id девайса)
             // А нужна ли вообще проверка ?
             if (data.username == AppUserStore.state.username) {
-                // return
+                return
             }
             
             if (data.type == "opened") {
