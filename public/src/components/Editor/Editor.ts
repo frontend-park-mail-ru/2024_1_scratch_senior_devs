@@ -182,7 +182,7 @@ export class Editor {
             subtree: true
         });
 
-        this.editable.focus()
+        // this.editable.focus()
         this.editable.click()
     }
 
