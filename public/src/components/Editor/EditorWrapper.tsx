@@ -8,7 +8,6 @@ import {Tippy} from "../Tippy/Tippy";
 import {YoutubeDialogForm} from "../YoutubeDialog/YoutubeDialog";
 import {Modal} from "../Modal/Modal";
 import {isEqual} from "@veglem/screact/dist/isEqual";
-import {AppNotesStore} from "../../modules/stores/NotesStore";
 
 window['mobileCheck'] = function() {
     let check = false;
@@ -73,8 +72,6 @@ export class EditorWrapper extends Component<any, EditorState> {
                 this.props.open
             );
         }
-
-        console.log(this.props.open)
     }
 
     syncTitle = (title:string) => {
