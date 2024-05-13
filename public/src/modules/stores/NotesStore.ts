@@ -13,6 +13,7 @@ export type NotesStoreState = {
     selectedNote: NoteType,
     selectedNoteCollaborators: CollaboratorType[],
     tags: string[],
+    selectedTags: string[],
     query: string,
     offset: number,
     count: number,
@@ -140,8 +141,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
         console.log("exit")
         AppNotesStore.ClearCallbacks()
         AppNoteStore.ClearCallbacks()
-
-
 
         this.SetState(state => ({
             ...state,
@@ -613,15 +612,21 @@ class NotesStore extends BaseStore<NotesStoreState> {
         this.state.selectedNote.data.content = content
     }
 
-    deleteTag = async (tag:string) => {
+    deleteTag = async (tagname:string) => {
         try {
-            const {status, csrf} = await AppTagRequests.DeleteTag(tag, AppUserStore.state.JWT, AppUserStore.state.csrf)
+            const {status, csrf} = await AppTagRequests.DeleteTag(tagname, AppUserStore.state.JWT, AppUserStore.state.csrf)
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 
             if (status == 204) {
                 AppToasts.success("Тэг успешно удален")
                 await this.fetchTags()
+
+                this.SetState(state => ({
+                    ...state,
+                    selectedTags: state.selectedTags.filter(tag => tag != tagname)
+                }))
+
                 await this.fetchNotes(true)
 
                 if (this.state.selectedNote) {

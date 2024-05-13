@@ -57,6 +57,7 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
     closeMenu = () => {
         this.setState(state => ({
             ...state,
+            selectedTag: null,
             menuOpen: false
         }))
     }
@@ -147,7 +148,7 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
                     </div>
 
                     {tags.map(tag => (
-                        <div className={"tag " + (this.props.selectedTags.includes(tag) ? "selected" : "")}
+                        <div className={"tag " + (this.props.selectedTags.includes(tag) || this.state.selectedTag == tag ? "selected" : "")}
                              onclick={() => this.props.selectTag(tag)} oncontextmenu={(e) => this.onTagRightClick(e, tag)}>
                             {tag}
                         </div>
