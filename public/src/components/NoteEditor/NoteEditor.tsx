@@ -24,6 +24,9 @@ export class NoteEditor extends ScReact.Component<any, any> {
         content: undefined,
         deleteNoteModalOpen: false,
         inviteUserModalOpen: false,
+        tagsModalOpen: false,
+        emojiModalOpen: false,
+        backgroundModalOpen: false,
         fullScreen: false,
         favourite: false // TODO
     };
@@ -118,9 +121,6 @@ export class NoteEditor extends ScReact.Component<any, any> {
     }
 
     changeBackground = (bg:string) => {
-        
-        
-
         document.getElementById(AppNotesStore.state.selectedNote.id).style.backgroundImage = bg;
 
         this.noteEditorHeader.style.background = bg
@@ -138,6 +138,48 @@ export class NoteEditor extends ScReact.Component<any, any> {
         AppDispatcher.dispatch(NotesActions.DELETE_NOTE, {
             id: this.state.selectedNote.id
         });
+    }
+
+    openTagsModal = () => {
+        this.setState(state => ({
+            ...state,
+            tagsModalOpen: true
+        }))
+    }
+
+    closeTagsModal = () => {
+        this.setState(state => ({
+            ...state,
+            tagsModalOpen: false
+        }))
+    }
+
+    openEmojiModal = () => {
+        this.setState(state => ({
+            ...state,
+            emojiModalOpen: true
+        }))
+    }
+
+    closeEmojiModal = () => {
+        this.setState(state => ({
+            ...state,
+            emojiModalOpen: false
+        }))
+    }
+
+    openBackgroundModal = () => {
+        this.setState(state => ({
+            ...state,
+            backgroundModalOpen: true
+        }))
+    }
+
+    closeBackgroundModal = () => {
+        this.setState(state => ({
+            ...state,
+            backgroundModalOpen: false
+        }))
     }
 
     render() {
@@ -159,6 +201,27 @@ export class NoteEditor extends ScReact.Component<any, any> {
                        content={<InviteUserModal handleClose={this.closeInviteUserModal} open={this.state.inviteUserModalOpen}/>}
                 />
 
+                <Modal open={this.state.tagsModalOpen}
+                       handleClose={this.closeTagsModal}
+                       reset={false}
+                       title="Изменить тэги"
+                       content={<TagList tags={this.state.selectedNote?.tags} onChange={this.props.onChangeTags} />}
+                />
+
+                <Modal open={this.state.emojiModalOpen}
+                       handleClose={this.closeEmojiModal}
+                       reset={false}
+                       title="Изменить иконку"
+                       content={<EmojiPicker onChange={this.props.onChangeIcon} icon={this.state.selectedNote?.icon} />}
+                />
+
+                <Modal open={this.state.backgroundModalOpen}
+                       handleClose={this.closeBackgroundModal}
+                       reset={false}
+                       title="Изменить шапку"
+                       content={<BackgroundPicker onChange={this.changeBackground} />}
+                />
+
                 <div className="note-background" ref={ref => this.noteEditorHeader = ref}>
 
                 </div>
@@ -173,15 +236,41 @@ export class NoteEditor extends ScReact.Component<any, any> {
                     </div>
 
                     <div className={"tag-list-wrapper " + (isSubNote ? "hidden" : "")}>
-                        {isOwner ? <TagList tags={this.state.selectedNote?.tags} onChange={this.props.onChangeTags}/> : ""}
+                        {isOwner ?
+                            <Tooltip
+                                showHoverTooltip={false}
+                                icon="tag.svg"
+                                label="Тэги"
+                                content={<TagList tags={this.state.selectedNote?.tags} onChange={this.props.onChangeTags} />}
+                            />
+                            : ""
+                        }
                     </div>
 
                     <div className={"emoji-picker-wrapper " + (isSubNote ? "hidden" : "")}>
-                        {isOwner ? <EmojiPicker onChange={this.props.onChangeIcon} icon={this.state.selectedNote?.icon} /> : ""}
+                        {isOwner ?
+                            <Tooltip
+                                showHoverTooltip={false}
+                                icon={this.state.selectedNote?.icon ? this.state.selectedNote?.icon : "emoji.svg"}
+                                iconFromUnicode={this.state.selectedNote?.icon}
+                                label="Иконка"
+                                content={<EmojiPicker onChange={this.props.onChangeIcon} icon={this.state.selectedNote?.icon} />}
+                            />
+                            : ""
+                        }
                     </div>
 
                     <div className={"background-picker-wrapper " + (isSubNote ? "hidden" : "")}>
-                        {isOwner ? <BackgroundPicker onChange={this.changeBackground} /> : ""}
+                        {isOwner ?
+                            <Tooltip
+                                showHoverTooltip={false}
+                                icon="image.svg"
+                                label="Шапка"
+                                content={<BackgroundPicker onChange={this.changeBackground} />}
+                            />
+                            :
+                            ""
+                        }
                     </div>
 
                     <div className="empty">
@@ -189,7 +278,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
                     </div>
 
                     <div className="note-save-indicator" ref={ref => this.savingLabelRef = ref}>
-                        <Tooltip icon="check.svg" label="Сохранено"/>
+                        <Tooltip icon="check.svg" showHoverTooltip={true} hoverTooltip="Сохранено"/>
                     </div>
 
                     <div className="collaborators-container">
@@ -197,32 +286,57 @@ export class NoteEditor extends ScReact.Component<any, any> {
                     </div>
 
                     <div className={isSubNote ? "hidden" : ""}>
-                        <Tooltip label={this.state.favourite ? "Удалить из избранного" : "В избранное"} className="add-to-favorite-btn"
+                        <Tooltip hoverTooltip={this.state.favourite ? "Удалить из избранного" : "В избранное"}
+                                 showHoverTooltip={true}
+                                 className="add-to-favorite-btn"
                                  icon={this.state.favourite ? "star-filled.svg" : "star.svg"}
                                  onClick={this.addToFavoriteBtn}/>
                     </div>
 
                     <div className={!isSubNote ? "hidden" : ""}>
-                        <Tooltip label="Вернуться" icon="arrow-up.svg" onClick={this.openParentNote}/>
+                        <Tooltip
+                            hoverTooltip="Вернуться"
+                            showHoverTooltip={true}
+                            icon="arrow-up.svg"
+                            onClick={this.openParentNote}
+                        />
                     </div>
 
-                    {isOwner ? <NoteMenu note={this.state.selectedNote} deleteNote={this.openDeleteNoteModal} inviteUser={this.openInviteUserModal}/> : ""}
-
-                    {!this.state.fullScreen ?
-                        <Tooltip icon="full-screen-open.svg" label="На весь экран" className="toggle-fullscreen-btn"
-                                 onClick={this.openFullScreen}/>
-                        :
-                        <Tooltip icon="full-screen-close.svg" label="Уменьшить" className="toggle-fullscreen-btn"
-                                 onClick={this.closeFullScreen}/>
+                    {isOwner ?
+                        <NoteMenu
+                            note={this.state.selectedNote}
+                            deleteNote={this.openDeleteNoteModal}
+                            inviteUser={this.openInviteUserModal}
+                            openTagList={this.openTagsModal}
+                            openEmojiList={this.openEmojiModal}
+                            openBackgroundList={this.openBackgroundModal}
+                        /> : ""
                     }
 
-                    <Tooltip icon="close.svg" label="Закрыть" className="close-editor-btn" onClick={this.closeEditor}/>
+                    {!this.state.fullScreen ?
+                        <Tooltip
+                            icon="full-screen-open.svg"
+                            hoverTooltip="На весь экран"
+                            showHoverTooltip={true}
+                            className="toggle-fullscreen-btn"
+                            onClick={this.openFullScreen}/>
+                        :
+                        <Tooltip
+                            icon="full-screen-close.svg"
+                            showHoverTooltip={true}
+                            hoverTooltip="Уменьшить"
+                            className="toggle-fullscreen-btn"
+                            onClick={this.closeFullScreen}/>
+                    }
+
+                    <Tooltip icon="close.svg" showHoverTooltip={true} hoverTooltip="Закрыть" className="close-editor-btn" onClick={this.closeEditor}/>
 
                 </div>
 
                 <div className="bottom-panel">
 
                     <EditorWrapper
+                        open={this.state.selectedNote != null}
                         onChangeTitle={(value: string) => {
                             this.props.onChangeTitle(value);
                             this.onChangeNote();

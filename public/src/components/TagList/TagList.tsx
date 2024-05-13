@@ -7,15 +7,13 @@ import {AppDispatcher} from "../../modules/dispatcher";
 
 type TagListState = {
     selectedTag: string | null,
-    value: string,
-    open: boolean
+    value: string
 }
 
 export class TagList extends ScReact.Component<any, TagListState> {
     state = {
         selectedTag: null,
         value: "",
-        open: false,
         tags: [...AppNotesStore.state.tags]
     }
 
@@ -24,22 +22,13 @@ export class TagList extends ScReact.Component<any, TagListState> {
     private MAX_TAG_COUNT = 10
 
     private inputRef
-    private openBtnRef
 
     componentDidMount() {
-        document.addEventListener('click', this.handleClickOutside, false);
         AppNotesStore.SubscribeToStore(this.updateState)
     }
 
     componentWillUnmount() {
-        document.removeEventListener('click', this.handleClickOutside);
         AppNotesStore.UnSubscribeToStore(this.updateState)
-    }
-
-    handleClickOutside = (e) => {
-        if (this.state.open && !this.openBtnRef.contains(e.target) && !e.target.matches(".tags-wrapper,.tags-wrapper *") && !e.target.matches(".note-editor *")) {
-            this.toggleOpen();
-        }
     }
 
     updateState = (store:NotesStoreState) => {
@@ -59,7 +48,7 @@ export class TagList extends ScReact.Component<any, TagListState> {
     onInput = (e) => {
         if (e.key == "Backspace") {
             if (this.state.selectedTag) {
-                this.deleteTag(this.state.selectedTag)
+                this.removeTag(this.state.selectedTag)
                 this.setState(state => ({
                     ...state,
                     selectedTag: null
@@ -114,29 +103,18 @@ export class TagList extends ScReact.Component<any, TagListState> {
     }
 
     addTag = (tagname:string) => {
-        
-        
         AppDispatcher.dispatch(NotesActions.ADD_TAG_TO_NOTE, tagname)
         this.props.onChange([...this.props.tags, tagname])
     }
 
-    deleteTag = (tagname:string) => {
+    removeTag = (tagname:string) => {
         AppDispatcher.dispatch(NotesActions.REMOVE_TAG_FROM_NOTE, tagname)
         this.props.onChange(this.props.tags.filter(tag => tag != tagname))
     }
 
-    toggleOpen = () => {
-        
-        this.setState(state => ({
-            ...state,
-            open: !state.open
-        }))
-    }
-
     handleSelectTag = (tagname:string) => {
         if (this.props.tags.includes(tagname)) {
-            // TODO
-            this.deleteTag(tagname)
+            this.removeTag(tagname)
         } else {
             this.addTag(tagname)
         }
@@ -150,44 +128,36 @@ export class TagList extends ScReact.Component<any, TagListState> {
         }
 
         return (
-            <div className={"tag-list " + (this.state.open ? "open" : "")}>
+            <div className="tags-wrapper">
 
-                <div className="open-btn" onclick={this.toggleOpen} ref={ref => this.openBtnRef = ref}>
-                    <Img src="tag.svg" className="icon" />
-                    <span>Тэги</span>
-                </div>
+                <form className="tag-items" onsubmit={(e) => e.preventDefault()}>
 
-                <div className="tags-wrapper">
-
-                    <form className="tag-items" onsubmit={(e) => e.preventDefault()}>
-
-                        {this.props.tags.map(tag => (
-                            <div className={"tag-item " + (this.state.selectedTag == tag ? "selected" : "")}>
-                                <span>{tag}</span>
-                                <Img src="delete.svg" className="delete-tag-btn" onClick={() => this.deleteTag(tag)}/>
-                            </div>
-                        ))}
-
-                        <div className="hidden">
-                            <span>Hidden</span>
+                    {this.props.tags.map(tag => (
+                        <div className={"tag-item " + (this.state.selectedTag == tag ? "selected" : "")}>
+                            <span>{tag}</span>
+                            <Img src="delete.svg" className="delete-tag-btn" onClick={() => this.removeTag(tag)}/>
                         </div>
+                    ))}
 
-                        <input type="text" placeholder="Введите тэг" value={this.state.value} oninput={this.setValue} onkeyup={this.onInput} ref={ref => this.inputRef = ref}/>
-
-                    </form>
-
-                    <div className="global-tags-wrapper">
-                        <h3>Все тэги</h3>
-                        <div className="global-tags-container">
-                            {this.state.tags.map(tag => (
-                                <div className={"tag-item " + (this.props.tags.includes(tag) ? "selected" : "")} onclick={() => this.handleSelectTag(tag)}>
-                                    <span>{tag}</span>
-                                </div>
-                            ))}
-                        </div>
+                    <div className="hidden">
+                        <span>Hidden</span>
                     </div>
 
+                    <input type="text" placeholder="Введите тэг" value={this.state.value} oninput={this.setValue} onkeyup={this.onInput} ref={ref => this.inputRef = ref}/>
+
+                </form>
+
+                <div className="global-tags-wrapper">
+                    <h3>Все тэги</h3>
+                    <div className="global-tags-container">
+                        {this.state.tags.map(tag => (
+                            <div className={"tag-item " + (this.props.tags.includes(tag) ? "selected" : "")} onclick={() => this.handleSelectTag(tag)}>
+                                <span>{tag}</span>
+                            </div>
+                        ))}
+                    </div>
                 </div>
+
             </div>
         )
     }

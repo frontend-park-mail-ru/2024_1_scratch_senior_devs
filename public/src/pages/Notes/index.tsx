@@ -183,7 +183,6 @@ export class NotesPage extends ScReact.Component<any, any> {
 
         if (selectedNote) {
             const noteEmoji = selectedNote.querySelector('.note-icon');
-
             noteEmoji.innerHTML = icon ? unicodeToChar(icon) : ""
             AppDispatcher.dispatch(NotesActions.UPDATE_NOTE_ICON, icon)
         }
@@ -198,6 +197,8 @@ export class NotesPage extends ScReact.Component<any, any> {
     }
 
     onChangeTags = (tags:string[]) => {
+        console.log("onChangeTags")
+        console.log(tags)
         AppNotesStore.state.selectedNote.tags = tags
         AppDispatcher.dispatch(NotesActions.SYNC_NOTES)
     }

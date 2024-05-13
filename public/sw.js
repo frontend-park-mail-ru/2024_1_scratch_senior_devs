@@ -48,3 +48,4 @@ self.addEventListener('fetch', (event) => {
         tryNetwork(event.request).catch(() => fromCache(event.request)),
     );
 });
+

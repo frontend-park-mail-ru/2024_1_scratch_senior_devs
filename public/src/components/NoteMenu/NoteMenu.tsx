@@ -43,6 +43,21 @@ export class NoteMenu extends ScReact.Component<any, any> {
         this.props.inviteUser()
     }
 
+    tagList = () => {
+        this.toggleMenu()
+        this.props.openTagList()
+    }
+
+    emojiList = () => {
+        this.toggleMenu()
+        this.props.openEmojiList()
+    }
+
+    backgroundList = () => {
+        this.toggleMenu()
+        this.props.openBackgroundList()
+    }
+
     render() {
         return (
             <div className={"note-menu " + (this.state.open ? "open" : "")}>
@@ -73,15 +88,15 @@ export class NoteMenu extends ScReact.Component<any, any> {
                         <Img src={this.props.note.favourite ? "star-filled.svg" : "star.svg"} className="icon"/>
                         <span>{this.props.note.favourite ? "Удалить из избранного" : "В избранное"}</span>
                     </div>
-                    <div className="options-item mobile-option">
+                    <div className="options-item mobile-option" onclick={this.tagList}>
                         <Img src="tag.svg" className="icon"/>
                         <span>Изменить тэги</span>
                     </div>
-                    <div className="options-item mobile-option">
+                    <div className="options-item mobile-option" onclick={this.emojiList}>
                         <Img src="emoji.svg" className="icon"/>
                         <span>Изменить иконку</span>
                     </div>
-                    <div className="options-item mobile-option">
+                    <div className="options-item mobile-option" onclick={this.backgroundList}>
                         <Img src="image.svg" className="icon"/>
                         <span>Изменить шапку</span>
                     </div>

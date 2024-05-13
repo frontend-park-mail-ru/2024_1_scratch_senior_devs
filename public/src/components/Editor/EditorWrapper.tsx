@@ -63,21 +63,18 @@ export class EditorWrapper extends Component<any, EditorState> {
         this.syncTitle(store.note.title)
 
         if (!isEqual(this.editor?.getSchema(), AppNoteStore.state.note.blocks)) {
-            
             this.self.innerHTML = ""
             this.editor = new Editor(
                 store.note.blocks,
                 this.self,
                 {open: this.openDropdown, close: this.closeDropdown},
                 this.props.onChangeContent,
-                {open: this.openTippy, close: this.closeTippy}
+                {open: this.openTippy, close: this.closeTippy},
+                this.props.open
             );
         }
 
-        // this.setState(state => ({
-        //     ...state,
-        //     dropdownOpen: store.dropdownOpen
-        // }))
+        console.log(this.props.open)
     }
 
     syncTitle = (title:string) => {

@@ -18,18 +18,22 @@ export class Editor {
     private dropdownObserver: MutationObserver
     private dropdownCallbacks: {open: (elem: HTMLElement) => void, close: () => void}
     private tippyCallbacks: {open: (elem: HTMLElement) => void, close: () => void}
+    private open
 
     constructor(note: PluginProps[],
                 parent: HTMLElement,
                 dropdown: {open: (elem: HTMLElement) => void, close: () => void },
                 onChange: (schema: PluginProps[]) => void,
-                tippy: {open: (elem: HTMLElement) => void, close: () => void}) {
+                tippy: {open: (elem: HTMLElement) => void, close: () => void},
+                open: boolean) {
 
         // TODO: при наборе символов в поисковую строку фокусится редактор заметки (отключить)
 
         this.dropdownCallbacks = dropdown;
         this.tippyCallbacks = tippy;
         this.addPlugins();
+
+        this.open = open
 
         this.editable = document.createElement('div');
         this.editable.contentEditable = "true";
@@ -182,7 +186,7 @@ export class Editor {
             subtree: true
         });
 
-        // this.editable.focus() // Вызывает на мобилке проблемы с фокусом при закрытии своей заметки
+        this.open && this.editable.focus() // Вызывает на мобилке проблемы с фокусом при закрытии своей заметки
         this.editable.click()
     }
 

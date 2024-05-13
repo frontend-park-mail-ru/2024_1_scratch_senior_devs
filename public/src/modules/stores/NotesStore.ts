@@ -174,6 +174,15 @@ class NotesStore extends BaseStore<NotesStoreState> {
         });
     }
 
+    syncSelectedNote = () => {
+        if (this.state.selectedNote) {
+            this.SetState(state => ({
+                ...state,
+                selectedNote: this.state.notes.find(note => note.id == this.state.selectedNote.id)
+            }))
+        }
+    }
+
     closeNote () {
         localStorage.setItem("selectedNote", null)
 
@@ -187,6 +196,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             selectedNoteCollaborators: []
         }));
 
+        AppDispatcher.dispatch(NoteStoreActions.CLEAR_NOTE)
     }
 
     async fetchNote (id:string) {
@@ -295,8 +305,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     async openNote(id:string) {
-        
-
         try {
             const note = await AppNoteRequests.Get(id, AppUserStore.state.JWT);
 
@@ -510,8 +518,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 
-            
-
             if (status == 200) {
                 this.SetState(state => ({
                     ...state,
@@ -523,7 +529,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             } else if (status == 409) {
                 AppToasts.info('Максимальное кол-во тэгов - 10');
             }
-        } catch {
+        } catch (e) {
             AppToasts.error('Что-то пошло не так');
         }
     }
@@ -573,13 +579,10 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     openFullScreen = () => {
-        
-        
         this.SetState(state => ({
             ...state,
             fullScreen: true
         }))
-        
     }
 
     closeFullScreen = () => {
@@ -590,7 +593,16 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     updateNoteIcon = (icon:string) => {
-        this.state.selectedNote.icon = icon
+        // TODO: отпрвлять запрос на апи
+
+        const updatedNote = this.state.selectedNote
+        updatedNote.icon = icon
+
+        this.SetState(state => ({
+            ...state,
+            selectedNote: updatedNote
+        }))
+
         this.syncNotes()
     }
 
@@ -616,6 +628,11 @@ class NotesStore extends BaseStore<NotesStoreState> {
             if (status == 204) {
                 AppToasts.success("Тэг успешно удален")
                 await this.fetchTags()
+                await this.fetchNotes(true)
+
+                if (this.state.selectedNote) {
+                    this.syncSelectedNote()
+                }
             }
         }
         catch {
