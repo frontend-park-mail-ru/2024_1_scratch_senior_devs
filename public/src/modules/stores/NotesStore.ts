@@ -234,8 +234,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
         this.ws.onMessage((event) => {
             let data = JSON.parse(event.data)
 
-            // TODO: синхронизация между девайсами (сверять id девайса)
-            // А нужна ли вообще проверка ?
+            // TODO: синхронизация между девайсами (сверять id девайса / вебсокета)
+            // А нужна ли вообще проверка ? // Нужна, иначе курсор скачет // С кем ты разговариваешь?
             if (data.username == AppUserStore.state.username) {
                 // return
             }

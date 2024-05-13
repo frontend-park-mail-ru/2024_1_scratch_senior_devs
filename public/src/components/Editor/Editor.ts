@@ -186,8 +186,7 @@ export class Editor {
             subtree: true
         });
 
-        console.log(this.open) // TODO: проверить на проде
-        this.open && this.editable.focus() // Вызывает на мобилке проблемы с фокусом при закрытии своей заметки
+        this.open && this.editable.focus()
         this.editable.click()
     }
 

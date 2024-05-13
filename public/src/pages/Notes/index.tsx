@@ -89,7 +89,7 @@ export class NotesPage extends ScReact.Component<any, any> {
                 document.title = parseNoteTitle(store.selectedNote.data.title);
 
                 if (this.state.selectedNote) {
-                    this.updatePreviewNoteTitle(store.selectedNote.data.title)
+                    // this.updatePreviewNoteTitle(store.selectedNote.data.title)
                 }
             }
 
@@ -197,8 +197,6 @@ export class NotesPage extends ScReact.Component<any, any> {
     }
 
     onChangeTags = (tags:string[]) => {
-        console.log("onChangeTags")
-        console.log(tags)
         AppNotesStore.state.selectedNote.tags = tags
         AppDispatcher.dispatch(NotesActions.SYNC_NOTES)
     }
