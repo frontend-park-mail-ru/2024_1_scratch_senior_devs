@@ -3,7 +3,7 @@ import './Note.sass';
 import {formatDate, parseNoteTitle, truncate, unicodeToChar} from "../../modules/utils";
 import {NoteType} from "../../utils/types";
 
-const MAX_NOTE_CONTENT_PREVIEW_LENGTH = 25;
+const MAX_NOTE_CONTENT_PREVIEW_LENGTH = 20;
 const MAX_TAGS_PREVIEW_COUNT = 2;
 
 type NoteProps = {
