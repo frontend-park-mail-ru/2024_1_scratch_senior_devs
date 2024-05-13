@@ -6,7 +6,7 @@ import {AppToasts} from '../toasts';
 import {CollaboratorType, NoteDataType, NoteType} from "../../utils/types";
 import {WebSocketConnection} from "../websocket";
 import {insertBlockPlugin} from "../../components/Editor/Plugin";
-import {NoteStoreActions} from "./NoteStore";
+import {AppNoteStore, NoteStoreActions} from "./NoteStore";
 
 export type NotesStoreState = {
     notes: NoteType[],
@@ -137,12 +137,25 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     exit () {
+        console.log("exit")
+        AppNotesStore.ClearCallbacks()
+        AppNoteStore.ClearCallbacks()
+
+
+
         this.SetState(state => ({
             ...state,
+            notes: [],
+            tags: [],
+            selectedTags: [],
+            selectedNote: null,
+            selectedNoteCollaborators: [],
             query: '',
             offset: 0,
-            selectedNote: undefined,
-            notes: []
+            count: 10,
+            fetching: false,
+            noteNotFound: false,
+            fullScreen: false
         }));
     }
 

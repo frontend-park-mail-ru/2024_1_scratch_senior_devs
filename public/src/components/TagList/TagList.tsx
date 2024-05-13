@@ -24,10 +24,12 @@ export class TagList extends ScReact.Component<any, TagListState> {
     private inputRef
 
     componentDidMount() {
+        console.log("componentDidMount")
         AppNotesStore.SubscribeToStore(this.updateState)
     }
 
     componentWillUnmount() {
+        console.log("UnSubscribeToStore")
         AppNotesStore.UnSubscribeToStore(this.updateState)
     }
 

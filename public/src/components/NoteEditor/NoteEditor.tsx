@@ -39,6 +39,11 @@ export class NoteEditor extends ScReact.Component<any, any> {
         AppNoteStore.AddSaver(this.saveNote);
     }
 
+    componentWillUnmount() {
+        AppNotesStore.UnSubscribeToStore(this.updateState);
+        AppNoteStore.RemoveSavers(() => this.saveNote);
+    }
+
     saveNote = (data) => {
         if (this.state.selectedNote) {
             AppDispatcher.dispatch(NotesActions.SAVE_NOTE, data);

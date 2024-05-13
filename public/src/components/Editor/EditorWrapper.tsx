@@ -58,6 +58,11 @@ export class EditorWrapper extends Component<any, EditorState> {
         AppNoteStore.SubscribeToStore(this.updateState)
     }
 
+    componentWillUnmount() {
+        console.log("componentWillUnmount")
+        AppNoteStore.UnSubscribeToStore(this.updateState)
+    }
+
     updateState = (store:NoteStoreState) => {
         this.syncTitle(store.note.title)
 

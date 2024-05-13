@@ -55,6 +55,13 @@ export class NotesPage extends ScReact.Component<any, any> {
         }
     }
 
+    componentWillUnmount() {
+        console.log("UnSubscribeToStore")
+        AppDispatcher.dispatch(NotesActions.EXIT);
+        AppNotesStore.UnSubscribeToStore(this.updateState);
+        document.body.classList.remove('locked');
+    }
+
     updateNotesTitles = () => {
         setTimeout(()=> {
             const notes = AppNotesStore.state.notes;
@@ -73,11 +80,6 @@ export class NotesPage extends ScReact.Component<any, any> {
         }, 10);
     };
 
-    componentWillUnmount() {
-        AppDispatcher.dispatch(NotesActions.EXIT);
-        AppNotesStore.UnSubscribeToStore(this.updateState);
-        document.body.classList.remove('locked');
-    }
 
     updateState = (store:NotesStoreState) => {
         this.setState(state => {
