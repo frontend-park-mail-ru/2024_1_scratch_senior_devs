@@ -25,7 +25,8 @@ export class Editor {
                 dropdown: {open: (elem: HTMLElement) => void, close: () => void },
                 onChange: (schema: PluginProps[]) => void,
                 tippy: {open: (elem: HTMLElement) => void, close: () => void},
-                open: boolean) {
+                open: boolean,
+                toast) {
 
         // TODO: при наборе символов в поисковую строку фокусится редактор заметки (отключить)
 
@@ -187,8 +188,10 @@ export class Editor {
             subtree: true
         });
 
-        this.open && this.editable.focus()
-        this.open && this.editable.click()
+
+        toast(this.open.toString())
+        // this.open && this.editable.focus()
+        // this.open && this.editable.click()
     }
 
     getSchema = () => {

@@ -8,6 +8,7 @@ import {Tippy} from "../Tippy/Tippy";
 import {YoutubeDialogForm} from "../YoutubeDialog/YoutubeDialog";
 import {Modal} from "../Modal/Modal";
 import {isEqual} from "@veglem/screact/dist/isEqual";
+import {AppToasts} from "../../modules/toasts";
 
 window['mobileCheck'] = function() {
     let check = false;
@@ -74,7 +75,8 @@ export class EditorWrapper extends Component<any, EditorState> {
                 {open: this.openDropdown, close: this.closeDropdown},
                 this.props.onChangeContent,
                 {open: this.openTippy, close: this.closeTippy},
-                this.props.open
+                this.props.open,
+                (value) => AppToasts.info(value)
             );
         }
     }
