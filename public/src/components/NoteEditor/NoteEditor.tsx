@@ -57,6 +57,9 @@ export class NoteEditor extends ScReact.Component<any, any> {
     };
 
     closeEditor = () => {
+        document.getElementById("note-editor-inner").contentEditable = "false"
+
+
         AppDispatcher.dispatch(NotesActions.CLOSE_FULLSCREEN)
 
         // this.saveNote({id: AppNotesStore.state.selectedNote.id, parent: AppNotesStore.state.selectedNote.parent, note: AppNoteStore.state.note});

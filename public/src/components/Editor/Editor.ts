@@ -36,6 +36,7 @@ export class Editor {
         this.open = open
 
         this.editable = document.createElement('div');
+        this.editable.id = "note-editor-inner"
         this.editable.contentEditable = "true";
 
         this.dropdownObserver = new MutationObserver((records) => {
