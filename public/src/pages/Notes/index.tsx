@@ -248,9 +248,9 @@ export class NotesPage extends ScReact.Component<any, any> {
                                 <Img src="plus.svg" className="add-note-icon"/>
                             </div>
                         </div>
-                        {/*{this.state.tags.length == 0 ? <AddTagMenu tags={this.state.tags} /> : ""}*/}
+                        {this.state.tags.length == 0 ? <AddTagMenu tags={this.state.tags} /> : ""}
                     </div>
-                    {this.state.tags.length > 0 ? <TagsFilter tags={this.state.tags} selectedTags={this.state.selectedTags} selectTag={this.selectTag} /> : "" }
+                    {/*{this.state.tags.length > 0 ? <TagsFilter tags={this.state.tags} selectedTags={this.state.selectedTags} selectTag={this.selectTag} /> : "" }*/}
                     <div className="notes-container" onclick={this.handleSelectNote} ref={ref => this.notesContainerRef = ref}>
                         <Loader active={this.state.fetching}/>
                         {
