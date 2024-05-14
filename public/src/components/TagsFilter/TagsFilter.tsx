@@ -140,7 +140,7 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
 
                 <div className="filters-panel" onscroll={this.closeMenu}>
 
-                    <AddTagMenu tags={this.props.tags}/>
+                    {/*<AddTagMenu tags={this.props.tags}/>*/}
 
                     <div className={"tag-options-menu " + (this.state.menuOpen ? "open" : "")}
                          ref={ref => this.menuRef = ref}>
