@@ -613,6 +613,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     deleteTag = async (tagname:string) => {
+        console.log("deleteTag")
+        console.log(tagname)
         try {
             const {status, csrf} = await AppTagRequests.DeleteTag(tagname, AppUserStore.state.JWT, AppUserStore.state.csrf)
 
