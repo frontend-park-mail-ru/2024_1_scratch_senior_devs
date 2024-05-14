@@ -87,8 +87,8 @@ export class AddTagMenu extends ScReact.Component<AddTagMenuProps, any> {
                 </div>
                 <form className={'add-tag__input-container ' + (this.state.open ? 'open' : '')} ref={ref => this.inputContainerRef = ref} onsubmit={this.handleSubmit}>
                     <input type="text" placeholder="Добавить тэг" ref={ref => this.inputRef = ref}/>
-                    <div type="submit" onclick={this.handleSubmit}>
-                        ✓
+                    <div onclick={this.handleSubmit}>
+                        <Img src="daw.svg" />
                     </div>
                 </form>
             </div>
