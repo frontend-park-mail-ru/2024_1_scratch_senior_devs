@@ -653,7 +653,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 
             if (status == 204) {
-                AppToasts.success("Тэг успешно добавлен")
+                // AppToasts.success("Тэг успешно добавлен")
                 await this.fetchTags()
             }
         }
