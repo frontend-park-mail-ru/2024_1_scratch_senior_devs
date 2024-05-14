@@ -1,5 +1,7 @@
 import {ScReact} from "@veglem/screact";
 import "./BackgroundPicker.sass"
+import {AppDispatcher} from "../../modules/dispatcher";
+import {NotesActions} from "../../modules/stores/NotesStore";
 
 export class BackgroundPicker extends ScReact.Component<any, any> {
     private backgroundData = [
@@ -14,12 +16,11 @@ export class BackgroundPicker extends ScReact.Component<any, any> {
     ]
 
     selectBackground = (bg:string) => {
-        // AppDispatcher.dispatch(NotesActions.UPDATE_NOTE_BACKGROUND, bg.id)
-        this.props.onChange(bg)
+        AppDispatcher.dispatch(NotesActions.UPDATE_NOTE_BACKGROUND, bg)
     }
 
     clearBackground = () => {
-        this.props.onChange(null)
+        AppDispatcher.dispatch(NotesActions.UPDATE_NOTE_BACKGROUND, null)
     }
 
     render() {

@@ -120,12 +120,6 @@ export class NoteEditor extends ScReact.Component<any, any> {
         }))
     }
 
-    changeBackground = (bg:string) => {
-        document.getElementById(AppNotesStore.state.selectedNote.id).style.backgroundImage = bg;
-
-        this.noteEditorHeader.style.background = bg
-    }
-
     openFullScreen = () => {
         AppDispatcher.dispatch(NotesActions.OPEN_FULLSCREEN)
     }
@@ -212,21 +206,21 @@ export class NoteEditor extends ScReact.Component<any, any> {
                        handleClose={this.closeEmojiModal}
                        reset={false}
                        title="Изменить иконку"
-                       content={<EmojiPicker onChange={this.props.onChangeIcon} icon={this.state.selectedNote?.icon} />}
+                       content={<EmojiPicker icon={this.state.selectedNote?.icon} />}
                 />
 
                 <Modal open={this.state.backgroundModalOpen}
                        handleClose={this.closeBackgroundModal}
                        reset={false}
                        title="Изменить шапку"
-                       content={<BackgroundPicker onChange={this.changeBackground} />}
+                       content={<BackgroundPicker />}
                 />
 
-                <div className="note-background" ref={ref => this.noteEditorHeader = ref}>
+                <div className="note-background" ref={ref => this.noteEditorHeader = ref} style={`background: ${this.state.selectedNote?.header};`}>
 
                 </div>
 
-                <div className="top-panel">
+                <div className="top-panel" >
 
                     <div className="close-editor-label-wrapper">
                         <div className="close-editor-label-container" onclick={this.closeEditor}>
@@ -242,8 +236,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
                                 icon="tag.svg"
                                 label="Тэги"
                                 content={<TagList tags={this.state.selectedNote?.tags} onChange={this.props.onChangeTags} />}
-                            />
-                            : ""
+                            /> : ""
                         }
                     </div>
 
@@ -254,9 +247,8 @@ export class NoteEditor extends ScReact.Component<any, any> {
                                 icon={this.state.selectedNote?.icon ? this.state.selectedNote?.icon : "emoji.svg"}
                                 iconFromUnicode={this.state.selectedNote?.icon}
                                 label="Иконка"
-                                content={<EmojiPicker onChange={this.props.onChangeIcon} icon={this.state.selectedNote?.icon} />}
-                            />
-                            : ""
+                                content={<EmojiPicker icon={this.state.selectedNote?.icon} />}
+                            /> : ""
                         }
                     </div>
 
@@ -266,10 +258,8 @@ export class NoteEditor extends ScReact.Component<any, any> {
                                 showHoverTooltip={false}
                                 icon="image.svg"
                                 label="Шапка"
-                                content={<BackgroundPicker onChange={this.changeBackground} />}
-                            />
-                            :
-                            ""
+                                content={<BackgroundPicker />}
+                            /> : ""
                         }
                     </div>
 
@@ -333,7 +323,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
                 </div>
 
-                <div className="bottom-panel" >
+                <div className="bottom-panel">
 
                     <EditorWrapper
                         open={this.state.selectedNote != null}

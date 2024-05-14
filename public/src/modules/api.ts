@@ -565,7 +565,54 @@ class NoteRequests {
 
             return URL.createObjectURL(blob);
         }
+    }
 
+    UpdateIcon = async (note_id: string, icon: string,  jwt:string, csrf:string)=> {
+        const response = await Ajax.Post(this.baseUrl + '/' + note_id + '/set_icon/', {
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            },
+            body: {
+                "icon": icon
+            }
+        });
+
+        if (response.status == 200) {
+            response.body.data = JSON.parse(response.body.data)
+
+            return {
+                note: response.body,
+                status: response.status,
+                csrf: response.headers['x-csrf-token']
+            }
+        }
+
+        throw Error(response.body.message);
+    }
+
+    UpdateBackground = async (note_id: string, header: string,  jwt:string, csrf:string)=> {
+        const response = await Ajax.Post(this.baseUrl + '/' + note_id + '/set_header/', {
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            },
+            body: {
+                "header": header
+            }
+        });
+
+        if (response.status == 200) {
+            response.body.data = JSON.parse(response.body.data)
+
+            return {
+                note: response.body,
+                status: response.status,
+                csrf: response.headers['x-csrf-token']
+            }
+        }
+
+        throw Error(response.body.message);
     }
 }
 

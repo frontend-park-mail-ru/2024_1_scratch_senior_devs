@@ -43,7 +43,7 @@ export class Note extends ScReact.Component<NoteProps, any> {
 
     render() {
         return (
-            <div className={'note-container ' + (this.props.selected ? 'selected' : '')} id={this.props.note.id}>
+            <div className={'note-container ' + (this.props.selected ? 'selected' : '')} id={this.props.note.id} style={`background: ${this.props.note.header};`}>
                 <div className="note-title__container">
                     <span className="note-icon">{this.props.note.icon ? unicodeToChar(this.props.note.icon) : ""}</span>
                     <h3 className="note-title">{truncate(parseNoteTitle(this.props.note.data.title), MAX_NOTE_CONTENT_PREVIEW_LENGTH)}</h3>

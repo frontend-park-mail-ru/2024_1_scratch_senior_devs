@@ -1,5 +1,7 @@
 import {ScReact} from "@veglem/screact";
 import "./EmojiPicker.sass"
+import {AppDispatcher} from "../../modules/dispatcher";
+import {NotesActions} from "../../modules/stores/NotesStore";
 
 export class EmojiPicker extends ScReact.Component<any, any> {
     private emojiData = [
@@ -28,11 +30,11 @@ export class EmojiPicker extends ScReact.Component<any, any> {
     ]
 
     selectEmoji = (emoji:string) => {
-        this.props.onChange(emoji)
+        AppDispatcher.dispatch(NotesActions.UPDATE_NOTE_ICON, emoji)
     }
 
     clearEmoji = () => {
-        this.props.onChange(null)
+        AppDispatcher.dispatch(NotesActions.UPDATE_NOTE_ICON, null)
     }
 
     render() {

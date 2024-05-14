@@ -123,7 +123,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
                     this.closeFullScreen()
                     break
                 case NotesActions.UPDATE_NOTE_ICON:
-                    this.updateNoteIcon(action.payload)
+                    await this.updateNoteIcon(action.payload)
                     break
                 case NotesActions.UPDATE_NOTE_BACKGROUND:
                     this.updateNoteBackground(action.payload)
@@ -135,7 +135,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
                     this.updateSelectedNoteContent(action.payload)
                     break
                 case NotesActions.EXPORT_TO_PDF:
-                    this.exportToPDF()
+                    await this.exportToPDF()
                     break
             }
         });
@@ -169,6 +169,11 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 notes[index] = this.state.selectedNote;
             }
         });
+
+        this.SetState(state => ({
+            ...state,
+            notes: notes
+        }))
     }
 
     syncSelectedNote = () => {
@@ -226,6 +231,11 @@ class NotesStore extends BaseStore<NotesStoreState> {
             this.syncNotes()
         }
 
+        AppDispatcher.dispatch(NoteStoreActions.SET_NOTE, {
+            title: note.data.title,
+            blocks: note.data.content
+        })
+
         this.closeWS()
 
         this.SetState(state => ({
@@ -235,10 +245,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
             selectedNoteCollaborators: []
         }));
 
-        AppDispatcher.dispatch(NoteStoreActions.SET_NOTE, {
-            title: this.state.selectedNote.data.title,
-            blocks: this.state.selectedNote.data.content
-        })
 
         this.ws = new WebSocketConnection(`note/${note.id}/subscribe_on_updates`)
 
@@ -594,23 +600,47 @@ class NotesStore extends BaseStore<NotesStoreState> {
         }))
     }
 
-    updateNoteIcon = (icon:string) => {
-        // TODO: отпрвлять запрос на апи
+    updateNoteIcon = async (icon:string) => {
+        try {
+            const {status, note, csrf} = await AppNoteRequests.UpdateIcon(this.state.selectedNote.id, icon, AppUserStore.state.JWT, AppUserStore.state.csrf)
 
-        const updatedNote = this.state.selectedNote
-        updatedNote.icon = icon
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 
-        this.SetState(state => ({
-            ...state,
-            selectedNote: updatedNote
-        }))
 
-        this.syncNotes()
+            if (status == 200) {
+                this.SetState(state => ({
+                    ...state,
+                    selectedNote: note
+                }))
+
+                this.syncNotes()
+            }
+
+        } catch {
+            AppToasts.error("Что-то пошло не так")
+        }
     }
 
-    updateNoteBackground = (background:string) => {
-        this.state.selectedNote.background = background
-        this.syncNotes()
+    updateNoteBackground = async (background:string) => {
+        try {
+            const {status, note, csrf} = await AppNoteRequests.UpdateBackground(this.state.selectedNote.id, background, AppUserStore.state.JWT, AppUserStore.state.csrf)
+
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+
+            console.log(note)
+            console.log(status)
+
+            this.SetState(state => ({
+                ...state,
+                selectedNote: note
+            }))
+
+            this.syncNotes()
+
+
+        } catch {
+            AppToasts.error("Что-то пошло не так")
+        }
     }
 
     updateSelectedNoteTitle = (title:string) => {
@@ -622,8 +652,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     deleteTag = async (tagname:string) => {
-        console.log("deleteTag")
-        console.log(tagname)
         try {
             const {status, csrf} = await AppTagRequests.DeleteTag(tagname, AppUserStore.state.JWT, AppUserStore.state.csrf)
 

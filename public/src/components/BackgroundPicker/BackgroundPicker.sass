@@ -3,7 +3,6 @@
 
 .background-list-container
 	flex-direction: column
-	width: 380px
 	border-radius: 12px
 	background: #18232f
 	border: 1px solid hsl(217.2 32.6% 25%)
@@ -29,7 +28,7 @@
 				background: rgba(0, 0, 0, 0.3)
 
 	.background-list
-		width: 100%
+		width: 300px
 		display: grid
 		grid-template-columns: repeat(3, 0.33fr)
 		padding: 10px
@@ -39,6 +38,12 @@
 		max-height: 140px
 		background: #121b25
 		border-radius: 8px
+
+		@media screen and (max-width: $lg)
+			max-height: 240px
+
+		@media screen and (max-width: 420px)
+			width: calc(80vw - 20px)
 
 		@include scrollbar
 

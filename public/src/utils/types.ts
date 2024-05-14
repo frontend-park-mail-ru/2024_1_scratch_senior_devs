@@ -10,7 +10,7 @@ export type NoteType = {
     update_time: string,
     owner_id: string,
     icon: string,
-    background: string
+    header: string
 }
 
 export type CollaboratorType = {
