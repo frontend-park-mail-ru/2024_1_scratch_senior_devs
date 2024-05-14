@@ -92,6 +92,7 @@ class NoteStore extends BaseStore<NoteStoreState> {
     };
 
     private setNote = (note: any) => {
+        console.log("setNote")
         this.SetState(state => ({
             ...state,
             note: note
@@ -99,22 +100,26 @@ class NoteStore extends BaseStore<NoteStoreState> {
     };
 
     private changeTitle = (title: string) => {
+        console.log("changeTitle")
         this.state.note.title = title;
         this.onNoteChanged()
     };
 
     private changeContent = (content: any) => {
+        console.log("changeContent")
         this.state.note.blocks = content
         this.onNoteChanged()
     }
 
     private onNoteChanged = () => {
+        console.log("onNoteChanged")
         if (AppNotesStore.state.selectedNote) {
             this.saveNote({id: AppNotesStore.state.selectedNote.id, parent: AppNotesStore.state.selectedNote.parent, note: this.state.note});
         }
     }
 
     private clearNote = () => {
+        console.log("clearNote")
         this.SetState(state => ({
             ...state,
             note: {

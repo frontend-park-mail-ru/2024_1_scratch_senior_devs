@@ -235,6 +235,11 @@ class NotesStore extends BaseStore<NotesStoreState> {
             selectedNoteCollaborators: []
         }));
 
+        AppDispatcher.dispatch(NoteStoreActions.SET_NOTE, {
+            title: this.state.selectedNote.data.title,
+            blocks: this.state.selectedNote.data.content
+        })
+
         this.ws = new WebSocketConnection(`note/${note.id}/subscribe_on_updates`)
 
         this.ws.onOpen(() => {

@@ -76,13 +76,6 @@ export class NoteEditor extends ScReact.Component<any, any> {
             selectedNote: store.selectedNote,
             fullScreen: store.fullScreen
         }));
-
-        if (this.state.selectedNote) {
-            AppDispatcher.dispatch(NoteStoreActions.SET_NOTE, {
-                title: this.state.selectedNote.data.title,
-                blocks: this.state.selectedNote.data.content
-            })
-        }
     };
 
     openDeleteNoteModal = () => {

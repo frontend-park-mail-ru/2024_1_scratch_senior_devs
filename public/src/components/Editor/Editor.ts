@@ -25,8 +25,7 @@ export class Editor {
                 dropdown: {open: (elem: HTMLElement) => void, close: () => void },
                 onChange: (schema: PluginProps[]) => void,
                 tippy: {open: (elem: HTMLElement) => void, close: () => void},
-                open: boolean,
-                toast) {
+                open: boolean) {
 
         // TODO: при наборе символов в поисковую строку фокусится редактор заметки (отключить)
 
@@ -41,10 +40,7 @@ export class Editor {
         this.editable.contentEditable = "true";
 
         this.dropdownObserver = new MutationObserver((records) => {
-            
             records.forEach(record => {
-
-
                 switch (record.type) {
                     case "childList":
                         if (record.addedNodes.length > 0) {
@@ -71,8 +67,6 @@ export class Editor {
         });
 
         parent.append(this.editable);
-
-
 
         const selectionCallback = () => {
             const isInEditor = (node: Node) => {
@@ -189,7 +183,6 @@ export class Editor {
         });
 
 
-        toast(this.open.toString())
         if (this.open) {
             this.editable.focus()
             this.editable.click()
