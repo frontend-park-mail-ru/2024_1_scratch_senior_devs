@@ -338,7 +338,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
                 </div>
 
-                <div className="bottom-panel">
+                <div className="bottom-panel" >
 
                     <EditorWrapper
                         open={this.state.selectedNote != null}

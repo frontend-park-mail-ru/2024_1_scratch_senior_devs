@@ -1,0 +1,77 @@
+@import "/public/src/utils/variables.sass"
+
+.add-tag
+	&__btn-container
+		display: flex
+		justify-content: center
+		align-items: center
+		padding: 8px
+		background: rgba(27, 39, 53, 0.5)
+		border-radius: 12px
+		cursor: pointer
+
+		&:hover
+			background: rgba(27, 39, 53, 0.7)
+
+		.icon
+			width: 20px
+			height: 20px
+			transition: 0.3s
+			filter: invert(80%)
+
+	&__input-container
+		position: absolute
+		top: 40px
+		left: -50px
+		border-radius: 5px
+		border: 1px solid hsl(217.2 32.6% 25%)
+		background: #1b2735
+		align-items: center
+		padding: 5px 8px
+		opacity: 0
+		transition: all 0.15s
+		display: none
+		animation: closeAnim 0.3s
+		z-index: 91
+
+		@media screen and (max-width: $sm)
+			left: -15px
+
+		&.open
+			opacity: 1
+			display: flex
+			animation: showAnim 0.3s
+
+		input
+			outline: none
+			border: none
+			height: 100%
+			background: transparent
+			color: $text-secondary-color
+			width: 120px
+			font-size: 16px
+			padding-right: 10px
+
+			&::placeholder
+				color: $text-secondary-color
+				font-size: 16px
+
+		button
+			width: 32px
+			height: 32px
+			outline: none
+			border: none
+			border-radius: 5px
+			background: hsl(210 40% 98%)
+			display: flex
+			justify-content: center
+			align-items: center
+			cursor: pointer
+			transition: 0.15s cubic-bezier(0.4, 0, 0.2, 1)
+
+			&:hover
+				opacity: 0.9
+
+			.success-icon
+				width: 16px
+				height: 16px

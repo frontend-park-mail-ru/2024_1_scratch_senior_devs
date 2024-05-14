@@ -11,6 +11,7 @@ import {Loader} from '../../components/Loader/Loader';
 import {parseNoteTitle, scrollToTop, truncate, unicodeToChar} from '../../modules/utils';
 import {Note} from "../../components/Note/Note";
 import {TagsFilter} from "../../components/TagsFilter/TagsFilter";
+import {AddTagMenu} from "../../components/AddTagMenu/AddTagMenu";
 
 export class NotesPage extends ScReact.Component<any, any> {
     state = {
@@ -247,13 +248,7 @@ export class NotesPage extends ScReact.Component<any, any> {
                                 <Img src="plus.svg" className="add-note-icon"/>
                             </div>
                         </div>
-                        {this.state.tags.length == 0 ?
-                            <div className="tag-icon-container">
-                                <Img src="tag.svg" className="icon"/>
-                            </div>
-                            :
-                            ""
-                        }
+                        {this.state.tags.length == 0 ? <AddTagMenu tags={this.state.tags} /> : ""}
                     </div>
                     {this.state.tags.length > 0 ? <TagsFilter tags={this.state.tags} selectedTags={this.state.selectedTags} selectTag={this.selectTag} /> : "" }
                     <div className="notes-container" onclick={this.handleSelectNote} ref={ref => this.notesContainerRef = ref}>

@@ -4,6 +4,7 @@ import {AppToasts} from "../../modules/toasts";
 import "./TagList.sass"
 import {AppNotesStore, NotesActions, NotesStoreState} from "../../modules/stores/NotesStore";
 import {AppDispatcher} from "../../modules/dispatcher";
+import {MAX_TAG_COUNT, MAX_TAG_LENGTH, MIN_TAG_LENGTH} from "../../utils/consts";
 
 type TagListState = {
     selectedTag: string | null,
@@ -17,19 +18,13 @@ export class TagList extends ScReact.Component<any, TagListState> {
         tags: [...AppNotesStore.state.tags]
     }
 
-    private MIN_TAG_LENGTH = 2
-    private MAX_TAG_LENGTH = 12
-    private MAX_TAG_COUNT = 10
-
     private inputRef
 
     componentDidMount() {
-        console.log("componentDidMount")
         AppNotesStore.SubscribeToStore(this.updateState)
     }
 
     componentWillUnmount() {
-        console.log("UnSubscribeToStore")
         AppNotesStore.UnSubscribeToStore(this.updateState)
     }
 
@@ -74,13 +69,13 @@ export class TagList extends ScReact.Component<any, TagListState> {
 
     handleAddTag = () => {
         if (this.state.value.length > 0) {
-            if (this.state.value.length < this.MIN_TAG_LENGTH) {
-                AppToasts.error(`Тэг не может быть короче ${this.MIN_TAG_LENGTH} символов`)
+            if (this.state.value.length < MIN_TAG_LENGTH) {
+                AppToasts.error(`Тэг не может быть короче ${MIN_TAG_LENGTH} символов`)
                 return
             }
 
-            if (this.state.value.length > this.MAX_TAG_LENGTH) {
-                AppToasts.error(`Тэг не может быть длинее ${this.MAX_TAG_LENGTH} символов`)
+            if (this.state.value.length > MAX_TAG_LENGTH) {
+                AppToasts.error(`Тэг не может быть длинее ${MAX_TAG_LENGTH} символов`)
                 return
             }
 
@@ -89,8 +84,8 @@ export class TagList extends ScReact.Component<any, TagListState> {
                 return
             }
 
-            if (this.props.tags.length >= this.MAX_TAG_COUNT) {
-                AppToasts.info(`Максимальное кол-во тэгов - 10`)
+            if (this.props.tags.length >= MAX_TAG_COUNT) {
+                AppToasts.info(`Максимальное кол-во тэгов - ${MAX_TAG_COUNT}`)
                 return
             }
 

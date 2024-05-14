@@ -6,6 +6,7 @@ import {DeleteTagDialog} from "../DeleteTagDialog/DeleteTagDialog";
 import {RenameTagModal} from "../RenameTagModal/RenameTagModal";
 import {AppDispatcher} from "../../modules/dispatcher";
 import {NotesActions} from "../../modules/stores/NotesStore";
+import {AddTagMenu} from "../AddTagMenu/AddTagMenu";
 
 type TagsFilterProps = {
     tags: string[],
@@ -31,6 +32,7 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
     }
 
     private menuRef
+    private addInputRef
 
     componentDidMount() {
         document.addEventListener('click', this.handleClickOutside, false);
@@ -135,13 +137,13 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
                     handleClose={this.closeRenameTagModal}
                     content={<RenameTagModal onSuccess={this.renameTag} tag={this.state.selectedTag} handleClose={this.closeRenameTagModal} />}
                 />
-                
-                <div className="filters-panel" onscroll={this.closeMenu}>
-                    <div className="tag-icon-container">
-                        <Img src="tag.svg" className="icon"/>
-                    </div>
 
-                    <div className={"tag-options-menu " + (this.state.menuOpen ? "open" : "")} ref={ref => this.menuRef = ref}>
+                <div className="filters-panel" onscroll={this.closeMenu}>
+
+                    <AddTagMenu tags={this.props.tags}/>
+
+                    <div className={"tag-options-menu " + (this.state.menuOpen ? "open" : "")}
+                         ref={ref => this.menuRef = ref}>
                         <div className="tag-options-menu__option" onclick={this.openRenameTagModal}>
                             <Img src="edit.svg"/>
                             <span>Изменить</span>
@@ -153,8 +155,10 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
                     </div>
 
                     {tags.map(tag => (
-                        <div className={"tag " + (this.props.selectedTags.includes(tag) || this.state.selectedTag == tag ? "selected" : "")}
-                             onclick={() => this.props.selectTag(tag)} oncontextmenu={(e) => this.onTagRightClick(e, tag)}>
+                        <div
+                            className={"tag " + (this.props.selectedTags.includes(tag) || this.state.selectedTag == tag ? "selected" : "")}
+                            onclick={() => this.props.selectTag(tag)}
+                            oncontextmenu={(e) => this.onTagRightClick(e, tag)}>
                             {tag}
                         </div>
                     ))}

@@ -562,7 +562,8 @@ class NoteRequests {
 
         if (response.status == 200) {
             const blob = await response.blob()
-            return blob
+
+            return URL.createObjectURL(blob);
         }
 
     }
@@ -614,8 +615,9 @@ class TagRequests {
             }
         });
 
+        // TODO: проверка на статус. При попытке добавления уже существующего тэга кидать предупреждение
+
         return {
-            note: response.body,
             status: response.status,
             csrf: response.headers['x-csrf-token']
         }

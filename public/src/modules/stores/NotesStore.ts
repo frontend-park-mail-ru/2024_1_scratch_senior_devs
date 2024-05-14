@@ -647,6 +647,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
     addTag = async (tag:string) => {
         try {
+
             const {status, csrf} = await AppTagRequests.AddTag(tag, AppUserStore.state.JWT, AppUserStore.state.csrf)
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
@@ -662,15 +663,10 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     exportToPDF = async () => {
-        console.log("exportToPDF")
         try {
             const note = document.querySelector(".note-editor-content").outerHTML
-            console.log(note)
-            const blob = await AppNoteRequests.ExportToPdf(note)
-
-            const url = window.URL.createObjectURL(blob)
+            const url = await AppNoteRequests.ExportToPdf(note)
             downloadFile(url, AppNoteStore.state.note.title + ".pdf")
-
         } catch {
             AppToasts.error("Что-то пошло не так")
         }
