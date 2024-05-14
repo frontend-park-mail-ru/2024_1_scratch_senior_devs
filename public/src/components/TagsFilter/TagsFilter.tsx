@@ -57,7 +57,6 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
     }
 
     closeMenu = () => {
-        console.log("closeMenu")
         this.setState(state => ({
             ...state,
             menuOpen: false
