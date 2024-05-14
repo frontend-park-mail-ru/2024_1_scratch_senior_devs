@@ -182,11 +182,8 @@ export class Editor {
             subtree: true
         });
 
-
-        if (this.open) {
-            this.editable.focus()
-            this.editable.click()
-        }
+        this.editable.focus()
+        this.editable.click()
     }
 
     getSchema = () => {
