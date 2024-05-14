@@ -190,8 +190,10 @@ export class Editor {
 
 
         toast(this.open.toString())
-        // this.open && this.editable.focus()
-        // this.open && this.editable.click()
+        if (this.open) {
+            this.editable.focus()
+            this.editable.click()
+        }
     }
 
     getSchema = () => {
