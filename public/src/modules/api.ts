@@ -551,6 +551,21 @@ class NoteRequests {
             csrf: response.headers['x-csrf-token']
         }
     }
+
+    ExportToPdf = async (note: string) => {
+        const options: RequestInit = {
+            method: RequestMethods.POST,
+            body: note
+        };
+
+        const response = await fetch(baseUrl + '/export_to_pdf/', options);
+
+        if (response.status == 200) {
+            const blob = await response.blob()
+            return blob
+        }
+
+    }
 }
 
 class TagRequests {

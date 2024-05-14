@@ -78,7 +78,6 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
     }
 
     deleteTag = () => {
-        console.log("dispatch")
         AppDispatcher.dispatch(NotesActions.DELETE_TAG, this.state.selectedTag)
 
         this.setState(state => ({

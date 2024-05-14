@@ -1,8 +1,9 @@
 import {ScReact} from "@veglem/screact";
 import "./NoteMenu.sass"
 import {Img} from "../Image/Image";
-import {AppNotesStore} from "../../modules/stores/NotesStore";
+import {AppNotesStore, NotesActions} from "../../modules/stores/NotesStore";
 import {isSubNote} from "../../modules/utils";
+import {AppDispatcher} from "../../modules/dispatcher";
 
 export class NoteMenu extends ScReact.Component<any, any> {
     state = {
@@ -58,6 +59,11 @@ export class NoteMenu extends ScReact.Component<any, any> {
         this.props.openBackgroundList()
     }
 
+    exportToPdf = () => {
+        this.toggleMenu()
+        AppDispatcher.dispatch(NotesActions.EXPORT_TO_PDF)
+    }
+
     render() {
         return (
             <div className={"note-menu " + (this.state.open ? "open" : "")}>
@@ -80,7 +86,7 @@ export class NoteMenu extends ScReact.Component<any, any> {
                         <Img src="trash.svg" className="icon"/>
                         <span>Удалить заметку</span>
                     </div>
-                    <div className="options-item">
+                    <div className="options-item" onclick={this.exportToPdf}>
                         <Img src="pdf.svg" className="icon"/>
                         <span>Скачать в pdf</span>
                     </div>

@@ -7,6 +7,7 @@ import {CollaboratorType, NoteDataType, NoteType} from "../../utils/types";
 import {WebSocketConnection} from "../websocket";
 import {insertBlockPlugin} from "../../components/Editor/Plugin";
 import {AppNoteStore, NoteStoreActions} from "./NoteStore";
+import {downloadFile} from "../utils";
 
 export type NotesStoreState = {
     notes: NoteType[],
@@ -132,6 +133,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
                     break
                 case NotesActions.CHANGE_CONTENT:
                     this.updateSelectedNoteContent(action.payload)
+                    break
+                case NotesActions.EXPORT_TO_PDF:
+                    this.exportToPDF()
                     break
             }
         });
@@ -656,6 +660,21 @@ class NotesStore extends BaseStore<NotesStoreState> {
             AppToasts.error("Что-то пошло не так")
         }
     }
+
+    exportToPDF = async () => {
+        console.log("exportToPDF")
+        try {
+            const note = document.querySelector(".note-editor-content").outerHTML
+            console.log(note)
+            const blob = await AppNoteRequests.ExportToPdf(note)
+
+            const url = window.URL.createObjectURL(blob)
+            downloadFile(url, AppNoteStore.state.note.title + ".pdf")
+
+        } catch {
+            AppToasts.error("Что-то пошло не так")
+        }
+    }
 }
 
 export const NotesActions = {
@@ -689,7 +708,8 @@ export const NotesActions = {
     CHANGE_TITLE: "CHANGE_TITLE",
     CHANGE_CONTENT: "CHANGE_CONTENT",
     DELETE_TAG: "DELETE_TAG",
-    ADD_TAG: "ADD_TAG"
+    ADD_TAG: "ADD_TAG",
+    EXPORT_TO_PDF: "EXPORT_TO_PDF"
 };
 
 export const AppNotesStore = new NotesStore();
