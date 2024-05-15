@@ -314,6 +314,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 }
 
                 console.log("updated state")
+                console.log(this.state.selectedNote)
+                console.log(noteData)
                 this.SetState(state => ({
                     ...state,
                     selectedNote: {
