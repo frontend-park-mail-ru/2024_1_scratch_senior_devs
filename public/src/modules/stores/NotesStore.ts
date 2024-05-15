@@ -323,6 +323,12 @@ class NotesStore extends BaseStore<NotesStoreState> {
                         data: noteData
                     }
                 }));
+
+                AppDispatcher.dispatch(NoteStoreActions.SET_NOTE, {
+                    title: noteData.title,
+                    blocks: noteData.content
+                })
+
             }
         })
     }
