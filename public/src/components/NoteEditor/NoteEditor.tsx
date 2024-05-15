@@ -80,7 +80,7 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
     };
 
     closeEditor = () => {
-        document.getElementById("note-editor-inner").contentEditable = "false"
+        // document.getElementById("note-editor-inner").contentEditable = "false"
 
         AppDispatcher.dispatch(NotesActions.CLOSE_FULLSCREEN)
 
@@ -91,7 +91,10 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
 
     updateState = (store:NotesStoreState) => {
         if (store.selectedNote != this.state.selectedNote) {
-            this.savingLabelRef.classList.remove("active")
+            this.setState(state => ({
+                ...state,
+                noteStatus: null,
+            }));
         }
 
         this.setState(state => ({
@@ -100,6 +103,8 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
             fullScreen: store.fullScreen
         }));
 
+        console.log("NoteEditore.updateState")
+        console.log(store.selectedNoteSynced)
         if (store.selectedNoteSynced) {
             this.setState(state => ({
                 ...state,

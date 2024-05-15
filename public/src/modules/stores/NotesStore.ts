@@ -158,6 +158,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             tags: [],
             selectedTags: [],
             selectedNote: null,
+            selectedNoteSynced: null,
             selectedNoteCollaborators: [],
             query: '',
             offset: 0,
@@ -192,15 +193,14 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     closeNote () {
-        localStorage.setItem("selectedNote", null)
-
         this.closeWS()
 
         // this.syncNotes()
 
         this.SetState(s=>({
             ...s,
-            selectedNote: undefined,
+            selectedNote: null,
+            selectedNoteSynced: null,
             selectedNoteCollaborators: []
         }));
 
