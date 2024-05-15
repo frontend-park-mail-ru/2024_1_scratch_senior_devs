@@ -268,8 +268,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
         this.ws.onMessage((event) => {
             let data = JSON.parse(event.data)
 
-            
-            
             // Если socket_id совпадает, то ничего обновлять не надо
             if (data.socket_id == this.socket_id) {
                 return
@@ -310,8 +308,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
                     return
                 }
 
-                
-                
                 this.SetState(state => ({
                     ...state,
                     selectedNoteSynced: data.username == AppUserStore.state.username,

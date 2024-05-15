@@ -296,11 +296,27 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
 
                     </div>
 
-                    <div className={"note-save-indicator " + (this.state.noteStatus ? "active" : "")}>
-                        <Tooltip icon={this.state.noteStatus == "saved" ? "check.svg" : "sync.svg"}
-                                 showHoverTooltip={true}
-                                 hoverTooltip={this.state.noteStatus == "saved" ? "Сохранено" : "Синхронизированно"}/>
-                    </div>
+                    {
+                        this.state.noteStatus == "saved" ?
+                            <div className={"note-save-indicator " + (this.state.noteStatus ? "active" : "")}>
+                                <Tooltip icon={"check.svg"}
+                                         showHoverTooltip={true}
+                                         hoverTooltip={"Сохранено"}/>
+                            </div>
+                            :
+                            ""
+                    }
+
+                    {
+                        this.state.noteStatus == "sync" ?
+                            <div className={"note-save-indicator " + (this.state.noteStatus ? "active" : "")}>
+                                <Tooltip icon={"sync.svg"}
+                                         showHoverTooltip={true}
+                                         hoverTooltip={"Синхронизированно"}/>
+                            </div>
+                            :
+                            ""
+                    }
 
                     <div className="collaborators-container">
                         <Collaborators/>
@@ -310,7 +326,7 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
                         <Tooltip
                             hoverTooltip={this.state.selectedNote?.favorite ? "Удалить из избранного" : "В избранное"}
                             showHoverTooltip={true}
-                                 className="add-to-favorite-btn"
+                            className="add-to-favorite-btn"
                                  icon={this.state.selectedNote?.favorite ? "star-filled.svg" : "star.svg"}
                                  onClick={this.addToFavoriteBtn}/>
                     </div>
