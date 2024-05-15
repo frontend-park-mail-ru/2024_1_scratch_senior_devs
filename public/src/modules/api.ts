@@ -326,7 +326,7 @@ class NoteRequests {
         throw new Error(response.body.message);
     };
 
-    Update = async({id, note}, jwt: string, csrf:string)=> {
+    Update = async({id, note}, socket_id:string, jwt: string, csrf:string)=> {
         
 
         const response = await Ajax.Post(this.baseUrl + '/' + id + '/edit', {
@@ -338,11 +338,11 @@ class NoteRequests {
                 data: {
                     title: note.title,
                     content: note.blocks
-                }
+                },
+                socket_id: socket_id
             }
         });
 
-        
 
         return {
             status: response.status,

@@ -425,15 +425,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
     async saveNote(data) {
         try {
 
-            const {csrf} = await AppNoteRequests.Update(data, AppUserStore.state.JWT, AppUserStore.state.csrf);
+            const {csrf} = await AppNoteRequests.Update(data, this.socket_id, AppUserStore.state.JWT, AppUserStore.state.csrf);
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
-
-            this.ws.sendMessage(JSON.stringify({
-                type: "edit",
-                data: data.note,
-                socket_id: this.socket_id
-            }))
 
         } catch {
             AppToasts.error('Что-то пошло не так');
