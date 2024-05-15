@@ -10,18 +10,37 @@ import {DeleteNoteDialog} from '../DeleteNoteDialog/DeleteNoteDialog';
 import NoteMenu from "../NoteMenu/NoteMenu";
 import {InviteUserModal} from "../InviteUserModal/InviteUserModal";
 import {Tooltip} from "../Tooltip/Tooltip";
-import {AppToasts} from "../../modules/toasts";
 import {TagList} from "../TagList/TagList";
 import {EditorWrapper} from "../Editor/EditorWrapper";
 import {AppUserStore} from "../../modules/stores/UserStore";
 import {Collaborators} from "../Collaborators/Collaborators";
 import {EmojiPicker} from "../EmojiPicker/EmojiPicker";
 import {BackgroundPicker} from "../BackgroundPicker/BackgroundPicker";
+import {NoteType} from "../../utils/types";
 
-export class NoteEditor extends ScReact.Component<any, any> {
+type NoteEditorType = {
+    selectedNote: NoteType
+    noteStatus: string
+    deleteNoteModalOpen: boolean
+    inviteUserModalOpen: boolean
+    tagsModalOpen: boolean
+    emojiModalOpen: boolean
+    backgroundModalOpen: boolean
+    fullScreen: boolean
+}
+
+type NoteEditorProps = {
+    open: boolean
+    setClose: () => void
+    onChangeTags: (tags) => void
+    onChangeTitle: (title) => void
+    onChangeNote: () => void
+}
+
+export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorType> {
     state = {
-        selectedNote: undefined,
-        content: undefined,
+        selectedNote: null,
+        noteStatus: null,
         deleteNoteModalOpen: false,
         inviteUserModalOpen: false,
         tagsModalOpen: false,
@@ -31,7 +50,6 @@ export class NoteEditor extends ScReact.Component<any, any> {
     };
 
     private savingLabelRef;
-    private noteEditorHeader
 
     componentDidMount() {
         AppNotesStore.SubscribeToStore(this.updateState);
@@ -48,11 +66,17 @@ export class NoteEditor extends ScReact.Component<any, any> {
             AppDispatcher.dispatch(NotesActions.SAVE_NOTE, data);
         }
 
-        this.savingLabelRef.classList.add("active");
+        this.setState(state => ({
+            ...state,
+            noteStatus: "saved"
+        }))
     };
 
     onChangeNote = () => {
-        this.savingLabelRef.classList.remove("active")
+        this.setState(state => ({
+            ...state,
+            noteStatus: null
+        }))
     };
 
     closeEditor = () => {
@@ -75,6 +99,14 @@ export class NoteEditor extends ScReact.Component<any, any> {
             selectedNote: store.selectedNote,
             fullScreen: store.fullScreen
         }));
+
+        if (store.selectedNoteSynced) {
+            this.setState(state => ({
+                ...state,
+                noteStatus: "sync",
+            }));
+        }
+
     };
 
     openDeleteNoteModal = () => {
@@ -209,7 +241,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
                        content={<BackgroundPicker />}
                 />
 
-                <div className="note-background" ref={ref => this.noteEditorHeader = ref} style={`background: ${this.state.selectedNote?.header};`}>
+                <div className="note-background" style={`background: ${this.state.selectedNote?.header};`}>
 
                 </div>
 
@@ -260,8 +292,8 @@ export class NoteEditor extends ScReact.Component<any, any> {
 
                     </div>
 
-                    <div className="note-save-indicator" ref={ref => this.savingLabelRef = ref}>
-                        <Tooltip icon="check.svg" showHoverTooltip={true} hoverTooltip="Сохранено"/>
+                    <div className={"note-save-indicator " + (this.state.noteStatus ? "active" : "")} ref={ref => this.savingLabelRef = ref}>
+                        <Tooltip icon={this.state.noteStatus == "saved" ? "check.svg" : "404.svg"} showHoverTooltip={true} hoverTooltip="Сохранено"/>
                     </div>
 
                     <div className="collaborators-container">

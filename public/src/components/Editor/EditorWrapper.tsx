@@ -66,7 +66,7 @@ export class EditorWrapper extends Component<any, EditorState> {
     updateState = (store:NoteStoreState) => {
         this.syncTitle(store.note.title)
 
-        if (!isEqual(this.editor?.getSchema(), AppNoteStore.state.note.blocks)) {
+        if (!isEqual(this.editor?.getSchema(), store.note.blocks)) {
             this.self.innerHTML = ""
             this.editor = new Editor(
                 store.note.blocks,

@@ -12,6 +12,7 @@ import {downloadFile} from "../utils";
 export type NotesStoreState = {
     notes: NoteType[],
     selectedNote: NoteType,
+    selectedNoteSynced: boolean
     selectedNoteCollaborators: CollaboratorType[],
     tags: string[],
     selectedTags: string[],
@@ -28,6 +29,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
         tags: [],
         selectedTags: [],
         selectedNote: null,
+        selectedNoteSynced: null,
         selectedNoteCollaborators: [],
         query: '',
         offset: 0,
@@ -314,12 +316,12 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 }
 
                 console.log("updated state")
-                console.log(this.state.selectedNote)
-                console.log(noteData)
+                console.log(data)
                 this.SetState(state => ({
                     ...state,
                     selectedNote: {
                         ...this.state.selectedNote,
+                        selectedNoteSynced: data.usermame == AppUserStore.state.username,
                         data: noteData
                     }
                 }));
