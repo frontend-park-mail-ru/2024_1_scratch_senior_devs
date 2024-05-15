@@ -182,8 +182,10 @@ export class Editor {
             subtree: true
         });
 
-        this.editable.focus()
-        this.editable.click()
+        if (window['mobileCheck']) {
+            this.editable.focus()
+            this.editable.click()
+        }
     }
 
     getSchema = () => {
