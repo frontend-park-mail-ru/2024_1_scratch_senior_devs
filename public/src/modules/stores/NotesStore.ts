@@ -319,9 +319,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 console.log(data)
                 this.SetState(state => ({
                     ...state,
+                    selectedNoteSynced: data.username == AppUserStore.state.username,
                     selectedNote: {
                         ...this.state.selectedNote,
-                        selectedNoteSynced: data.username == AppUserStore.state.username,
                         data: noteData
                     }
                 }));
