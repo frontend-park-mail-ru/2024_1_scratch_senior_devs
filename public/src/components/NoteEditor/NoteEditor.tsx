@@ -310,27 +310,30 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
                     {/*             hoverTooltip={"Синхронизированно"}/>*/}
                     {/*</div>*/}
 
-                    {
-                        this.state.noteStatus == "saved" ?
-                            <div className={"note-save-indicator " + (this.state.noteStatus ? "active" : "")}>
-                                <Tooltip icon={"check.svg"}
-                                         showHoverTooltip={true}
-                                         hoverTooltip={"Сохранено"}/>
-                            </div>
-                            :
-                            ""
-                    }
+                    <div>
+                        {
+                            this.state.noteStatus == "saved" ?
+                                <div className={"note-save-indicator " + (this.state.noteStatus ? "active" : "")}>
+                                    <Tooltip icon={"check.svg"}
+                                             showHoverTooltip={true}
+                                             hoverTooltip={"Сохранено"}/>
+                                </div>
+                                :
+                                ""
+                        }
 
-                    {
-                        this.state.noteStatus == "sync" ?
-                            <div className={"note-save-indicator " + (this.state.noteStatus ? "active" : "")}>
-                                <Tooltip icon={"sync.svg"}
-                                         showHoverTooltip={true}
-                                         hoverTooltip={"Синхронизированно"}/>
-                            </div>
-                            :
-                            ""
-                    }
+                        {
+                            this.state.noteStatus == "sync" ?
+                                <div className={"note-save-indicator " + (this.state.noteStatus ? "active" : "")}>
+                                    <Tooltip icon={"sync.svg"}
+                                             showHoverTooltip={true}
+                                             hoverTooltip={"Синхронизированно"}/>
+                                </div>
+                                :
+                                ""
+                        }
+                    </div>
+
 
                     <div className="collaborators-container">
                         <Collaborators/>
