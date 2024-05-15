@@ -38,6 +38,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
     };
 
     private ws
+    private socket_id
 
     constructor() {
         super();
@@ -226,6 +227,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             this.ws.close()
             this.ws = null
+            this.socket_id = null
         }
     }
 
@@ -266,7 +268,13 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             // TODO: синхронизация между девайсами (сверять id девайса / вебсокета)
             // А нужна ли вообще проверка ? // Нужна, иначе курсор скачет // С кем ты разговариваешь?
-            if (data.username == AppUserStore.state.username) {
+            console.log("onMessage")
+            console.log(data)
+            console.log(data.socket_id)
+            console.log(this.socket_id)
+            console.log(data.socket_id == this.socket_id)
+            if (data.socket_id == this.socket_id) {
+                console.log("return")
                 return
             }
             
@@ -284,6 +292,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
                     }))
                 }
 
+            } else if (data.type == "info") {
+                this.socket_id = data.socket_id
             } else if (data.type == "closed") {
                 const collaborator = {
                     id: data.user_id,
@@ -418,6 +428,12 @@ class NotesStore extends BaseStore<NotesStoreState> {
             const {csrf} = await AppNoteRequests.Update(data, AppUserStore.state.JWT, AppUserStore.state.csrf);
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+
+            this.ws.sendMessage(JSON.stringify({
+                type: "edit",
+                data: data,
+                socket_id: this.socket_id
+            }))
 
         } catch {
             AppToasts.error('Что-то пошло не так');
