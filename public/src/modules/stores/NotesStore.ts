@@ -431,7 +431,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             this.ws.sendMessage(JSON.stringify({
                 type: "edit",
-                data: data,
+                data: data.note,
                 socket_id: this.socket_id
             }))
 
@@ -566,12 +566,14 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
         AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 
-        this.SetState(state => ({
-            ...state,
-            selectedNote: note
-        }))
+        if (status == 204) {
+            this.SetState(state => ({
+                ...state,
+                selectedNote: note
+            }))
 
-        await this.fetchTags()
+            await this.fetchTags()
+        }
     }
 
     addCollaborator = async ({note_id, username}) => {
