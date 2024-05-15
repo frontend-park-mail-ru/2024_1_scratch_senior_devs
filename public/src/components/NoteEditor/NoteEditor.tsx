@@ -249,7 +249,7 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
 
                 </div>
 
-                <div className="top-panel" >
+                <div className="top-panel">
 
                     <div className="close-editor-label-wrapper">
                         <div className="close-editor-label-container" onclick={this.closeEditor}>
@@ -264,7 +264,8 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
                                 showHoverTooltip={false}
                                 icon="tag.svg"
                                 label="Тэги"
-                                content={<TagList tags={this.state.selectedNote?.tags} onChange={this.props.onChangeTags} />}
+                                content={<TagList tags={this.state.selectedNote?.tags}
+                                                  onChange={this.props.onChangeTags}/>}
                             /> : ""
                         }
                     </div>
@@ -276,7 +277,7 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
                                 icon={this.state.selectedNote?.icon ? this.state.selectedNote?.icon : "emoji.svg"}
                                 iconFromUnicode={this.state.selectedNote?.icon}
                                 label="Иконка"
-                                content={<EmojiPicker icon={this.state.selectedNote?.icon} />}
+                                content={<EmojiPicker icon={this.state.selectedNote?.icon}/>}
                             /> : ""
                         }
                     </div>
@@ -287,7 +288,7 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
                                 showHoverTooltip={false}
                                 icon="image.svg"
                                 label="Шапка"
-                                content={<BackgroundPicker />}
+                                content={<BackgroundPicker/>}
                             /> : ""
                         }
                     </div>
@@ -296,20 +297,40 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
 
                     </div>
 
-
                     <div className={"note-save-indicator " + (this.state.noteStatus == "saved" ? "active" : "")}>
                         <Tooltip icon={"check.svg"}
                                  showHoverTooltip={true}
-                                 hoverTooltip={"Сохранено"} />
+                                 hoverTooltip={"Сохранено"}/>
                     </div>
 
 
                     <div className={"note-save-indicator " + (this.state.noteStatus == "sync" ? "active" : "")}>
                         <Tooltip icon={"sync.svg"}
                                  showHoverTooltip={true}
-                                 hoverTooltip={"Синхронизированно"} />
+                                 hoverTooltip={"Синхронизированно"}/>
                     </div>
 
+                    {/*{*/}
+                    {/*    this.state.noteStatus == "saved" ?*/}
+                    {/*        <div className={"note-save-indicator " + (this.state.noteStatus ? "active" : "")}>*/}
+                    {/*            <Tooltip icon={"check.svg"}*/}
+                    {/*                     showHoverTooltip={true}*/}
+                    {/*                     hoverTooltip={"Сохранено"}/>*/}
+                    {/*        </div>*/}
+                    {/*        :*/}
+                    {/*        ""*/}
+                    {/*}*/}
+
+                    {/*{*/}
+                    {/*    this.state.noteStatus == "sync" ?*/}
+                    {/*        <div className={"note-save-indicator " + (this.state.noteStatus ? "active" : "")}>*/}
+                    {/*            <Tooltip icon={"sync.svg"}*/}
+                    {/*                     showHoverTooltip={true}*/}
+                    {/*                     hoverTooltip={"Синхронизированно"}/>*/}
+                    {/*        </div>*/}
+                    {/*        :*/}
+                    {/*        ""*/}
+                    {/*}*/}
 
                     <div className="collaborators-container">
                         <Collaborators/>
@@ -320,8 +341,8 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
                             hoverTooltip={this.state.selectedNote?.favorite ? "Удалить из избранного" : "В избранное"}
                             showHoverTooltip={true}
                             className="add-to-favorite-btn"
-                                 icon={this.state.selectedNote?.favorite ? "star-filled.svg" : "star.svg"}
-                                 onClick={this.addToFavoriteBtn}/>
+                            icon={this.state.selectedNote?.favorite ? "star-filled.svg" : "star.svg"}
+                            onClick={this.addToFavoriteBtn}/>
                     </div>
 
                     <div className={!isSubNote ? "hidden" : ""}>
@@ -360,7 +381,8 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
                             onClick={this.closeFullScreen}/>
                     }
 
-                    <Tooltip icon="close.svg" showHoverTooltip={true} hoverTooltip="Закрыть" className="close-editor-btn" onClick={this.closeEditor}/>
+                    <Tooltip icon="close.svg" showHoverTooltip={true} hoverTooltip="Закрыть"
+                             className="close-editor-btn" onClick={this.closeEditor}/>
 
                 </div>
 
