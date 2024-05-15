@@ -215,6 +215,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             this.selectNote(note);
 
         } catch (e) {
+            console.log(e.message)
             AppToasts.error('Заметка не найдена');
         }
     }
@@ -335,7 +336,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             history.pushState(null, null, '/notes/' + id)
 
         } catch (e) {
-            
+            console.log(e.message)
             AppToasts.error('Заметка не найдена');
         }
     }

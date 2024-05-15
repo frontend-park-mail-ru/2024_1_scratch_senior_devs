@@ -489,7 +489,7 @@ export const defaultPlugins: EditorPlugin[] = [
             const img = document.createElement('img');
             img.contentEditable = 'false';
             img.width = 500
-            img.src = '/assets/add.svg'; //todo: default image url
+            img.src = '/assets/add.svg'; //todo: default image url // скелетоны нужныыыыыы
             img.dataset.imgid = props['imgId'] as string;
 
             AppNoteRequests.GetImage(props['imgId'] as string, AppUserStore.state.JWT, AppUserStore.state.csrf).then(url => {
@@ -501,7 +501,7 @@ export const defaultPlugins: EditorPlugin[] = [
             const img = document.createElement('img');
             img.contentEditable = 'false';
             img.width = 500
-            img.src = '/assets/add.svg'; //todo: default image url
+            img.src = '/assets/add.svg'; //todo: default image url  // скелетоны нужныыыыыы аааааааа
             img.dataset.imgid = args[0];
 
             AppNoteRequests.GetImage(args[0], AppUserStore.state.JWT, AppUserStore.state.csrf).then(url => {
