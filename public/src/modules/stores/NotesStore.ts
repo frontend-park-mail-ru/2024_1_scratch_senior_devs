@@ -321,7 +321,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
                     ...state,
                     selectedNote: {
                         ...this.state.selectedNote,
-                        selectedNoteSynced: data.usermame == AppUserStore.state.username,
+                        selectedNoteSynced: data.username == AppUserStore.state.username,
                         data: noteData
                     }
                 }));
