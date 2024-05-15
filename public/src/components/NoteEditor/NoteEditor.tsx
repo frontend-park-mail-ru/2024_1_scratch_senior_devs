@@ -296,19 +296,10 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
 
                     </div>
 
-
-
                     <div className={"note-save-indicator " + (this.state.noteStatus ? "active" : "")}>
-                        {this.state.noteStatus == "saved" ?
-                            <Tooltip icon={"check.svg"}
-                                     showHoverTooltip={true}
-                                     hoverTooltip={"Сохранено"}/>
-                            :
-                            <Tooltip icon={"sync.svg"}
-                                     showHoverTooltip={true}
-                                     hoverTooltip={"Синхронизированно"}/>
-                        }
-
+                        <Tooltip icon={this.state.noteStatus == "saved" ? "check.svg" : "sync.svg"}
+                                 showHoverTooltip={true}
+                                 hoverTooltip={this.state.noteStatus == "saved" ? "Сохранено" : "Синхронизированно"}/>
                     </div>
 
                     <div className="collaborators-container">
