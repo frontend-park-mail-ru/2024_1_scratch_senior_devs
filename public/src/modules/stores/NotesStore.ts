@@ -313,13 +313,13 @@ class NotesStore extends BaseStore<NotesStoreState> {
                     return
                 }
 
-                const updatedNote = this.state.selectedNote
-                updatedNote.data = noteData
-
                 console.log("updated state")
                 this.SetState(state => ({
                     ...state,
-                    selectedNote: updatedNote
+                    selectedNote: {
+                        ...this.state.selectedNote,
+                        data: noteData
+                    }
                 }));
             }
         })
