@@ -73,6 +73,7 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
     };
 
     onChangeNote = () => {
+        console.log("onChangeNote")
         this.setState(state => ({
             ...state,
             noteStatus: null
@@ -100,7 +101,6 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
             selectedNote: store.selectedNote,
             fullScreen: store.fullScreen
         }));
-
 
         console.log("updateState")
         console.log(store.selectedNoteSynced)
@@ -296,8 +296,19 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
 
                     </div>
 
-                    <div className={"note-save-indicator " + (this.state.noteStatus ? "active" : "")} ref={ref => this.savingLabelRef = ref}>
-                        <Tooltip icon={this.state.noteStatus == "saved" ? "check.svg" : "sync.svg"} showHoverTooltip={true} hoverTooltip={this.state.noteStatus == "saved" ? "Сохранено" : "Синхронизированно"} />
+
+
+                    <div className={"note-save-indicator " + (this.state.noteStatus ? "active" : "")}>
+                        {this.state.noteStatus == "saved" ?
+                            <Tooltip icon={"check.svg"}
+                                     showHoverTooltip={true}
+                                     hoverTooltip={"Сохранено"}/>
+                            :
+                            <Tooltip icon={"sync.svg"}
+                                     showHoverTooltip={true}
+                                     hoverTooltip={"Синхронизированно"}/>
+                        }
+
                     </div>
 
                     <div className="collaborators-container">
@@ -305,8 +316,9 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
                     </div>
 
                     <div className={isSubNote ? "hidden" : ""}>
-                        <Tooltip hoverTooltip={this.state.selectedNote?.favorite ? "Удалить из избранного" : "В избранное"}
-                                 showHoverTooltip={true}
+                        <Tooltip
+                            hoverTooltip={this.state.selectedNote?.favorite ? "Удалить из избранного" : "В избранное"}
+                            showHoverTooltip={true}
                                  className="add-to-favorite-btn"
                                  icon={this.state.selectedNote?.favorite ? "star-filled.svg" : "star.svg"}
                                  onClick={this.addToFavoriteBtn}/>
