@@ -182,6 +182,7 @@ export class Editor {
             subtree: true
         });
 
+        console.log(window['mobileCheck'])
         if (window['mobileCheck']) {
             this.editable.focus()
             this.editable.click()
