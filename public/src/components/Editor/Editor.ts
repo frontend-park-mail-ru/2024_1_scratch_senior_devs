@@ -182,7 +182,10 @@ export class Editor {
             subtree: true
         });
 
-        console.log(window['mobileCheck'])
+        
+
+        // Заметка открыта с пк и с телефона. Редачится с телефона. С пк курсор начинает скакать
+        // Возможное решение: сохранять в дата атрибуты помимо username еще и socket_id чтобы различать девайс с которого редачится заметка
         if (window['mobileCheck']) {
             this.editable.focus()
             this.editable.click()

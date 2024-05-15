@@ -57,7 +57,7 @@ export class NotesPage extends ScReact.Component<any, any> {
     }
 
     componentWillUnmount() {
-        console.log("UnSubscribeToStore")
+        
         AppDispatcher.dispatch(NotesActions.EXIT);
         AppNotesStore.UnSubscribeToStore(this.updateState);
         document.body.classList.remove('locked');

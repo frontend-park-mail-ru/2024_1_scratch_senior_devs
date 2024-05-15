@@ -9,12 +9,12 @@ export class Collaborators extends ScReact.Component<any, any> {
     }
 
     componentDidMount() {
-        console.log("componentDidMount")
+        
         AppNotesStore.SubscribeToStore(this.updateState)
     }
 
     componentWillUnmount() {
-        console.log("UnSubscribeToStore")
+        
         AppNotesStore.UnSubscribeToStore(this.updateState)
     }
 

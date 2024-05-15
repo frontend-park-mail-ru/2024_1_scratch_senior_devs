@@ -148,7 +148,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     exit () {
-        console.log("exit")
+        
         AppNotesStore.ClearCallbacks()
         AppNoteStore.ClearCallbacks()
 
@@ -268,15 +268,10 @@ class NotesStore extends BaseStore<NotesStoreState> {
         this.ws.onMessage((event) => {
             let data = JSON.parse(event.data)
 
-            // TODO: синхронизация между девайсами (сверять id девайса / вебсокета)
-            // А нужна ли вообще проверка ? // Нужна, иначе курсор скачет // С кем ты разговариваешь?
-            console.log("onMessage")
-            console.log(data)
-            console.log(data.socket_id)
-            console.log(this.socket_id)
-            console.log(data.socket_id == this.socket_id)
+            
+            
+            // Если socket_id совпадает, то ничего обновлять не надо
             if (data.socket_id == this.socket_id) {
-                console.log("return")
                 return
             }
             
@@ -315,8 +310,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
                     return
                 }
 
-                console.log("updated state")
-                console.log(data)
+                
+                
                 this.SetState(state => ({
                     ...state,
                     selectedNoteSynced: data.username == AppUserStore.state.username,
@@ -652,8 +647,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 
-            console.log(note)
-            console.log(status)
+            
+            
 
             this.SetState(state => ({
                 ...state,
