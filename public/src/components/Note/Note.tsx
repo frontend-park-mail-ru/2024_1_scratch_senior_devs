@@ -59,7 +59,7 @@ export class Note extends ScReact.Component<NoteProps, any> {
                 <div className="note-tags-container" ref={ref => this.tagsContainerRef = ref}></div>
                 <span className="update-time">{formatDate(this.props.note.update_time)}</span>
 
-                <Img src={this.props.note.favorite ? "star-filled.svg" : "star.svg"} className="favorite-icon" onClick={this.toggleFavorite}/>
+                <Img src={this.props.note.favorite ? "star-filled.svg" : "star.svg"} className={"favorite-icon " + (this.props.note.favorite ? "show" : "") } onClick={this.toggleFavorite}/>
             </div>
         );
     }

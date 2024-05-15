@@ -741,6 +741,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             }))
 
             AppToasts.info("Заметка добавлена в избранное")
+
         }
     }
 
@@ -750,7 +751,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
         AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 
         if (status == 200) {
-
             if (this.state.selectedNote?.id == note_id) {
                 this.SetState(state => ({
                     ...state,
@@ -771,6 +771,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             }))
 
             AppToasts.info("Заметка удалена из избранного")
+
         }
     }
 

@@ -18,6 +18,10 @@
 	&:hover
 		background: rgba(27, 39, 53, 0.9)
 
+		.favorite-icon
+			animation: showAnim 0.2s
+			display: flex
+
 	.note-title__container
 		display: flex
 		align-items: center
@@ -53,6 +57,8 @@
 
 	.favorite-icon
 		position: absolute
+		display: none
+		animation: closeAnim 0.2s
 		right: 15px
 		top: 10px
 		filter: invert(70%)
@@ -61,6 +67,10 @@
 		pointer-events: auto
 		padding: 4px
 		border-radius: 8px
+
+		&.show
+			display: block
+			animation: showAnim 0.2s
 
 		&:hover
 			background: rgba(0, 0, 0, 0.15)

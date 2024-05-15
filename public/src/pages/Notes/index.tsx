@@ -240,7 +240,9 @@ export class NotesPage extends ScReact.Component<any, any> {
                     <div className="notes-container" onclick={this.handleSelectNote} ref={ref => this.notesContainerRef = ref}>
                         <Loader active={this.state.fetching}/>
                         {
-                            this.state.notes.length > 0 ?
+                            this.state.notes.sort(function (note1, note2) {
+                                return (note1.favorite === note2.favorite)? 0 : note1.favorite? -1 : 1
+                            }).length > 0 ?
                                 this.state.notes.map(note => (
                                     <Note selected={this.state.selectedNote?.id == note.id} note={note}/>
                                 ))
