@@ -47,7 +47,7 @@ export class Tooltip extends ScReact.Component<TooltipProps, any> {
         return (
             <div
                  className={"tooltip-wrapper " + (this.props.className ? this.props.className : "") + (this.state.open && this.props.content ? " open " : "")}
-                 onclick={() =>  this.props.onClick && this.props.onClick() }
+                 onclick={() => this.props.onClick && this.props.onClick() }
             >
 
                 <div className="open-btn" onclick={this.toggleOpen} ref={ref => this.openBtnRef = ref}>

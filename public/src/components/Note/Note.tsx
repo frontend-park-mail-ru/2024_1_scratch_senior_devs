@@ -2,6 +2,10 @@ import {ScReact} from '@veglem/screact';
 import './Note.sass';
 import {formatDate, parseNoteTitle, truncate, unicodeToChar} from "../../modules/utils";
 import {NoteType} from "../../utils/types";
+import {Img} from "../Image/Image";
+import {Tooltip} from "../Tooltip/Tooltip";
+import {AppDispatcher} from "../../modules/dispatcher";
+import {NotesActions} from "../../modules/stores/NotesStore";
 
 const MAX_NOTE_CONTENT_PREVIEW_LENGTH = 20;
 const MAX_TAGS_PREVIEW_COUNT = 2;
@@ -41,6 +45,10 @@ export class Note extends ScReact.Component<NoteProps, any> {
         }
     }
 
+    toggleFavorite = () => {
+        AppDispatcher.dispatch(NotesActions.TOGGLE_FAVORITE, this.props.note)
+    }
+
     render() {
         return (
             <div className={'note-container ' + (this.props.selected ? 'selected' : '')} id={this.props.note.id} style={`background: ${this.props.note.header};`}>
@@ -50,6 +58,8 @@ export class Note extends ScReact.Component<NoteProps, any> {
                 </div>
                 <div className="note-tags-container" ref={ref => this.tagsContainerRef = ref}></div>
                 <span className="update-time">{formatDate(this.props.note.update_time)}</span>
+
+                <Img src={this.props.note.favorite ? "star-filled.svg" : "star.svg"} className="favorite-icon" onClick={this.toggleFavorite}/>
             </div>
         );
     }

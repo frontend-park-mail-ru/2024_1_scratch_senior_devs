@@ -126,7 +126,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
                     await this.updateNoteIcon(action.payload)
                     break
                 case NotesActions.UPDATE_NOTE_BACKGROUND:
-                    this.updateNoteBackground(action.payload)
+                    await this.updateNoteBackground(action.payload)
                     break
                 case NotesActions.CHANGE_TITLE:
                     this.updateSelectedNoteTitle(action.payload)
@@ -136,6 +136,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
                     break
                 case NotesActions.EXPORT_TO_PDF:
                     await this.exportToPDF()
+                    break
+                case NotesActions.TOGGLE_FAVORITE:
+                    await this.toggleFavorite(action.payload)
                     break
             }
         });
@@ -686,7 +689,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 
             if (status == 204) {
-                // AppToasts.success("Тэг успешно добавлен")
                 await this.fetchTags()
             }
         }
@@ -704,6 +706,74 @@ class NotesStore extends BaseStore<NotesStoreState> {
             AppToasts.error("Что-то пошло не так")
         }
     }
+
+    toggleFavorite = async (note:NoteType) => {
+        if (note.favorite) {
+            await this.removeFromFavorites(note.id)
+        } else {
+            await this.addToFavorites(note.id)
+        }
+    }
+
+    addToFavorites = async (note_id:string) => {
+        const {status, csrf, note} = await AppNoteRequests.AddToFavorites(note_id, AppUserStore.state.JWT, AppUserStore.state.csrf)
+
+        AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+
+        if (status == 200) {
+            if (this.state.selectedNote?.id == note_id) {
+                this.SetState(state => ({
+                    ...state,
+                    selectedNote: note
+                }))
+            }
+
+            const notes = this.state.notes;
+            notes.forEach((item, index) => {
+                if (item.id == note_id) {
+                    notes[index] = note;
+                }
+            });
+
+            this.SetState(state => ({
+                ...state,
+                notes: notes
+            }))
+
+            AppToasts.info("Заметка добавлена в избранное")
+        }
+    }
+
+    removeFromFavorites = async (note_id:string) => {
+        const {status, csrf, note} = await AppNoteRequests.RemoveFromFavorites(note_id, AppUserStore.state.JWT, AppUserStore.state.csrf)
+
+        AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+
+        if (status == 200) {
+
+            if (this.state.selectedNote?.id == note_id) {
+                this.SetState(state => ({
+                    ...state,
+                    selectedNote: note
+                }))
+            }
+
+            const notes = this.state.notes;
+            notes.forEach((item, index) => {
+                if (item.id == note_id) {
+                    notes[index] = note;
+                }
+            });
+
+            this.SetState(state => ({
+                ...state,
+                notes: notes
+            }))
+
+            AppToasts.info("Заметка удалена из избранного")
+        }
+    }
+
 }
 
 export const NotesActions = {
@@ -738,7 +808,8 @@ export const NotesActions = {
     CHANGE_CONTENT: "CHANGE_CONTENT",
     DELETE_TAG: "DELETE_TAG",
     ADD_TAG: "ADD_TAG",
-    EXPORT_TO_PDF: "EXPORT_TO_PDF"
+    EXPORT_TO_PDF: "EXPORT_TO_PDF",
+    TOGGLE_FAVORITE: "TOGGLE_FAVORITE",
 };
 
 export const AppNotesStore = new NotesStore();

@@ -614,6 +614,48 @@ class NoteRequests {
 
         throw Error(response.body.message);
     }
+
+    AddToFavorites = async (note_id: string,jwt:string, csrf:string) => {
+        const response = await Ajax.Put(this.baseUrl + '/' + note_id + '/add_fav/', {
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            }
+        });
+
+        if (response.status == 200) {
+            response.body.data = JSON.parse(response.body.data)
+
+            return {
+                note: response.body,
+                status: response.status,
+                csrf: response.headers['x-csrf-token']
+            }
+        }
+
+        throw Error(response.body.message);
+    }
+
+    RemoveFromFavorites = async (note_id: string, jwt:string, csrf:string) => {
+        const response = await Ajax.Put(this.baseUrl + '/' + note_id + '/del_fav/', {
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            }
+        });
+
+        if (response.status == 200) {
+            response.body.data = JSON.parse(response.body.data)
+
+            return {
+                note: response.body,
+                status: response.status,
+                csrf: response.headers['x-csrf-token']
+            }
+        }
+
+        throw Error(response.body.message);
+    }
 }
 
 class TagRequests {

@@ -91,8 +91,8 @@ export class NoteMenu extends ScReact.Component<any, any> {
                         <span>Скачать в pdf</span>
                     </div>
                     <div className="options-item mobile-option">
-                        <Img src={this.props.note.favourite ? "star-filled.svg" : "star.svg"} className="icon"/>
-                        <span>{this.props.note.favourite ? "Удалить из избранного" : "В избранное"}</span>
+                        <Img src={this.props.note.favorite ? "star-filled.svg" : "star.svg"} className="icon"/>
+                        <span>{this.props.note.favorite ? "Удалить из избранного" : "В избранное"}</span>
                     </div>
                     <div className="options-item mobile-option" onclick={this.tagList}>
                         <Img src="tag.svg" className="icon"/>

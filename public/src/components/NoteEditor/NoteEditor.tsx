@@ -27,8 +27,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
         tagsModalOpen: false,
         emojiModalOpen: false,
         backgroundModalOpen: false,
-        fullScreen: false,
-        favourite: false // TODO
+        fullScreen: false
     };
 
     private savingLabelRef;
@@ -111,13 +110,7 @@ export class NoteEditor extends ScReact.Component<any, any> {
     }
 
     addToFavoriteBtn = () => {
-        // TODO: 4 модуль
-        
-        AppToasts.success("Заметка добавлена в избранное")
-        this.setState(state => ({
-            ...state,
-            favourite: !state.favourite
-        }))
+        AppDispatcher.dispatch(NotesActions.TOGGLE_FAVORITE, this.state.selectedNote)
     }
 
     openFullScreen = () => {
@@ -276,10 +269,10 @@ export class NoteEditor extends ScReact.Component<any, any> {
                     </div>
 
                     <div className={isSubNote ? "hidden" : ""}>
-                        <Tooltip hoverTooltip={this.state.favourite ? "Удалить из избранного" : "В избранное"}
+                        <Tooltip hoverTooltip={this.state.selectedNote?.favorite ? "Удалить из избранного" : "В избранное"}
                                  showHoverTooltip={true}
                                  className="add-to-favorite-btn"
-                                 icon={this.state.favourite ? "star-filled.svg" : "star.svg"}
+                                 icon={this.state.selectedNote?.favorite ? "star-filled.svg" : "star.svg"}
                                  onClick={this.addToFavoriteBtn}/>
                     </div>
 
