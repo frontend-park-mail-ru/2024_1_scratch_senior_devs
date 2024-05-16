@@ -489,16 +489,23 @@ export const defaultPlugins: EditorPlugin[] = [
             const img = document.createElement('img');
             img.contentEditable = 'false';
             img.width = 500
-            img.src = '/assets/add.svg'; //todo: default image url // скелетоны нужныыыыыы
-            img.dataset.imgid = props['imgId'] as string;
+
+            const id = props['imgId'] as string
+
+            img.dataset.imgid = id;
 
             console.log("fromJson")
             console.log(AppNoteStore.state.cache)
+            console.log(id in AppNoteStore.state.cache)
 
-            AppNoteRequests.GetImage(props['imgId'] as string, AppUserStore.state.JWT, AppUserStore.state.csrf).then(url => {
-                img.src = url;
-                AppDispatcher.dispatch(NoteStoreActions.PUT_TO_CACHE, {key: props['imgId'], value: url})
-            })
+            if (id in AppNoteStore.state.cache) {
+                img.src = AppNoteStore.state.cache[id]
+            } else {
+                AppNoteRequests.GetImage(id, AppUserStore.state.JWT, AppUserStore.state.csrf).then(url => {
+                    img.src = url;
+                    AppDispatcher.dispatch(NoteStoreActions.PUT_TO_CACHE, {key: id, value: url})
+                })
+            }
 
             return img;
         },
