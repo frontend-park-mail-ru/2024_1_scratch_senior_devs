@@ -148,7 +148,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     exit () {
-        
         AppNotesStore.ClearCallbacks()
         AppNoteStore.ClearCallbacks()
 
@@ -327,17 +326,12 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     async openNote(id:string) {
-        try {
+        const note = await AppNoteRequests.Get(id, AppUserStore.state.JWT);
 
-            const note = await AppNoteRequests.Get(id, AppUserStore.state.JWT);
+        this.selectNote(note);
 
-            this.selectNote(note);
+        history.pushState(null, null, '/notes/' + id)
 
-            history.pushState(null, null, '/notes/' + id)
-
-        } catch {
-            AppToasts.error('Что-то пошло не так');
-        }
     }
 
     async init () {
