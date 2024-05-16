@@ -1071,18 +1071,24 @@ const RenderSubNote = (subNoteId:string) => {
 
     subNoteWrapper.appendChild(subNoteContainer)
 
-    AppNoteRequests.Get(subNoteId, AppUserStore.state.JWT).then(result => {
-        if (result.data.title == null) {
-            subNoteTitle.innerHTML = 'Подзаметка'
-        }
+    if (subNoteId in AppNoteStore.state.cache) {
+        subNoteTitle.innerHTML = AppNoteStore.state.cache[subNoteId]
+    } else {
+        AppNoteRequests.Get(subNoteId, AppUserStore.state.JWT).then(result => {
+            if (result.data.title == null) {
+                subNoteTitle.innerHTML = 'Подзаметка'
+            }
 
-        //subNoteWrapper.dataset.title = parseNoteTitle(result.data.title)
-        subNoteTitle.innerHTML = parseNoteTitle(result.data.title)
+            //subNoteWrapper.dataset.title = parseNoteTitle(result.data.title)
+            subNoteTitle.innerHTML = parseNoteTitle(result.data.title)
 
-    }).catch((e) => {
-        subNoteTitle.innerHTML = "Заметка не найдена"
-        subNoteWrapper.dataset.deleted = "true"
-    });
+            AppDispatcher.dispatch(NoteStoreActions.PUT_TO_CACHE, {key: subNoteId, value: parseNoteTitle(result.data.title)})
+
+        }).catch((e) => {
+            subNoteTitle.innerHTML = "Заметка не найдена"
+            subNoteWrapper.dataset.deleted = "true"
+        });
+    }
 
     let loading = true
 
