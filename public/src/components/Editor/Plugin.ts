@@ -492,6 +492,7 @@ export const defaultPlugins: EditorPlugin[] = [
             const id = props['imgId'] as string
 
             img.dataset.imgid = id;
+            img.className = "img"
 
             if (id in AppNoteStore.state.cache) {
                 img.src = AppNoteStore.state.cache[id]
@@ -507,12 +508,18 @@ export const defaultPlugins: EditorPlugin[] = [
         insertNode: (innerContent, ...args) => {
             const img = document.createElement('img');
             img.contentEditable = 'false';
-            img.src = '/assets/add.svg'; //todo: default image url  // скелетоны нужныыыыыы аааааааа
-            img.dataset.imgid = args[0];
+            img.src = '/assets/add.svg'; // todo: скелетон
+            img.className = "img"
 
-            AppNoteRequests.GetImage(args[0], AppUserStore.state.JWT, AppUserStore.state.csrf).then(url => {
+            const id = args[0] as string
+
+            img.dataset.imgid = id;
+
+            AppNoteRequests.GetImage(id, AppUserStore.state.JWT, AppUserStore.state.csrf).then(url => {
                 img.src = url;
+                AppDispatcher.dispatch(NoteStoreActions.PUT_TO_CACHE, {key: id, value: url})
             })
+
             return img;
         }
     },
