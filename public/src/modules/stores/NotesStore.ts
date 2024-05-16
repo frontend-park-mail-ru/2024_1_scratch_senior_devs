@@ -244,7 +244,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
             ...state,
             selectedNote: note,
             selectedNoteChildren: note.children,
-            selectedNoteCollaborators: []
+            selectedNoteCollaborators: [],
+            selectedNoteSynced: null
         }));
 
         AppDispatcher.dispatch(NoteStoreActions.SET_NOTE, {
