@@ -1073,28 +1073,44 @@ const RenderSubNote = (subNoteId:string) => {
 
     let loaded = false
 
-    if (subNoteId in AppNoteStore.state.cache) {
-        subNoteTitle.innerHTML = AppNoteStore.state.cache[subNoteId]
+    // if (subNoteId in AppNoteStore.state.cache) {
+    //     subNoteTitle.innerHTML = AppNoteStore.state.cache[subNoteId]
+    //     loaded = true
+    // } else {
+    //     AppNoteRequests.Get(subNoteId, AppUserStore.state.JWT).then(result => {
+    //         if (result.data.title == null) {
+    //             subNoteTitle.innerHTML = 'Подзаметка'
+    //         }
+    //
+    //         //subNoteWrapper.dataset.title = parseNoteTitle(result.data.title)
+    //         subNoteTitle.innerHTML = parseNoteTitle(result.data.title)
+    //
+    //         AppDispatcher.dispatch(NoteStoreActions.PUT_TO_CACHE, {key: subNoteId, value: parseNoteTitle(result.data.title)})
+    //
+    //         loaded = true
+    //
+    //     }).catch((e) => {
+    //         subNoteTitle.innerHTML = "Заметка не найдена"
+    //         subNoteWrapper.dataset.deleted = "true"
+    //     });
+    // }
+
+    AppNoteRequests.Get(subNoteId, AppUserStore.state.JWT).then(result => {
+        if (result.data.title == null) {
+            subNoteTitle.innerHTML = 'Подзаметка'
+        }
+
+        //subNoteWrapper.dataset.title = parseNoteTitle(result.data.title)
+        subNoteTitle.innerHTML = parseNoteTitle(result.data.title)
+
+        AppDispatcher.dispatch(NoteStoreActions.PUT_TO_CACHE, {key: subNoteId, value: parseNoteTitle(result.data.title)})
+
         loaded = true
-    } else {
-        AppNoteRequests.Get(subNoteId, AppUserStore.state.JWT).then(result => {
-            if (result.data.title == null) {
-                subNoteTitle.innerHTML = 'Подзаметка'
-            }
 
-            //subNoteWrapper.dataset.title = parseNoteTitle(result.data.title)
-            subNoteTitle.innerHTML = parseNoteTitle(result.data.title)
-
-            AppDispatcher.dispatch(NoteStoreActions.PUT_TO_CACHE, {key: subNoteId, value: parseNoteTitle(result.data.title)})
-
-            loaded = true
-
-        }).catch((e) => {
-            subNoteTitle.innerHTML = "Заметка не найдена"
-            subNoteWrapper.dataset.deleted = "true"
-        });
-    }
-
+    }).catch((e) => {
+        subNoteTitle.innerHTML = "Заметка не найдена"
+        subNoteWrapper.dataset.deleted = "true"
+    });
 
     subNoteWrapper.onclick = () => {
         if (!subNoteWrapper.dataset.deleted && loaded) {
