@@ -50,6 +50,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
     private registerEvents(){
         AppDispatcher.register(async (action) => {
             switch (action.type){
+                case NotesActions.OPEN_NOTE:
+                    await this.openNote(action.payload)
+                    break
                 case NotesActions.SELECT_NOTE:
                     this.selectNote(action.payload);
                     break;
@@ -95,9 +98,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 case NotesActions.START_FETCHING:
                     this.startFetching();
                     break;
-                case NotesActions.OPEN_NOTE:
-                    await this.openNote(action.payload)
-                    break
                 case NotesActions.ADD_TAG_TO_NOTE:
                     await this.createTag(action.payload)
                     break
@@ -239,11 +239,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
             this.syncNotes()
         }
 
-        AppDispatcher.dispatch(NoteStoreActions.SET_NOTE, {
-            title: note.data.title,
-            blocks: note.data.content
-        })
-
         this.closeWS()
 
         this.SetState(state => ({
@@ -253,6 +248,10 @@ class NotesStore extends BaseStore<NotesStoreState> {
             selectedNoteCollaborators: []
         }));
 
+        AppDispatcher.dispatch(NoteStoreActions.SET_NOTE, {
+            title: note.data.title,
+            blocks: note.data.content
+        })
 
         this.ws = new WebSocketConnection(`note/${note.id}/subscribe_on_updates`)
 
@@ -329,15 +328,15 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
     async openNote(id:string) {
         try {
+
             const note = await AppNoteRequests.Get(id, AppUserStore.state.JWT);
 
             this.selectNote(note);
 
             history.pushState(null, null, '/notes/' + id)
 
-        } catch (e) {
-            console.log(e.message)
-            AppToasts.error('Заметка не найдена');
+        } catch {
+            AppToasts.error('Что-то пошло не так');
         }
     }
 

@@ -488,15 +488,10 @@ export const defaultPlugins: EditorPlugin[] = [
         fromJson: (props: PluginProps) => {
             const img = document.createElement('img');
             img.contentEditable = 'false';
-            img.width = 500
 
             const id = props['imgId'] as string
 
             img.dataset.imgid = id;
-
-            console.log("fromJson")
-            console.log(AppNoteStore.state.cache)
-            console.log(id in AppNoteStore.state.cache)
 
             if (id in AppNoteStore.state.cache) {
                 img.src = AppNoteStore.state.cache[id]
@@ -512,7 +507,6 @@ export const defaultPlugins: EditorPlugin[] = [
         insertNode: (innerContent, ...args) => {
             const img = document.createElement('img');
             img.contentEditable = 'false';
-            img.width = 500
             img.src = '/assets/add.svg'; //todo: default image url  // скелетоны нужныыыыыы аааааааа
             img.dataset.imgid = args[0];
 
