@@ -4,7 +4,7 @@ import {AppNotesStore, NotesActions} from "../../modules/stores/NotesStore";
 import {AppNoteRequests} from "../../modules/api";
 import {AppDispatcher} from "../../modules/dispatcher";
 import {AppToasts} from "../../modules/toasts";
-import {AppNoteStore} from "../../modules/stores/NoteStore";
+import {AppNoteStore, NoteStoreActions} from "../../modules/stores/NoteStore";
 
 interface EditorPlugin {
     pluginName: string;
@@ -492,9 +492,14 @@ export const defaultPlugins: EditorPlugin[] = [
             img.src = '/assets/add.svg'; //todo: default image url // скелетоны нужныыыыыы
             img.dataset.imgid = props['imgId'] as string;
 
+            console.log("fromJson")
+            console.log(AppNoteStore.state.cache)
+
             AppNoteRequests.GetImage(props['imgId'] as string, AppUserStore.state.JWT, AppUserStore.state.csrf).then(url => {
                 img.src = url;
+                AppDispatcher.dispatch(NoteStoreActions.PUT_TO_CACHE, {key: props['imgId'], value: url})
             })
+
             return img;
         },
         insertNode: (innerContent, ...args) => {

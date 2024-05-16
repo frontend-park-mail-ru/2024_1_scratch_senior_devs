@@ -8,7 +8,8 @@ export const NoteStoreActions = {
     CHANGE_TITLE: 'CHANGE_TITLE',
     CHANGE_CONTENT: 'CHANGE_CONTENT',
     OPEN_DROPDOWN: "OPEN_DROPDOWN",
-    CLOSE_DROPDOWN: "CLOSE_DROPDOWN"
+    CLOSE_DROPDOWN: "CLOSE_DROPDOWN",
+    PUT_TO_CACHE: "PUT_TO_CACHE"
 };
 
 export type NoteStoreState = {
@@ -34,7 +35,8 @@ class NoteStore extends BaseStore<NoteStoreState> {
         note: {
             title: '',
             blocks: Array<any>()
-        }
+        },
+        cache: {}
     };
 
     private severs: Array<(data) => any> = [];
@@ -58,6 +60,9 @@ class NoteStore extends BaseStore<NoteStoreState> {
                     break
                 case NoteStoreActions.CLEAR_NOTE:
                     this.clearNote();
+                    break
+                case NoteStoreActions.PUT_TO_CACHE:
+                    this.updateCache(action.payload);
                     break
             }
         });
@@ -122,6 +127,10 @@ class NoteStore extends BaseStore<NoteStoreState> {
                 blocks: Array<any>()
             }
         }))
+    }
+
+    private updateCache = ({key, value}) => {
+        this.state.cache[key] = value
     }
 }
 
