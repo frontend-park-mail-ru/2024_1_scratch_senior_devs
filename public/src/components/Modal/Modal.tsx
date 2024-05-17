@@ -21,7 +21,7 @@ export class Modal extends ScReact.Component<any, any> {
 
     render() {
         return (
-            <div className={'modal-wrapper ' + (this.props.open ? 'active' : '')}>
+            <div className={'modal-wrapper ' + (this.props.open ? 'active ' : '') + (this.props.hideTitle ? "short " : "")}>
                 <div className="overlay" ref={ref => this.overlayRef = ref}></div>
                 <div className="modal-content">
                     <h2 className="modal-content__title">{this.props.title ? this.props.title : ""}</h2>

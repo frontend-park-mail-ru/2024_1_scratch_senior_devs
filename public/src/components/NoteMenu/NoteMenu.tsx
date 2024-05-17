@@ -71,6 +71,10 @@ export class NoteMenu extends ScReact.Component<any, any> {
         AppDispatcher.dispatch(NotesActions.EXPORT_TO_PDF)
     }
 
+    sharePanel = () => {
+        this.toggleMenu()
+        this.props.openSharePanel()
+    }
 
     render() {
         return (
@@ -81,15 +85,15 @@ export class NoteMenu extends ScReact.Component<any, any> {
                     </div>
                 </div>
                 <div className="options" ref={ref => this.noteMenuRef = ref}>
-                    <div className="options-item" onClick={this.deleteNote}>
-                        <Img src="trash.svg" className="icon"/>
-                        <span>Удалить заметку</span>
+                    <div className="options-item" onclick={this.sharePanel}>
+                        <Img src="link.svg" className="icon"/>
+                        <span>Поделиться</span>
                     </div>
-                    <div className="options-item" onClick={this.exportToPdf}>
+                    <div className="options-item" onclick={this.exportToPdf}>
                         <Img src="pdf.svg" className="icon"/>
                         <span>Скачать в pdf</span>
                     </div>
-                    <div className="options-item" onClick={this.exportToZip}>
+                    <div className="options-item" onclick={this.exportToZip}>
                         <Img src="zip.svg" className="icon"/>
                         <span>Скачать в zip</span>
                     </div>
@@ -97,17 +101,21 @@ export class NoteMenu extends ScReact.Component<any, any> {
                         <Img src={this.props.note.favorite ? "star-filled.svg" : "star.svg"} className="icon"/>
                         <span>{this.props.note.favorite ? "Удалить из избранного" : "В избранное"}</span>
                     </div>
-                    <div className="options-item mobile-option" onClick={this.tagList}>
+                    <div className="options-item mobile-option" onclick={this.tagList}>
                         <Img src="tag.svg" className="icon"/>
                         <span>Изменить тэги</span>
                     </div>
-                    <div className="options-item mobile-option" onClick={this.emojiList}>
+                    <div className="options-item mobile-option" onclick={this.emojiList}>
                         <Img src="emoji.svg" className="icon"/>
                         <span>Изменить иконку</span>
                     </div>
-                    <div className="options-item mobile-option" onClick={this.backgroundList}>
+                    <div className="options-item mobile-option" onclick={this.backgroundList}>
                         <Img src="image.svg" className="icon"/>
                         <span>Изменить шапку</span>
+                    </div>
+                    <div className="options-item" onclick={this.deleteNote}>
+                        <Img src="trash.svg" className="icon"/>
+                        <span>Удалить заметку</span>
                     </div>
                 </div>
             </div>

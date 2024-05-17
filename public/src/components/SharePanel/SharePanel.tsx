@@ -21,7 +21,7 @@ export class SharePanel extends ScReact.Component<any, any> {
                         <span>Просматривать могут все, у кого есть ссылка</span>
                         <ToggleButton />
                     </div>
-                    <input type="text" disabled className="share_panel__share-link-container__input" value="http://localhost:8010/notes/0a48fb5e-eb2b-41f4-9e41-87544842f539"/>
+                    <input type="text" disabled className="share_panel__share-link-container__input" value="https://you-note.ru/notes/4a644626-c335-4728-bb82-f63e9844eb74"/>
                     <Button label="Скопировать"/>
                 </div>
                 <div className="share_panel__social-btns-container">
@@ -30,6 +30,7 @@ export class SharePanel extends ScReact.Component<any, any> {
                         <Img src="vk.png" className="social-icon"/>
                         <Img src="odnoklassniki.png" className="social-icon" />
                         <Img src="whatsapp.png" className="social-icon" />
+                        <Img src="viber.png" className="social-icon" />
                     </div>
                 </div>
             </div>

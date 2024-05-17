@@ -28,6 +28,7 @@ type NoteEditorType = {
     emojiModalOpen: boolean
     backgroundModalOpen: boolean
     fullScreen: boolean
+    shareModalOpen: boolean
 }
 
 type NoteEditorProps = {
@@ -47,10 +48,9 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
         tagsModalOpen: false,
         emojiModalOpen: false,
         backgroundModalOpen: false,
+        shareModalOpen: false,
         fullScreen: false
     };
-
-    private savingLabelRef;
 
     componentDidMount() {
         AppNotesStore.SubscribeToStore(this.updateState);
@@ -206,6 +206,20 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
         }))
     }
 
+    openShareModal = () => {
+        this.setState(state => ({
+            ...state,
+            shareModalOpen: true
+        }))
+    }
+
+    closeShareModal = () => {
+        this.setState(state => ({
+            ...state,
+            shareModalOpen: false
+        }))
+    }
+
     render() {
         const isSubNote = this.state.selectedNote?.parent != "00000000-0000-0000-0000-000000000000" ? "hidden" : ""
         const isOwner = this.state.selectedNote?.owner_id == AppUserStore.state.user_id
@@ -244,6 +258,13 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
                        reset={false}
                        title="Изменить шапку"
                        content={<BackgroundPicker />}
+                />
+
+                <Modal open={this.state.shareModalOpen}
+                       handleClose={this.closeShareModal}
+                       reset={false}
+                       hideTitle={true}
+                       content={<SharePanel />}
                 />
 
                 <div className="note-background" style={`background: ${this.state.selectedNote?.header};`}>
@@ -380,6 +401,7 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
                             openTagList={this.openTagsModal}
                             openEmojiList={this.openEmojiModal}
                             openBackgroundList={this.openBackgroundModal}
+                            openSharePanel={this.openShareModal}
                         /> : ""
                     }
 
