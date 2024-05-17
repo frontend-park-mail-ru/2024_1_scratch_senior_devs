@@ -11,6 +11,8 @@ import {
 import {AppUserStore} from "../../modules/stores/UserStore";
 import {getCaretPosition} from "../../modules/utils";
 import {debounce} from "../../utils/debauncer";
+import {AppNotesStore} from "../../modules/stores/NotesStore";
+import {AppNoteStore} from "../../modules/stores/NoteStore";
 
 export class Editor {
     private readonly editable: HTMLElement;
@@ -80,8 +82,8 @@ export class Editor {
             }
 
             const scanTree = (node: HTMLElement) => {
-                if (`cursor${AppUserStore.state.username}` in node.dataset) {
-                    delete node.dataset[`cursor${AppUserStore.state.username}`];
+                if (`cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replace('-','')}` in node.dataset) {
+                    delete node.dataset[`cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replace('-','')}`];
                 }
 
                 node.childNodes.forEach(child => {
@@ -106,7 +108,7 @@ export class Editor {
 
                 scanTree(this.editable);
 
-                elem.dataset[`cursor${AppUserStore.state.username}`] = `${getCaretPosition(elem)}`;
+                elem.dataset[`cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replace('-','')}`] = `${getCaretPosition(elem)}`;
 
                 // TODO: отоброажать курсоры пользователей при редактировании одной заметки
                 // const fakeCaret = document.createElement("div")
@@ -182,7 +184,7 @@ export class Editor {
             subtree: true
         });
 
-        
+
 
         // Заметка открыта с пк и с телефона. Редачится с телефона. С пк курсор начинает скакать
         // Возможное решение: сохранять в дата атрибуты помимо username еще и socket_id чтобы различать девайс с которого редачится заметка
@@ -208,7 +210,9 @@ export class Editor {
             const parentPlugin = defaultPlugins.find(plug => {
                 return plug.checkPlugin(node.parentElement);
             });
-            if ((parentPlugin.pluginName === 'div' || parentPlugin.pluginName === 'li' || parentPlugin.pluginName === 'li-todo') && node.textContent.startsWith('/') && `cursor${AppUserStore.state.username}` in node.parentElement.dataset) {
+            if ((parentPlugin.pluginName === 'div' || parentPlugin.pluginName === 'li' || parentPlugin.pluginName === 'li-todo') &&
+                node.textContent.startsWith('/') &&
+                `cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replace('-','')}` in node.parentElement.dataset) {
                 lastChosenElement.node = node;
                 this.dropdownCallbacks.open(node.parentElement)
             } else {
@@ -220,7 +224,7 @@ export class Editor {
             return plugin.pluginName === 'div';
         }));
         defaultPlugins[divIndex].onInsert = (node: Node) => {
-            if (node.textContent.startsWith('/') && `cursor${AppUserStore.state.username}` in node.parentElement.dataset) {
+            if (node.textContent.startsWith('/') && `cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replace('-','')}` in node.parentElement.dataset) {
                 lastChosenElement.node = node;
                 this.dropdownCallbacks.open(node as HTMLElement)
             }

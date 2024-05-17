@@ -40,7 +40,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
     };
 
     private ws
-    private socket_id
+    public socket_id
 
     constructor() {
         super();
