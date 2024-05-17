@@ -82,7 +82,7 @@ export class Editor {
             }
 
             const scanTree = (node: HTMLElement) => {
-                if (`cursor${AppUserStore.state.username}` in node.dataset) {
+                if (`cursor${AppUserStore.state.username}-${AppNotesStore.socket_id.toString()}` in node.dataset) {
                     delete node.dataset[`cursor${AppUserStore.state.username}-${AppNotesStore.socket_id.toString()}`];
                 }
 
