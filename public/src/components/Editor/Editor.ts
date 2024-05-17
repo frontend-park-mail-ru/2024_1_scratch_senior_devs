@@ -82,8 +82,8 @@ export class Editor {
             }
 
             const scanTree = (node: HTMLElement) => {
-                if (`cursor${AppUserStore.state.username}-${AppNotesStore.socket_id.toString()}` in node.dataset) {
-                    delete node.dataset[`cursor${AppUserStore.state.username}-${AppNotesStore.socket_id.toString()}`];
+                if (`cursor${AppUserStore.state.username}-${AppNotesStore.socket_id?.toString()}` in node.dataset) {
+                    delete node.dataset[`cursor${AppUserStore.state.username}-${AppNotesStore.socket_id?.toString()}`];
                 }
 
                 node.childNodes.forEach(child => {
@@ -108,7 +108,7 @@ export class Editor {
 
                 scanTree(this.editable);
 
-                elem.dataset[`cursor${AppUserStore.state.username}-${AppNotesStore.socket_id.toString()}`] = `${getCaretPosition(elem)}`;
+                elem.dataset[`cursor${AppUserStore.state.username}-${AppNotesStore.socket_id?.toString()}`] = `${getCaretPosition(elem)}`;
 
                 // TODO: отоброажать курсоры пользователей при редактировании одной заметки
                 // const fakeCaret = document.createElement("div")
@@ -184,7 +184,7 @@ export class Editor {
             subtree: true
         });
 
-        
+
 
         // Заметка открыта с пк и с телефона. Редачится с телефона. С пк курсор начинает скакать
         // Возможное решение: сохранять в дата атрибуты помимо username еще и socket_id чтобы различать девайс с которого редачится заметка
@@ -212,7 +212,7 @@ export class Editor {
             });
             if ((parentPlugin.pluginName === 'div' || parentPlugin.pluginName === 'li' || parentPlugin.pluginName === 'li-todo') &&
                 node.textContent.startsWith('/') &&
-                `cursor${AppUserStore.state.username}-${AppNotesStore.socket_id.toString()}` in node.parentElement.dataset) {
+                `cursor${AppUserStore.state.username}-${AppNotesStore.socket_id?.toString()}` in node.parentElement.dataset) {
                 lastChosenElement.node = node;
                 this.dropdownCallbacks.open(node.parentElement)
             } else {
@@ -224,7 +224,7 @@ export class Editor {
             return plugin.pluginName === 'div';
         }));
         defaultPlugins[divIndex].onInsert = (node: Node) => {
-            if (node.textContent.startsWith('/') && `cursor${AppUserStore.state.username}-${AppNotesStore.socket_id.toString()}` in node.parentElement.dataset) {
+            if (node.textContent.startsWith('/') && `cursor${AppUserStore.state.username}-${AppNotesStore.socket_id?.toString()}` in node.parentElement.dataset) {
                 lastChosenElement.node = node;
                 this.dropdownCallbacks.open(node as HTMLElement)
             }
