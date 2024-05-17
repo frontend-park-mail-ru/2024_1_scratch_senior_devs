@@ -31,7 +31,7 @@ export class Tooltip extends ScReact.Component<TooltipProps, any> {
     }
 
     handleClickOutside = (e) => {
-        if (this.state.open && !this.openBtnRef.contains(e.target) && !this.tooltipContentRef.contains(e.target) && !e.target.matches(".note-editor-content, .note-editor-content *")) {
+        if (this.state.open && !this.openBtnRef.contains(e.target) && !this.tooltipContentRef.contains(e.target)) {
             this.toggleOpen();
         }
     }

@@ -17,6 +17,7 @@ import {Collaborators} from "../Collaborators/Collaborators";
 import {EmojiPicker} from "../EmojiPicker/EmojiPicker";
 import {BackgroundPicker} from "../BackgroundPicker/BackgroundPicker";
 import {NoteType} from "../../utils/types";
+import {SharePanel} from "../SharePanel/SharePanel";
 
 type NoteEditorType = {
     selectedNote: NoteType
@@ -293,6 +294,17 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
                         }
                     </div>
 
+                    <div className={"share-panel-wrapper " + (isSubNote ? "hidden" : "")}>
+                        {isOwner ?
+                            <Tooltip
+                                showHoverTooltip={false}
+                                icon="link.svg"
+                                label="Поделиться"
+                                content={<SharePanel />}
+                            /> : ""
+                        }
+                    </div>
+
                     <div className="empty">
 
                     </div>
@@ -312,7 +324,6 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
                                      hoverTooltip={"Сохранено"}/>
                         </div>
                     }
-
 
                     {/*<div>*/}
                     {/*    {*/}

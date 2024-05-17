@@ -330,11 +330,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
     async openNote(id:string) {
         const note = await AppNoteRequests.Get(id, AppUserStore.state.JWT);
-
         this.selectNote(note);
-
         history.pushState(null, null, '/notes/' + id)
-
     }
 
     async init () {

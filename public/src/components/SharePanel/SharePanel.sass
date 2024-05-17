@@ -1,0 +1,103 @@
+@import "/public/src/utils/variables.sass"
+
+.share_panel
+	display: flex
+	flex-direction: column
+	border: 1px solid hsl(217.2 32.6% 25%)
+	background: #18232f
+	border-radius: 12px
+
+	h3
+		color: #f4f6f9
+
+	&__invite-people-container
+		display: flex
+		flex-direction: column
+		padding: 16px
+		gap: 12px
+		border-bottom: 1px solid hsl(217.2 32.6% 25%)
+
+		&__bottom-container
+			display: flex
+			gap: 12px
+
+			.invite-input
+				outline: none
+				background: #18232f
+				border: 1px solid hsl(217.2 32.6% 25%)
+				border-radius: 8px
+				padding: 4px 8px
+				color: #eee
+				transition: 0.3s ease
+
+				&:focus
+					border: 1px solid rgba(13, 65, 227, 0.8)
+
+				&::placeholder
+					color: #A1A1AA
+
+			.button
+				border-radius: 4px
+				padding: 6px 12px
+
+				&:hover
+					transform: scale(1)
+					background: #1744d0
+
+
+	&__share-link-container
+		display: flex
+		flex-direction: column
+		padding: 16px
+		gap: 12px
+		border-bottom: 1px solid hsl(217.2 32.6% 25%)
+
+		&__center-container
+			display: flex
+
+			span
+				color: #c0c0c0
+
+		&__input
+			outline: none
+			background: #18232f
+			border: 1px solid hsl(217.2 32.6% 25%)
+			border-radius: 8px
+			padding: 4px 8px
+			color: #eee
+			transition: 0.3s ease
+			cursor: text
+
+			&:focus
+				border: 1px solid rgba(13, 65, 227, 0.8)
+
+			&::placeholder
+				color: #A1A1AA
+
+		.button
+			width: 100%
+			border-radius: 4px
+
+			&:hover
+				transform: scale(1)
+				background: #1744d0
+
+	&__social-btns-container
+		display: flex
+		flex-direction: column
+		padding: 16px
+		gap: 12px
+
+		&__bottom-container
+			display: flex
+			align-items: center
+			justify-content: flex-start
+			width: 100%
+			gap: 10px
+
+			.social-icon
+				cursor: pointer
+				transition: 0.2s
+
+				&:hover
+					transform: scale(1.1)

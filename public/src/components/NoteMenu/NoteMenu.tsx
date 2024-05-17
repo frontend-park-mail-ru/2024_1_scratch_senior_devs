@@ -64,6 +64,14 @@ export class NoteMenu extends ScReact.Component<any, any> {
         AppDispatcher.dispatch(NotesActions.EXPORT_TO_PDF)
     }
 
+    exportToZip = () => {
+        this.toggleMenu()
+
+        // TODO
+        AppDispatcher.dispatch(NotesActions.EXPORT_TO_PDF)
+    }
+
+
     render() {
         return (
             <div className={"note-menu " + (this.state.open ? "open" : "")}>
@@ -73,36 +81,31 @@ export class NoteMenu extends ScReact.Component<any, any> {
                     </div>
                 </div>
                 <div className="options" ref={ref => this.noteMenuRef = ref}>
-                    {!isSubNote(AppNotesStore.state.selectedNote) ?
-                        <div className="options-item" onclick={this.inviteUser}>
-                            <Img src="invite.png" className="icon"/>
-                            <span>Пригласить людей</span>
-                        </div> : ""}
-                    <div className="options-item">
-                        <Img src="share.svg" className="icon"/>
-                        <span>Поделиться заметкой</span>
-                    </div>
-                    <div className="options-item" onclick={this.deleteNote}>
+                    <div className="options-item" onClick={this.deleteNote}>
                         <Img src="trash.svg" className="icon"/>
                         <span>Удалить заметку</span>
                     </div>
-                    <div className="options-item" onclick={this.exportToPdf}>
+                    <div className="options-item" onClick={this.exportToPdf}>
                         <Img src="pdf.svg" className="icon"/>
                         <span>Скачать в pdf</span>
+                    </div>
+                    <div className="options-item" onClick={this.exportToZip}>
+                        <Img src="zip.svg" className="icon"/>
+                        <span>Скачать в zip</span>
                     </div>
                     <div className="options-item mobile-option">
                         <Img src={this.props.note.favorite ? "star-filled.svg" : "star.svg"} className="icon"/>
                         <span>{this.props.note.favorite ? "Удалить из избранного" : "В избранное"}</span>
                     </div>
-                    <div className="options-item mobile-option" onclick={this.tagList}>
+                    <div className="options-item mobile-option" onClick={this.tagList}>
                         <Img src="tag.svg" className="icon"/>
                         <span>Изменить тэги</span>
                     </div>
-                    <div className="options-item mobile-option" onclick={this.emojiList}>
+                    <div className="options-item mobile-option" onClick={this.emojiList}>
                         <Img src="emoji.svg" className="icon"/>
                         <span>Изменить иконку</span>
                     </div>
-                    <div className="options-item mobile-option" onclick={this.backgroundList}>
+                    <div className="options-item mobile-option" onClick={this.backgroundList}>
                         <Img src="image.svg" className="icon"/>
                         <span>Изменить шапку</span>
                     </div>

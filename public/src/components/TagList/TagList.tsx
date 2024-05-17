@@ -132,7 +132,7 @@ export class TagList extends ScReact.Component<any, TagListState> {
                     {this.props.tags.map(tag => (
                         <div className={"tag-item " + (this.state.selectedTag == tag ? "selected" : "")}>
                             <span>{tag}</span>
-                            <Img src="delete.svg" className="delete-tag-btn" onClick={() => this.removeTag(tag)}/>
+                            <Img src="delete.svg" className="delete-tag-btn" onClick={(e) => {e.stopPropagation(); this.removeTag(tag)}}/>
                         </div>
                     ))}
 

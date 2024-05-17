@@ -83,11 +83,12 @@
 				.add-note-btn
 					height: 100%
 					width: 220px
-					background: rgba(27, 39, 53, 0.3)
+					background: rgba(27, 39, 53, 0.5)
 					color: #f4f6f9
+					transition: 0.2s ease
 
 					&:hover
-						background: rgba(27, 39, 53, 0.8)
+						background: rgba(27, 39, 53, 0.7)
 						transform: scale(1)
 
 					@media screen and (max-width: $sm)
@@ -96,13 +97,14 @@
 				.add-note-icon-wrapper
 					display: none
 					padding: 8px
-					background: rgba(27, 39, 53, 0.3)
 					border-radius: 50%
-					transition: 0.3s ease
 					cursor: pointer
+					transition: 0.2s ease
+
+					background: rgba(27, 39, 53, 0.5)
 
 					&:hover
-						opacity: 0.8
+						background: rgba(27, 39, 53, 0.7)
 
 					.add-note-icon
 						width: 24px
