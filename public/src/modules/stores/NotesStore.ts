@@ -322,6 +322,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
                     blocks: noteData.content
                 })
 
+                this.syncNotes()
+
             }
         })
     }
