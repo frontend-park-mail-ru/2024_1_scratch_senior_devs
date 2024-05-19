@@ -1,7 +1,7 @@
 import {AppUserStore, UserStoreState} from '../../modules/stores/UserStore';
 import {AppNotesStore} from '../../modules/stores/NotesStore';
 import {AppRouter} from '../../modules/router';
-import {AppNoteRequests} from '../../modules/api';
+import {AppNoteRequests, AppSharedNoteRequests} from '../../modules/api';
 
 export const NotesLoader = async (path:string) => {
     const p = new Promise((resolve, reject) => {
@@ -25,6 +25,7 @@ export const NotesLoader = async (path:string) => {
 
             AppUserStore.UnSubscribeToStore(callback);
 
+            // TODO: если авторизован и открывается пошереная заметка, то делаеть ее selectedNote и рид онли ?
             if (isAuth) {
                 AppNotesStore.init().then((store) => {
                     if (path?.includes('notes/')) {
@@ -35,7 +36,7 @@ export const NotesLoader = async (path:string) => {
                             // AppToasts.error('Заметка не найдена');
                             // history.pushState(null, '', '/notes');
                             // resolve({notes: store.notes});
-                            
+
                             AppRouter.go("/404")
                             reject()
                         });
@@ -44,6 +45,19 @@ export const NotesLoader = async (path:string) => {
                     }
                 });
             } else {
+                if (path?.includes('notes/')) {
+                    const noteId = window.location.pathname.split('/').at(-1);
+
+                    AppSharedNoteRequests.Get(noteId).then(note => {
+                      console.log(note)
+                        AppRouter.openSharedNotePage(note)
+                    }).catch(() => {
+                        AppRouter.go("/")
+                    });
+
+                    reject()
+                }
+
                 AppRouter.go('/');
                 reject();
             }

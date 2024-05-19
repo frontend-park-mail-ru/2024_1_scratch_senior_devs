@@ -83,7 +83,7 @@ const Ajax = {
         return Ajax.Request(RequestMethods.POST, url, params);
     },
 
-    Get:  async (url: string, params: RequestParams): Promise<Response> => {
+    Get:  async (url: string, params?: RequestParams): Promise<Response> => {
         return Ajax.Request(RequestMethods.GET, url, params);
     },
 
@@ -363,7 +363,7 @@ class NoteRequests {
                     content: [
                         {
                             pluginName: "textBlock",
-                            content: "Hello You-note"
+                            content: " "
                         },
                         {
                             pluginName: "div",
@@ -656,6 +656,64 @@ class NoteRequests {
 
         throw Error(response.body.message);
     }
+
+    SetPublic = async (note_id: string, jwt:string, csrf:string) => {
+        const response = await Ajax.Put(this.baseUrl + '/' + note_id + '/set_public/', {
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            }
+        });
+
+        if (response.status == 200) {
+            response.body.data = JSON.parse(response.body.data)
+
+            return {
+                note: response.body,
+                status: response.status,
+                csrf: response.headers['x-csrf-token']
+            }
+        }
+
+        throw Error(response.body.message);
+    }
+
+    SetPrivate = async (note_id: string, jwt:string, csrf:string) => {
+        const response = await Ajax.Put(this.baseUrl + '/' + note_id + '/set_private/', {
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            }
+        });
+
+        if (response.status == 200) {
+            response.body.data = JSON.parse(response.body.data)
+
+            return {
+                note: response.body,
+                status: response.status,
+                csrf: response.headers['x-csrf-token']
+            }
+        }
+
+        throw Error(response.body.message);
+    }
+}
+
+class SharedNoteRequests {
+    private baseUrl = '/shared';
+
+    Get = async (id: string) => {
+        const response = await fetch(baseUrl + this.baseUrl + '/' + id);
+
+        if (response.status === 200) {
+            const data = await response.json()
+            data.data = JSON.parse(data.data);
+            return data;
+        }
+
+        throw Error(response.statusText);
+    };
 }
 
 class TagRequests {
@@ -716,6 +774,8 @@ class TagRequests {
 export const AppAuthRequests = new AuthRequests();
 
 export const AppNoteRequests = new NoteRequests();
+
+export const AppSharedNoteRequests = new SharedNoteRequests();
 
 export const AppTagRequests = new TagRequests();
 

@@ -12,7 +12,6 @@ import {AppUserStore} from "../../modules/stores/UserStore";
 import {getCaretPosition} from "../../modules/utils";
 import {debounce} from "../../utils/debauncer";
 import {AppNotesStore} from "../../modules/stores/NotesStore";
-import {AppNoteStore} from "../../modules/stores/NoteStore";
 
 export class Editor {
     private readonly editable: HTMLElement;
@@ -20,22 +19,20 @@ export class Editor {
     private dropdownObserver: MutationObserver
     private dropdownCallbacks: {open: (elem: HTMLElement) => void, close: () => void}
     private tippyCallbacks: {open: (elem: HTMLElement) => void, close: () => void}
-    private open
 
-    constructor(note: PluginProps[],
-                parent: HTMLElement,
-                dropdown: {open: (elem: HTMLElement) => void, close: () => void },
-                onChange: (schema: PluginProps[]) => void,
-                tippy: {open: (elem: HTMLElement) => void, close: () => void},
-                open: boolean) {
+    constructor(
+        note: PluginProps[],
+        parent: HTMLElement,
+        dropdown: {open: (elem: HTMLElement) => void, close: () => void },
+        onChange: (schema: PluginProps[]) => void,
+        tippy: {open: (elem: HTMLElement) => void, close: () => void}
+    ) {
 
         // TODO: при наборе символов в поисковую строку фокусится редактор заметки (отключить)
 
         this.dropdownCallbacks = dropdown;
         this.tippyCallbacks = tippy;
         this.addPlugins();
-
-        this.open = open
 
         this.editable = document.createElement('div');
         this.editable.id = "note-editor-inner"

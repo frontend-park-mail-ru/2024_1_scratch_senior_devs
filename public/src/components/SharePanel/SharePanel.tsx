@@ -3,17 +3,22 @@ import {Button} from "../Button/Button";
 import "./SharePanel.sass"
 import {ToggleButton} from "../ToggleButton/ToggleButton";
 import {Img} from "../Image/Image";
-import {AppNotesStore} from "../../modules/stores/NotesStore";
+import {AppNotesStore, NotesActions} from "../../modules/stores/NotesStore";
 import {parseNoteTitle} from "../../modules/utils";
+import {AppDispatcher} from "../../modules/dispatcher";
 
 export class SharePanel extends ScReact.Component<any, any> {
+
+    handleToggle = (value:boolean) => {
+        AppDispatcher.dispatch(value ? NotesActions.SET_PUBLIC : NotesActions.SET_PRIVATE)
+    }
 
     shareToVK = () => {
         const url = "https://vk.com/share.php?url=" + window.location.href + "&title=" + parseNoteTitle(AppNotesStore.state.selectedNote.title)
         this.openShareWindow(url)
     }
 
-    shareToOdnoklassniki = () => {
+    shareToOK= () => {
         const url = "https://connect.ok.ru/offer?url=" + window.location.href + "&title=" + parseNoteTitle(AppNotesStore.state.selectedNote.title)
         this.openShareWindow(url)
     }
@@ -45,7 +50,7 @@ export class SharePanel extends ScReact.Component<any, any> {
                     <h3>Поделиться ссылкой</h3>
                     <div className="share_panel__share-link-container__center-container">
                         <span>Просматривать могут все, у кого есть ссылка</span>
-                        <ToggleButton />
+                        <ToggleButton value={this.props.public} onToggle={this.handleToggle}/>
                     </div>
                     <input type="text" disabled className="share_panel__share-link-container__input" value="https://you-note.ru/notes/4a644626-c335-4728-bb82-f63e9844eb74"/>
                     <Button label="Скопировать"/>
@@ -54,7 +59,7 @@ export class SharePanel extends ScReact.Component<any, any> {
                     <h3>Поделиться через соц. сети</h3>
                     <div className="share_panel__social-btns-container__bottom-container">
                         <Img src="vk.png" className="social-icon" onClick={this.shareToVK}/>
-                        <Img src="odnoklassniki.png" className="social-icon" onClick={this.shareToOdnoklassniki} />
+                        <Img src="odnoklassniki.png" className="social-icon" onClick={this.shareToOK} />
                         <Img src="whatsapp.png" className="social-icon" onClick={this.shareToWhatsApp} />
                     </div>
                 </div>

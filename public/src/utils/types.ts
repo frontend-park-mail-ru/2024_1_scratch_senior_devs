@@ -11,7 +11,8 @@ export type NoteType = {
     owner_id: string,
     icon: string,
     header: string,
-    favorite: boolean
+    favorite: boolean,
+    public: boolean
 }
 
 export type CollaboratorType = {

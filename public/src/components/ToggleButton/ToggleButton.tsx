@@ -1,7 +1,13 @@
 import {ScReact} from '@veglem/screact';
 import './ToggleButton.sass';
 
-export class ToggleButton extends ScReact.Component<any, any> {
+type ToggleButtonProps = {
+    label?: string
+    value: boolean
+    onToggle: (value) => void
+}
+
+export class ToggleButton extends ScReact.Component<ToggleButtonProps, any> {
     state = {
         select: false
     };

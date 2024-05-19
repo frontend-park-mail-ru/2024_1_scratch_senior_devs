@@ -73,8 +73,7 @@ export class EditorWrapper extends Component<any, EditorState> {
                 this.self,
                 {open: this.openDropdown, close: this.closeDropdown},
                 this.props.onChangeContent,
-                {open: this.openTippy, close: this.closeTippy},
-                this.props.open
+                {open: this.openTippy, close: this.closeTippy}
             );
         }
     }

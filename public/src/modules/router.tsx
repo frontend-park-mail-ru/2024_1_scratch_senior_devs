@@ -15,6 +15,8 @@ import {HomePageLoader} from '../pages/Home/loader';
 import {NotesActions} from './stores/NotesStore';
 import {AppDispatcher} from './dispatcher';
 import NotFoundPage from '../pages/Error';
+import {NoteType} from "../utils/types";
+import {SharedNotePage} from "../pages/SharedNote";
 
 type routerState = {
     currPage: {new(): Component<any, any> }
@@ -67,8 +69,6 @@ export class Router extends ScReact.Component<any, routerState> {
         
         const path = this.normalizeURL(window.location.pathname)
 
-        
-
         if (path.includes('notes/')) {
             const noteId = path.split('/').at(-1);
             AppDispatcher.dispatch(NotesActions.FETCH_NOTE, noteId);
@@ -78,8 +78,6 @@ export class Router extends ScReact.Component<any, routerState> {
         history.replaceState(null, null, path)
 
         const page: RouterMapValue = this.pages[path];
-
-        
 
         if (page.loader !== undefined) {
 
@@ -110,20 +108,14 @@ export class Router extends ScReact.Component<any, routerState> {
     }
 
     public go(raw: string): void {
-        
-        
 
         const path = this.normalizeURL(raw)
-
-        
 
         let page: RouterMapValue = this.pages[path];
 
         if (path.includes('notes/')) {
             page = this.pages['notes'];
         }
-
-        
 
         history.pushState(null, null, path);
         if (page === undefined) {
@@ -151,7 +143,6 @@ export class Router extends ScReact.Component<any, routerState> {
                     PageProps: props
                 }));
 
-
             }).catch(() => {
                 this.setState(s => ({
                     ...s,
@@ -166,6 +157,14 @@ export class Router extends ScReact.Component<any, routerState> {
             }));
         }
 
+    }
+
+    public openSharedNotePage (note:NoteType) {
+        this.setState(s => ({
+            ...s,
+            currPage: SharedNotePage,
+            PageProps: {note: note}
+        }));
     }
 
     render(): VDomNode {

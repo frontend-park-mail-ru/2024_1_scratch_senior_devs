@@ -23,6 +23,44 @@ export type NotesStoreState = {
     fullScreen: boolean
 }
 
+export const NotesActions = {
+    SELECT_NOTE: 'SELECT_NOTE',
+    FETCH_NOTE: 'FETCH_NOTE',
+    SEARCH_NOTES: 'SEARCH_NOTES',
+    LOAD_NOTES: 'LOAD_NOTES',
+    CLOSE_NOTE: 'CLOSE_NOTE',
+    EXIT: 'EXIT_NOTES_PAGE',
+    OPEN_DELETE_NOTE_DIALOG: 'OPEN_DELETE_NOTE_DIALOG',
+    CLOSE_DELETE_NOTE_DIALOG: 'CLOSE_DELETE_NOTE_DIALOG',
+    DELETE_NOTE: 'DELETE_NOTE',
+    SAVE_NOTE: 'SAVE_NOTE',
+    CREATE_NEW_NOTE: 'CREATE_NEW_NOTE',
+    UPLOAD_IMAGE: 'UPLOAD_IMAGE',
+    UPLOAD_FILE: 'UPLOAD_FILE',
+    DOWNLOAD_FILE: 'DOWNLOAD_FILE',
+    FETCH_IMAGE: 'FETCH_IMAGE',
+    START_FETCHING: 'START_FETCHING',
+    OPEN_NOTE: 'OPEN_NOTE',
+    CREATE_SUB_NOTE: "CREATE_SUB_NOTE",
+    ADD_TAG_TO_NOTE: "ADD_TAG_TO_NOTE",
+    REMOVE_TAG_FROM_NOTE: "REMOVE_TAG_FROM_NOTE",
+    ADD_COLLABORATOR: "ADD_COLLABORATOR",
+    FETCH_TAGS: "FETCH_TAGS",
+    SYNC_NOTES: "SYNC_NOTES",
+    OPEN_FULLSCREEN: "OPEN_FULLSCREEN",
+    CLOSE_FULLSCREEN: "CLOSE_FULLSCREEN",
+    UPDATE_NOTE_ICON: "UPDATE_NOTE_ICON",
+    UPDATE_NOTE_BACKGROUND: "UPDATE_NOTE_BACKGROUND",
+    CHANGE_TITLE: "CHANGE_TITLE",
+    CHANGE_CONTENT: "CHANGE_CONTENT",
+    DELETE_TAG: "DELETE_TAG",
+    ADD_TAG: "ADD_TAG",
+    EXPORT_TO_PDF: "EXPORT_TO_PDF",
+    TOGGLE_FAVORITE: "TOGGLE_FAVORITE",
+    SET_PUBLIC: "SET_PUBLIC",
+    SET_PRIVATE: "SET_PRIVATE"
+};
+
 class NotesStore extends BaseStore<NotesStoreState> {
     state = {
         notes: [],
@@ -142,6 +180,12 @@ class NotesStore extends BaseStore<NotesStoreState> {
                     break
                 case NotesActions.TOGGLE_FAVORITE:
                     await this.toggleFavorite(action.payload)
+                    break
+                case NotesActions.SET_PRIVATE:
+                    await this.setPrivate()
+                    break
+                case NotesActions.SET_PUBLIC:
+                    await this.setPublic()
                     break
             }
         });
@@ -778,46 +822,47 @@ class NotesStore extends BaseStore<NotesStoreState> {
             }))
 
             AppToasts.info("Заметка удалена из избранного")
+        }
+    }
 
+    setPrivate = async () => {
+        try {
+            const {status, csrf, note} = await AppNoteRequests.SetPrivate(this.state.selectedNote.id, AppUserStore.state.JWT, AppUserStore.state.csrf)
+
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+
+            if (status == 200) {
+                this.SetState(state => ({
+                    ...state,
+                    selectedNote: note
+                }))
+
+                this.syncNotes()
+            }
+        } catch {
+            AppToasts.error("Что-то пошло не так")
+        }
+    }
+
+    setPublic = async () => {
+        try {
+            const {status, csrf, note} = await AppNoteRequests.SetPublic(this.state.selectedNote.id, AppUserStore.state.JWT, AppUserStore.state.csrf)
+
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+
+            if (status == 200) {
+                this.SetState(state => ({
+                    ...state,
+                    selectedNote: note
+                }))
+
+                this.syncNotes()
+            }
+        } catch {
+            AppToasts.error("Что-то пошло не так")
         }
     }
 
 }
-
-export const NotesActions = {
-    SELECT_NOTE: 'SELECT_NOTE',
-    FETCH_NOTE: 'FETCH_NOTE',
-    SEARCH_NOTES: 'SEARCH_NOTES',
-    LOAD_NOTES: 'LOAD_NOTES',
-    CLOSE_NOTE: 'CLOSE_NOTE',
-    EXIT: 'EXIT_NOTES_PAGE',
-    OPEN_DELETE_NOTE_DIALOG: 'OPEN_DELETE_NOTE_DIALOG',
-    CLOSE_DELETE_NOTE_DIALOG: 'CLOSE_DELETE_NOTE_DIALOG',
-    DELETE_NOTE: 'DELETE_NOTE',
-    SAVE_NOTE: 'SAVE_NOTE',
-    CREATE_NEW_NOTE: 'CREATE_NEW_NOTE',
-    UPLOAD_IMAGE: 'UPLOAD_IMAGE',
-    UPLOAD_FILE: 'UPLOAD_FILE',
-    DOWNLOAD_FILE: 'DOWNLOAD_FILE',
-    FETCH_IMAGE: 'FETCH_IMAGE',
-    START_FETCHING: 'START_FETCHING',
-    OPEN_NOTE: 'OPEN_NOTE',
-    CREATE_SUB_NOTE: "CREATE_SUB_NOTE",
-    ADD_TAG_TO_NOTE: "ADD_TAG_TO_NOTE",
-    REMOVE_TAG_FROM_NOTE: "REMOVE_TAG_FROM_NOTE",
-    ADD_COLLABORATOR: "ADD_COLLABORATOR",
-    FETCH_TAGS: "FETCH_TAGS",
-    SYNC_NOTES: "SYNC_NOTES",
-    OPEN_FULLSCREEN: "OPEN_FULLSCREEN",
-    CLOSE_FULLSCREEN: "CLOSE_FULLSCREEN",
-    UPDATE_NOTE_ICON: "UPDATE_NOTE_ICON",
-    UPDATE_NOTE_BACKGROUND: "UPDATE_NOTE_BACKGROUND",
-    CHANGE_TITLE: "CHANGE_TITLE",
-    CHANGE_CONTENT: "CHANGE_CONTENT",
-    DELETE_TAG: "DELETE_TAG",
-    ADD_TAG: "ADD_TAG",
-    EXPORT_TO_PDF: "EXPORT_TO_PDF",
-    TOGGLE_FAVORITE: "TOGGLE_FAVORITE",
-};
 
 export const AppNotesStore = new NotesStore();

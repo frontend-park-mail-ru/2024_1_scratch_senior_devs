@@ -50,7 +50,7 @@
 
 	.note-title
 		width: 100%
-		font-size: 28px
+		font-size: 32px
 		color: $text-main-color
 		font-weight: bold
 		margin-bottom: 5px
@@ -61,6 +61,14 @@
 			cursor: text
 
 	.note-body
+		#note-editor-inner > div:empty
+			&:hover
+				&:before
+					content: "Введите '/' для комманд"
+					color: rgba(255, 255, 255, 0.7)
+					cursor: text
+					animation: fadeIn 0.3s
+
 		.blockplaceholder
 			caret-color: transparent
 
