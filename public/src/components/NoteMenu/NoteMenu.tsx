@@ -4,6 +4,7 @@ import {Img} from "../Image/Image";
 import {AppNotesStore, NotesActions} from "../../modules/stores/NotesStore";
 import {isSubNote} from "../../modules/utils";
 import {AppDispatcher} from "../../modules/dispatcher";
+import {AppUserStore} from "../../modules/stores/UserStore";
 
 export class NoteMenu extends ScReact.Component<any, any> {
     state = {
@@ -39,11 +40,6 @@ export class NoteMenu extends ScReact.Component<any, any> {
         this.props.deleteNote()
     }
 
-    inviteUser = () => {
-        this.toggleMenu()
-        this.props.inviteUser()
-    }
-
     tagList = () => {
         this.toggleMenu()
         this.props.openTagList()
@@ -77,6 +73,8 @@ export class NoteMenu extends ScReact.Component<any, any> {
     }
 
     render() {
+        const isOwner = this.props.note?.owner_id == AppUserStore.state.user_id
+
         return (
             <div className={"note-menu " + (this.state.open ? "open" : "")}>
                 <div className="dots-wrapper" onclick={this.toggleMenu} ref={ref => this.dotsRef = ref}>
@@ -85,10 +83,14 @@ export class NoteMenu extends ScReact.Component<any, any> {
                     </div>
                 </div>
                 <div className="options" ref={ref => this.noteMenuRef = ref}>
-                    <div className="options-item" onclick={this.sharePanel}>
-                        <Img src="link.svg" className="icon"/>
-                        <span>Поделиться</span>
-                    </div>
+
+                    {isOwner ?
+                        <div className="options-item" onClick={this.sharePanel}>
+                            <Img src="link.svg" className="icon"/>
+                            <span>Поделиться</span>
+                        </div> : ""
+                    }
+
                     <div className="options-item" onclick={this.exportToPdf}>
                         <Img src="pdf.svg" className="icon"/>
                         <span>Скачать в pdf</span>
@@ -97,26 +99,42 @@ export class NoteMenu extends ScReact.Component<any, any> {
                         <Img src="zip.svg" className="icon"/>
                         <span>Скачать в zip</span>
                     </div>
-                    <div className="options-item mobile-option">
-                        <Img src={this.props.note.favorite ? "star-filled.svg" : "star.svg"} className="icon"/>
-                        <span>{this.props.note.favorite ? "Удалить из избранного" : "В избранное"}</span>
-                    </div>
-                    <div className="options-item mobile-option" onclick={this.tagList}>
-                        <Img src="tag.svg" className="icon"/>
-                        <span>Изменить тэги</span>
-                    </div>
-                    <div className="options-item mobile-option" onclick={this.emojiList}>
-                        <Img src="emoji.svg" className="icon"/>
-                        <span>Изменить иконку</span>
-                    </div>
-                    <div className="options-item mobile-option" onclick={this.backgroundList}>
-                        <Img src="image.svg" className="icon"/>
-                        <span>Изменить шапку</span>
-                    </div>
-                    <div className="options-item" onclick={this.deleteNote}>
-                        <Img src="trash.svg" className="icon"/>
-                        <span>Удалить заметку</span>
-                    </div>
+
+                    {isOwner ?
+                        <div className="options-item mobile-option">
+                            <Img src={this.props.note?.favorite ? "star-filled.svg" : "star.svg"} className="icon"/>
+                            <span>{this.props.note?.favorite ? "Удалить из избранного" : "В избранное"}</span>
+                        </div> : ""
+                    }
+
+                    {isOwner ?
+                        <div className="options-item mobile-option" onClick={this.tagList}>
+                            <Img src="tag.svg" className="icon"/>
+                            <span>Изменить тэги</span>
+                        </div> : ""
+                    }
+
+                    {isOwner ?
+                        <div className="options-item mobile-option" onClick={this.emojiList}>
+                            <Img src="emoji.svg" className="icon"/>
+                            <span>Изменить иконку</span>
+                        </div> : ""
+                    }
+
+                    {isOwner ?
+                        <div className="options-item mobile-option" onclick={this.backgroundList}>
+                            <Img src="image.svg" className="icon"/>
+                            <span>Изменить шапку</span>
+                        </div> : ""
+                    }
+
+                    {isOwner ?
+                        <div className="options-item" onClick={this.deleteNote}>
+                            <Img src="trash.svg" className="icon"/>
+                            <span>Удалить заметку</span>
+                        </div> : ""
+                    }
+
                 </div>
             </div>
         )

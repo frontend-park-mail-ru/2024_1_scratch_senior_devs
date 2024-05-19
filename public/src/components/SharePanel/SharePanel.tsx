@@ -16,17 +16,17 @@ export class SharePanel extends ScReact.Component<any, any> {
     }
 
     shareToVK = () => {
-        const url = "https://vk.com/share.php?url=" + window.location.href + "&title=" + parseNoteTitle(AppNotesStore.state.selectedNote.title)
+        const url = "https://vk.com/share.php?url=" + this.getNoteURL()+ "&title=" + parseNoteTitle(this.props.note.title)
         this.openShareWindow(url)
     }
 
     shareToOK= () => {
-        const url = "https://connect.ok.ru/offer?url=" + window.location.href + "&title=" + parseNoteTitle(AppNotesStore.state.selectedNote.title)
+        const url = "https://connect.ok.ru/offer?url=" + this.getNoteURL() + "&title=" + parseNoteTitle(this.props.note.title)
         this.openShareWindow(url)
     }
 
     shareToWhatsApp = () => {
-        const url = "https://wa.me/?text=" + window.location.href
+        const url = "https://wa.me/?text=" + this.getNoteURL()
         this.openShareWindow(url)
     }
 
@@ -43,9 +43,9 @@ export class SharePanel extends ScReact.Component<any, any> {
         AppToasts.info("Ссылка на заметку скопирована")
     }
 
-    render() {
-        const noteUrl = baseUrl + "/notes/" + this.props.note?.id
+    getNoteURL = () => baseUrl + "/notes/" + this.props.note?.id
 
+    render() {
         return (
             <div className="share_panel">
                 <div className="share_panel__invite-people-container">
@@ -61,7 +61,7 @@ export class SharePanel extends ScReact.Component<any, any> {
                         <span>Просматривать могут все, у кого есть ссылка</span>
                         <ToggleButton value={this.props.note?.public} onToggle={this.handleToggle}/>
                     </div>
-                    <input type="text" disabled className="share_panel__share-link-container__input" value={noteUrl} />
+                    <input type="text" disabled className="share_panel__share-link-container__input" value={this.getNoteURL()} />
                     <Button label="Скопировать" onClick={this.copyNoteURL} />
                 </div>
                 <div className="share_panel__social-btns-container">

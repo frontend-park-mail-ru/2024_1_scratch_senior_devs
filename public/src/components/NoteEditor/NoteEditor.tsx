@@ -224,6 +224,20 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
         const isSubNote = this.state.selectedNote?.parent != "00000000-0000-0000-0000-000000000000" ? "hidden" : ""
         const isOwner = this.state.selectedNote?.owner_id == AppUserStore.state.user_id
 
+        // TODO: скелетон для эдитора
+        // console.log("render")
+        // console.log(this.state.selectedNote)
+        //
+        // if (!this.state.selectedNote) {
+        //     return (
+        //         <div>
+        //
+        //         </div>
+        //     )
+        // }
+        //
+        // console.log("123")
+
         return (
             <div className={'note-editor-wrapper ' + (this.props.open ? ' active ' : '')  + (this.state.fullScreen ? ' fullscreen ' : '') }>
 
@@ -393,17 +407,15 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
                         />
                     </div>
 
-                    {isOwner ?
-                        <NoteMenu
-                            note={this.state.selectedNote}
-                            deleteNote={this.openDeleteNoteModal}
-                            inviteUser={this.openInviteUserModal}
-                            openTagList={this.openTagsModal}
-                            openEmojiList={this.openEmojiModal}
-                            openBackgroundList={this.openBackgroundModal}
-                            openSharePanel={this.openShareModal}
-                        /> : ""
-                    }
+                    <NoteMenu
+                        note={this.state.selectedNote}
+                        deleteNote={this.openDeleteNoteModal}
+                        openTagList={this.openTagsModal}
+                        openEmojiList={this.openEmojiModal}
+                        openBackgroundList={this.openBackgroundModal}
+                        openSharePanel={this.openShareModal}
+                    />
+
 
                     {!this.state.fullScreen ?
                         <Tooltip
