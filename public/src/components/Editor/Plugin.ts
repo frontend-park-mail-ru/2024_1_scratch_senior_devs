@@ -714,20 +714,25 @@ export const defaultPlugins: EditorPlugin[] = [
         toJson: (node: Node) => {
             return {
                 pluginName: 'youtube',
-                src: (node as HTMLImageElement).src
+                src: (node as HTMLImageElement).src,
+                allow: 'autoplay'
             }
         },
         fromJson: (props: PluginProps) => {
-            const img = document.createElement('iframe');
-            img.contentEditable = 'false';
-            img.src = props.src as string;
-            return img;
+            const iframe = document.createElement('iframe');
+            iframe.contentEditable = 'false';
+            iframe.setAttribute('allow', 'autoplay;');
+            iframe.src = props.src as string;
+            iframe.id = props.src as string
+            return iframe;
         },
         insertNode: (innerContent, ...args) => {
-            const img = document.createElement('iframe');
-            img.contentEditable = 'false';
-            img.src = args[0];
-            return img;
+            const iframe = document.createElement('iframe');
+            iframe.contentEditable = 'false';
+            iframe.setAttribute('allow', 'autoplay;');
+            iframe.src = args[0];
+            iframe.id = args[0] as string
+            return iframe;
         }
     },
     {
