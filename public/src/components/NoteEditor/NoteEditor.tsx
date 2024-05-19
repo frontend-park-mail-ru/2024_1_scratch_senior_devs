@@ -278,7 +278,7 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
                        handleClose={this.closeShareModal}
                        reset={false}
                        hideTitle={true}
-                       content={<SharePanel public={this.state.selectedNote?.public}/>}
+                       content={<SharePanel note={this.state.selectedNote}/>}
                 />
 
                 <div className="note-background" style={`background: ${this.state.selectedNote?.header};`}>

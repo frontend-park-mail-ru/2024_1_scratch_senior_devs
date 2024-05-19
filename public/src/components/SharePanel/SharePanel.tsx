@@ -16,12 +16,13 @@ export class SharePanel extends ScReact.Component<any, any> {
     }
 
     shareToVK = () => {
-        const url = "https://vk.com/share.php?url=" + this.getNoteURL()+ "&title=" + parseNoteTitle(this.props.note.title)
+        console.log("shareToVK")
+        const url = "https://vk.com/share.php?url=" + this.getNoteURL()+ "&title=" + parseNoteTitle(this.props.note.data.title)
         this.openShareWindow(url)
     }
 
     shareToOK= () => {
-        const url = "https://connect.ok.ru/offer?url=" + this.getNoteURL() + "&title=" + parseNoteTitle(this.props.note.title)
+        const url = "https://connect.ok.ru/offer?url=" + this.getNoteURL() + "&title=" + parseNoteTitle(this.props.note.data.title)
         this.openShareWindow(url)
     }
 
