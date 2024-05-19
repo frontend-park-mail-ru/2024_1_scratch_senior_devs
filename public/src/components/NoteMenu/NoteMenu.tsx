@@ -92,7 +92,7 @@ export class NoteMenu extends ScReact.Component<any, any> {
                     </div>
 
                     {isOwner ?
-                        <div className="options-item" onClick={this.sharePanel}>
+                        <div className="options-item mobile-option" onClick={this.sharePanel}>
                             <Img src="link.svg" className="icon"/>
                             <span>Поделиться</span>
                         </div> : ""
