@@ -7,7 +7,7 @@ import {CollaboratorType, NoteDataType, NoteType} from "../../utils/types";
 import {WebSocketConnection} from "../websocket";
 import {insertBlockPlugin} from "../../components/Editor/Plugin";
 import {AppNoteStore, NoteStoreActions} from "./NoteStore";
-import {downloadFile} from "../utils";
+import {downloadFile, parseNoteTitle} from "../utils";
 
 export type NotesStoreState = {
     notes: NoteType[],
@@ -56,6 +56,7 @@ export const NotesActions = {
     DELETE_TAG: "DELETE_TAG",
     ADD_TAG: "ADD_TAG",
     EXPORT_TO_PDF: "EXPORT_TO_PDF",
+    EXPORT_TO_ZIP: "EXPORT_TO_ZIP",
     TOGGLE_FAVORITE: "TOGGLE_FAVORITE",
     SET_PUBLIC: "SET_PUBLIC",
     SET_PRIVATE: "SET_PRIVATE"
@@ -177,6 +178,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
                     break
                 case NotesActions.EXPORT_TO_PDF:
                     await this.exportToPDF()
+                    break
+                case NotesActions.EXPORT_TO_ZIP:
+                    await this.exportToZIP()
                     break
                 case NotesActions.TOGGLE_FAVORITE:
                     await this.toggleFavorite(action.payload)
@@ -752,7 +756,21 @@ class NotesStore extends BaseStore<NotesStoreState> {
         try {
             const note = document.querySelector(".note-editor-content").outerHTML
             const url = await AppNoteRequests.ExportToPdf(note)
-            downloadFile(url, AppNoteStore.state.note.title + ".pdf")
+            downloadFile(url, parseNoteTitle(AppNoteStore.state.note.title) + ".pdf")
+        } catch {
+            AppToasts.error("Что-то пошло не так")
+        }
+    }
+
+    exportToZIP = async () => {
+        try {
+            const note = document.querySelector(".note-editor-content").outerHTML
+            const {url, csrf} = await AppNoteRequests.ExportToZip(this.state.selectedNote.id, note, AppUserStore.state.JWT, AppUserStore.state.csrf)
+
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+
+            downloadFile(url, parseNoteTitle(AppNoteStore.state.note.title)  + ".zip")
+
         } catch {
             AppToasts.error("Что-то пошло не так")
         }

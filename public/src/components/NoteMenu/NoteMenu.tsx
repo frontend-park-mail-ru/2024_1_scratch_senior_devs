@@ -62,9 +62,7 @@ export class NoteMenu extends ScReact.Component<any, any> {
 
     exportToZip = () => {
         this.toggleMenu()
-
-        // TODO
-        AppDispatcher.dispatch(NotesActions.EXPORT_TO_PDF)
+        AppDispatcher.dispatch(NotesActions.EXPORT_TO_ZIP)
     }
 
     sharePanel = () => {

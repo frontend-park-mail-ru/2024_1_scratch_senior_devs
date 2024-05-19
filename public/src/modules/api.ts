@@ -563,7 +563,35 @@ class NoteRequests {
         }
     }
 
-    UpdateIcon = async (note_id: string, icon: string,  jwt:string, csrf:string)=> {
+    ExportToZip = async (note_id:string, note: string, jwt:string, csrf:string) => {
+        console.log("ExportToZip")
+
+        const options: RequestInit = {
+            method: RequestMethods.POST,
+            body: note,
+            mode: 'cors',
+            credentials: 'include',
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            }
+        };
+
+        const response = await fetch(baseUrl + "/note/" + note_id + "/make_zip", options);
+
+        if (response.status == 200) {
+            const blob = await response.blob()
+            return {
+                url: URL.createObjectURL(blob),
+                status: response.status,
+                csrf: response.headers['x-csrf-token']
+            };
+        }
+
+        throw Error(response.statusText);
+    }
+
+    UpdateIcon = async (note_id: string, icon: string, jwt:string, csrf:string)=> {
         const response = await Ajax.Post(this.baseUrl + '/' + note_id + '/set_icon/', {
             headers: {
                 'Authorization': jwt,
