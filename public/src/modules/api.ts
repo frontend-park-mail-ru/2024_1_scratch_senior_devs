@@ -577,9 +577,6 @@ class NoteRequests {
 
         const response = await fetch(baseUrl + "/note/" + note_id + "/make_zip", options);
 
-        console.log(response.headers['x-csrf-token'])
-        console.log(response)
-
         if (response.status == 200) {
             const blob = await response.blob()
             return {

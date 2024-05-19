@@ -7,7 +7,6 @@ import {NotesActions} from "../../modules/stores/NotesStore";
 import {parseNoteTitle} from "../../modules/utils";
 import {AppDispatcher} from "../../modules/dispatcher";
 import {AppToasts} from "../../modules/toasts";
-import {baseUrl} from "../../utils/consts";
 
 export class SharePanel extends ScReact.Component<any, any> {
 
@@ -44,7 +43,7 @@ export class SharePanel extends ScReact.Component<any, any> {
         AppToasts.info("Ссылка на заметку скопирована")
     }
 
-    getNoteURL = () => baseUrl + "/notes/" + this.props.note?.id
+    getNoteURL = () => "https://you-note.ru/notes/" + this.props.note?.id
 
     render() {
         return (
