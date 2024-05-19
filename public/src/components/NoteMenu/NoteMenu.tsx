@@ -82,13 +82,6 @@ export class NoteMenu extends ScReact.Component<any, any> {
                 </div>
                 <div className="options" ref={ref => this.noteMenuRef = ref}>
 
-                    {isOwner ?
-                        <div className="options-item" onClick={this.sharePanel}>
-                            <Img src="link.svg" className="icon"/>
-                            <span>Поделиться</span>
-                        </div> : ""
-                    }
-
                     <div className="options-item" onclick={this.exportToPdf}>
                         <Img src="pdf.svg" className="icon"/>
                         <span>Скачать в pdf</span>
@@ -97,6 +90,13 @@ export class NoteMenu extends ScReact.Component<any, any> {
                         <Img src="zip.svg" className="icon"/>
                         <span>Скачать в zip</span>
                     </div>
+
+                    {isOwner ?
+                        <div className="options-item" onClick={this.sharePanel}>
+                            <Img src="link.svg" className="icon"/>
+                            <span>Поделиться</span>
+                        </div> : ""
+                    }
 
                     {isOwner ?
                         <div className="options-item mobile-option">
