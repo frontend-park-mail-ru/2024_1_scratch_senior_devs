@@ -321,7 +321,7 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
                                 showHoverTooltip={false}
                                 icon="link.svg"
                                 label="Поделиться"
-                                content={<SharePanel public={this.state.selectedNote?.public} />}
+                                content={<SharePanel note={this.state.selectedNote} />}
                             /> : ""
                         }
                     </div>

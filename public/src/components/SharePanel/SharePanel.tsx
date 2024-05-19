@@ -7,6 +7,7 @@ import {AppNotesStore, NotesActions} from "../../modules/stores/NotesStore";
 import {parseNoteTitle} from "../../modules/utils";
 import {AppDispatcher} from "../../modules/dispatcher";
 import {AppToasts} from "../../modules/toasts";
+import {baseUrl} from "../../utils/consts";
 
 export class SharePanel extends ScReact.Component<any, any> {
 
@@ -43,6 +44,8 @@ export class SharePanel extends ScReact.Component<any, any> {
     }
 
     render() {
+        const noteUrl = baseUrl + "/notes/" + this.props.note?.id
+
         return (
             <div className="share_panel">
                 <div className="share_panel__invite-people-container">
@@ -56,9 +59,9 @@ export class SharePanel extends ScReact.Component<any, any> {
                     <h3>Поделиться ссылкой</h3>
                     <div className="share_panel__share-link-container__center-container">
                         <span>Просматривать могут все, у кого есть ссылка</span>
-                        <ToggleButton value={this.props.public} onToggle={this.handleToggle}/>
+                        <ToggleButton value={this.props.note?.public} onToggle={this.handleToggle}/>
                     </div>
-                    <input type="text" disabled className="share_panel__share-link-container__input" value={window.location.href} />
+                    <input type="text" disabled className="share_panel__share-link-container__input" value={noteUrl} />
                     <Button label="Скопировать" onClick={this.copyNoteURL} />
                 </div>
                 <div className="share_panel__social-btns-container">

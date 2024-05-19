@@ -4,11 +4,7 @@ import {
     UserRegisterCredentialsType,
     UserUpdatePasswordCredentialsType
 } from './stores/UserStore';
-import {isDebug} from "../utils/consts";
-
-const baseUrl = isDebug ? 'http://localhost:8080/api' : 'https://you-note.ru/api';
-
-export const imagesUlr = isDebug ? 'http://localhost/images/' : 'https://you-note.ru/images/';
+import {baseUrl} from "../utils/consts";
 
 enum RequestMethods {
     POST = 'POST',
@@ -701,10 +697,10 @@ class NoteRequests {
 }
 
 class SharedNoteRequests {
-    private baseUrl = '/shared';
+    private baseUrl = '/shared/note/';
 
     Get = async (id: string) => {
-        const response = await fetch(baseUrl + this.baseUrl + '/' + id);
+        const response = await fetch(baseUrl + this.baseUrl + id);
 
         if (response.status === 200) {
             const data = await response.json()

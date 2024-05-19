@@ -1,7 +1,7 @@
 import {ScReact} from "@veglem/screact";
 import "./Collaborators.sass"
 import {AppNotesStore, NotesStoreState} from "../../modules/stores/NotesStore";
-import {imagesUlr} from "../../modules/api";
+import {imagesUlr} from "../../utils/consts";
 
 export class Collaborators extends ScReact.Component<any, any> {
     state = {

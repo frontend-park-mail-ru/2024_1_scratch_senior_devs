@@ -56,7 +56,6 @@ export const NotesLoader = async (path:string) => {
                     const noteId = window.location.pathname.split('/').at(-1);
 
                     AppSharedNoteRequests.Get(noteId).then(note => {
-                      console.log(note)
                         AppRouter.openSharedNotePage(note)
                     }).catch(() => {
                         AppRouter.go("/")
