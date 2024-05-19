@@ -375,7 +375,7 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
                         <Collaborators/>
                     </div>
 
-                    <div className={isSubNote ? "hidden" : ""}>
+                    <div className={!isOwner || isSubNote ? "hidden" : ""}>
                         <Tooltip
                             hoverTooltip={this.state.selectedNote?.favorite ? "Удалить из избранного" : "В избранное"}
                             showHoverTooltip={true}

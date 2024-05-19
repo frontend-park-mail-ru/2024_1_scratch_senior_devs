@@ -137,6 +137,8 @@ export class Router extends ScReact.Component<any, routerState> {
             }));
 
             page.loader(path).then((props) => {
+                console.log("123")
+                console.log(props)
                 this.setState(s => ({
                     ...s,
                     currPage: page.page,

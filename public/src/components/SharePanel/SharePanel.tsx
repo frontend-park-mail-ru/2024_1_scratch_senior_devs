@@ -6,6 +6,7 @@ import {Img} from "../Image/Image";
 import {AppNotesStore, NotesActions} from "../../modules/stores/NotesStore";
 import {parseNoteTitle} from "../../modules/utils";
 import {AppDispatcher} from "../../modules/dispatcher";
+import {AppToasts} from "../../modules/toasts";
 
 export class SharePanel extends ScReact.Component<any, any> {
 
@@ -36,6 +37,11 @@ export class SharePanel extends ScReact.Component<any, any> {
         social_window.focus();
     }
 
+    copyNoteURL = async () => {
+        await navigator.clipboard.writeText(window.location.href)
+        AppToasts.info("Ссылка на заметку скопирована")
+    }
+
     render() {
         return (
             <div className="share_panel">
@@ -52,8 +58,8 @@ export class SharePanel extends ScReact.Component<any, any> {
                         <span>Просматривать могут все, у кого есть ссылка</span>
                         <ToggleButton value={this.props.public} onToggle={this.handleToggle}/>
                     </div>
-                    <input type="text" disabled className="share_panel__share-link-container__input" value="https://you-note.ru/notes/4a644626-c335-4728-bb82-f63e9844eb74"/>
-                    <Button label="Скопировать"/>
+                    <input type="text" disabled className="share_panel__share-link-container__input" value={window.location.href} />
+                    <Button label="Скопировать" onClick={this.copyNoteURL} />
                 </div>
                 <div className="share_panel__social-btns-container">
                     <h3>Поделиться через соц. сети</h3>

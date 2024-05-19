@@ -37,8 +37,15 @@ export const NotesLoader = async (path:string) => {
                             // history.pushState(null, '', '/notes');
                             // resolve({notes: store.notes});
 
-                            AppRouter.go("/404")
-                            reject()
+                            AppSharedNoteRequests.Get(noteId).then(note => {
+                                console.log(note)
+                                resolve({notes: store.notes, note: note, tags: store.tags});
+                            }).catch(() => {
+                                AppRouter.go("/404")
+
+                                reject()
+                            });
+
                         });
                     } else {
                         resolve({notes: store.notes, tags: store.tags});
