@@ -564,8 +564,6 @@ class NoteRequests {
     }
 
     ExportToZip = async (note_id:string, note: string, jwt:string, csrf:string) => {
-        console.log("ExportToZip")
-
         const options: RequestInit = {
             method: RequestMethods.POST,
             body: note,
@@ -579,12 +577,15 @@ class NoteRequests {
 
         const response = await fetch(baseUrl + "/note/" + note_id + "/make_zip", options);
 
+        console.log(response.headers['x-csrf-token'])
+        console.log(response)
+
         if (response.status == 200) {
             const blob = await response.blob()
             return {
                 url: URL.createObjectURL(blob),
                 status: response.status,
-                csrf: response.headers['x-csrf-token']
+                csrf: response.headers.get('x-csrf-token')
             };
         }
 

@@ -767,6 +767,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
             const note = document.querySelector(".note-editor-content").outerHTML
             const {url, csrf} = await AppNoteRequests.ExportToZip(this.state.selectedNote.id, note, AppUserStore.state.JWT, AppUserStore.state.csrf)
 
+            console.log(csrf)
+
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 
             downloadFile(url, parseNoteTitle(AppNoteStore.state.note.title)  + ".zip")
