@@ -79,8 +79,8 @@ export class Editor {
             }
 
             const scanTree = (node: HTMLElement) => {
-                if (`cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replace('-','')}` in node.dataset) {
-                    delete node.dataset[`cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replace('-','')}`];
+                if (`cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replace('-','').toLowerCase()}` in node.dataset) {
+                    delete node.dataset[`cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replace('-','').toLowerCase()}`];
                 }
 
                 node.childNodes.forEach(child => {
@@ -105,7 +105,7 @@ export class Editor {
 
                 scanTree(this.editable);
 
-                elem.dataset[`cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replace('-','')}`] = `${getCaretPosition(elem)}`;
+                elem.dataset[`cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replace('-','').toLowerCase()}`] = `${getCaretPosition(elem)}`;
 
                 // TODO: отоброажать курсоры пользователей при редактировании одной заметки
                 // const fakeCaret = document.createElement("div")
@@ -209,7 +209,7 @@ export class Editor {
             });
             if ((parentPlugin.pluginName === 'div' || parentPlugin.pluginName === 'li' || parentPlugin.pluginName === 'li-todo') &&
                 node.textContent.startsWith('/') &&
-                `cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replace('-','')}` in node.parentElement.dataset) {
+                `cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replace('-','').toLowerCase()}` in node.parentElement.dataset) {
                 lastChosenElement.node = node;
                 this.dropdownCallbacks.open(node.parentElement)
             } else {
@@ -221,7 +221,7 @@ export class Editor {
             return plugin.pluginName === 'div';
         }));
         defaultPlugins[divIndex].onInsert = (node: Node) => {
-            if (node.textContent.startsWith('/') && `cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replace('-','')}` in node.parentElement.dataset) {
+            if (node.textContent.startsWith('/') && `cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replace('-','').toLowerCase()}` in node.parentElement.dataset) {
                 lastChosenElement.node = node;
                 this.dropdownCallbacks.open(node as HTMLElement)
             }
