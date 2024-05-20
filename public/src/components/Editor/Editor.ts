@@ -107,6 +107,7 @@ export class Editor {
                 console.log(`cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replaceAll('-','').toLowerCase()}`)
 
                 elem.dataset[`cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replaceAll('-','').toLowerCase()}`] = `${getCaretPosition(elem)}`;
+                elem.scrollIntoView();
 
                 // TODO: отоброажать курсоры пользователей при редактировании одной заметки
                 // const fakeCaret = document.createElement("div")
