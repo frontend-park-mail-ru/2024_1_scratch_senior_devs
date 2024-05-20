@@ -851,12 +851,12 @@ export const fromJson = (props: PluginProps) => {
         }
     }
 
-    if (`cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replace('-','').toLowerCase()}` in props) {
+    if (`cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replaceAll('-','').toLowerCase()}` in props) {
         // const regex = /([a-zA]+)-([\d]+)/;
         // const matches = regex.exec(props.cursor as string);
         
 
-        if (props[`cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replace('-','').toLowerCase()}`] === '0') {
+        if (props[`cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replaceAll('-','').toLowerCase()}`] === '0') {
             setTimeout(() => {
                 setCursorAtNodePosition(node, 0);
                 // (node as HTMLElement).click();
@@ -865,7 +865,7 @@ export const fromJson = (props: PluginProps) => {
 
         } else {
             setTimeout(() => {
-                setCursorAtNodePosition(node, Number(props[`cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replace('-','').toLowerCase()}`]));
+                setCursorAtNodePosition(node, Number(props[`cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replaceAll('-','').toLowerCase()}`]));
                 // (node as HTMLElement).click();
                 // document.getSelection().setPosition(node.firstChild, Number(props[`cursor${AppUserStore.state.username}`]));
             })
