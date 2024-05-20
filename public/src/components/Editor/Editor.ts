@@ -210,6 +210,7 @@ export class Editor {
             if ((parentPlugin.pluginName === 'div' || parentPlugin.pluginName === 'li' || parentPlugin.pluginName === 'li-todo') &&
                 node.textContent.startsWith('/') &&
                 `cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replace('-','').toLowerCase()}` in node.parentElement.dataset) {
+                console.log(`cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replace('-','').toLowerCase()}`)
                 lastChosenElement.node = node;
                 this.dropdownCallbacks.open(node.parentElement)
             } else {
