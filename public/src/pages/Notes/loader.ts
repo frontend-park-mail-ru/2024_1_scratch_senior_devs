@@ -25,7 +25,6 @@ export const NotesLoader = async (path:string) => {
 
             AppUserStore.UnSubscribeToStore(callback);
 
-            // TODO: если авторизован и открывается пошереная заметка, то делаеть ее selectedNote и рид онли ?
             if (isAuth) {
                 AppNotesStore.init().then((store) => {
                     if (path?.includes('notes/')) {

@@ -17,6 +17,8 @@ import {AppDispatcher} from './dispatcher';
 import NotFoundPage from '../pages/Error';
 import {NoteType} from "../utils/types";
 import {SharedNotePage} from "../pages/SharedNote";
+import {AppUserStore} from "./stores/UserStore";
+import {AppSharedNoteRequests} from "./api";
 
 type routerState = {
     currPage: {new(): Component<any, any> }
@@ -69,9 +71,22 @@ export class Router extends ScReact.Component<any, routerState> {
         
         const path = this.normalizeURL(window.location.pathname)
 
+        let isAuth = AppUserStore.state.isAuth;
+
         if (path.includes('notes/')) {
             const noteId = path.split('/').at(-1);
-            AppDispatcher.dispatch(NotesActions.FETCH_NOTE, noteId);
+
+            if (isAuth) {
+                AppDispatcher.dispatch(NotesActions.FETCH_NOTE, noteId);
+            } else {
+                AppSharedNoteRequests.Get(noteId).then(note => {
+                    this.openSharedNotePage(note)
+                }).catch(() => {
+                    AppRouter.go("/")
+                });
+
+            }
+
             return;
         }
         
@@ -118,6 +133,7 @@ export class Router extends ScReact.Component<any, routerState> {
         }
 
         history.pushState(null, null, path);
+
         if (page === undefined) {
             this.setState(s => ({
                 ...s,
@@ -160,6 +176,8 @@ export class Router extends ScReact.Component<any, routerState> {
     }
 
     public openSharedNotePage (note:NoteType) {
+        history.pushState(null, null, "/notes/" + note.id);
+
         this.setState(s => ({
             ...s,
             currPage: SharedNotePage,

@@ -1,0 +1,74 @@
+@import "/public/src/utils/variables.sass"
+
+.note-viewer-wrapper
+	width: 100%
+	background: #1b2735
+	border-radius: 12px
+	position: relative
+	overflow: hidden
+
+	.icon
+		width: 24px
+		height: 24px
+		transition: 0.3s
+		filter: invert(75%)
+		user-select: none
+
+	.top-panel
+		display: flex
+		justify-content: flex-start
+		align-items: center
+		min-height: 40px
+		position: relative
+		gap: 6px
+		margin-bottom: 10px
+		background: blue
+		padding: 20px
+
+		.back-btn-container
+			display: flex
+			cursor: pointer
+			justify-content: center
+			align-items: center
+			gap: 4px
+
+			&:hover
+				.back-icon
+					filter: invert(5%)
+
+				.back-label
+					color: $text-main-color
+
+			.back-icon
+				width: 9px
+				height: 9px
+				filter: invert(20%)
+				transition: 0.3s ease
+
+			.back-label
+				font-size: 18px
+				color: $text-secondary-color
+				transition: 0.3s ease
+
+
+		.empty
+			flex: 1
+
+		.note-menu
+			order: 2
+
+			.options
+				width: 185px
+
+	.bottom-panel
+		display: flex
+		flex-direction: column
+		gap: 10px
+		height: 100%
+		position: relative
+		padding-bottom: 5px
+		animation: fadeIn 0.2s
+
+		.note-body
+			height: 55vh
+

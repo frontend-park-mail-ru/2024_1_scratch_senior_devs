@@ -416,7 +416,6 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
                         openSharePanel={this.openShareModal}
                     />
 
-
                     {!this.state.fullScreen ?
                         <Tooltip
                             icon="full-screen-open.svg"

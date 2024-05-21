@@ -1,13 +1,18 @@
+@import "/public/src/utils/variables.sass"
+
 .shared-note-page
 	width: 100%
 	display: flex
 	justify-content: center
 	align-items: center
 	padding: 100px 20%
+	height: 100vh
 
-	.note-editor
-		width: 100%
-		height: 85vh
-		background: #1b2735
-		border-radius: 12px
-		padding: 20px
+	@media screen and (max-width: $xl)
+		padding: 100px 10%
+
+	@media screen and (max-width: $lg)
+		padding: 100px 50px
+
+	@media screen and (max-width: $sm)
+		padding: 75px 25px

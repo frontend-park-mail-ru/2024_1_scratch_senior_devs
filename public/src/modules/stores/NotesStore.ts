@@ -177,10 +177,10 @@ class NotesStore extends BaseStore<NotesStoreState> {
                     this.updateSelectedNoteContent(action.payload)
                     break
                 case NotesActions.EXPORT_TO_PDF:
-                    await this.exportToPDF()
+                    await this.exportToPDF(action.payload)
                     break
                 case NotesActions.EXPORT_TO_ZIP:
-                    await this.exportToZIP()
+                    await this.exportToZIP(action.payload)
                     break
                 case NotesActions.TOGGLE_FAVORITE:
                     await this.toggleFavorite(action.payload)
@@ -752,22 +752,18 @@ class NotesStore extends BaseStore<NotesStoreState> {
         }
     }
 
-    exportToPDF = async () => {
+    exportToPDF = async (content:string) => {
         try {
-            const note = document.querySelector(".note-editor-content").outerHTML
-            const url = await AppNoteRequests.ExportToPdf(note)
+            const url = await AppNoteRequests.ExportToPdf(content)
             downloadFile(url, parseNoteTitle(AppNoteStore.state.note.title) + ".pdf")
         } catch {
             AppToasts.error("Что-то пошло не так")
         }
     }
 
-    exportToZIP = async () => {
+    exportToZIP = async ({note_id, content}:{note_id:string, content:string}) => {
         try {
-            const note = document.querySelector(".note-editor-content").outerHTML
-            const {url, csrf} = await AppNoteRequests.ExportToZip(this.state.selectedNote.id, note, AppUserStore.state.JWT, AppUserStore.state.csrf)
-
-            console.log(csrf)
+            const {url, csrf} = await AppNoteRequests.ExportToZip(note_id, content, AppUserStore.state.JWT, AppUserStore.state.csrf)
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 

@@ -57,12 +57,12 @@ export class NoteMenu extends ScReact.Component<any, any> {
 
     exportToPdf = () => {
         this.toggleMenu()
-        AppDispatcher.dispatch(NotesActions.EXPORT_TO_PDF)
+        this.props.onExportToPdf()
     }
 
     exportToZip = () => {
         this.toggleMenu()
-        AppDispatcher.dispatch(NotesActions.EXPORT_TO_ZIP)
+        this.props.onExportToZip()
     }
 
     sharePanel = () => {
@@ -72,6 +72,7 @@ export class NoteMenu extends ScReact.Component<any, any> {
 
     render() {
         const isOwner = this.props.note?.owner_id == AppUserStore.state.user_id
+        const isAuthorized = AppUserStore.state.user_id != null
 
         return (
             <div className={"note-menu " + (this.state.open ? "open" : "")}>
@@ -86,10 +87,13 @@ export class NoteMenu extends ScReact.Component<any, any> {
                         <Img src="pdf.svg" className="icon"/>
                         <span>Скачать в pdf</span>
                     </div>
-                    <div className="options-item" onclick={this.exportToZip}>
-                        <Img src="zip.svg" className="icon"/>
-                        <span>Скачать в zip</span>
-                    </div>
+
+                    {isAuthorized ?
+                        <div className="options-item" onClick={this.exportToZip}>
+                            <Img src="zip.svg" className="icon"/>
+                            <span>Скачать в zip</span>
+                        </div> : ""
+                    }
 
                     {isOwner ?
                         <div className="options-item mobile-option" onClick={this.sharePanel}>
