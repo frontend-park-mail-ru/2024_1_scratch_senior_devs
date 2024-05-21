@@ -715,7 +715,7 @@ export const defaultPlugins: EditorPlugin[] = [
             return {
                 pluginName: 'youtube',
                 src: (node as HTMLImageElement).src,
-                allow: 'autoplay'
+                allow: 'autoplay' // TODO
             }
         },
         fromJson: (props: PluginProps) => {

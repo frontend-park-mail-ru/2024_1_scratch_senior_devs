@@ -60,7 +60,8 @@ export class YoutubeDialogForm extends ScReact.Component<any, any> {
     };
 
     insertVideo = (video_id:string) => {
-        insertBlockPlugin('youtube', 'https://www.youtube.com/embed/' + video_id + "?autoplay=1")
+        // TODO: ?autoplay=1
+        insertBlockPlugin('youtube', 'https://www.youtube.com/embed/' + video_id)
 
         this.props.handleClose()
     };
