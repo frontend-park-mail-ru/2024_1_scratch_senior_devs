@@ -160,6 +160,8 @@ export class Router extends ScReact.Component<any, routerState> {
     }
 
     public openSharedNotePage (note:NoteType) {
+        history.pushState(null, null, "/notes/" + note.id)
+
         this.setState(s => ({
             ...s,
             currPage: SharedNotePage,
