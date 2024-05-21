@@ -229,6 +229,16 @@ export class Editor {
                 this.dropdownCallbacks.open(node as HTMLElement)
             }
         }
+        const brIndex = defaultPlugins.findIndex((plugin => {
+            return plugin.pluginName === 'br';
+        }));
+        defaultPlugins[brIndex].onInsert = (node: Node) => {
+            if (node.parentElement.contentEditable === 'true') {
+                const div = document.createElement('div');
+                div.append(document.createElement('br'));
+                (node as HTMLElement).replaceWith(div);
+            }
+        }
     }
 
     private lastBlock: HTMLElement = null;
