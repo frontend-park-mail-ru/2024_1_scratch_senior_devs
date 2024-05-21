@@ -220,6 +220,17 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
         }))
     }
 
+    exportToPDF = () => {
+        AppDispatcher.dispatch(NotesActions.EXPORT_TO_PDF, document.querySelector(".note-editor-content").outerHTML)
+    }
+
+    exportToZip = () => {
+        AppDispatcher.dispatch(NotesActions.EXPORT_TO_ZIP, {
+            note_id: this.state.selectedNote.id,
+            content: document.querySelector(".note-editor-content").outerHTML
+        })
+    }
+
     render() {
         const isSubNote = this.state.selectedNote?.parent != "00000000-0000-0000-0000-000000000000" ? "hidden" : ""
         const isOwner = this.state.selectedNote?.owner_id == AppUserStore.state.user_id
@@ -414,6 +425,8 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
                         openEmojiList={this.openEmojiModal}
                         openBackgroundList={this.openBackgroundModal}
                         openSharePanel={this.openShareModal}
+                        onExportToPdf={this.exportToPDF}
+                        onExportToZip={this.exportToZip}
                     />
 
                     {!this.state.fullScreen ?

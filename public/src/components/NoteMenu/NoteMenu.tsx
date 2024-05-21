@@ -89,14 +89,14 @@ export class NoteMenu extends ScReact.Component<any, any> {
                     </div>
 
                     {isAuthorized ?
-                        <div className="options-item" onClick={this.exportToZip}>
+                        <div className="options-item" onclick={this.exportToZip}>
                             <Img src="zip.svg" className="icon"/>
                             <span>Скачать в zip</span>
                         </div> : ""
                     }
 
                     {isOwner ?
-                        <div className="options-item mobile-option" onClick={this.sharePanel}>
+                        <div className="options-item mobile-option" onclick={this.sharePanel}>
                             <Img src="link.svg" className="icon"/>
                             <span>Поделиться</span>
                         </div> : ""
@@ -110,14 +110,14 @@ export class NoteMenu extends ScReact.Component<any, any> {
                     }
 
                     {isOwner ?
-                        <div className="options-item mobile-option" onClick={this.tagList}>
+                        <div className="options-item mobile-option" onclick={this.tagList}>
                             <Img src="tag.svg" className="icon"/>
                             <span>Изменить тэги</span>
                         </div> : ""
                     }
 
                     {isOwner ?
-                        <div className="options-item mobile-option" onClick={this.emojiList}>
+                        <div className="options-item mobile-option" onclick={this.emojiList}>
                             <Img src="emoji.svg" className="icon"/>
                             <span>Изменить иконку</span>
                         </div> : ""
@@ -131,7 +131,7 @@ export class NoteMenu extends ScReact.Component<any, any> {
                     }
 
                     {isOwner ?
-                        <div className="options-item" onClick={this.deleteNote}>
+                        <div className="options-item" onclick={this.deleteNote}>
                             <Img src="trash.svg" className="icon"/>
                             <span>Удалить заметку</span>
                         </div> : ""
