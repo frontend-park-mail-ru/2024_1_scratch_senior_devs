@@ -32,7 +32,6 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
     }
 
     private menuRef
-    private addInputRef
 
     componentDidMount() {
         document.addEventListener('click', this.handleClickOutside, false);
@@ -59,6 +58,7 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
     closeMenu = () => {
         this.setState(state => ({
             ...state,
+            selectedTag: null,
             menuOpen: false
         }))
     }
