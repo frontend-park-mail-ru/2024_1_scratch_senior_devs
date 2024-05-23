@@ -5,7 +5,7 @@
 	display: flex
 	justify-content: center
 	align-items: center
-	padding: 100px 20%
+	padding: 100px 20% 50px
 	height: 100vh
 
 	@media screen and (max-width: $xl)
@@ -15,4 +15,10 @@
 		padding: 100px 50px
 
 	@media screen and (max-width: $sm)
-		padding: 75px 25px
+		padding: 75px 15px
+
+	@media screen and (max-width: $xs)
+		padding: 75px 10px
+
+	&.fullscreen
+		padding: 0
