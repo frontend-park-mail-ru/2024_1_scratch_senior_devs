@@ -42,7 +42,21 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
     }
 
     handleClickOutside = (e) => {
-        if (this.state.menuOpen && !e.target.matches(".tag")) {
+        if (!this.state.menuOpen) {
+            this.setState(state => ({
+                ...state,
+                selectedTag: null
+            }))
+
+            return
+        }
+
+        if (this.menuRef.contains(e.target)) {
+            this.setState(state => ({
+                ...state,
+                menuOpen: false
+            }))
+        } else {
             this.closeMenu();
         }
     }
@@ -141,8 +155,7 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
 
                     <AddTagMenu tags={this.props.tags}/>
 
-                    <div className={"tag-options-menu " + (this.state.menuOpen ? "open" : "")}
-                         ref={ref => this.menuRef = ref}>
+                    <div className={"tag-options-menu " + (this.state.menuOpen ? "open" : "")} ref={ref => this.menuRef = ref}>
                         <div className="tag-options-menu__option" onclick={this.openRenameTagModal}>
                             <Img src="edit.svg"/>
                             <span>Изменить</span>
