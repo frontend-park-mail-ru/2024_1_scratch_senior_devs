@@ -74,7 +74,6 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
     };
 
     onChangeNote = () => {
-        console.log("onChangeNote")
         this.setState(state => ({
             ...state,
             noteStatus: null

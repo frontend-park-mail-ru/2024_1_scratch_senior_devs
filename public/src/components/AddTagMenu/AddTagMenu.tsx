@@ -54,12 +54,12 @@ export class AddTagMenu extends ScReact.Component<AddTagMenuProps, any> {
 
         const value = this.inputRef.value
         if (value.length > 0) {
-            if (value < MIN_TAG_LENGTH) {
+            if (value.length < MIN_TAG_LENGTH) {
                 AppToasts.error(`Тэг не может быть короче ${MIN_TAG_LENGTH} символов`)
                 return
             }
 
-            if (value > MAX_TAG_LENGTH) {
+            if (value.length > MAX_TAG_LENGTH) {
                 AppToasts.error(`Тэг не может быть длинее ${MAX_TAG_LENGTH} символов`)
                 return
             }

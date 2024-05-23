@@ -41,6 +41,12 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
         document.removeEventListener('click', this.handleClickOutside);
     }
 
+    componentDidUpdate() {
+        if (this.state.expanded && this.props.tags.length <= 10) {
+            this.toggleExpanded()
+        }
+    }
+
     handleClickOutside = (e) => {
         if (!this.state.menuOpen) {
             this.setState(state => ({
