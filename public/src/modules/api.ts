@@ -791,6 +791,24 @@ class TagRequests {
             csrf: response.headers['x-csrf-token']
         }
     }
+
+    UpdateTag = async (old_name: string, new_name:string,  jwt:string, csrf:string)=> {
+        const response = await Ajax.Post(this.baseUrl + '/update/', {
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            },
+            body: {
+                "old_name": old_name,
+                "new_name": new_name
+            }
+        });
+
+        return {
+            status: response.status,
+            csrf: response.headers['x-csrf-token']
+        }
+    }
 }
 
 export const AppAuthRequests = new AuthRequests();

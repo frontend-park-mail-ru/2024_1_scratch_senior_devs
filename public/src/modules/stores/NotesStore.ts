@@ -44,6 +44,7 @@ export const NotesActions = {
     CREATE_SUB_NOTE: "CREATE_SUB_NOTE",
     ADD_TAG_TO_NOTE: "ADD_TAG_TO_NOTE",
     REMOVE_TAG_FROM_NOTE: "REMOVE_TAG_FROM_NOTE",
+    RENAME_TAG: "RENAME_TAG",
     ADD_COLLABORATOR: "ADD_COLLABORATOR",
     FETCH_TAGS: "FETCH_TAGS",
     SYNC_NOTES: "SYNC_NOTES",
@@ -190,6 +191,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
                     break
                 case NotesActions.SET_PUBLIC:
                     await this.setPublic()
+                    break
+                case NotesActions.RENAME_TAG:
+                    await this.renameTag(action.payload)
                     break
             }
         });
@@ -873,6 +877,22 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 }))
 
                 this.syncNotes()
+            }
+        } catch {
+            AppToasts.error("Что-то пошло не так")
+        }
+    }
+
+    renameTag = async ({old_name, new_name}) => {
+        try {
+            const {status, csrf} = await AppTagRequests.UpdateTag(old_name, new_name, AppUserStore.state.JWT, AppUserStore.state.csrf)
+
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+
+            // TODO: обновленный тэг улетает в конец списка
+
+            if (status == 204) {
+                await this.fetchTags()
             }
         } catch {
             AppToasts.error("Что-то пошло не так")

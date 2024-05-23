@@ -69,12 +69,6 @@ export class HomePage extends ScReact.Component<any, any> {
                         </div>
                     </div>
                 </section>
-                {/*<section className="slider">*/}
-                {/*    <div className="slider-container">*/}
-
-                {/*    </div>*/}
-                {/*    <Img src="laptop.jpg" className="banner" />*/}
-                {/*</section>*/}
             </div>
         );
     }

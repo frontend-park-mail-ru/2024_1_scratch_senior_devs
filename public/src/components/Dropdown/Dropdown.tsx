@@ -56,7 +56,7 @@ export class Dropdown extends ScReact.Component<any, any> {
         } else if (id === "h2") {
             insertBlockPlugin('header', 'h2')
         } else if (id === "h3") {
-            insertBlockPlugin('header', 'h2')
+            insertBlockPlugin('header', 'h3')
         } else if (id === 'bullet-list') {
             insertBlockPlugin('ul')
         } else if (id === 'numbered-list') {

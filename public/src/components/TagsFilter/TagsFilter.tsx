@@ -7,6 +7,7 @@ import {RenameTagModal} from "../RenameTagModal/RenameTagModal";
 import {AppDispatcher} from "../../modules/dispatcher";
 import {NotesActions} from "../../modules/stores/NotesStore";
 import {AddTagMenu} from "../AddTagMenu/AddTagMenu";
+import {AppToasts} from "../../modules/toasts";
 
 type TagsFilterProps = {
     tags: string[],
@@ -48,6 +49,10 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
     }
 
     handleClickOutside = (e) => {
+        if (this.state.renameTagModalOpen || this.state.deleteTagDialogOpen) {
+            return
+        }
+
         if (!this.state.menuOpen) {
             this.setState(state => ({
                 ...state,
@@ -107,13 +112,23 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
         }))
     }
 
-    renameTag = () => {
-        // TODO
+    renameTag = (new_name:string) => {
+        AppDispatcher.dispatch(NotesActions.RENAME_TAG, {
+            old_name: this.state.selectedTag,
+            new_name: new_name
+        })
+
+        this.setState(state => ({
+            ...state,
+            selectedTag: null,
+            renameTagModalOpen: false
+        }))
     }
 
     openDeleteTagModalDialog = () => {
         this.setState(state => ({
             ...state,
+            menuOpen: false,
             deleteTagDialogOpen: true
         }))
     }
@@ -128,6 +143,7 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
     openRenameTagModal= () => {
         this.setState(state => ({
             ...state,
+            menuOpen: false,
             renameTagModalOpen: true
         }))
     }
@@ -154,7 +170,7 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
                 <Modal
                     open={this.state.renameTagModalOpen}
                     handleClose={this.closeRenameTagModal}
-                    content={<RenameTagModal onSuccess={this.renameTag} tag={this.state.selectedTag} handleClose={this.closeRenameTagModal} />}
+                    content={<RenameTagModal onSuccess={this.renameTag} tag={this.state.selectedTag} tags={this.props.tags} handleClose={this.closeRenameTagModal} />}
                 />
 
                 <div className="filters-panel" onscroll={this.closeMenu}>
