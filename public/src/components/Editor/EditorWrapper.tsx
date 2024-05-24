@@ -141,10 +141,3 @@ export class EditorWrapper extends Component<EditorProps, EditorState> {
         )
     }
 }
-
-const getFirstElem = (node) => {
-    if (node.nodeType === 1) {
-        return node;
-    }
-    return getFirstElem(node.parentElement);
-}
