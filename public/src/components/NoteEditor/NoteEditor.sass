@@ -6,12 +6,11 @@
 	background: rgba(27, 39, 53, 0.3)
 	display: none
 	flex-direction: column
-	padding: 10px 20px 80px 20px
-	gap: 15px
 	width: 100%
 	flex-basis: 100%
 	position: relative
 	overflow: hidden
+	padding-bottom: 50px
 
 	@media screen and (max-width: $lg)
 		display: flex
@@ -26,11 +25,9 @@
 
 	@media screen and (max-width: $md)
 		padding: 75px 25px
-		gap: 10px
 
 	@media screen and (max-width: $sm)
-		padding: 75px 15px
-		gap: 5px
+		padding: 50px 15px
 
 	&.active
 		display: flex
@@ -54,33 +51,45 @@
 		@media screen and (max-width: $lg)
 			padding: 55px 5% 80px
 
+		.top-panel
+			background: none !important
+			padding: 15px 0
+
 		.note-background
 			height: 120px
-
-			@media screen and (max-width: $md)
-				height: 110px
-
-			@media screen and (max-width: $sm)
-				height: 105px
+			display: block
 
 	.note-background
 		position: absolute
 		top: 0
 		left: 0
 		width: 100%
-		height: 80px
+		height: 140px
 		z-index: 0
+		display: none
+
+		@media screen and (max-width: $lg)
+			display: block
+
+		@media screen and (max-width: $sm)
+			height: 120px
 
 	.top-panel
 		display: flex
 		justify-content: flex-end
 		align-items: center
-		min-height: 40px // Нужен, чтобы на мобилках, при редактировании чужой заметки, панель не скакала
 		position: relative
 		gap: 6px
+		width: 100%
+		padding: 15px 25px
+		min-height: 74px
 
 		.hidden
 			display: none
+
+		@media screen and (max-width: $lg)
+			padding: 15px 0
+			background: none !important
 
 		.tag-list-wrapper
 			@media screen and (max-width: $xl)
@@ -115,8 +124,8 @@
 			display: none
 			position: absolute
 			left: 0
-			top: 0
-			height: 100%
+			top: 50%
+			transform: translateY(-50%)
 
 			@media screen and (max-width: $lg)
 				display: flex

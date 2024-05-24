@@ -77,14 +77,17 @@ export class Router extends ScReact.Component<any, routerState> {
             const noteId = path.split('/').at(-1);
 
             if (isAuth) {
-                AppDispatcher.dispatch(NotesActions.FETCH_NOTE, noteId);
+                AppSharedNoteRequests.Get(noteId).then(note => {
+                    AppDispatcher.dispatch(NotesActions.SELECT_NOTE, note);
+                }).catch(() => {
+                    AppDispatcher.dispatch(NotesActions.FETCH_NOTE, noteId);
+                });
             } else {
                 AppSharedNoteRequests.Get(noteId).then(note => {
                     this.openSharedNotePage(note)
                 }).catch(() => {
                     AppRouter.go("/")
                 });
-
             }
 
             return;
@@ -124,7 +127,7 @@ export class Router extends ScReact.Component<any, routerState> {
 
     public go(raw: string): void {
 
-        const path = this.normalizeURL(raw)
+        const path = this.normalizeURL(raw) // TODO: "/" -> empty string
 
         let page: RouterMapValue = this.pages[path];
 
@@ -132,6 +135,9 @@ export class Router extends ScReact.Component<any, routerState> {
             page = this.pages['notes'];
         }
 
+        console.log("history.pushState")
+        console.log(path)
+        console.log(raw)
         history.pushState(null, null, path);
 
         if (page === undefined) {

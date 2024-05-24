@@ -69,10 +69,8 @@ export class EditorWrapper extends Component<any, EditorState> {
     updateState = (store:NoteStoreState) => {
         this.syncTitle(store.note.title)
 
-        const isOwner = this.props.note?.owner_id == AppUserStore.state.user_id
-        console.log(isOwner)
         console.log(this.props.note)
-        if (!isOwner && this.props.note?.public) {
+        if (!this.props.isOwner && this.props.note?.public) {
             this.self.innerHTML = ""
             new Viewer(
                 store.note.blocks,

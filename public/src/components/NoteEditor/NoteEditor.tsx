@@ -295,7 +295,7 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
 
                 </div>
 
-                <div className="top-panel">
+                <div className="top-panel" style={`background: ${this.state.selectedNote?.header};`}>
 
                     <div className="close-editor-label-wrapper">
                         <div className="close-editor-label-container" onclick={this.closeEditor}>
@@ -454,6 +454,7 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
                     <EditorWrapper
                         open={this.state.selectedNote != null}
                         note={this.state.selectedNote}
+                        isOwner={isOwner}
                         onChangeTitle={(value: string) => {
                             this.props.onChangeTitle(value);
                             this.onChangeNote();

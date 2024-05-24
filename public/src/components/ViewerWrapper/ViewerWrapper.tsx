@@ -30,7 +30,10 @@ export class ViewerWrapper extends ScReact.Component<ViewerWrapperProps, any> {
     }
 
     closeViewer = () => {
+        console.log("closeViewer")
         AppRouter.go("/")
+
+        history.pushState(null, null, "/"); // TODO
     }
 
     exportToPDF = () => {
