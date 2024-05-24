@@ -19,6 +19,10 @@ import {BackgroundPicker} from "../BackgroundPicker/BackgroundPicker";
 import {NoteType} from "../../utils/types";
 import {SharePanel} from "../SharePanel/SharePanel";
 import {PluginProps} from "../Editor/Plugin";
+import {Editor} from "../Editor/Editor";
+import {parseNoteTitle} from "../../modules/utils";
+import {Dropdown} from "../Dropdown/Dropdown";
+import YoutubeDialogForm from "../YoutubeDialog/YoutubeDialog";
 
 type NoteEditorType = {
     selectedNote: NoteType
@@ -50,8 +54,16 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
         emojiModalOpen: false,
         backgroundModalOpen: false,
         shareModalOpen: false,
-        fullScreen: false
+        fullScreen: false,
+        dropdownOpen: false,
+        dropdownPos: {
+            left: 0,
+            top: 0
+        },
+        youtube: false
     };
+
+    private editorWrapperRef
 
     componentDidMount() {
         AppNotesStore.SubscribeToStore(this.updateState);
@@ -231,6 +243,42 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
         })
     }
 
+    openDropdown = (elem: HTMLElement) => {
+        const editor = this.editorWrapperRef
+        const offsetBottom = editor.clientHeight - elem.getBoundingClientRect().top
+        const dropdownOffsetTop = offsetBottom < 205 ? -225 : 40
+
+        this.setState(state => ({
+            ...state,
+            dropdownOpen: true,
+            dropdownPos: {
+                left: elem.offsetLeft + 20,
+                top: elem.offsetTop + dropdownOffsetTop
+            }
+        }))
+    }
+
+    closeDropdown = () => {
+        this.setState(state => ({
+            ...state,
+            dropdownOpen: false
+        }))
+    }
+
+    openYoutube = (elem: HTMLElement) => {
+        this.setState(state => ({
+            ...state,
+            youtube: true,
+        }))
+    }
+
+    closeYoutube = () => {
+        this.setState(state => ({
+            ...state,
+            youtube: false
+        }))
+    }
+
     render() {
         const isSubNote = this.state.selectedNote?.parent != "00000000-0000-0000-0000-000000000000" ? "hidden" : ""
         const isOwner = this.state.selectedNote?.owner_id == AppUserStore.state.user_id
@@ -251,7 +299,7 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
         // console.log("123")
 
         return (
-            <div className={'note-editor-wrapper ' + (this.props.open ? ' active ' : '')  + (this.state.fullScreen ? ' fullscreen ' : '') }>
+            <div className={'note-editor-wrapper ' + (this.props.open ? ' active ' : '')  + (this.state.fullScreen ? ' fullscreen ' : '') } ref={ref => this.editorWrapperRef = ref}>
 
                 <SwipeArea enable={this.props.open} right={this.closeEditor} target=".note-editor-wrapper"/>
 
@@ -292,6 +340,8 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
                        hideTitle={true}
                        content={<SharePanel note={this.state.selectedNote}/>}
                 />
+
+                <Modal open={this.state.youtube} content={<YoutubeDialogForm handleClose={this.closeYoutube}/>} handleClose={this.closeYoutube}/>
 
                 <div className="note-background" style={`background: ${this.state.selectedNote?.header};`}>
 
@@ -453,11 +503,20 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
 
                 <div className="bottom-panel">
 
+                    <Dropdown
+                        style={`left: ${this.state.dropdownPos.left}px; top: ${this.state.dropdownPos.top}px;`}
+                        onClose={this.closeDropdown}
+                        open={this.state.dropdownOpen}
+                        openYoutubeDialog={this.openYoutube}
+                    />
+
                     <EditorWrapper
                         open={this.state.selectedNote != null}
                         note={this.state.selectedNote}
                         isOwner={isOwner}
                         isEditable={isEditable}
+                        openDropdown={this.openDropdown}
+                        closeDropdown={this.closeDropdown}
                         onChangeTitle={(value: string) => {
                             this.props.onChangeTitle(value);
                             this.onChangeNote();

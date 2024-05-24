@@ -56,15 +56,15 @@ export class Router extends ScReact.Component<any, routerState> {
     }
 
     normalizeURL = (path:string) => {
-        return path.replace(/\/\/+/g, '/').replace(/^\//, '').replace(/\/$/, '')
+        return path.replace(/\/\/+/g, '/')
     }
 
     private initPages = () => {
-        this.pages[''] = {page: HomePage, loader: HomePageLoader};
-        this.pages['login'] = {page: AuthPage, loader: AuthPageLoader, skeleton: AuthPageSkeleton};
-        this.pages['register'] = {page: AuthPage, loader: AuthPageLoader, skeleton: AuthPageSkeleton};
-        this.pages['notes'] = {page: NotesPage, loader: NotesLoader, skeleton: NotesPageSkeleton};
-        this.pages['404'] = {page: NotFoundPage };
+        this.pages['/'] = {page: HomePage, loader: HomePageLoader};
+        this.pages['/login'] = {page: AuthPage, loader: AuthPageLoader, skeleton: AuthPageSkeleton};
+        this.pages['/register'] = {page: AuthPage, loader: AuthPageLoader, skeleton: AuthPageSkeleton};
+        this.pages['/notes'] = {page: NotesPage, loader: NotesLoader, skeleton: NotesPageSkeleton};
+        this.pages['/404'] = {page: NotFoundPage };
     };
 
     public handlePopState = () => {
@@ -72,6 +72,8 @@ export class Router extends ScReact.Component<any, routerState> {
         const path = this.normalizeURL(window.location.pathname)
 
         let isAuth = AppUserStore.state.isAuth;
+
+        history.replaceState(null, null, path)
 
         if (path.includes('notes/')) {
             const noteId = path.split('/').at(-1);
@@ -92,8 +94,6 @@ export class Router extends ScReact.Component<any, routerState> {
 
             return;
         }
-        
-        history.replaceState(null, null, path)
 
         const page: RouterMapValue = this.pages[path];
 
@@ -132,7 +132,7 @@ export class Router extends ScReact.Component<any, routerState> {
         let page: RouterMapValue = this.pages[path];
 
         if (path.includes('notes/')) {
-            page = this.pages['notes'];
+            page = this.pages['/notes'];
         }
 
         console.log("history.pushState")

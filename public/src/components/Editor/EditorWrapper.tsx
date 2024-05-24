@@ -2,16 +2,10 @@ import {Component} from "@veglem/screact/dist/component";
 import {VDomNode} from "@veglem/screact/dist/vdom";
 import "./Editor.sass"
 import {Editor} from "./Editor";
-import {Dropdown} from "../Dropdown/Dropdown";
 import {AppNoteStore, NoteStoreState} from "../../modules/stores/NoteStore";
 import {Tippy} from "../Tippy/Tippy";
-import {YoutubeDialogForm} from "../YoutubeDialog/YoutubeDialog";
-import {Modal} from "../Modal/Modal";
 import {isEqual} from "@veglem/screact/dist/isEqual";
-import {AppToasts} from "../../modules/toasts";
-import {AppUserStore} from "../../modules/stores/UserStore";
 import {Viewer} from "./Viewer";
-import {AppNotesStore} from "../../modules/stores/NotesStore";
 import {NoteType} from "../../utils/types";
 import {PluginProps} from "./Plugin";
 import {parseNoteTitle} from "../../modules/utils";
@@ -28,12 +22,6 @@ type EditorState = {
         left: number,
         top: number
     }
-    dropdownOpen: boolean,
-    dropdownPos: {
-        left: number,
-        top: number
-    }
-    youtube: boolean
 }
 
 type EditorProps = {
@@ -41,6 +29,8 @@ type EditorProps = {
     note: NoteType,
     isOwner: boolean,
     isEditable: boolean,
+    openDropdown: () => void,
+    closeDropdown: () => void,
     onChangeTitle: (value: string) => void,
     onChangeContent: (value: PluginProps[]) => void
 }
@@ -51,17 +41,7 @@ export class EditorWrapper extends Component<EditorProps, EditorState> {
         tippyPos: {
             left: 0,
             top: 0
-        },
-        dropdownOpen: false,
-        dropdownPos: {
-            left: 0,
-            top: 0
-        },
-        youtube: false
-    }
-
-    constructor() {
-        super();
+        }
     }
 
     private self: HTMLElement
@@ -92,7 +72,7 @@ export class EditorWrapper extends Component<EditorProps, EditorState> {
             this.editor = new Editor(
                 store.note.blocks,
                 this.self,
-                {open: this.openDropdown, close: this.closeDropdown},
+                {open: this.props.openDropdown, close: this.props.closeDropdown},
                 this.props.onChangeContent,
                 {open: this.openTippy, close: this.closeTippy}
             );
@@ -114,42 +94,6 @@ export class EditorWrapper extends Component<EditorProps, EditorState> {
         }
     }
 
-    openDropdown = (elem: HTMLElement) => {
-        const editor = document.querySelector(".note-editor-wrapper")
-        const offsetBottom = editor.clientHeight - elem.getBoundingClientRect().top
-        const dropdownOffsetTop = offsetBottom < 255 ? -225 : 20
-
-        this.setState(state => ({
-            ...state,
-            dropdownOpen: true,
-            dropdownPos: {
-                left: elem.offsetLeft + 20,
-                top: elem.offsetTop + dropdownOffsetTop
-            }
-        }))
-    }
-
-    closeDropdown = () => {
-        this.setState(state => ({
-            ...state,
-            dropdownOpen: false
-        }))
-    }
-
-    openYoutube = (elem: HTMLElement) => {
-        this.setState(state => ({
-            ...state,
-            youtube: true,
-        }))
-    }
-
-    closeYoutube = () => {
-        this.setState(state => ({
-            ...state,
-            youtube: false
-        }))
-    }
-
     openTippy = (elem: HTMLElement) => {
         this.setState(state => ({
             ...state,
@@ -162,7 +106,6 @@ export class EditorWrapper extends Component<EditorProps, EditorState> {
     }
 
     closeTippy = () => {
-        
         this.setState(state => ({
             ...state,
             tippyOpen: false
@@ -182,19 +125,12 @@ export class EditorWrapper extends Component<EditorProps, EditorState> {
     render(): VDomNode {
         return (
             <div className="note-editor">
-                <Dropdown
-                    style={`left: ${this.state.dropdownPos.left}px; top: ${this.state.dropdownPos.top}px;`}
-                    onClose={this.closeDropdown}
-                    open={this.state.dropdownOpen}
-                    openYoutubeDialog={this.openYoutube}
-                />
 
-                <Tippy style={`left: ${this.state.tippyPos.left}px; top: ${this.state.tippyPos.top}px;`}
+                <Tippy
+                    style={`left: ${this.state.tippyPos.left}px; top: ${this.state.tippyPos.top}px;`}
                     open={this.state.tippyOpen}
-                       onClose={this.closeTippy}
+                    onClose={this.closeTippy}
                 />
-
-                <Modal open={this.state.youtube} content={<YoutubeDialogForm handleClose={this.closeYoutube}/>} handleClose={this.closeYoutube}/>
 
                 <div className="note-editor-content">
                     <div className="note-title" contentEditable={this.props.isEditable} oninput={this.onChangeTitle} ref={ref => this.noteTitleRef = ref}></div>

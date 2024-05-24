@@ -1022,24 +1022,24 @@ const RenderAttach = (attach_filename:string, attach_id:string) => {
     attachContainer.appendChild(fileExtensionLabel)
     attachContainer.appendChild(fileName)
 
-    const closeAttachBtnContainer = document.createElement("div")
-    closeAttachBtnContainer.className = "close-attach-btn-container"
-
-    const closeBtn = document.createElement("img")
-    closeBtn.src = "./src/assets/close.svg"
-    closeBtn.className = "close-attach-btn"
 
     if (pluginSettings.isEditable) {
+        const closeAttachBtnContainer = document.createElement("div")
+        closeAttachBtnContainer.className = "close-attach-btn-container"
+        const closeBtn = document.createElement("img")
+        closeBtn.src = "./src/assets/close.svg"
+        closeBtn.className = "close-attach-btn"
+
         closeBtn.onclick = (e) => {
             e.stopPropagation()
             attachWrapper.remove();
         }
+
+        closeAttachBtnContainer.appendChild(closeBtn)
+        
+        attachContainer.appendChild(closeAttachBtnContainer)
     }
 
-
-    closeAttachBtnContainer.appendChild(closeBtn)
-
-    attachContainer.appendChild(closeAttachBtnContainer)
 
     attachWrapper.appendChild(attachContainer)
 
