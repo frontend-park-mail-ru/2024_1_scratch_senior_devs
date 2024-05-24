@@ -70,6 +70,10 @@ export class NoteMenu extends ScReact.Component<any, any> {
         this.props.openSharePanel()
     }
 
+    toggleFavorite = () => {
+        AppDispatcher.dispatch(NotesActions.TOGGLE_FAVORITE, this.props.note)
+    }
+
     render() {
         const isOwner = this.props.note?.owner_id == AppUserStore.state.user_id
         const isAuth = AppUserStore.state.isAuth
@@ -103,7 +107,7 @@ export class NoteMenu extends ScReact.Component<any, any> {
                     }
 
                     {isAuth ?
-                        <div className="options-item">
+                        <div className="options-item" onclick={this.toggleFavorite}>
                             <Img src={this.props.note?.favorite ? "star-filled.svg" : "star.svg"} className="icon"/>
                             <span>{this.props.note?.favorite ? "Удалить из избранного" : "В избранное"}</span>
                         </div> : ""

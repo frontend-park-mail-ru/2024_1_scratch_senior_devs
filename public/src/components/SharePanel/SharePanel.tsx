@@ -62,6 +62,8 @@ export class SharePanel extends ScReact.Component<any, any> {
                 note_id: AppNotesStore.state.selectedNote.id,
                 username: value
             })
+
+            this.inviteInputRef.value = ""
         }
     }
 
