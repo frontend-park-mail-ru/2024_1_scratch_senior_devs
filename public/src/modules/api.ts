@@ -455,7 +455,7 @@ class NoteRequests {
             }
         };
 
-        const response = await fetch(baseUrl + (pluginSettings.isEditable ? '/attach/' : '/shared/') + id, options);
+        const response = await fetch(baseUrl + (pluginSettings.isEditable ? '/attach/' : '/shared/attach/') + id, options);
 
         const blob = await response.blob();
 
@@ -473,7 +473,7 @@ class NoteRequests {
             }
         };
 
-        const response = await fetch(baseUrl + (pluginSettings.isEditable ? '/attach/' : '/shared/') + id, options);
+        const response = await fetch(baseUrl + (pluginSettings.isEditable ? '/attach/' : '/shared/attach/') + id, options);
         const blob = await response.blob();
 
         const url = URL.createObjectURL(blob);
