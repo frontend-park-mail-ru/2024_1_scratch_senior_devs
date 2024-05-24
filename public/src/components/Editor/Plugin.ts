@@ -494,11 +494,17 @@ export const defaultPlugins: EditorPlugin[] = [
             img.dataset.imgid = id;
             img.className = "img"
 
+
+
             if (id in AppNoteStore.state.cache) {
                 img.src = AppNoteStore.state.cache[id]
             } else {
                 AppNoteRequests.GetImage(id, AppUserStore.state.JWT, AppUserStore.state.csrf).then(url => {
-                    img.src = url;
+                    if (pluginSettings.isEditable) {
+                        img.src = url;
+                    } else {
+                        img.src = url.replace('attach', 'shared');
+                    }
                     AppDispatcher.dispatch(NoteStoreActions.PUT_TO_CACHE, {key: id, value: url})
                 })
             }
@@ -876,6 +882,8 @@ export const fromJson = (props: PluginProps) => {
 }
 
 export const lastChosenElement: {node?: Node } = {};
+
+export const pluginSettings: {isEditable: Boolean} = {isEditable: true};
 
 export const insertBlockPlugin = (pluginName: string, ...args: any) => {
     let plugin: EditorPlugin;

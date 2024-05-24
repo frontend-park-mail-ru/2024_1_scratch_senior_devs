@@ -5,7 +5,7 @@ import {
     fromJson,
     inspectBlocks,
     lastChosenElement,
-    PluginProps,
+    PluginProps, pluginSettings,
     toJson
 } from "./Plugin";
 import {AppUserStore} from "../../modules/stores/UserStore";
@@ -30,6 +30,7 @@ export class Editor {
 
         // TODO: при наборе символов в поисковую строку фокусится редактор заметки (отключить)
 
+        pluginSettings.isEditable = true;
         this.dropdownCallbacks = dropdown;
         this.tippyCallbacks = tippy;
         this.addPlugins();

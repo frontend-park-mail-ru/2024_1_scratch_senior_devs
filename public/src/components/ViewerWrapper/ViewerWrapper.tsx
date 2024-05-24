@@ -8,6 +8,7 @@ import {NotesActions} from "../../modules/stores/NotesStore";
 import {Editor} from "../Editor/Editor";
 import {AppRouter} from "../../modules/router";
 import {NoteType} from "../../utils/types";
+import {Viewer} from "../Editor/Viewer";
 
 type ViewerWrapperProps = {
     fullScreen: boolean
@@ -22,12 +23,16 @@ export class ViewerWrapper extends ScReact.Component<ViewerWrapperProps, any> {
 
     componentDidMount() {
         this.noteContentRef.innerHTML = ""
-        new Editor(
+        // new Editor(
+        //     this.props.note.data.content,
+        //     this.noteContentRef,
+        //     {open: () => {}, close: () => {}},
+        //     () => {},
+        //     {open: () => {}, close: () => {}}
+        // );
+        new Viewer(
             this.props.note.data.content,
-            this.noteContentRef,
-            {open: () => {}, close: () => {}},
-            () => {},
-            {open: () => {}, close: () => {}}
+            this.noteContentRef
         );
     }
 
