@@ -1020,10 +1020,13 @@ const RenderAttach = (attach_filename:string, attach_id:string) => {
     closeBtn.src = "./src/assets/close.svg"
     closeBtn.className = "close-attach-btn"
 
-    closeBtn.onclick = (e) => {
-        e.stopPropagation()
-        attachWrapper.remove();
+    if (pluginSettings.isEditable) {
+        closeBtn.onclick = (e) => {
+            e.stopPropagation()
+            attachWrapper.remove();
+        }
     }
+
 
     closeAttachBtnContainer.appendChild(closeBtn)
 
@@ -1069,17 +1072,20 @@ const RenderSubNote = (subNoteId:string) => {
         deleteSubNoteBtn.src = "./src/assets/trash.svg"
         deleteSubNoteBtn.className = "delete-subnote-btn"
 
-        deleteSubNoteBtnContainer.onclick = (e) => {
-            e.stopPropagation()
-            subNoteWrapper.remove();
+        if (pluginSettings.isEditable) {
+            deleteSubNoteBtnContainer.onclick = (e) => {
+                e.stopPropagation()
+                subNoteWrapper.remove();
 
-            if (!subNoteWrapper.dataset.deleted) {
-                AppDispatcher.dispatch(NotesActions.DELETE_NOTE, {
-                    id: subNoteId,
-                    redirect: false
-                })
+                if (!subNoteWrapper.dataset.deleted) {
+                    AppDispatcher.dispatch(NotesActions.DELETE_NOTE, {
+                        id: subNoteId,
+                        redirect: false
+                    })
+                }
             }
         }
+
 
         deleteSubNoteBtnContainer.appendChild(deleteSubNoteBtn)
         subNoteContainer.appendChild(deleteSubNoteBtnContainer)
@@ -1111,11 +1117,13 @@ const RenderSubNote = (subNoteId:string) => {
         });
     }
 
-    subNoteWrapper.onclick = () => {
-        if (!subNoteWrapper.dataset.deleted && loaded) {
-            AppDispatcher.dispatch(NotesActions.OPEN_NOTE, subNoteId)
-        } else {
-            AppToasts.error("Заметка не найдена")
+    if (pluginSettings.isEditable) {
+        subNoteWrapper.onclick = () => {
+            if (!subNoteWrapper.dataset.deleted && loaded) {
+                AppDispatcher.dispatch(NotesActions.OPEN_NOTE, subNoteId)
+            } else {
+                AppToasts.error("Заметка не найдена")
+            }
         }
     }
 
