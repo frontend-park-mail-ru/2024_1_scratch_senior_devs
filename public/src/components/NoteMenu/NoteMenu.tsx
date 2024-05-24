@@ -107,7 +107,7 @@ export class NoteMenu extends ScReact.Component<any, any> {
                     }
 
                     {isAuth ?
-                        <div className="options-item" onclick={this.toggleFavorite}>
+                        <div className="options-item mobile-option" onclick={this.toggleFavorite}>
                             <Img src={this.props.note?.favorite ? "star-filled.svg" : "star.svg"} className="icon"/>
                             <span>{this.props.note?.favorite ? "Удалить из избранного" : "В избранное"}</span>
                         </div> : ""

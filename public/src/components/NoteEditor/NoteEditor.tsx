@@ -267,6 +267,7 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
 
     render() {
         const isSubNote = this.state.selectedNote?.parent != "00000000-0000-0000-0000-000000000000" ? "hidden" : ""
+        const isAuth = AppUserStore.state.isAuth
         const isOwner = this.state.selectedNote?.owner_id == AppUserStore.state.user_id
         const isEditable = this.state.selectedNote?.collaborators.includes(AppUserStore.state.user_id) || isOwner
 
@@ -432,7 +433,7 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
                         <Collaborators/>
                     </div>
 
-                    <div className={!isOwner || isSubNote ? "hidden" : ""}>
+                    <div className={!isAuth || isSubNote ? "hidden" : ""}>
                         <Tooltip
                             hoverTooltip={this.state.selectedNote?.favorite ? "Удалить из избранного" : "В избранное"}
                             showHoverTooltip={true}
