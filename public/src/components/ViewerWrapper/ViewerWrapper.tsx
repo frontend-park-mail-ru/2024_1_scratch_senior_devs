@@ -9,6 +9,7 @@ import {Editor} from "../Editor/Editor";
 import {AppRouter} from "../../modules/router";
 import {NoteType} from "../../utils/types";
 import {Viewer} from "../Editor/Viewer";
+import {parseNoteTitle} from "../../modules/utils";
 
 type ViewerWrapperProps = {
     fullScreen: boolean
@@ -84,7 +85,7 @@ export class ViewerWrapper extends ScReact.Component<ViewerWrapperProps, any> {
 
                 <div className="bottom-panel">
                     <div className="note-editor" ref={ref => this.viewerRef = ref}>
-                        <div className="note-title">{this.props.note.data.title}</div>
+                        <div className="note-title">{parseNoteTitle(this.props.note.data.title)}</div>
                         <div className="note-body" ref={elem => this.noteContentRef = elem}></div>
                     </div>
                 </div>

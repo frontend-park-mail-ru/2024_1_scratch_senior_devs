@@ -12,6 +12,9 @@ import {AppToasts} from "../../modules/toasts";
 import {AppUserStore} from "../../modules/stores/UserStore";
 import {Viewer} from "./Viewer";
 import {AppNotesStore} from "../../modules/stores/NotesStore";
+import {NoteType} from "../../utils/types";
+import {PluginProps} from "./Plugin";
+import {parseNoteTitle} from "../../modules/utils";
 
 window['mobileCheck'] = function() {
     let check = false;
@@ -33,7 +36,16 @@ type EditorState = {
     youtube: boolean
 }
 
-export class EditorWrapper extends Component<any, EditorState> {
+type EditorProps = {
+    open: boolean,
+    note: NoteType,
+    isOwner: boolean,
+    isEditable: boolean,
+    onChangeTitle: (value: string) => void,
+    onChangeContent: (value: PluginProps[]) => void
+}
+
+export class EditorWrapper extends Component<EditorProps, EditorState> {
     state = {
         tippyOpen: false,
         tippyPos: {
@@ -69,7 +81,6 @@ export class EditorWrapper extends Component<any, EditorState> {
     updateState = (store:NoteStoreState) => {
         this.syncTitle(store.note.title)
 
-        console.log(this.props.note)
         if (!this.props.isOwner && this.props.note?.public) {
             this.self.innerHTML = ""
             new Viewer(
@@ -89,6 +100,11 @@ export class EditorWrapper extends Component<any, EditorState> {
     }
 
     syncTitle = (title:string) => {
+        if (!this.props.isEditable) {
+            this.noteTitleRef.textContent = parseNoteTitle(title)
+            return
+        }
+
         this.noteTitleRef.textContent = title
 
         if (this.noteTitleRef.textContent.length == 0) {
@@ -101,7 +117,7 @@ export class EditorWrapper extends Component<any, EditorState> {
     openDropdown = (elem: HTMLElement) => {
         const editor = document.querySelector(".note-editor-wrapper")
         const offsetBottom = editor.clientHeight - elem.getBoundingClientRect().top
-        const dropdownOffsetTop = offsetBottom < 225 ? -225 : 20
+        const dropdownOffsetTop = offsetBottom < 255 ? -225 : 20
 
         this.setState(state => ({
             ...state,
@@ -114,7 +130,6 @@ export class EditorWrapper extends Component<any, EditorState> {
     }
 
     closeDropdown = () => {
-        
         this.setState(state => ({
             ...state,
             dropdownOpen: false
@@ -182,7 +197,7 @@ export class EditorWrapper extends Component<any, EditorState> {
                 <Modal open={this.state.youtube} content={<YoutubeDialogForm handleClose={this.closeYoutube}/>} handleClose={this.closeYoutube}/>
 
                 <div className="note-editor-content">
-                    <div className="note-title" contentEditable={true} oninput={this.onChangeTitle} ref={ref => this.noteTitleRef = ref}></div>
+                    <div className="note-title" contentEditable={this.props.isEditable} oninput={this.onChangeTitle} ref={ref => this.noteTitleRef = ref}></div>
                     <div className="note-body" ref={elem => this.self = elem}></div>
                 </div>
 

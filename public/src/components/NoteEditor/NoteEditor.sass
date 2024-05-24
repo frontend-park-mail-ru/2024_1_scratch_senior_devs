@@ -51,9 +51,15 @@
 		@media screen and (max-width: $lg)
 			padding: 55px 5% 80px
 
+		@media screen and (max-width: $sm)
+			padding: 55px 15px 80px
+
 		.top-panel
 			background: none !important
 			padding: 15px 0
+
+		.bottom-panel
+			padding: 10px 0 50px
 
 		.note-background
 			height: 120px
@@ -188,5 +194,8 @@
 		gap: 10px
 		height: 100%
 		position: relative
-		padding: 10px 0 50px
+		padding: 10px 10px 50px 30px
 		animation: fadeIn 0.2s
+
+		@media screen and (max-width: $lg)
+			padding: 10px 10px 50px 0

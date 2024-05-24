@@ -2,6 +2,8 @@ import {ScReact} from "@veglem/screact";
 import "./style.sass"
 import "../../components/Editor/Editor.sass"
 import {ViewerWrapper} from "../../components/ViewerWrapper/ViewerWrapper";
+import {AppNotesStore} from "../../modules/stores/NotesStore";
+import {NoteStoreActions} from "../../modules/stores/NoteStore";
 
 export class SharedNotePage extends ScReact.Component<any, any> {
     state = {
@@ -13,6 +15,7 @@ export class SharedNotePage extends ScReact.Component<any, any> {
             ...state,
             fullScreen: true
         }))
+        document.getElementById("header").classList.add("fullscreen")
     }
 
     closeFullScreen = () => {
@@ -20,6 +23,11 @@ export class SharedNotePage extends ScReact.Component<any, any> {
             ...state,
             fullScreen: false
         }))
+        document.getElementById("header").classList.remove("fullscreen")
+    }
+
+    componentWillUnmount() {
+        console.log("asdfasdfas")
     }
 
     render () {

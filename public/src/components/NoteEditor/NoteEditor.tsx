@@ -18,6 +18,7 @@ import {EmojiPicker} from "../EmojiPicker/EmojiPicker";
 import {BackgroundPicker} from "../BackgroundPicker/BackgroundPicker";
 import {NoteType} from "../../utils/types";
 import {SharePanel} from "../SharePanel/SharePanel";
+import {PluginProps} from "../Editor/Plugin";
 
 type NoteEditorType = {
     selectedNote: NoteType
@@ -233,6 +234,7 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
     render() {
         const isSubNote = this.state.selectedNote?.parent != "00000000-0000-0000-0000-000000000000" ? "hidden" : ""
         const isOwner = this.state.selectedNote?.owner_id == AppUserStore.state.user_id
+        const isEditable = this.state.selectedNote?.collaborators.includes(AppUserStore.state.user_id) || isOwner
 
         // TODO: скелетон для эдитора
         // console.log("render")
@@ -455,13 +457,14 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
                         open={this.state.selectedNote != null}
                         note={this.state.selectedNote}
                         isOwner={isOwner}
+                        isEditable={isEditable}
                         onChangeTitle={(value: string) => {
                             this.props.onChangeTitle(value);
                             this.onChangeNote();
                             AppDispatcher.dispatch(NoteStoreActions.CHANGE_TITLE, value)
                             AppDispatcher.dispatch(NotesActions.CHANGE_TITLE, value)
                         }}
-                        onChangeContent={(content) => {
+                        onChangeContent={(content:PluginProps) => {
                             this.props.onChangeNote()
                             this.onChangeNote()
                             AppDispatcher.dispatch(NoteStoreActions.CHANGE_CONTENT, content)

@@ -45,7 +45,7 @@ export class Header extends ScReact.Component<any, any>{
 
     render() {
         return (
-            <header id="header" className={(location.pathname.includes("notes") ? "notes " : "") + (this.state.fullscreen ? "fullscreen" : "")}>
+            <header id="header" className={(location.pathname.includes("notes") && this.state.isAuth ? "notes " : "") + (this.state.fullscreen ? "fullscreen" : "")}>
                 <Logo />
                 { this.state.userChecked ? (
                     this.state.isAuth ? <Profile avatarUrl={this.state.avatarUrl} otpEnabled={this.state.otpEnabled} qr={this.state.qr}/> : (

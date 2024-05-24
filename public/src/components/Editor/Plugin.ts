@@ -502,6 +502,8 @@ export const defaultPlugins: EditorPlugin[] = [
                 AppNoteRequests.GetImage(id, AppUserStore.state.JWT, AppUserStore.state.csrf).then(url => {
                     img.src = url;
                     AppDispatcher.dispatch(NoteStoreActions.PUT_TO_CACHE, {key: id, value: url})
+                }).catch(error => {
+                    console.log(error)
                 })
             }
 
@@ -517,12 +519,16 @@ export const defaultPlugins: EditorPlugin[] = [
 
             img.dataset.imgid = id;
 
+            // TODO: если вставить битую фотку, то пустой img останется в заметке
+
             AppNoteRequests.GetImage(id, AppUserStore.state.JWT, AppUserStore.state.csrf).then(url => {
                 img.src = url;
                 AppDispatcher.dispatch(NoteStoreActions.PUT_TO_CACHE, {key: id, value: url})
+            }).catch(error => {
+                console.log(error)
             })
 
-            return img;
+            return img
         }
     },
     {
@@ -888,8 +894,8 @@ export const insertBlockPlugin = (pluginName: string, ...args: any) => {
             plugin = val;
         }
     });
-    // 
-    if (plugin === undefined || plugin.insertNode === undefined) {
+
+    if (plugin === undefined || !plugin.insertNode) {
         return;
     }
     const self: string[] = [plugin.pluginName, plugin.type];
@@ -906,8 +912,11 @@ export const insertBlockPlugin = (pluginName: string, ...args: any) => {
             });
         }
         const newNode = plugin.insertNode([], args);
-        (nodeToReplace as HTMLElement).replaceWith(newNode);
-        document.getSelection().setPosition(newNode, 0);
+        console.log(newNode)
+        if (newNode) {
+            (nodeToReplace as HTMLElement).replaceWith(newNode);
+            document.getSelection().setPosition(newNode, 0);
+        }
     }
 }
 
