@@ -72,6 +72,7 @@ export class NoteMenu extends ScReact.Component<any, any> {
 
     render() {
         const isOwner = this.props.note?.owner_id == AppUserStore.state.user_id
+        const isAuth = AppUserStore.state.isAuth
 
         return (
             <div className={"note-menu " + (this.state.open ? "open" : "")}>
@@ -101,8 +102,8 @@ export class NoteMenu extends ScReact.Component<any, any> {
                         </div> : ""
                     }
 
-                    {isOwner ?
-                        <div className="options-item mobile-option">
+                    {isAuth ?
+                        <div className="options-item">
                             <Img src={this.props.note?.favorite ? "star-filled.svg" : "star.svg"} className="icon"/>
                             <span>{this.props.note?.favorite ? "Удалить из избранного" : "В избранное"}</span>
                         </div> : ""

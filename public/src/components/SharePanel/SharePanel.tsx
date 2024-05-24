@@ -3,12 +3,15 @@ import {Button} from "../Button/Button";
 import "./SharePanel.sass"
 import {ToggleButton} from "../ToggleButton/ToggleButton";
 import {Img} from "../Image/Image";
-import {NotesActions} from "../../modules/stores/NotesStore";
+import {AppNotesStore, NotesActions} from "../../modules/stores/NotesStore";
 import {parseNoteTitle} from "../../modules/utils";
 import {AppDispatcher} from "../../modules/dispatcher";
 import {AppToasts} from "../../modules/toasts";
+import {AppUserStore} from "../../modules/stores/UserStore";
 
 export class SharePanel extends ScReact.Component<any, any> {
+
+    private inviteInputRef
 
     handleToggle = (value:boolean) => {
         AppDispatcher.dispatch(value ? NotesActions.SET_PUBLIC : NotesActions.SET_PRIVATE)
@@ -43,6 +46,25 @@ export class SharePanel extends ScReact.Component<any, any> {
         AppToasts.info("Ссылка на заметку скопирована")
     }
 
+    sendInvite = (e) => {
+        e.preventDefault()
+        console.log("sendInvite")
+
+        const value = this.inviteInputRef.value
+
+        if (value == AppUserStore.state.username) {
+            AppToasts.info("Вы не можете пригласить самого себя")
+            return
+        }
+
+        if (value) {
+            AppDispatcher.dispatch(NotesActions.ADD_COLLABORATOR, {
+                note_id: AppNotesStore.state.selectedNote.id,
+                username: value
+            })
+        }
+    }
+
     getNoteURL = () => "https://you-note.ru/notes/" + this.props.note?.id
 
     render() {
@@ -50,10 +72,10 @@ export class SharePanel extends ScReact.Component<any, any> {
             <div className="share_panel">
                 <div className="share_panel__invite-people-container">
                     <h3>Пригласить людей</h3>
-                    <div className="share_panel__invite-people-container__bottom-container">
-                        <input type="text" placeholder="Введите логин" className="invite-input"/>
+                    <form className="share_panel__invite-people-container__bottom-container" onsubmit={this.sendInvite}>
+                        <input type="text" placeholder="Введите логин" className="invite-input" ref={ref => this.inviteInputRef = ref}/>
                         <Button label="Отправить"/>
-                    </div>
+                    </form>
                 </div>
                 <div className="share_panel__share-link-container">
                     <h3>Поделиться ссылкой</h3>

@@ -626,7 +626,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             if (status == 204) {
                 AppToasts.success("Приглашение успешно отправлено")
             } else {
-                AppToasts.success("Пользователя не существует")
+                AppToasts.error("Пользователь не найден")
             }
 
         } catch {

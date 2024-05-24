@@ -8,6 +8,7 @@ import {AppNoteStore, NoteStoreActions} from '../../modules/stores/NoteStore';
 import {Modal} from '../Modal/Modal';
 import {DeleteNoteDialog} from '../DeleteNoteDialog/DeleteNoteDialog';
 import NoteMenu from "../NoteMenu/NoteMenu";
+import {InviteUserModal} from "../InviteUserModal/InviteUserModal";
 import {Tooltip} from "../Tooltip/Tooltip";
 import {TagList} from "../TagList/TagList";
 import {EditorWrapper} from "../Editor/EditorWrapper";
@@ -45,17 +46,18 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
         selectedNote: null,
         noteStatus: null,
         deleteNoteModalOpen: false,
+        inviteUserModalOpen: false,
         tagsModalOpen: false,
         emojiModalOpen: false,
         backgroundModalOpen: false,
         shareModalOpen: false,
         fullScreen: false,
         dropdownOpen: false,
-        youtube: false,
         dropdownPos: {
             left: 0,
             top: 0
         },
+        youtube: false
     };
 
     private editorWrapperRef
@@ -110,12 +112,15 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
             fullScreen: store.fullScreen
         }));
 
+        console.log("updateState")
+        console.log(store.selectedNoteSynced)
         if (store.selectedNoteSynced) {
             this.setState(state => ({
                 ...state,
                 noteStatus: "sync",
             }));
         }
+
     };
 
     openDeleteNoteModal = () => {
@@ -291,6 +296,11 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
                 <Modal open={this.state.deleteNoteModalOpen}
                        handleClose={this.closeDeleteModalDialog}
                        content={<DeleteNoteDialog onSuccess={this.deleteNote} handleClose={this.closeDeleteModalDialog}/>}
+                />
+
+                <Modal open={this.state.inviteUserModalOpen}
+                       handleClose={this.closeInviteUserModal}
+                       content={<InviteUserModal handleClose={this.closeInviteUserModal} open={this.state.inviteUserModalOpen}/>}
                 />
 
                 <Modal open={this.state.tagsModalOpen}
