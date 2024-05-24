@@ -1062,7 +1062,7 @@ const RenderSubNote = (subNoteId:string) => {
     subNoteContainer.appendChild(noteIcon)
     subNoteContainer.appendChild(subNoteTitle)
 
-    const isOwner= AppNotesStore.state.selectedNote.owner_id == AppUserStore.state.user_id
+    const isOwner= AppNotesStore.state.selectedNote?.owner_id == AppUserStore.state.user_id
 
     if (isOwner) {
         const deleteSubNoteBtnContainer = document.createElement("div")
