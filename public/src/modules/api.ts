@@ -5,6 +5,7 @@ import {
     UserUpdatePasswordCredentialsType
 } from './stores/UserStore';
 import {baseUrl} from "../utils/consts";
+import {pluginSettings} from "../components/Editor/Plugin";
 
 enum RequestMethods {
     POST = 'POST',
@@ -454,7 +455,7 @@ class NoteRequests {
             }
         };
 
-        const response = await fetch(baseUrl + '/attach/' + id, options);
+        const response = await fetch(baseUrl + pluginSettings.isEditable ? '/attach/' : '/shared/' + id, options);
 
         const blob = await response.blob();
 
@@ -472,7 +473,7 @@ class NoteRequests {
             }
         };
 
-        const response = await fetch(baseUrl + '/attach/' + id, options);
+        const response = await fetch(baseUrl + pluginSettings.isEditable ? '/attach/' : '/shared/' + id, options);
         const blob = await response.blob();
 
         const url = URL.createObjectURL(blob);

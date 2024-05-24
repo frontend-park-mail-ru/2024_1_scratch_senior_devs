@@ -500,11 +500,7 @@ export const defaultPlugins: EditorPlugin[] = [
                 img.src = AppNoteStore.state.cache[id]
             } else {
                 AppNoteRequests.GetImage(id, AppUserStore.state.JWT, AppUserStore.state.csrf).then(url => {
-                    if (pluginSettings.isEditable) {
-                        img.src = url;
-                    } else {
-                        img.src = url.replace('attach', 'shared');
-                    }
+                    img.src = url;
                     AppDispatcher.dispatch(NoteStoreActions.PUT_TO_CACHE, {key: id, value: url})
                 })
             }
