@@ -23,13 +23,6 @@ export class ViewerWrapper extends ScReact.Component<ViewerWrapperProps, any> {
 
     componentDidMount() {
         this.noteContentRef.innerHTML = ""
-        // new Editor(
-        //     this.props.note.data.content,
-        //     this.noteContentRef,
-        //     {open: () => {}, close: () => {}},
-        //     () => {},
-        //     {open: () => {}, close: () => {}}
-        // );
         new Viewer(
             this.props.note.data.content,
             this.noteContentRef

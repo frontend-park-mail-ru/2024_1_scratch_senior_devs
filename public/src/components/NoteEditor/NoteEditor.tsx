@@ -453,6 +453,7 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
 
                     <EditorWrapper
                         open={this.state.selectedNote != null}
+                        note={this.state.selectedNote}
                         onChangeTitle={(value: string) => {
                             this.props.onChangeTitle(value);
                             this.onChangeNote();

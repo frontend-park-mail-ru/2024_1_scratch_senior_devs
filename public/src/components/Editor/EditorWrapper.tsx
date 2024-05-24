@@ -9,6 +9,9 @@ import {YoutubeDialogForm} from "../YoutubeDialog/YoutubeDialog";
 import {Modal} from "../Modal/Modal";
 import {isEqual} from "@veglem/screact/dist/isEqual";
 import {AppToasts} from "../../modules/toasts";
+import {AppUserStore} from "../../modules/stores/UserStore";
+import {Viewer} from "./Viewer";
+import {AppNotesStore} from "../../modules/stores/NotesStore";
 
 window['mobileCheck'] = function() {
     let check = false;
@@ -66,7 +69,16 @@ export class EditorWrapper extends Component<any, EditorState> {
     updateState = (store:NoteStoreState) => {
         this.syncTitle(store.note.title)
 
-        if (!isEqual(this.editor?.getSchema(), store.note.blocks)) {
+        const isOwner = this.props.note?.owner_id == AppUserStore.state.user_id
+        console.log(isOwner)
+        console.log(this.props.note)
+        if (!isOwner && this.props.note?.public) {
+            this.self.innerHTML = ""
+            new Viewer(
+                store.note.blocks,
+                this.self
+            );
+        } else if (!isEqual(this.editor?.getSchema(), store.note.blocks)) {
             this.self.innerHTML = ""
             this.editor = new Editor(
                 store.note.blocks,

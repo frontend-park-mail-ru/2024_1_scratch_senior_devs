@@ -234,7 +234,7 @@ export class Editor {
             return plugin.pluginName === 'br';
         }));
         defaultPlugins[brIndex].onInsert = (node: Node) => {
-            if (node.parentElement.contentEditable === 'true') {
+            if (node.parentElement?.contentEditable === 'true') {
                 const div = document.createElement('div');
                 div.append(document.createElement('br'));
                 (node as HTMLElement).replaceWith(div);
@@ -249,7 +249,7 @@ export class Editor {
             if (!node || !node.parentElement) {
                 return null;
             }
-            if (node.parentElement.contentEditable === 'true' &&
+            if (node.parentElement?.contentEditable === 'true' &&
                 node.parentElement.parentElement.classList.contains('note-body') &&
                 node.nodeType === Node.ELEMENT_NODE &&
                 (node as HTMLElement).tagName === "DIV") {
