@@ -1,7 +1,14 @@
 import {ScReact} from '@veglem/screact';
 import './Button.sass';
 
-export class Button extends ScReact.Component<any, any>{
+type ButtonProps = {
+    label: string,
+    disabled: boolean,
+    className?: string,
+    onClick: (e) => void
+}
+
+export class Button extends ScReact.Component<ButtonProps, any>{
 
     handleClick = (e) => {
         this.props.onClick && !this.props.disabled && this.props.onClick(e);

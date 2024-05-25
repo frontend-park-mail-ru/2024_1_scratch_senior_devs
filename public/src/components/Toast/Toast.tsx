@@ -17,12 +17,14 @@ export class Toast extends ScReact.Component<ToastProps, any> {
     closeToast = () => {
         this.props.onHide(this.props.key1);
     };
+
     formatType ():string {
         if (this.props.type == TOAST_TYPE.SUCCESS) {
             return 'Успех';
         } else if (this.props.type == TOAST_TYPE.ERROR) {
             return 'Ошибка';
         }
+
         return 'Инфо';
     }
 
