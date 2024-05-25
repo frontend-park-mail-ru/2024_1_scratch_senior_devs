@@ -95,52 +95,22 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
         this.invitesWS = new WebSocketConnection(`note/subscribe/on_invites`)
 
-        this.invitesWS.onOpen(() => {
-            console.log("invitesWS.onOpen")
-            // this.editorWS.sendMessage(JSON.stringify({
-            //     type: "opened",
-            //     note_id: note.id,
-            //     user_id: AppUserStore.state.user_id,
-            //     username: AppUserStore.state.username,
-            //     image_path: AppUserStore.state.avatarUrl
-            // }))
-        })
-
-        this.invitesWS.onMessage((event) => {
-            console.log("invitesWS.onMessage")
-
+        this.invitesWS.onMessage(async (event) => {
             let data = JSON.parse(event.data)
 
-            console.log(data)
-
             if (data.type == "invite") {
-                const owner = data.owner
-                AppToasts.info(owner + " пригласил вас в свою заметку!")
+                try {
+                    const note = await AppNoteRequests.Get(data.note_id, AppUserStore.state.JWT)
 
-                const note:NoteType = {
-                    "id": data.note_id,
-                    "data": {
-                        "title": data.note_title.replace('"', ""),
-                        "content": []
-                    },
-                    "update_time": data.created,
-                    "owner_id": null,
-                    "parent": "00000000-0000-0000-0000-000000000000",
-                    "children": [],
-                    "tags": [],
-                    "collaborators": [],
-                    "icon": "",
-                    "header": "",
-                    "favorite": false,
-                    "public": false
+                    AppToasts.info(data.owner + " пригласил вас в свою заметку!")
+
+                    this.SetState(state => ({
+                        ...state,
+                        notes: [note, ...state.notes]
+                    }));
+                } catch {
+                    AppToasts.error("Что-то пошло не так")
                 }
-
-                this.SetState(state => ({
-                    ...state,
-                    // offset: state.offset + 1, ?
-                    notes: [note, ...state.notes]
-                }));
-
             }
         })
 
