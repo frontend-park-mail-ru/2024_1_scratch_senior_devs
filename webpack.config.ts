@@ -4,6 +4,8 @@ import HtmlWebpackPlugin from "html-webpack-plugin";
 
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
+const ImageminPlugin = require("imagemin-webpack-plugin").default;
+const glob = require("glob")
 
 import "webpack-dev-server"
 
@@ -34,8 +36,14 @@ const config : webpack.Configuration = {
                 { from: "manifest.json", to: "" },
             ],
         }),
-        // Add your plugins here
-        // Learn more about plugins from https://webpack.js.org/configuration/plugins/
+        new ImageminPlugin({
+            externalImages: {
+                context: ".",
+                destination: "dist/assets",
+                fileName: "[name].[ext]",
+                sources: glob.sync("public/src/assets/**/*.{png,jpg,jpeg,svg}")
+            }
+        })
     ],
     module: {
         rules: [
@@ -77,10 +85,7 @@ const config : webpack.Configuration = {
             {
                 test: /\.(woff|woff2|eot|ttf|otf)$/i,
                 type: "asset/resource",
-            },
-
-            // Add your rules for custom modules here
-            // Learn more about loaders from https://webpack.js.org/loaders/
+            }
         ],
     },
     resolve: {

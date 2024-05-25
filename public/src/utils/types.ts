@@ -8,7 +8,17 @@ export type NoteType = {
         content: any[],
     },
     update_time: string,
-    owner_id: string
+    owner_id: string,
+    icon: string,
+    header: string,
+    favorite: boolean,
+    public: boolean
+}
+
+export type CollaboratorType = {
+    id: string,
+    username: string,
+    avatar: string
 }
 
 export type NoteDataType = {

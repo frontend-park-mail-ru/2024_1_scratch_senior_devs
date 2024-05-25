@@ -19,7 +19,8 @@ type InputProps = {
     type?: string,
     placeholder: string,
     icon?: string,
-    underline?: boolean
+    underline?: boolean,
+    focused?: boolean,
     onChange: (value:string) => void,
 }
 
@@ -41,6 +42,8 @@ export class Input extends ScReact.Component<InputProps, InputState>{
             hasIcon: this.props.icon != undefined,
             underline: this.props.underline  != undefined ? this.props.underline : true
         }));
+
+        this.props.focused && this.inputRef.focus()
     }
 
     toggleInputType = () => {

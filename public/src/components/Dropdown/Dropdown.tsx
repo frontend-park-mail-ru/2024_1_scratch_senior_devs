@@ -51,13 +51,12 @@ export class Dropdown extends ScReact.Component<any, any> {
         let attr = null;
         let content = [];
 
-        // TODO
         if (id === "h1") {
             insertBlockPlugin('header', 'h1')
         } else if (id === "h2") {
             insertBlockPlugin('header', 'h2')
         } else if (id === "h3") {
-            insertBlockPlugin('header', 'h2')
+            insertBlockPlugin('header', 'h3')
         } else if (id === 'bullet-list') {
             insertBlockPlugin('ul')
         } else if (id === 'numbered-list') {
@@ -66,14 +65,10 @@ export class Dropdown extends ScReact.Component<any, any> {
             insertBlockPlugin('todo')
         } else if (id === 'image') {
 
-            // TODO
-
             const fileInput = document.createElement('input');
             fileInput.type = 'file';
-            fileInput.accept = '.jpg,.png,.jpeg';
+            fileInput.accept = '.jpg,.png,.jpeg,.gif';
             fileInput.hidden = true;
-
-            // this.ref.append(fileInput);
 
             fileInput.onchange = (e: InputEvent) => {
                 fileInput.remove();
@@ -81,19 +76,12 @@ export class Dropdown extends ScReact.Component<any, any> {
                 const file = (e.target as HTMLInputElement).files[0]
                 if (file.size < MAX_ATTACH_SIZE) {
                     AppNoteRequests.UploadFile(AppNotesStore.state.selectedNote.id, file, AppUserStore.state.JWT, AppUserStore.state.csrf).then(response => {
-                        // AppUserStore.state.csrf = response.headers.get('x-csrf-token');
                         AppDispatcher.dispatch(UserActions.UPDATE_CSRF, response.headers.get('x-csrf-token'))
                         response.json().then(respJson => {
                             insertBlockPlugin('img', respJson.id);
                         })
                     })
 
-                    // AppDispatcher.dispatch(NotesActions.UPLOAD_IMAGE, {
-                    //     file: file,
-                    //     noteId: AppNotesStore.state.selectedNote.id,
-                    //     blockId: this.props.blockId
-                    // });
-                    // AppDispatcher.dispatch(NoteStoreActions.REMOVE_CURSOR, {});
                 } else {
                     AppToasts.error('Фото слишком большое');
                 }
@@ -101,7 +89,6 @@ export class Dropdown extends ScReact.Component<any, any> {
             fileInput.click();
 
         } else if (id === 'document') {
-            // TODO
 
             const fileInput = document.createElement('input');
             fileInput.type = 'file';
@@ -111,21 +98,12 @@ export class Dropdown extends ScReact.Component<any, any> {
                 fileInput.remove();
                 const file = (e.target as HTMLInputElement).files[0]
                 if (file.size < MAX_ATTACH_SIZE) {
-                    // AppDispatcher.dispatch(NotesActions.UPLOAD_FILE, {
-                    //     file: file,
-                    //     noteId: AppNotesStore.state.selectedNote.id,
-                    //     blockId: this.props.blockId,
-                    //     fileName: (e.target as HTMLInputElement).files[0].name
-                    // });
                     AppNoteRequests.UploadFile(AppNotesStore.state.selectedNote.id, file, AppUserStore.state.JWT, AppUserStore.state.csrf).then(response => {
                         AppDispatcher.dispatch(UserActions.UPDATE_CSRF, response.headers.get('x-csrf-token'))
-                        // AppUserStore.state.csrf = response.headers.get('x-csrf-token');
                         response.json().then(respJson => {
-                            
                             insertBlockPlugin('file', respJson.id, file.name);
                         })
                     })
-                    // AppDispatcher.dispatch(NoteStoreActions.REMOVE_CURSOR);
                 } else {
                     AppToasts.error('Файл слишком большой');
                 }

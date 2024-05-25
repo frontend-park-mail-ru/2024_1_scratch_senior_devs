@@ -1,14 +1,11 @@
-import {decode, downloadFile} from './utils';
+import {downloadFile} from './utils';
 import {
     UserLoginCredentialsType,
     UserRegisterCredentialsType,
     UserUpdatePasswordCredentialsType
 } from './stores/UserStore';
-import {isDebug} from "../utils/consts";
-
-const baseUrl = isDebug ? 'http://localhost:8080/api' : 'https://you-note.ru/api';
-
-export const imagesUlr = isDebug ? 'http://localhost/images/' : 'https://you-note.ru/images/';
+import {baseUrl} from "../utils/consts";
+import {pluginSettings} from "../components/Editor/Plugin";
 
 enum RequestMethods {
     POST = 'POST',
@@ -83,7 +80,7 @@ const Ajax = {
         return Ajax.Request(RequestMethods.POST, url, params);
     },
 
-    Get:  async (url: string, params: RequestParams): Promise<Response> => {
+    Get:  async (url: string, params?: RequestParams): Promise<Response> => {
         return Ajax.Request(RequestMethods.GET, url, params);
     },
 
@@ -284,7 +281,7 @@ class NoteRequests {
 
         if (response.status === 200) {
             for (const elem of response.body) {
-                elem.data = decode(elem.data);
+                elem.data = JSON.parse(elem.data);
             }
             return response.body;
         }
@@ -301,7 +298,7 @@ class NoteRequests {
         });
 
         if (response.status === 200) {
-            response.body.data = decode(response.body.data);
+            response.body.data = JSON.parse(response.body.data);
             return response.body;
         }
 
@@ -326,7 +323,9 @@ class NoteRequests {
         throw new Error(response.body.message);
     };
 
-    Update = async({id, note}, jwt: string, csrf:string)=> {
+    Update = async({id, note}, socket_id:string, jwt: string, csrf:string)=> {
+        
+
         const response = await Ajax.Post(this.baseUrl + '/' + id + '/edit', {
             headers: {
                 'Authorization': jwt,
@@ -336,9 +335,11 @@ class NoteRequests {
                 data: {
                     title: note.title,
                     content: note.blocks
-                }
+                },
+                socket_id: socket_id
             }
         });
+
 
         return {
             status: response.status,
@@ -359,7 +360,7 @@ class NoteRequests {
                     content: [
                         {
                             pluginName: "textBlock",
-                            content: "Hello You-note"
+                            content: " "
                         },
                         {
                             pluginName: "div",
@@ -375,7 +376,7 @@ class NoteRequests {
         });
 
         if (response.status == 201) {
-            response.body.data = decode(response.body.data);
+            response.body.data = JSON.parse(response.body.data);
             return response;
         }
 
@@ -454,7 +455,7 @@ class NoteRequests {
             }
         };
 
-        const response = await fetch(baseUrl + '/attach/' + id, options);
+        const response = await fetch(baseUrl + (pluginSettings.isEditable ? '/attach/' : '/shared/attach/') + id, options);
 
         const blob = await response.blob();
 
@@ -472,7 +473,7 @@ class NoteRequests {
             }
         };
 
-        const response = await fetch(baseUrl + '/attach/' + id, options);
+        const response = await fetch(baseUrl + (pluginSettings.isEditable ? '/attach/' : '/shared/attach/') + id, options);
         const blob = await response.blob();
 
         const url = URL.createObjectURL(blob);
@@ -511,7 +512,7 @@ class NoteRequests {
         });
 
         if (response.status == 200) {
-            response.body.data = decode(response.body.data)
+            response.body.data = JSON.parse(response.body.data)
 
             return {
                 note: response.body,
@@ -538,7 +539,7 @@ class NoteRequests {
         });
 
         if (response.status == 200) {
-            response.body.data = decode(response.body.data)
+            response.body.data = JSON.parse(response.body.data)
         }
 
         return {
@@ -547,11 +548,202 @@ class NoteRequests {
             csrf: response.headers['x-csrf-token']
         }
     }
+
+    ExportToPdf = async (note: string) => {
+        const options: RequestInit = {
+            method: RequestMethods.POST,
+            body: note
+        };
+
+        const response = await fetch(baseUrl + '/export_to_pdf/', options);
+
+        if (response.status == 200) {
+            const blob = await response.blob()
+
+            return URL.createObjectURL(blob);
+        }
+    }
+
+    ExportToZip = async (note_id:string, note: string, jwt:string, csrf:string) => {
+        const options: RequestInit = {
+            method: RequestMethods.POST,
+            body: note,
+            mode: 'cors',
+            credentials: 'include',
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            }
+        };
+
+        const response = await fetch(baseUrl + "/note/" + note_id + "/make_zip", options);
+
+        if (response.status == 200) {
+            const blob = await response.blob()
+            return {
+                url: URL.createObjectURL(blob),
+                status: response.status,
+                csrf: response.headers.get('x-csrf-token')
+            };
+        }
+
+        throw Error(response.statusText);
+    }
+
+    UpdateIcon = async (note_id: string, icon: string, jwt:string, csrf:string)=> {
+        const response = await Ajax.Post(this.baseUrl + '/' + note_id + '/set_icon/', {
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            },
+            body: {
+                "icon": icon
+            }
+        });
+
+        if (response.status == 200) {
+            response.body.data = JSON.parse(response.body.data)
+
+            return {
+                note: response.body,
+                status: response.status,
+                csrf: response.headers['x-csrf-token']
+            }
+        }
+
+        throw Error(response.body.message);
+    }
+
+    UpdateBackground = async (note_id: string, header: string,  jwt:string, csrf:string)=> {
+        const response = await Ajax.Post(this.baseUrl + '/' + note_id + '/set_header/', {
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            },
+            body: {
+                "header": header
+            }
+        });
+
+        if (response.status == 200) {
+            response.body.data = JSON.parse(response.body.data)
+
+            return {
+                note: response.body,
+                status: response.status,
+                csrf: response.headers['x-csrf-token']
+            }
+        }
+
+        throw Error(response.body.message);
+    }
+
+    AddToFavorites = async (note_id: string,jwt:string, csrf:string) => {
+        const response = await Ajax.Put(this.baseUrl + '/' + note_id + '/add_fav/', {
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            }
+        });
+
+        if (response.status == 200) {
+            response.body.data = JSON.parse(response.body.data)
+
+            return {
+                note: response.body,
+                status: response.status,
+                csrf: response.headers['x-csrf-token']
+            }
+        }
+
+        throw Error(response.body.message);
+    }
+
+    RemoveFromFavorites = async (note_id: string, jwt:string, csrf:string) => {
+        const response = await Ajax.Put(this.baseUrl + '/' + note_id + '/del_fav/', {
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            }
+        });
+
+        if (response.status == 200) {
+            response.body.data = JSON.parse(response.body.data)
+
+            return {
+                note: response.body,
+                status: response.status,
+                csrf: response.headers['x-csrf-token']
+            }
+        }
+
+        throw Error(response.body.message);
+    }
+
+    SetPublic = async (note_id: string, jwt:string, csrf:string) => {
+        const response = await Ajax.Put(this.baseUrl + '/' + note_id + '/set_public/', {
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            }
+        });
+
+        if (response.status == 200) {
+            response.body.data = JSON.parse(response.body.data)
+
+            return {
+                note: response.body,
+                status: response.status,
+                csrf: response.headers['x-csrf-token']
+            }
+        }
+
+        throw Error(response.body.message);
+    }
+
+    SetPrivate = async (note_id: string, jwt:string, csrf:string) => {
+        const response = await Ajax.Put(this.baseUrl + '/' + note_id + '/set_private/', {
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            }
+        });
+
+        if (response.status == 200) {
+            response.body.data = JSON.parse(response.body.data)
+
+            return {
+                note: response.body,
+                status: response.status,
+                csrf: response.headers['x-csrf-token']
+            }
+        }
+
+        throw Error(response.body.message);
+    }
+}
+
+class SharedNoteRequests {
+    private baseUrl = '/shared/note/';
+
+    Get = async (id: string) => {
+        const response = await fetch(baseUrl + this.baseUrl + id);
+
+        if (response.status === 200) {
+            const data = await response.json()
+            data.data = JSON.parse(data.data);
+            return data;
+        }
+
+        throw Error(response.statusText);
+    };
 }
 
 class TagRequests {
+    private baseUrl = '/tags';
+
     GetAll = async (jwt:string) => {
-        const response = await Ajax.Get('/tags' , {
+        const response = await Ajax.Get(this.baseUrl , {
             headers: {
                 'Authorization': jwt
             },
@@ -563,11 +755,68 @@ class TagRequests {
 
         throw Error(response.body.message);
     }
+
+    DeleteTag = async (tag: string,  jwt:string, csrf:string)=> {
+        const response = await Ajax.Delete(this.baseUrl + '/forget/', {
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            },
+            body: {
+                "tag_name": tag
+            }
+        });
+
+        return {
+            note: response.body,
+            status: response.status,
+            csrf: response.headers['x-csrf-token']
+        }
+    }
+
+    AddTag = async (tag: string,  jwt:string, csrf:string)=> {
+        const response = await Ajax.Post(this.baseUrl + '/remember/', {
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            },
+            body: {
+                "tag_name": tag
+            }
+        });
+
+        // TODO: проверка на статус. При попытке добавления уже существующего тэга кидать предупреждение
+
+        return {
+            status: response.status,
+            csrf: response.headers['x-csrf-token']
+        }
+    }
+
+    UpdateTag = async (old_name: string, new_name:string,  jwt:string, csrf:string)=> {
+        const response = await Ajax.Post(this.baseUrl + '/update/', {
+            headers: {
+                'Authorization': jwt,
+                'x-csrf-token': csrf
+            },
+            body: {
+                "old_name": old_name,
+                "new_name": new_name
+            }
+        });
+
+        return {
+            status: response.status,
+            csrf: response.headers['x-csrf-token']
+        }
+    }
 }
 
 export const AppAuthRequests = new AuthRequests();
 
 export const AppNoteRequests = new NoteRequests();
+
+export const AppSharedNoteRequests = new SharedNoteRequests();
 
 export const AppTagRequests = new TagRequests();
 

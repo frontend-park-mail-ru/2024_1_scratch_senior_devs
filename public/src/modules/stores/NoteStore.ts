@@ -1,12 +1,15 @@
 import {BaseStore} from './BaseStore';
 import {AppDispatcher} from '../dispatcher';
+import {AppNotesStore} from "./NotesStore";
 
 export const NoteStoreActions = {
+    CLEAR_NOTE: "CLEAR_NOTE",
     SET_NOTE: "SET_NOTE",
     CHANGE_TITLE: 'CHANGE_TITLE',
     CHANGE_CONTENT: 'CHANGE_CONTENT',
     OPEN_DROPDOWN: "OPEN_DROPDOWN",
-    CLOSE_DROPDOWN: "CLOSE_DROPDOWN"
+    CLOSE_DROPDOWN: "CLOSE_DROPDOWN",
+    PUT_TO_CACHE: "PUT_TO_CACHE"
 };
 
 export type NoteStoreState = {
@@ -32,10 +35,11 @@ class NoteStore extends BaseStore<NoteStoreState> {
         note: {
             title: '',
             blocks: Array<any>()
-        }
+        },
+        cache: {}
     };
 
-    private severs: Array<() => any> = [];
+    private severs: Array<(data) => any> = [];
 
     constructor() {
         super();
@@ -54,18 +58,24 @@ class NoteStore extends BaseStore<NoteStoreState> {
                 case NoteStoreActions.CHANGE_CONTENT:
                     this.changeContent(action.payload);
                     break
+                case NoteStoreActions.CLEAR_NOTE:
+                    this.clearNote();
+                    break
+                case NoteStoreActions.PUT_TO_CACHE:
+                    this.updateCache(action.payload);
+                    break
             }
         });
     };
 
     private timerId;
 
-    private saveNote = (immediately=false) => {
+    private saveNote = (data, immediately=false) => {
         clearTimeout(this.timerId);
 
         if (immediately) {
             this.severs.forEach((saver) => {
-                saver();
+                saver(data);
             });
 
             return
@@ -73,12 +83,12 @@ class NoteStore extends BaseStore<NoteStoreState> {
 
         this.timerId = setTimeout(() => {
             this.severs.forEach((saver) => {
-                saver();
+                saver(data);
             });
-        }, 500);
+        }, 250);
     };
 
-    public AddSaver = (saver: () => any) => {
+    public AddSaver = (saver: (data) => any) => {
         this.severs.push(saver);
     };
 
@@ -95,26 +105,32 @@ class NoteStore extends BaseStore<NoteStoreState> {
 
     private changeTitle = (title: string) => {
         this.state.note.title = title;
-        this.saveNote();
+        this.onNoteChanged()
     };
 
     private changeContent = (content: any) => {
         this.state.note.blocks = content
-        this.saveNote();
+        this.onNoteChanged()
     }
 
-    private openDropdown = () => {
+    private onNoteChanged = () => {
+        if (AppNotesStore.state.selectedNote) {
+            this.saveNote({id: AppNotesStore.state.selectedNote.id, parent: AppNotesStore.state.selectedNote.parent, note: this.state.note});
+        }
+    }
+
+    private clearNote = () => {
         this.SetState(state => ({
             ...state,
-            dropdownOpen: true
+            note: {
+                title: '',
+                blocks: Array<any>()
+            }
         }))
     }
 
-    private closeDropdown = () => {
-        this.SetState(state => ({
-            ...state,
-            dropdownOpen: false
-        }))
+    private updateCache = ({key, value}) => {
+        this.state.cache[key] = value
     }
 }
 

@@ -2,7 +2,7 @@
 
 header
 	width: 100%
-	padding: 0 15%
+	padding: 0 10%
 	height: 60px
 	display: flex
 	justify-content: space-between
@@ -12,5 +12,17 @@ header
 	z-index: 100
 	background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0))
 
-	@media screen and (max-width: $xxl)
+	@media screen and (max-width: $md)
 		padding: 0 5%
+
+	&.notes
+		padding: 0 10%
+
+		@media screen and (max-width: $xxl)
+			padding: 0 5%
+
+	&.fullscreen
+		padding: 0 10%
+
+		@media screen and (max-width: $xxl)
+			padding: 0 5%

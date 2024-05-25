@@ -31,7 +31,7 @@ export class HomePage extends ScReact.Component<any, any> {
     }
 
     handleButtonClick = () => {
-        const url = AppUserStore.state.isAuth ? '/notes' : 'login';
+        const url = AppUserStore.state.isAuth ? '/notes' : '/login';
         AppRouter.go(url);
     };
 

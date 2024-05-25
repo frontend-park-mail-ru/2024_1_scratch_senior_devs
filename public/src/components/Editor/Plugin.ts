@@ -4,7 +4,7 @@ import {AppNotesStore, NotesActions} from "../../modules/stores/NotesStore";
 import {AppNoteRequests} from "../../modules/api";
 import {AppDispatcher} from "../../modules/dispatcher";
 import {AppToasts} from "../../modules/toasts";
-import {AppNoteStore} from "../../modules/stores/NoteStore";
+import {AppNoteStore, NoteStoreActions} from "../../modules/stores/NoteStore";
 
 interface EditorPlugin {
     pluginName: string;
@@ -288,6 +288,7 @@ export const defaultPlugins: EditorPlugin[] = [
         },
         insertNode: (innerContent) => {
             const ul = document.createElement('ul');
+            ul.dataset.type = 'todo';
             const  li = document.createElement('li');
             li.dataset.selected = "false"
             if (innerContent == null || innerContent.length === 0) {
@@ -375,7 +376,19 @@ export const defaultPlugins: EditorPlugin[] = [
             }
             return li;
         },
-        insertNode: undefined
+        insertNode: undefined,
+        onInsert: node => {
+            (node as HTMLElement).onclick = () => {
+                if (document.getSelection().anchorOffset !== 0) {
+                    return;
+                }
+                if ((node as HTMLElement).dataset.selected === 'false') {
+                    (node as HTMLElement).dataset.selected = 'true';
+                } else {
+                    (node as HTMLElement).dataset.selected = 'false';
+                }
+            }
+        }
     },
     {
         pluginName: 'header',
@@ -475,26 +488,47 @@ export const defaultPlugins: EditorPlugin[] = [
         fromJson: (props: PluginProps) => {
             const img = document.createElement('img');
             img.contentEditable = 'false';
-            img.width = 500
-            img.src = '/assets/add.svg'; //todo: default image url
-            img.dataset.imgid = props['imgId'] as string;
 
-            AppNoteRequests.GetImage(props['imgId'] as string, AppUserStore.state.JWT, AppUserStore.state.csrf).then(url => {
-                img.src = url;
-            })
+            const id = props['imgId'] as string
+
+            img.dataset.imgid = id;
+            img.className = "img"
+
+
+
+            if (id in AppNoteStore.state.cache) {
+                img.src = AppNoteStore.state.cache[id]
+            } else {
+                AppNoteRequests.GetImage(id, AppUserStore.state.JWT, AppUserStore.state.csrf).then(url => {
+                    img.src = url;
+                    AppDispatcher.dispatch(NoteStoreActions.PUT_TO_CACHE, {key: id, value: url})
+                }).catch(error => {
+                    console.log(error)
+                })
+            }
+
             return img;
         },
         insertNode: (innerContent, ...args) => {
             const img = document.createElement('img');
             img.contentEditable = 'false';
-            img.width = 500
-            img.src = '/assets/add.svg'; //todo: default image url
-            img.dataset.imgid = args[0];
+            img.src = '/assets/add.svg'; // todo: скелетон
+            img.className = "img"
 
-            AppNoteRequests.GetImage(args[0], AppUserStore.state.JWT, AppUserStore.state.csrf).then(url => {
+            const id = args[0] as string
+
+            img.dataset.imgid = id;
+
+            // TODO: если вставить битую фотку, то пустой img останется в заметке
+
+            AppNoteRequests.GetImage(id, AppUserStore.state.JWT, AppUserStore.state.csrf).then(url => {
                 img.src = url;
+                AppDispatcher.dispatch(NoteStoreActions.PUT_TO_CACHE, {key: id, value: url})
+            }).catch(error => {
+                console.log(error)
             })
-            return img;
+
+            return img
         }
     },
     {
@@ -601,7 +635,7 @@ export const defaultPlugins: EditorPlugin[] = [
         type: "inline",
         content: "inline",
         checkPlugin: (node: Node) => {
-            return node.nodeType === node.ELEMENT_NODE && (node as HTMLElement).tagName === 'SPAN'
+            return node.nodeType === node.ELEMENT_NODE && (node as HTMLElement).tagName === 'SPAN' && (node as HTMLElement).style.backgroundColor == ""
         },
         toJson: (node: Node) => {
             const children: PluginProps[] = [];
@@ -688,21 +722,90 @@ export const defaultPlugins: EditorPlugin[] = [
         toJson: (node: Node) => {
             return {
                 pluginName: 'youtube',
-                src: (node as HTMLImageElement).src
+                src: (node as HTMLImageElement).src,
+                allow: 'autoplay' // TODO
             }
         },
         fromJson: (props: PluginProps) => {
-            const img = document.createElement('iframe');
-            img.contentEditable = 'false';
-            img.src = props.src as string;
-            return img;
+            const iframe = document.createElement('iframe');
+            iframe.contentEditable = 'false';
+            iframe.setAttribute('allow', 'autoplay;');
+            iframe.src = props.src as string;
+            iframe.id = props.src as string
+            return iframe;
         },
         insertNode: (innerContent, ...args) => {
-            const img = document.createElement('iframe');
-            img.contentEditable = 'false';
-            img.src = args[0];
-            return img;
+            const iframe = document.createElement('iframe');
+            iframe.contentEditable = 'false';
+            iframe.setAttribute('allow', 'autoplay;');
+            iframe.src = args[0];
+            iframe.id = args[0] as string
+            return iframe;
         }
+    },
+    {
+        pluginName: 'font',
+        type: "inline",
+        content: "inline",
+        checkPlugin: (node: Node) => {
+            return node.nodeType === node.ELEMENT_NODE && (node as HTMLElement).tagName === 'FONT'
+        },
+        toJson: (node: Node) => {
+            const children: PluginProps[] = [];
+            (node as HTMLElement).childNodes.forEach(child => {
+                children.push(toJson(child));
+            })
+            return {
+                pluginName: 'font',
+                children: children,
+                color: (node as HTMLFontElement).color
+            };
+        },
+        fromJson: (props: PluginProps) => {
+            const children: Node[] = [];
+            props.children.forEach(value => {
+                children.push(fromJson(value));
+            });
+            const div = document.createElement('font');
+            children.forEach(child => {
+                div.append(child);
+            })
+            div.color = props.color as string;
+            return div;
+        },
+        insertNode: undefined,
+    },
+    {
+        pluginName: 'background',
+        type: "inline",
+        content: "inline",
+        checkPlugin: (node: Node) => {
+            return node.nodeType === node.ELEMENT_NODE && (node as HTMLElement).tagName === 'SPAN' && (node as HTMLElement).style.backgroundColor != ""
+        },
+        toJson: (node: Node) => {
+            const children: PluginProps[] = [];
+            (node as HTMLElement).childNodes.forEach(child => {
+                children.push(toJson(child));
+            })
+            return {
+                pluginName: 'background',
+                children: children,
+                background: (node as HTMLElement).style.backgroundColor
+            };
+        },
+        fromJson: (props: PluginProps) => {
+            const children: Node[] = [];
+            props.children.forEach(value => {
+                children.push(fromJson(value));
+            });
+            const div = document.createElement('span');
+            children.forEach(child => {
+                div.append(child);
+            })
+            div.style.backgroundColor = props.background as string;
+            return div;
+        },
+        insertNode: undefined,
     },
 ]
 
@@ -749,20 +852,29 @@ export const fromJson = (props: PluginProps) => {
         }
     });
     const node = plugin.fromJson(props);
-    if (`cursor${AppUserStore.state.username}` in props) {
+
+    for (const propKey in props) {
+        if (propKey.startsWith('cursor')) {
+            (node as HTMLElement).dataset[propKey] = props[propKey] as string;
+        }
+    }
+
+    if (`cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replaceAll('-','').toLowerCase()}` in props) {
         // const regex = /([a-zA]+)-([\d]+)/;
         // const matches = regex.exec(props.cursor as string);
         
 
-        if (props[`cursor${AppUserStore.state.username}`] === '0') {
+        if (props[`cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replaceAll('-','').toLowerCase()}`] === '0') {
             setTimeout(() => {
                 setCursorAtNodePosition(node, 0);
+                // (node as HTMLElement).click();
                 // document.getSelection().setPosition(node, 0);
             })
 
         } else {
             setTimeout(() => {
-                setCursorAtNodePosition(node, Number(props[`cursor${AppUserStore.state.username}`]));
+                setCursorAtNodePosition(node, Number(props[`cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replaceAll('-','').toLowerCase()}`]));
+                // (node as HTMLElement).click();
                 // document.getSelection().setPosition(node.firstChild, Number(props[`cursor${AppUserStore.state.username}`]));
             })
 
@@ -773,6 +885,8 @@ export const fromJson = (props: PluginProps) => {
 
 export const lastChosenElement: {node?: Node } = {};
 
+export const pluginSettings: {isEditable: Boolean} = {isEditable: true};
+
 export const insertBlockPlugin = (pluginName: string, ...args: any) => {
     let plugin: EditorPlugin;
     defaultPlugins.forEach(val => {
@@ -780,8 +894,8 @@ export const insertBlockPlugin = (pluginName: string, ...args: any) => {
             plugin = val;
         }
     });
-    // 
-    if (plugin === undefined || plugin.insertNode === undefined) {
+
+    if (plugin === undefined || !plugin.insertNode) {
         return;
     }
     const self: string[] = [plugin.pluginName, plugin.type];
@@ -798,8 +912,11 @@ export const insertBlockPlugin = (pluginName: string, ...args: any) => {
             });
         }
         const newNode = plugin.insertNode([], args);
-        (nodeToReplace as HTMLElement).replaceWith(newNode);
-        document.getSelection().setPosition(newNode, 0);
+        console.log(newNode)
+        if (newNode) {
+            (nodeToReplace as HTMLElement).replaceWith(newNode);
+            document.getSelection().setPosition(newNode, 0);
+        }
     }
 }
 
@@ -905,21 +1022,24 @@ const RenderAttach = (attach_filename:string, attach_id:string) => {
     attachContainer.appendChild(fileExtensionLabel)
     attachContainer.appendChild(fileName)
 
-    const closeAttachBtnContainer = document.createElement("div")
-    closeAttachBtnContainer.className = "close-attach-btn-container"
 
-    const closeBtn = document.createElement("img")
-    closeBtn.src = "./src/assets/close.svg"
-    closeBtn.className = "close-attach-btn"
+    if (pluginSettings.isEditable) {
+        const closeAttachBtnContainer = document.createElement("div")
+        closeAttachBtnContainer.className = "close-attach-btn-container"
+        const closeBtn = document.createElement("img")
+        closeBtn.src = "./src/assets/close.svg"
+        closeBtn.className = "close-attach-btn"
 
-    closeBtn.onclick = (e) => {
-        e.stopPropagation()
-        attachWrapper.remove();
+        closeBtn.onclick = (e) => {
+            e.stopPropagation()
+            attachWrapper.remove();
+        }
+
+        closeAttachBtnContainer.appendChild(closeBtn)
+        
+        attachContainer.appendChild(closeAttachBtnContainer)
     }
 
-    closeAttachBtnContainer.appendChild(closeBtn)
-
-    attachContainer.appendChild(closeAttachBtnContainer)
 
     attachWrapper.appendChild(attachContainer)
 
@@ -951,7 +1071,7 @@ const RenderSubNote = (subNoteId:string) => {
     subNoteContainer.appendChild(noteIcon)
     subNoteContainer.appendChild(subNoteTitle)
 
-    const isOwner= AppNotesStore.state.selectedNote.owner_id == AppUserStore.state.user_id
+    const isOwner= AppNotesStore.state.selectedNote?.owner_id == AppUserStore.state.user_id
 
     if (isOwner) {
         const deleteSubNoteBtnContainer = document.createElement("div")
@@ -961,17 +1081,20 @@ const RenderSubNote = (subNoteId:string) => {
         deleteSubNoteBtn.src = "./src/assets/trash.svg"
         deleteSubNoteBtn.className = "delete-subnote-btn"
 
-        deleteSubNoteBtnContainer.onclick = (e) => {
-            e.stopPropagation()
-            subNoteWrapper.remove();
+        if (pluginSettings.isEditable) {
+            deleteSubNoteBtnContainer.onclick = (e) => {
+                e.stopPropagation()
+                subNoteWrapper.remove();
 
-            if (!subNoteWrapper.dataset.deleted) {
-                AppDispatcher.dispatch(NotesActions.DELETE_NOTE, {
-                    id: subNoteId,
-                    redirect: false
-                })
+                if (!subNoteWrapper.dataset.deleted) {
+                    AppDispatcher.dispatch(NotesActions.DELETE_NOTE, {
+                        id: subNoteId,
+                        redirect: false
+                    })
+                }
             }
         }
+
 
         deleteSubNoteBtnContainer.appendChild(deleteSubNoteBtn)
         subNoteContainer.appendChild(deleteSubNoteBtnContainer)
@@ -979,32 +1102,40 @@ const RenderSubNote = (subNoteId:string) => {
 
     subNoteWrapper.appendChild(subNoteContainer)
 
-    AppNoteRequests.Get(subNoteId, AppUserStore.state.JWT).then(result => {
-        if (result.data.title == null) {
-            subNoteTitle.innerHTML = 'Подзаметка'
-        }
+    let loaded = false
 
-        //subNoteWrapper.dataset.title = parseNoteTitle(result.data.title)
-        subNoteTitle.innerHTML = parseNoteTitle(result.data.title)
+    if (subNoteId in AppNoteStore.state.cache) {
+        subNoteTitle.innerHTML = AppNoteStore.state.cache[subNoteId]
+        loaded = true
+    } else {
+        AppNoteRequests.Get(subNoteId, AppUserStore.state.JWT).then(result => {
+            if (result.data.title == null) {
+                subNoteTitle.innerHTML = 'Подзаметка'
+            }
 
-    }).catch(() => {
-        subNoteTitle.innerHTML = "Заметка не найдена"
-        subNoteWrapper.dataset.deleted = "true"
-    });
+            //subNoteWrapper.dataset.title = parseNoteTitle(result.data.title)
+            subNoteTitle.innerHTML = parseNoteTitle(result.data.title)
 
-    let loading = true
+            AppDispatcher.dispatch(NoteStoreActions.PUT_TO_CACHE, {key: subNoteId, value: parseNoteTitle(result.data.title)})
 
-    setTimeout(() => {
-        loading = false
-    }, 1000)
+            loaded = true
 
-    subNoteWrapper.onclick = () => {
-        if (!subNoteWrapper.dataset.deleted) {
-            !loading && AppDispatcher.dispatch(NotesActions.OPEN_NOTE, subNoteId)
-        } else {
-            AppToasts.error("Заметка не найдена")
+        }).catch((e) => {
+            subNoteTitle.innerHTML = "Заметка не найдена"
+            subNoteWrapper.dataset.deleted = "true"
+        });
+    }
+
+    if (pluginSettings.isEditable) {
+        subNoteWrapper.onclick = () => {
+            if (!subNoteWrapper.dataset.deleted && loaded) {
+                AppDispatcher.dispatch(NotesActions.OPEN_NOTE, subNoteId)
+            } else {
+                AppToasts.error("Заметка не найдена")
+            }
         }
     }
 
     return subNoteWrapper
 }
+

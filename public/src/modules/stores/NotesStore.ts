@@ -3,63 +3,96 @@ import {AppNoteRequests, AppTagRequests} from '../api';
 import {AppUserStore, UserActions} from './UserStore';
 import {AppDispatcher} from '../dispatcher';
 import {AppToasts} from '../toasts';
-import {NoteDataType, NoteType} from "../../utils/types";
-import {decode} from "../utils";
+import {CollaboratorType, NoteDataType, NoteType} from "../../utils/types";
 import {WebSocketConnection} from "../websocket";
 import {insertBlockPlugin} from "../../components/Editor/Plugin";
+import {AppNoteStore, NoteStoreActions} from "./NoteStore";
+import {downloadFile, parseNoteTitle} from "../utils";
 
 export type NotesStoreState = {
     notes: NoteType[],
     selectedNote: NoteType,
+    selectedNoteSynced: boolean
+    selectedNoteCollaborators: CollaboratorType[],
     tags: string[],
+    selectedTags: string[],
     query: string,
     offset: number,
     count: number,
-    fetching: boolean
+    fetching: boolean,
+    fullScreen: boolean
 }
+
+export const NotesActions = {
+    SELECT_NOTE: 'SELECT_NOTE',
+    FETCH_NOTE: 'FETCH_NOTE',
+    SEARCH_NOTES: 'SEARCH_NOTES',
+    LOAD_NOTES: 'LOAD_NOTES',
+    CLOSE_NOTE: 'CLOSE_NOTE',
+    EXIT: 'EXIT_NOTES_PAGE',
+    OPEN_DELETE_NOTE_DIALOG: 'OPEN_DELETE_NOTE_DIALOG',
+    CLOSE_DELETE_NOTE_DIALOG: 'CLOSE_DELETE_NOTE_DIALOG',
+    DELETE_NOTE: 'DELETE_NOTE',
+    SAVE_NOTE: 'SAVE_NOTE',
+    CREATE_NEW_NOTE: 'CREATE_NEW_NOTE',
+    UPLOAD_IMAGE: 'UPLOAD_IMAGE',
+    UPLOAD_FILE: 'UPLOAD_FILE',
+    DOWNLOAD_FILE: 'DOWNLOAD_FILE',
+    FETCH_IMAGE: 'FETCH_IMAGE',
+    START_FETCHING: 'START_FETCHING',
+    OPEN_NOTE: 'OPEN_NOTE',
+    CREATE_SUB_NOTE: "CREATE_SUB_NOTE",
+    ADD_TAG_TO_NOTE: "ADD_TAG_TO_NOTE",
+    REMOVE_TAG_FROM_NOTE: "REMOVE_TAG_FROM_NOTE",
+    RENAME_TAG: "RENAME_TAG",
+    ADD_COLLABORATOR: "ADD_COLLABORATOR",
+    FETCH_TAGS: "FETCH_TAGS",
+    SYNC_NOTES: "SYNC_NOTES",
+    OPEN_FULLSCREEN: "OPEN_FULLSCREEN",
+    CLOSE_FULLSCREEN: "CLOSE_FULLSCREEN",
+    UPDATE_NOTE_ICON: "UPDATE_NOTE_ICON",
+    UPDATE_NOTE_BACKGROUND: "UPDATE_NOTE_BACKGROUND",
+    CHANGE_TITLE: "CHANGE_TITLE",
+    CHANGE_CONTENT: "CHANGE_CONTENT",
+    DELETE_TAG: "DELETE_TAG",
+    ADD_TAG: "ADD_TAG",
+    EXPORT_TO_PDF: "EXPORT_TO_PDF",
+    EXPORT_TO_ZIP: "EXPORT_TO_ZIP",
+    TOGGLE_FAVORITE: "TOGGLE_FAVORITE",
+    SET_PUBLIC: "SET_PUBLIC",
+    SET_PRIVATE: "SET_PRIVATE"
+};
 
 class NotesStore extends BaseStore<NotesStoreState> {
     state = {
         notes: [],
         tags: [],
         selectedTags: [],
-        selectedNote: undefined,
+        selectedNote: null,
+        selectedNoteSynced: null,
+        selectedNoteCollaborators: [],
         query: '',
         offset: 0,
         count: 10,
         fetching: false,
-        noteNotFound: false
+        noteNotFound: false,
+        fullScreen: false
     };
 
     private ws
+    public socket_id
 
     constructor() {
         super();
         this.registerEvents();
-
-        window.addEventListener("storage", e => {
-            if (e.key == "selectedNote") {
-                let note = JSON.parse(localStorage.getItem("selectedNote"))
-
-                if (note && this.state.selectedNote && this.state.selectedNote.id == note.id) {
-                    const updatedNote = this.state.selectedNote
-                    updatedNote.data = {
-                        title: note.note.title,
-                        content: note.note.blocks
-                    }
-
-                    this.SetState(state => ({
-                        ...state,
-                        selectedNote: updatedNote
-                    }))
-                }
-            }
-        })
     }
 
     private registerEvents(){
         AppDispatcher.register(async (action) => {
             switch (action.type){
+                case NotesActions.OPEN_NOTE:
+                    await this.openNote(action.payload)
+                    break
                 case NotesActions.SELECT_NOTE:
                     this.selectNote(action.payload);
                     break;
@@ -105,14 +138,17 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 case NotesActions.START_FETCHING:
                     this.startFetching();
                     break;
-                case NotesActions.OPEN_NOTE:
-                    await this.openNote(action.payload)
-                    break
-                case NotesActions.CREATE_TAG:
+                case NotesActions.ADD_TAG_TO_NOTE:
                     await this.createTag(action.payload)
                     break
-                case NotesActions.REMOVE_TAG:
+                case NotesActions.REMOVE_TAG_FROM_NOTE:
                     await this.removeTag(action.payload)
+                    break
+                case NotesActions.DELETE_TAG:
+                    await this.deleteTag(action.payload)
+                    break
+                case NotesActions.ADD_TAG:
+                    await this.addTag(action.payload)
                     break
                 case NotesActions.ADD_COLLABORATOR:
                     await this.addCollaborator(action.payload)
@@ -123,17 +159,64 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 case NotesActions.SYNC_NOTES:
                     this.syncNotes()
                     break
+                case NotesActions.OPEN_FULLSCREEN:
+                    this.openFullScreen()
+                    break
+                case NotesActions.CLOSE_FULLSCREEN:
+                    this.closeFullScreen()
+                    break
+                case NotesActions.UPDATE_NOTE_ICON:
+                    await this.updateNoteIcon(action.payload)
+                    break
+                case NotesActions.UPDATE_NOTE_BACKGROUND:
+                    await this.updateNoteBackground(action.payload)
+                    break
+                case NotesActions.CHANGE_TITLE:
+                    this.updateSelectedNoteTitle(action.payload)
+                    break
+                case NotesActions.CHANGE_CONTENT:
+                    this.updateSelectedNoteContent(action.payload)
+                    break
+                case NotesActions.EXPORT_TO_PDF:
+                    await this.exportToPDF(action.payload)
+                    break
+                case NotesActions.EXPORT_TO_ZIP:
+                    await this.exportToZIP(action.payload)
+                    break
+                case NotesActions.TOGGLE_FAVORITE:
+                    await this.toggleFavorite(action.payload)
+                    break
+                case NotesActions.SET_PRIVATE:
+                    await this.setPrivate()
+                    break
+                case NotesActions.SET_PUBLIC:
+                    await this.setPublic()
+                    break
+                case NotesActions.RENAME_TAG:
+                    await this.renameTag(action.payload)
+                    break
             }
         });
     }
 
     exit () {
+        AppNotesStore.ClearCallbacks()
+        AppNoteStore.ClearCallbacks()
+
         this.SetState(state => ({
             ...state,
+            notes: [],
+            tags: [],
+            selectedTags: [],
+            selectedNote: null,
+            selectedNoteSynced: null,
+            selectedNoteCollaborators: [],
             query: '',
             offset: 0,
-            selectedNote: undefined,
-            notes: []
+            count: 10,
+            fetching: false,
+            noteNotFound: false,
+            fullScreen: false
         }));
     }
 
@@ -144,29 +227,46 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 notes[index] = this.state.selectedNote;
             }
         });
+
+        this.SetState(state => ({
+            ...state,
+            notes: notes
+        }))
+    }
+
+    syncSelectedNote = () => {
+        if (this.state.selectedNote) {
+            this.SetState(state => ({
+                ...state,
+                selectedNote: this.state.notes.find(note => note.id == this.state.selectedNote.id)
+            }))
+        }
     }
 
     closeNote () {
-        localStorage.setItem("selectedNote", null)
-
         this.closeWS()
 
-        this.syncNotes()
+        // this.syncNotes()
 
         this.SetState(s=>({
             ...s,
-            selectedNote: undefined
+            selectedNote: null,
+            selectedNoteSynced: null,
+            selectedNoteCollaborators: []
         }));
 
+        AppDispatcher.dispatch(NoteStoreActions.CLEAR_NOTE)
     }
 
     async fetchNote (id:string) {
+        
         try {
             const note = await AppNoteRequests.Get(id, AppUserStore.state.JWT);
 
             this.selectNote(note);
 
         } catch (e) {
+            console.log(e.message)
             AppToasts.error('Заметка не найдена');
         }
     }
@@ -181,6 +281,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             this.ws.close()
             this.ws = null
+            this.socket_id = null
         }
     }
 
@@ -194,8 +295,15 @@ class NotesStore extends BaseStore<NotesStoreState> {
         this.SetState(state => ({
             ...state,
             selectedNote: note,
-            selectedNoteChildren: note.children
+            selectedNoteChildren: note.children,
+            selectedNoteCollaborators: [],
+            selectedNoteSynced: null
         }));
+
+        AppDispatcher.dispatch(NoteStoreActions.SET_NOTE, {
+            title: note.data.title,
+            blocks: note.data.content
+        })
 
         this.ws = new WebSocketConnection(`note/${note.id}/subscribe_on_updates`)
 
@@ -211,37 +319,71 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
         this.ws.onMessage((event) => {
             let data = JSON.parse(event.data)
-            if (data.username == AppUserStore.state.username) {
+
+            // Если socket_id совпадает, то ничего обновлять не надо
+            if (data.socket_id == this.socket_id) {
                 return
             }
+            
+            if (data.type == "opened") {
+                const collaborator = {
+                    id: data.user_id,
+                    username: data.username,
+                    avatar: data.image_path
+                }
 
-            const noteData = decode(data.message_info) as NoteDataType
-            if (JSON.stringify(noteData) == JSON.stringify(this.state.selectedNote.data)) {
-                return
+                if (collaborator.id != AppUserStore.state.user_id && !this.state.selectedNoteCollaborators.find(cb => cb.id == collaborator.id)) {
+                    this.SetState(state => ({
+                        ...state,
+                        selectedNoteCollaborators: [...state.selectedNoteCollaborators, collaborator]
+                    }))
+                }
+
+            } else if (data.type == "info") {
+                this.socket_id = data.socket_id
+            } else if (data.type == "closed") {
+                const collaborator = {
+                    id: data.user_id,
+                    username: data.username,
+                    avatar: data.image_path
+                }
+
+                this.SetState(state => ({
+                    ...state,
+                    selectedNoteCollaborators: state.selectedNoteCollaborators.filter(cb => cb.id != collaborator.id)
+                }))
+
+            } else if (data.type == "updated") {
+                const noteData = JSON.parse(data.message_info) as NoteDataType
+
+                if (JSON.stringify(noteData) == JSON.stringify(this.state.selectedNote.data)) {
+                    return
+                }
+
+                this.SetState(state => ({
+                    ...state,
+                    selectedNoteSynced: data.username == AppUserStore.state.username,
+                    selectedNote: {
+                        ...this.state.selectedNote,
+                        data: noteData
+                    }
+                }));
+
+                AppDispatcher.dispatch(NoteStoreActions.SET_NOTE, {
+                    title: noteData.title,
+                    blocks: noteData.content
+                })
+
+                this.syncNotes()
+
             }
-
-            const updatedNote = this.state.selectedNote
-            updatedNote.data = noteData
-
-            this.SetState(state => ({
-                ...state,
-                selectedNote: updatedNote
-            }));
         })
     }
 
     async openNote(id:string) {
-        try {
-            const note = await AppNoteRequests.Get(id, AppUserStore.state.JWT);
-
-            this.selectNote(note);
-
-            history.pushState(null, null, '/notes/' + id)
-
-        } catch (e) {
-            
-            AppToasts.error('Заметка не найдена');
-        }
+        const note = await AppNoteRequests.Get(id, AppUserStore.state.JWT);
+        this.selectNote(note);
+        history.pushState(null, null, '/notes/' + id)
     }
 
     async init () {
@@ -318,9 +460,9 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             history.pushState(null, null, '/notes');
 
-            await this.fetchTags()
-
             AppToasts.info('Заметка успешно удалена');
+
+            AppDispatcher.dispatch(NoteStoreActions.CLEAR_NOTE)
 
         } catch {
             AppToasts.error('Что-то пошло не так');
@@ -329,11 +471,10 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
     async saveNote(data) {
         try {
-            const {csrf} = await AppNoteRequests.Update(data, AppUserStore.state.JWT, AppUserStore.state.csrf);
+
+            const {csrf} = await AppNoteRequests.Update(data, this.socket_id, AppUserStore.state.JWT, AppUserStore.state.csrf);
 
             AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
-
-            localStorage.setItem("selectedNote", JSON.stringify(data))
 
         } catch {
             AppToasts.error('Что-то пошло не так');
@@ -456,7 +597,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             } else if (status == 409) {
                 AppToasts.info('Максимальное кол-во тэгов - 10');
             }
-        } catch {
+        } catch (e) {
             AppToasts.error('Что-то пошло не так');
         }
     }
@@ -466,12 +607,14 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
         AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
 
-        this.SetState(state => ({
-            ...state,
-            selectedNote: note
-        }))
+        if (status == 204) {
+            this.SetState(state => ({
+                ...state,
+                selectedNote: note
+            }))
 
-        await this.fetchTags()
+            await this.fetchTags()
+        }
     }
 
     addCollaborator = async ({note_id, username}) => {
@@ -483,7 +626,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             if (status == 204) {
                 AppToasts.success("Приглашение успешно отправлено")
             } else {
-                AppToasts.success("Пользователя не существует")
+                AppToasts.error("Пользователь не найден")
             }
 
         } catch {
@@ -504,32 +647,258 @@ class NotesStore extends BaseStore<NotesStoreState> {
             AppToasts.error("Что-то пошло не так")
         }
     }
-}
 
-export const NotesActions = {
-    SELECT_NOTE: 'SELECT_NOTE',
-    FETCH_NOTE: 'FETCH_NOTE',
-    SEARCH_NOTES: 'SEARCH_NOTES',
-    LOAD_NOTES: 'LOAD_NOTES',
-    CLOSE_NOTE: 'CLOSE_NOTE',
-    EXIT: 'EXIT_NOTES_PAGE',
-    OPEN_DELETE_NOTE_DIALOG: 'OPEN_DELETE_NOTE_DIALOG',
-    CLOSE_DELETE_NOTE_DIALOG: 'CLOSE_DELETE_NOTE_DIALOG',
-    DELETE_NOTE: 'DELETE_NOTE',
-    SAVE_NOTE: 'SAVE_NOTE',
-    CREATE_NEW_NOTE: 'CREATE_NEW_NOTE',
-    UPLOAD_IMAGE: 'UPLOAD_IMAGE',
-    UPLOAD_FILE: 'UPLOAD_FILE',
-    DOWNLOAD_FILE: 'DOWNLOAD_FILE',
-    FETCH_IMAGE: 'FETCH_IMAGE',
-    START_FETCHING: 'START_FETCHING',
-    OPEN_NOTE: 'OPEN_NOTE',
-    CREATE_SUB_NOTE: "CREATE_SUB_NOTE",
-    CREATE_TAG: "CREATE_TAG",
-    REMOVE_TAG: "REMOVE_TAG",
-    ADD_COLLABORATOR: "ADD_COLLABORATOR",
-    FETCH_TAGS: "FETCH_TAGS",
-    SYNC_NOTES: "SYNC_NOTES"
-};
+    openFullScreen = () => {
+        this.SetState(state => ({
+            ...state,
+            fullScreen: true
+        }))
+    }
+
+    closeFullScreen = () => {
+        this.SetState(state => ({
+            ...state,
+            fullScreen: false
+        }))
+    }
+
+    updateNoteIcon = async (icon:string) => {
+        try {
+            const {status, note, csrf} = await AppNoteRequests.UpdateIcon(this.state.selectedNote.id, icon, AppUserStore.state.JWT, AppUserStore.state.csrf)
+
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+
+
+            if (status == 200) {
+                this.SetState(state => ({
+                    ...state,
+                    selectedNote: note
+                }))
+
+                this.syncNotes()
+            }
+
+        } catch {
+            AppToasts.error("Что-то пошло не так")
+        }
+    }
+
+    updateNoteBackground = async (background:string) => {
+        try {
+            const {status, note, csrf} = await AppNoteRequests.UpdateBackground(this.state.selectedNote.id, background, AppUserStore.state.JWT, AppUserStore.state.csrf)
+
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+
+            
+            
+
+            this.SetState(state => ({
+                ...state,
+                selectedNote: note
+            }))
+
+            this.syncNotes()
+
+
+        } catch {
+            AppToasts.error("Что-то пошло не так")
+        }
+    }
+
+    updateSelectedNoteTitle = (title:string) => {
+        this.state.selectedNote.data.title = title
+    }
+
+    updateSelectedNoteContent = (content:Array<any>) => {
+        this.state.selectedNote.data.content = content
+    }
+
+    deleteTag = async (tagname:string) => {
+        try {
+            const {status, csrf} = await AppTagRequests.DeleteTag(tagname, AppUserStore.state.JWT, AppUserStore.state.csrf)
+
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+
+            if (status == 204) {
+                AppToasts.success("Тэг успешно удален")
+                await this.fetchTags()
+
+                this.SetState(state => ({
+                    ...state,
+                    selectedTags: state.selectedTags.filter(tag => tag != tagname)
+                }))
+
+                await this.fetchNotes(true)
+
+                if (this.state.selectedNote) {
+                    this.syncSelectedNote()
+                }
+            }
+        }
+        catch {
+            AppToasts.error("Что-то пошло не так")
+        }
+    }
+
+    addTag = async (tag:string) => {
+        try {
+
+            const {status, csrf} = await AppTagRequests.AddTag(tag, AppUserStore.state.JWT, AppUserStore.state.csrf)
+
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+
+            if (status == 204) {
+                await this.fetchTags()
+            }
+        }
+        catch {
+            AppToasts.error("Что-то пошло не так")
+        }
+    }
+
+    exportToPDF = async (content:string) => {
+        try {
+            const url = await AppNoteRequests.ExportToPdf(content)
+            downloadFile(url, parseNoteTitle(AppNoteStore.state.note.title) + ".pdf")
+        } catch {
+            AppToasts.error("Что-то пошло не так")
+        }
+    }
+
+    exportToZIP = async ({note_id, content}:{note_id:string, content:string}) => {
+        try {
+            const {url, csrf} = await AppNoteRequests.ExportToZip(note_id, content, AppUserStore.state.JWT, AppUserStore.state.csrf)
+
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+
+            downloadFile(url, parseNoteTitle(AppNoteStore.state.note.title)  + ".zip")
+
+        } catch {
+            AppToasts.error("Что-то пошло не так")
+        }
+    }
+
+    toggleFavorite = async (note:NoteType) => {
+        if (note.favorite) {
+            await this.removeFromFavorites(note.id)
+        } else {
+            await this.addToFavorites(note.id)
+        }
+    }
+
+    addToFavorites = async (note_id:string) => {
+        const {status, csrf, note} = await AppNoteRequests.AddToFavorites(note_id, AppUserStore.state.JWT, AppUserStore.state.csrf)
+
+        AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+
+        if (status == 200) {
+            if (this.state.selectedNote?.id == note_id) {
+                this.SetState(state => ({
+                    ...state,
+                    selectedNote: note
+                }))
+            }
+
+            const notes = this.state.notes;
+            notes.forEach((item, index) => {
+                if (item.id == note_id) {
+                    notes[index] = note;
+                }
+            });
+
+            this.SetState(state => ({
+                ...state,
+                notes: notes
+            }))
+
+            AppToasts.info("Заметка добавлена в избранное")
+
+        }
+    }
+
+    removeFromFavorites = async (note_id:string) => {
+        const {status, csrf, note} = await AppNoteRequests.RemoveFromFavorites(note_id, AppUserStore.state.JWT, AppUserStore.state.csrf)
+
+        AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+
+        if (status == 200) {
+            if (this.state.selectedNote?.id == note_id) {
+                this.SetState(state => ({
+                    ...state,
+                    selectedNote: note
+                }))
+            }
+
+            const notes = this.state.notes;
+            notes.forEach((item, index) => {
+                if (item.id == note_id) {
+                    notes[index] = note;
+                }
+            });
+
+            this.SetState(state => ({
+                ...state,
+                notes: notes
+            }))
+
+            AppToasts.info("Заметка удалена из избранного")
+        }
+    }
+
+    setPrivate = async () => {
+        try {
+            const {status, csrf, note} = await AppNoteRequests.SetPrivate(this.state.selectedNote.id, AppUserStore.state.JWT, AppUserStore.state.csrf)
+
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+
+            if (status == 200) {
+                this.SetState(state => ({
+                    ...state,
+                    selectedNote: note
+                }))
+
+                this.syncNotes()
+            }
+        } catch {
+            AppToasts.error("Что-то пошло не так")
+        }
+    }
+
+    setPublic = async () => {
+        try {
+            const {status, csrf, note} = await AppNoteRequests.SetPublic(this.state.selectedNote.id, AppUserStore.state.JWT, AppUserStore.state.csrf)
+
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+
+            if (status == 200) {
+                this.SetState(state => ({
+                    ...state,
+                    selectedNote: note
+                }))
+
+                this.syncNotes()
+            }
+        } catch {
+            AppToasts.error("Что-то пошло не так")
+        }
+    }
+
+    renameTag = async ({old_name, new_name}) => {
+        try {
+            const {status, csrf} = await AppTagRequests.UpdateTag(old_name, new_name, AppUserStore.state.JWT, AppUserStore.state.csrf)
+
+            AppDispatcher.dispatch(UserActions.UPDATE_CSRF, csrf);
+
+            // TODO: обновленный тэг улетает в конец списка
+
+            if (status == 204) {
+                await this.fetchTags()
+            }
+        } catch {
+            AppToasts.error("Что-то пошло не так")
+        }
+    }
+
+}
 
 export const AppNotesStore = new NotesStore();
