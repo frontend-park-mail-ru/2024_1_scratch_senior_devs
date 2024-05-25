@@ -9,6 +9,7 @@ export type NoteType = {
     },
     update_time: string,
     owner_id: string,
+    collaborators: string[],
     icon: string,
     header: string,
     favorite: boolean,

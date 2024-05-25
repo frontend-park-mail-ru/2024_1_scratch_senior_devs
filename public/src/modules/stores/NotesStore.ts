@@ -8,6 +8,7 @@ import {WebSocketConnection} from "../websocket";
 import {insertBlockPlugin} from "../../components/Editor/Plugin";
 import {AppNoteStore, NoteStoreActions} from "./NoteStore";
 import {downloadFile, parseNoteTitle} from "../utils";
+import {Note} from '../../components/Note/Note';
 
 export type NotesStoreState = {
     notes: NoteType[],
@@ -118,10 +119,12 @@ class NotesStore extends BaseStore<NotesStoreState> {
                 const title = data.note_title.replace("\\", "").replace('"', "")
                 AppToasts.info(owner + " пригласил вас в свою заметку!")
 
-                const note = {
+                const note:NoteType = {
                     "id": data.note_id,
-                    "data": null,
-                    "create_time": data.created,
+                    "data": {
+                        "title": data.note_title,
+                        "content": []
+                    },
                     "update_time": data.created,
                     "owner_id": null,
                     "parent": "00000000-0000-0000-0000-000000000000",
