@@ -1,9 +1,25 @@
+@import "/public/src/utils/mixins.sass"
+
 *
 	font-family: "Roboto", sans-serif
 
 body
 	overflow-x: hidden
 	position: relative
+
+	&::-webkit-scrollbar-track
+		box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.2)
+		background: #121b25
+
+	&::-webkit-scrollbar
+		width: 6px
+
+
+	&::-webkit-scrollbar-thumb
+		border-radius: 10px
+		box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1)
+		background: $scrollbar-main-color
+		top: 20px
 
 	&.locked
 		overflow: hidden

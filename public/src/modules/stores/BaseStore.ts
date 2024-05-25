@@ -11,6 +11,13 @@ export class BaseStore<S> {
         this.callbacks.delete(callback);
     }
 
+    public GetCallbacks = () => this.callbacks
+
+
+    public ClearCallbacks = () => {
+        this.callbacks.clear()
+    }
+
     protected SetState(updater: (u: S) => S){
         this.state = updater(this.state);
         this.callbacks.forEach((callback: (state: S) => void) => {

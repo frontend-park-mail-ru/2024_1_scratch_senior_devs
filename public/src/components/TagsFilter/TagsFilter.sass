@@ -1,52 +1,84 @@
 @import "/public/src/utils/variables.sass"
+@import "/public/src/utils/mixins.sass"
 
-.filters-panel
-	display: flex
-	flex-wrap: wrap
-	gap: 5px
-	width: 100%
-	padding: 0 5px
+.filters-wrapper
+	position: relative
 
-	.tag-icon-container
+	.filters-panel
 		display: flex
-		justify-content: center
-		align-items: center
-		padding: 8px
-		background: rgba(43, 59, 85, 0.5)
-		border-radius: 12px
-
-		.icon
-			width: 20px
-			height: 20px
-			transition: 0.3s
-			filter: invert(80%)
-
-			&:hover
-				opacity: 1
-
-	.tag
-		display: flex
-		justify-content: center
-		align-items: center
+		flex-wrap: wrap
 		gap: 5px
-		padding: 4px 8px
-		background: rgba(43, 59, 85, 0.3)
-		border-radius: 12px
-		color: $text-main-color
-		z-index: 1
-		user-select: none
-		cursor: pointer
-		font-size: 16px
-		transition: 0.3s
+		width: 100%
+		padding: 0 5px
+		max-height: 150px
+		overflow-y: auto
 
-		&:hover
-			background: rgba(43, 59, 85, 0.8)
+		@include scrollbar
 
-		&.selected
-			background: #2b3b55
-
-		&.hide-btn
-			background: rgba(43, 59, 85, 1)
+		.tag
+			display: flex
+			justify-content: center
+			align-items: center
+			gap: 5px
+			padding: 4px 8px
+			background: rgba(43, 59, 85, 0.3)
+			border-radius: 12px
+			color: $text-main-color
+			z-index: 1
+			user-select: none
+			cursor: pointer
+			font-size: 16px
+			transition: 0.3s
+			position: relative
 
 			&:hover
-				background: rgba(84, 97, 137, 0.5)
+				background: rgba(43, 59, 85, 0.8)
+
+			&.selected
+				background: #2b3b55
+
+			&.hide-btn
+				background: rgba(43, 59, 85, 1)
+
+				&:hover
+					background: rgba(84, 97, 137, 0.5)
+
+		.tag-options-menu
+			position: absolute
+			flex-direction: column
+			top: 40px
+			left: 45px
+			z-index: 1000
+			width: 130px
+			display: none
+			animation: closeAnim 0.3s
+			border: 1px solid hsl(217.2 32.6% 25%)
+			border-radius: 12px
+			overflow: hidden
+
+			&.open
+				display: flex
+				animation: showAnim 0.3s
+
+			&__option
+				width: 100%
+				display: flex
+				align-items: center
+				justify-content: center
+				cursor: pointer
+				padding: 8px 12px
+				transition: 0.3s
+				background: #1b2735
+				line-height: 32px
+				gap: 10px
+
+				&:hover
+					background: #1e2c3b
+
+				img
+					width: 20px
+					height: 20px
+					filter: invert(75%)
+
+				span
+					color: $text-secondary-color

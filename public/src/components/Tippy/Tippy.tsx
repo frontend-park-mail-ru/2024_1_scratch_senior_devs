@@ -65,7 +65,6 @@ export class Tippy extends ScReact.Component<any, any> {
     };
 
     handleSelect = (item) => {
-
         if (item.type === 'bold') {
             document.execCommand('bold', false, null);
         }
@@ -78,33 +77,15 @@ export class Tippy extends ScReact.Component<any, any> {
         if (item.type === 'lineThrough') {
             document.execCommand('strikeThrough', false, null);
         }
-        
 
         this.closeColorPicker();
         this.props.onClose();
     };
 
-    setOptions = (blockId: number, anchorId: number, focusId: number, anchorPos: number, focusPos: number) => {
-        this.options = {
-            blockId,
-            anchorId,
-            focusId,
-            anchorPos,
-            focusPos
-        };
-    };
-
-    private options = {
-        blockId: 0,
-        anchorId: 0,
-        focusId: 0,
-        anchorPos: 0,
-        focusPos: 0
-    };
-
     render() {
+        // TODO: Сделать гиперссылки
+
         const data = [
-            // TODO: жирный текст и гиперссылки не робят
             {
                 type: 'bold',
                 icon: 'bold.svg'
@@ -126,12 +107,12 @@ export class Tippy extends ScReact.Component<any, any> {
         return (
             <div className={'tippy-container ' + (this.props.open ? 'open' : '')} ref={(val) => this.tippyRef = val} style={this.props.style} id={'tippy'}>
 
-                <div className="first-container" onclick={this.toggleLinkInput}  ref={ref => {this.toggleLinkInputRef = ref;}}>
-                    <Img src="link.svg" className="link-icon" />
-                    <span className="link-label">Ссылка</span>
-                </div>
+                {/*<div className="first-container" onclick={this.toggleLinkInput}  ref={ref => {this.toggleLinkInputRef = ref;}}>*/}
+                {/*    <Img src="link.svg" className="link-icon" />*/}
+                {/*    <span className="link-label">Ссылка</span>*/}
+                {/*</div>*/}
 
-                <LinkInput open={this.state.linkInputOpen} onSubmit={this.handleEnterLink} toggleBtn={this.toggleLinkInputRef}/>
+                {/*<LinkInput open={this.state.linkInputOpen} onSubmit={this.handleEnterLink} toggleBtn={this.toggleLinkInputRef}/>*/}
 
                 <div className="second-container">
                     {data.map(item => (

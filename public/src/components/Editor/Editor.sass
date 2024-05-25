@@ -1,9 +1,17 @@
 @import "/public/src/utils/variables.sass"
 @import "/public/src/utils/mixins.sass"
+@import "/public/src/utils/animations.sass"
 
 [contenteditable]
 	outline: none
 	color: white
+	//ul
+	//	list-style: initial
+	//	padding: initial
+	//
+	//ol
+	//	list-style: initial
+	//	padding: initial
 
 [data-selected='true']::marker
 	content: '☑ '
@@ -26,16 +34,22 @@
 	flex-direction: column
 	gap: 10px
 	position: relative
-	padding-right: 20px
+
+	@media screen and (max-width: $lg)
+		padding-left: 10px
 
 	@include scrollbar
+
+	&::-webkit-scrollbar-thumb
+		padding-top: 20px
+
 
 	.buttons-container
 		display: flex
 
 	.note-title
 		width: 100%
-		font-size: 28px
+		font-size: 32px
 		color: $text-main-color
 		font-weight: bold
 		margin-bottom: 5px
@@ -46,6 +60,31 @@
 			cursor: text
 
 	.note-body
+		#note-editor-inner > div:empty
+			&:hover
+				&:before
+					content: "Введите '/' для комманд"
+					color: rgba(255, 255, 255, 0.7)
+					cursor: text
+					animation: fadeIn 0.3s
+
+		.blockplaceholder
+			caret-color: transparent
+
+			&:before
+				content: "Введите '/' для комманд"
+				color: rgba(255, 255, 255, 0.7)
+				cursor: text
+				animation: fadeIn 0.3s
+
+		.img
+			max-width: 50%
+			min-width: 300px
+
+			@media screen and (max-width: $sm)
+				min-width: 90%
+
+
 		.subnote-wrapper
 			background: $modal-background
 			padding: 8px 16px
@@ -53,6 +92,7 @@
 			transition: 0.2s ease
 			border: 1px solid #2b3b55
 			margin: 15px 2px
+			user-select: none
 
 			&:hover
 				cursor: pointer
@@ -91,6 +131,7 @@
 			border: none
 			background: transparent
 			padding: 0
+			user-select: none
 
 			.attach-container
 				background: $modal-background
@@ -103,10 +144,12 @@
 				position: relative
 				cursor: pointer
 				transition: 0.2s ease
-				margin-right: 2px
+				margin-left: 2px
+				border: 1px solid hsl(217.2 32.6% 25%)
 
 				&:hover
-					opacity: 0.9
+					cursor: pointer
+					box-shadow: 0 0 2px $primary-color, 0 0 6px $primary-color
 
 				.file-extension-label
 					background: #546189
@@ -134,11 +177,3 @@
 						filter: invert(80%)
 						width: 20px
 						height: 20px
-
-		.placeholder
-			color: $text-secondary-color
-			position: absolute
-			top: 0
-			left: 30px
-			font-size: 28px
-			font-weight: bold

@@ -5,12 +5,13 @@ import {
     fromJson,
     inspectBlocks,
     lastChosenElement,
-    PluginProps,
+    PluginProps, pluginSettings,
     toJson
 } from "./Plugin";
 import {AppUserStore} from "../../modules/stores/UserStore";
 import {getCaretPosition} from "../../modules/utils";
 import {debounce} from "../../utils/debauncer";
+import {AppNotesStore} from "../../modules/stores/NotesStore";
 
 export class Editor {
     private readonly editable: HTMLElement;
@@ -19,24 +20,26 @@ export class Editor {
     private dropdownCallbacks: {open: (elem: HTMLElement) => void, close: () => void}
     private tippyCallbacks: {open: (elem: HTMLElement) => void, close: () => void}
 
-    constructor(note: PluginProps[],
-                parent: HTMLElement,
-                dropdown: {open: (elem: HTMLElement) => void, close: () => void },
-                onChange: (schema: PluginProps[]) => void,
-                tippy: {open: (elem: HTMLElement) => void, close: () => void}) {
+    constructor(
+        note: PluginProps[],
+        parent: HTMLElement,
+        dropdown: {open: (elem: HTMLElement) => void, close: () => void },
+        onChange: (schema: PluginProps[]) => void,
+        tippy: {open: (elem: HTMLElement) => void, close: () => void}
+    ) {
 
         // TODO: при наборе символов в поисковую строку фокусится редактор заметки (отключить)
-        
 
+        pluginSettings.isEditable = true;
         this.dropdownCallbacks = dropdown;
         this.tippyCallbacks = tippy;
         this.addPlugins();
 
         this.editable = document.createElement('div');
+        this.editable.id = "note-editor-inner"
         this.editable.contentEditable = "true";
 
         this.dropdownObserver = new MutationObserver((records) => {
-            
             records.forEach(record => {
                 switch (record.type) {
                     case "childList":
@@ -65,41 +68,6 @@ export class Editor {
 
         parent.append(this.editable);
 
-        this.observer = new MutationObserver((records) => {
-            // if (records.every((record) => {return record.type === 'attributes'})) {
-            //     return;
-            // }
-            if (records.some(record => {return record.type === 'characterData'})) {
-                selectionCallback();
-            }
-            setTimeout(() => {
-                const schema = [];
-                this.editable.childNodes.forEach(node => {
-                    schema.push(toJson(node));
-                })
-
-                if (schema.length > 0 && (schema[schema.length - 1] as PluginProps).pluginName !== 'div' ||
-                    ((schema[schema.length - 1] as PluginProps).pluginName === 'div' &&
-                    (schema[schema.length - 1] as PluginProps).children?.[0]?.pluginName !== 'br')) {
-                    const div = document.createElement('div');
-                    div.append(document.createElement('br'));
-                    this.editable.append(div);
-                }
-                
-                onChange(schema)
-            })
-
-        });
-
-        this.observer.observe(this.editable, {
-            childList: true,
-            characterData: true,
-            characterDataOldValue: true,
-            attributes: true,
-            attributeOldValue: true,
-            subtree: true
-        });
-
         const selectionCallback = () => {
             const isInEditor = (node: Node) => {
                 if (node.nodeType === Node.ELEMENT_NODE && (node as HTMLElement).contentEditable === 'true' && !(node as HTMLElement).classList.contains("note-title")) {
@@ -112,8 +80,8 @@ export class Editor {
             }
 
             const scanTree = (node: HTMLElement) => {
-                if (`cursor${AppUserStore.state.username}` in node.dataset) {
-                    delete node.dataset[`cursor${AppUserStore.state.username}`];
+                if (`cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replaceAll('-','').toLowerCase()}` in node.dataset) {
+                    delete node.dataset[`cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replaceAll('-','').toLowerCase()}`];
                 }
 
                 node.childNodes.forEach(child => {
@@ -137,8 +105,10 @@ export class Editor {
                     : selection.anchorNode.parentElement;
 
                 scanTree(this.editable);
+                console.log(`cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replaceAll('-','').toLowerCase()}`)
 
-                elem.dataset[`cursor${AppUserStore.state.username}`] = `${getCaretPosition(elem)}`;
+                elem.dataset[`cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replaceAll('-','').toLowerCase()}`] = `${getCaretPosition(elem)}`;
+                // elem.scrollIntoView();
 
                 // TODO: отоброажать курсоры пользователей при редактировании одной заметки
                 // const fakeCaret = document.createElement("div")
@@ -156,7 +126,11 @@ export class Editor {
             }
         }
 
-        document.onselectionchange = debounce(selectionCallback, 500)
+        document.removeEventListener('selectionchange', this.addPlaceHolder)
+        document.removeEventListener('selectionchange', debounce(selectionCallback, 500))
+
+        document.addEventListener('selectionchange', this.addPlaceHolder)
+        document.addEventListener('selectionchange', debounce(selectionCallback, 500))
 
         // TODO: убрать задержку при закрытии всплывашки, но оставить задержку при открытии
         // document.onclick = (e) => {
@@ -164,6 +138,60 @@ export class Editor {
         //         this.tippyCallbacks.close();
         //     }
         // }
+
+        this.observer = new MutationObserver((records) => {
+            // if (records.every((record) => {return record.type === 'attributes'})) {
+            //     return;
+            // }
+            if (records.some(record => {return record.type === 'characterData'})) {
+                selectionCallback();
+            }
+            setTimeout(() => {
+                const schema = [];
+                this.editable.childNodes.forEach(node => {
+                    schema.push(toJson(node));
+                })
+
+                this.addPlaceHolder();
+
+                if (schema.length > 0 && (schema[schema.length - 1] as PluginProps).pluginName !== 'div' ||
+                    ((schema[schema.length - 1] as PluginProps).pluginName === 'div' &&
+                        (schema[schema.length - 1] as PluginProps).children?.[0]?.pluginName !== 'br')) {
+                    const div = document.createElement('div');
+                    div.append(document.createElement('br'));
+                    this.editable.append(div);
+                }
+
+                onChange(schema)
+            })
+
+        });
+
+        this.observer.observe(this.editable, {
+            childList: true,
+            characterData: true,
+            characterDataOldValue: true,
+            attributes: true,
+            attributeOldValue: true,
+            attributeFilter: [
+                "data-selected",
+                "data-imgid",
+                "data-fileid",
+                "data-filename",
+                "style",
+                "data-noteid"
+            ],
+            subtree: true
+        });
+
+
+
+        // Заметка открыта с пк и с телефона. Редачится с телефона. С пк курсор начинает скакать
+        // Возможное решение: сохранять в дата атрибуты помимо username еще и socket_id чтобы различать девайс с которого редачится заметка
+        if (window['mobileCheck']) {
+            this.editable.focus()
+            this.editable.click()
+        }
     }
 
     getSchema = () => {
@@ -182,7 +210,10 @@ export class Editor {
             const parentPlugin = defaultPlugins.find(plug => {
                 return plug.checkPlugin(node.parentElement);
             });
-            if ((parentPlugin.pluginName === 'div' || parentPlugin.pluginName === 'li' || parentPlugin.pluginName === 'li-todo') && node.textContent.startsWith('/')) {
+            if ((parentPlugin.pluginName === 'div' || parentPlugin.pluginName === 'li' || parentPlugin.pluginName === 'li-todo') &&
+                node.textContent.startsWith('/') &&
+                `cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replaceAll('-','').toLowerCase()}` in node.parentElement.dataset) {
+
                 lastChosenElement.node = node;
                 this.dropdownCallbacks.open(node.parentElement)
             } else {
@@ -194,10 +225,47 @@ export class Editor {
             return plugin.pluginName === 'div';
         }));
         defaultPlugins[divIndex].onInsert = (node: Node) => {
-            if (node.textContent.startsWith('/')) {
+            if (node.textContent.startsWith('/') && `cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replaceAll('-','').toLowerCase()}` in node.parentElement.dataset) {
                 lastChosenElement.node = node;
                 this.dropdownCallbacks.open(node as HTMLElement)
             }
+        }
+        const brIndex = defaultPlugins.findIndex((plugin => {
+            return plugin.pluginName === 'br';
+        }));
+        defaultPlugins[brIndex].onInsert = (node: Node) => {
+            if (node.parentElement?.contentEditable === 'true') {
+                const div = document.createElement('div');
+                div.append(document.createElement('br'));
+                (node as HTMLElement).replaceWith(div);
+            }
+        }
+    }
+
+    private lastBlock: HTMLElement = null;
+
+    addPlaceHolder = () => {
+        const findBlock = (node: Node): HTMLElement => {
+            if (!node || !node.parentElement) {
+                return null;
+            }
+            if (node.parentElement?.contentEditable === 'true' &&
+                node.parentElement.parentElement.classList.contains('note-body') &&
+                node.nodeType === Node.ELEMENT_NODE &&
+                (node as HTMLElement).tagName === "DIV") {
+                return node as HTMLElement;
+            } else {
+                return findBlock(node.parentElement);
+            }
+        }
+
+        const newBlock = findBlock(document.getSelection().anchorNode);
+
+        this.lastBlock?.classList.remove('blockplaceholder');
+
+        if (newBlock?.textContent === "") {
+            newBlock.classList.add('blockplaceholder');
+            this.lastBlock = newBlock;
         }
     }
 }

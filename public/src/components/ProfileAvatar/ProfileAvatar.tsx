@@ -1,13 +1,12 @@
 import {ScReact} from '@veglem/screact';
 import {Img} from '../Image/Image';
-import {imagesUlr} from '../../modules/api';
 import {AppToasts} from '../../modules/toasts';
 import {AppDispatcher} from '../../modules/dispatcher';
 import {AppUserStore, UserActions, UserStoreState} from '../../modules/stores/UserStore';
 import './ProfileAvatar.sass';
 import {AvatarUploadLoader} from '../AvatarUplodaLoader/AvatarUploadLoader';
 import {crop} from '../../modules/utils';
-import {MAX_AVATAR_SIZE} from '../../utils/consts';
+import {imagesUlr, MAX_AVATAR_SIZE} from '../../utils/consts';
 
 type ProfileAvatarState = {
     uploadAnimation: boolean,

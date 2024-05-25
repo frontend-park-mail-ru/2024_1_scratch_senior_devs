@@ -7,6 +7,7 @@ import {Profile} from '../Profile/Profile';
 import {AuthPage} from '../../pages/Auth';
 import {AppUserStore, UserActions, UserStoreState} from '../../modules/stores/UserStore';
 import {AppDispatcher} from '../../modules/dispatcher';
+import {AppNotesStore, NotesStoreState} from "../../modules/stores/NotesStore";
 
 export class Header extends ScReact.Component<any, any>{
     state = {
@@ -14,11 +15,13 @@ export class Header extends ScReact.Component<any, any>{
         userChecked: false,
         avatarUrl: false,
         otpEnabled: false,
-        qr: undefined
+        qr: undefined,
+        fullscreen: false
     };
 
     componentDidMount() {
         AppUserStore.SubscribeToStore(this.updateState);
+        AppNotesStore.SubscribeToStore(this.checkFullscreen);
         AppDispatcher.dispatch(UserActions.CHECK_USER);
     }
 
@@ -33,9 +36,16 @@ export class Header extends ScReact.Component<any, any>{
         }));
     };
 
+    checkFullscreen = (store:NotesStoreState) => {
+        this.setState(state => ({
+            ...state,
+            fullscreen: store.fullScreen
+        }));
+    };
+
     render() {
         return (
-            <header id="header">
+            <header id="header" className={(location.pathname.includes("notes") && this.state.isAuth ? "notes " : "") + (this.state.fullscreen ? "fullscreen" : "")}>
                 <Logo />
                 { this.state.userChecked ? (
                     this.state.isAuth ? <Profile avatarUrl={this.state.avatarUrl} otpEnabled={this.state.otpEnabled} qr={this.state.qr}/> : (

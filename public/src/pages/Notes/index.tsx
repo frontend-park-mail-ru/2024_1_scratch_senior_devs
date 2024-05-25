@@ -8,9 +8,10 @@ import {Button} from '../../components/Button/Button';
 import {Img} from '../../components/Image/Image';
 import {AppNoteStore} from '../../modules/stores/NoteStore';
 import {Loader} from '../../components/Loader/Loader';
-import {parseNoteTitle, scrollToTop, truncate} from '../../modules/utils';
+import {parseNoteTitle, scrollToTop, truncate, unicodeToChar} from '../../modules/utils';
 import {Note} from "../../components/Note/Note";
 import {TagsFilter} from "../../components/TagsFilter/TagsFilter";
+import {AddTagMenu} from "../../components/AddTagMenu/AddTagMenu";
 
 export class NotesPage extends ScReact.Component<any, any> {
     state = {
@@ -20,7 +21,8 @@ export class NotesPage extends ScReact.Component<any, any> {
         selectedTags: [],
         editorOpen: false,
         fetching: false,
-        query: ""
+        query: "",
+        fullScreen: false
     };
 
     private notesContainerRef
@@ -54,6 +56,13 @@ export class NotesPage extends ScReact.Component<any, any> {
         }
     }
 
+    componentWillUnmount() {
+        
+        AppDispatcher.dispatch(NotesActions.EXIT);
+        AppNotesStore.UnSubscribeToStore(this.updateState);
+        document.body.classList.remove('locked');
+    }
+
     updateNotesTitles = () => {
         setTimeout(()=> {
             const notes = AppNotesStore.state.notes;
@@ -72,11 +81,6 @@ export class NotesPage extends ScReact.Component<any, any> {
         }, 10);
     };
 
-    componentWillUnmount() {
-        AppDispatcher.dispatch(NotesActions.EXIT);
-        AppNotesStore.UnSubscribeToStore(this.updateState);
-        document.body.classList.remove('locked');
-    }
 
     updateState = (store:NotesStoreState) => {
         this.setState(state => {
@@ -88,7 +92,7 @@ export class NotesPage extends ScReact.Component<any, any> {
                 document.title = parseNoteTitle(store.selectedNote.data.title);
 
                 if (this.state.selectedNote) {
-                    this.updatePreviewNoteTitle(store.selectedNote.data.title)
+                    // this.updatePreviewNoteTitle(store.selectedNote.data.title)
                 }
             }
 
@@ -98,7 +102,8 @@ export class NotesPage extends ScReact.Component<any, any> {
                 tags: store.tags,
                 editorOpen: store.selectedNote != undefined,
                 notes: store.notes,
-                fetching: store.fetching
+                fetching: store.fetching,
+                fullScreen: store.fullScreen
             };
         });
     };
@@ -183,28 +188,6 @@ export class NotesPage extends ScReact.Component<any, any> {
     onChangeTags = (tags:string[]) => {
         AppNotesStore.state.selectedNote.tags = tags
         AppDispatcher.dispatch(NotesActions.SYNC_NOTES)
-
-        // const selectedNote = document.getElementById(this.state.selectedNote.id);
-        //
-        // if (selectedNote) {
-        //     const tagsContainer = selectedNote.querySelector('.note-tags-container');
-        //
-        //     tagsContainer.innerHTML = ""
-        //
-        //     tags.slice(0, 2).forEach(tagname => {
-        //         const tag = document.createElement("span")
-        //         tag.innerHTML = tagname
-        //         tag.className = "note-tag"
-        //         tagsContainer.appendChild(tag)
-        //     })
-        //
-        //     if (tags.length > 2) {
-        //         const tag = document.createElement("span")
-        //         tag.innerHTML = `+${tags.length - 2}`
-        //         tag.className = "note-tag"
-        //         tagsContainer.appendChild(tag)
-        //     }
-        // }
     }
 
     selectTag = (tag:string) => {
@@ -241,7 +224,7 @@ export class NotesPage extends ScReact.Component<any, any> {
 
     render() {
         return (
-            <div className={'notes-page-wrapper ' + (this.state.editorOpen ? 'active' : '')} >
+            <div className={'notes-page-wrapper ' + (this.state.editorOpen ? ' active ' : '') + (this.state.fullScreen ? ' fullscreen ' : '')} >
                 <aside>
                     <div className="top-panel">
                         <SearchBar onStartTyping={this.onSearchBarStartTyping} onChange={this.onSearchBarChange}/>
@@ -251,12 +234,15 @@ export class NotesPage extends ScReact.Component<any, any> {
                                 <Img src="plus.svg" className="add-note-icon"/>
                             </div>
                         </div>
+                        {this.state.tags.length == 0 ? <AddTagMenu tags={this.state.tags} /> : ""}
                     </div>
                     {this.state.tags.length > 0 ? <TagsFilter tags={this.state.tags} selectedTags={this.state.selectedTags} selectTag={this.selectTag} /> : "" }
                     <div className="notes-container" onclick={this.handleSelectNote} ref={ref => this.notesContainerRef = ref}>
                         <Loader active={this.state.fetching}/>
                         {
-                            this.state.notes.length > 0 ?
+                            this.state.notes.sort(function (note1, note2) {
+                                return (note1.favorite === note2.favorite)? 0 : note1.favorite? -1 : 1
+                            }).length > 0 ?
                                 this.state.notes.map(note => (
                                     <Note selected={this.state.selectedNote?.id == note.id} note={note}/>
                                 ))

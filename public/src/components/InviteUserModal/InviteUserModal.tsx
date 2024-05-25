@@ -86,7 +86,7 @@ export class InviteUserModal extends ScReact.Component<any, any>{
             <form className="invite-user-form" onsubmit={this.handleSubmit}>
                 <Img src="close.svg" className="close-modal-btn" onClick={this.props.handleClose}/>
                 <h2>Пригласить пользователя</h2>
-                <Input value={this.state.value} onChange={this.handleChange} placeholder="Логин" error={this.state.errorMessage} validationResult={this.state.validationResult} />
+                <Input value={this.state.value} onChange={this.handleChange} placeholder="Логин" focused={true} error={this.state.errorMessage} validationResult={this.state.validationResult} />
                 <Button label="Отправить" />
             </form>
         );

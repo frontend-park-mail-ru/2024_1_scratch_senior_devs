@@ -60,22 +60,7 @@ export class YoutubeDialogForm extends ScReact.Component<any, any> {
     };
 
     insertVideo = (video_id:string) => {
-        // const block = AppNoteStore.state.note.blocks[AppNoteStore.state["dropdownPos"].blockId];
-        // block.type = 'iframe';
-        // block.content = undefined;
-        // block.attributes = {
-        //     youtube: 'https://www.youtube.com/embed/' + video_id,
-        //     width: "560",
-        //     height: "315",
-        //     className: "youtube-player",
-        //     src: 'https://www.youtube.com/embed/' + video_id,
-        //     sandbox: "allow-same-origin allow-scripts"
-        // };
-        // AppDispatcher.dispatch(NoteStoreActions.CHANGE_BLOCK, {
-        //     blockId: AppNoteStore.state.dropdownPos.blockId,
-        //     newBlock: block
-        // });
-
+        // TODO: ?autoplay=1
         insertBlockPlugin('youtube', 'https://www.youtube.com/embed/' + video_id)
 
         this.props.handleClose()
@@ -85,7 +70,7 @@ export class YoutubeDialogForm extends ScReact.Component<any, any> {
         return (
             <form id="youtube-dialog-form" onsubmit={this.handleSubmit}>
                 <h3>Вставить видео из YouTube</h3>
-                <Input value={this.state.value} onChange={this.handleChange} placeholder="Ссылка" error={this.state.errorMessage} validationResult={this.state.validationResult}/>
+                <Input value={this.state.value} onChange={this.handleChange} placeholder="Ссылка" focused={true} error={this.state.errorMessage} validationResult={this.state.validationResult}/>
                 <Button label="Вставить" />
             </form>
         );

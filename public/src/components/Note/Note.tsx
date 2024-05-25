@@ -1,9 +1,13 @@
 import {ScReact} from '@veglem/screact';
 import './Note.sass';
-import {formatDate, parseNoteTitle, truncate} from "../../modules/utils";
+import {formatDate, parseNoteTitle, truncate, unicodeToChar} from "../../modules/utils";
 import {NoteType} from "../../utils/types";
+import {Img} from "../Image/Image";
+import {Tooltip} from "../Tooltip/Tooltip";
+import {AppDispatcher} from "../../modules/dispatcher";
+import {NotesActions} from "../../modules/stores/NotesStore";
 
-const MAX_NOTE_CONTENT_PREVIEW_LENGTH = 25;
+const MAX_NOTE_CONTENT_PREVIEW_LENGTH = 20;
 const MAX_TAGS_PREVIEW_COUNT = 2;
 
 type NoteProps = {
@@ -19,9 +23,6 @@ export class Note extends ScReact.Component<NoteProps, any> {
     }
 
     componentDidUpdate() {
-        console.log("componentDidUpdate")
-        console.log(this.props.note.tags)
-
        this.renderTags()
     }
 
@@ -40,17 +41,25 @@ export class Note extends ScReact.Component<NoteProps, any> {
             const span = document.createElement("span")
             span.className = "note-tag"
             span.textContent = `+${this.props.note.tags.length - MAX_TAGS_PREVIEW_COUNT}`
-
             this.tagsContainerRef.appendChild(span)
         }
     }
 
+    toggleFavorite = () => {
+        AppDispatcher.dispatch(NotesActions.TOGGLE_FAVORITE, this.props.note)
+    }
+
     render() {
         return (
-            <div className={'note-container ' + (this.props.selected ? 'selected' : '')} id={this.props.note.id} >
-                <h3>{truncate(parseNoteTitle(this.props.note.data.title), MAX_NOTE_CONTENT_PREVIEW_LENGTH)}</h3>
+            <div className={'note-container ' + (this.props.selected ? 'selected' : '')} id={this.props.note.id} style={`background: ${this.props.note.header};`}>
+                <div className="note-title__container">
+                    <span className="note-icon">{this.props.note.icon ? unicodeToChar(this.props.note.icon) : ""}</span>
+                    <h3 className="note-title">{truncate(parseNoteTitle(this.props.note.data.title), MAX_NOTE_CONTENT_PREVIEW_LENGTH)}</h3>
+                </div>
                 <div className="note-tags-container" ref={ref => this.tagsContainerRef = ref}></div>
                 <span className="update-time">{formatDate(this.props.note.update_time)}</span>
+
+                <Img src={this.props.note.favorite ? "star-filled.svg" : "star.svg"} className={"favorite-icon " + (this.props.note.favorite ? "show" : "") } onClick={this.toggleFavorite}/>
             </div>
         );
     }

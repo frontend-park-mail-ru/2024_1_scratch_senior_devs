@@ -24,7 +24,7 @@ type ToastState = {
 const TOAST_DEFAULT_OFFSET_BOTTOM = 25;
 const TOAST_SHOW_DELAY = 3000;
 const TOAST_HIDE_ANIMATION_DELAY = 300;
-const MAX_TOASTS = 3;
+const MAX_TOASTS = 2;
 
 export class Toasts extends ScReact.Component<any, ToastState> {
     state = {
@@ -57,11 +57,6 @@ export class Toasts extends ScReact.Component<any, ToastState> {
             })
         }));
 
-        this.state.toasts = this.state.toasts.map(toast => {
-            toast.offset += 100;
-            return toast;
-        })
-
         const toast = {
             open: true,
             type: type,
@@ -74,7 +69,6 @@ export class Toasts extends ScReact.Component<any, ToastState> {
             ...state,
             toasts: state.toasts.concat(toast)
         }));
-        this.state.toasts = this.state.toasts.concat(toast)
 
         setTimeout(() => {
             this.closeToast(toast.id);

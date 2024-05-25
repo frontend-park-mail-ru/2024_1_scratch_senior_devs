@@ -1,7 +1,7 @@
 import {AppUserStore, UserStoreState} from '../../modules/stores/UserStore';
 import {AppNotesStore} from '../../modules/stores/NotesStore';
 import {AppRouter} from '../../modules/router';
-import {AppNoteRequests} from '../../modules/api';
+import {AppNoteRequests, AppSharedNoteRequests} from '../../modules/api';
 
 export const NotesLoader = async (path:string) => {
     const p = new Promise((resolve, reject) => {
@@ -35,15 +35,34 @@ export const NotesLoader = async (path:string) => {
                             // AppToasts.error('Заметка не найдена');
                             // history.pushState(null, '', '/notes');
                             // resolve({notes: store.notes});
-                            
-                            AppRouter.go("/404")
-                            reject()
+
+                            AppSharedNoteRequests.Get(noteId).then(note => {
+                                console.log(note)
+                                resolve({notes: store.notes, note: note, tags: store.tags});
+                            }).catch(() => {
+                                AppRouter.go("/404")
+
+                                reject()
+                            });
+
                         });
                     } else {
                         resolve({notes: store.notes, tags: store.tags});
                     }
                 });
             } else {
+                if (path?.includes('notes/')) {
+                    const noteId = window.location.pathname.split('/').at(-1);
+
+                    AppSharedNoteRequests.Get(noteId).then(note => {
+                        AppRouter.openSharedNotePage(note)
+                    }).catch(() => {
+                        AppRouter.go("/")
+                    });
+
+                    reject()
+                }
+
                 AppRouter.go('/');
                 reject();
             }
