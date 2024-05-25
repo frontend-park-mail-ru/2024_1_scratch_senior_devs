@@ -79,12 +79,65 @@ class NotesStore extends BaseStore<NotesStoreState> {
         fullScreen: false
     };
 
-    private ws
+    private editorWS
+    private invitesWS
     public socket_id
 
     constructor() {
         super();
         this.registerEvents();
+    }
+
+    async init () {
+        await this.fetchNotes(true);
+        await this.fetchTags()
+
+        this.invitesWS = new WebSocketConnection(`api/note/subscribe/on_invites`)
+
+        this.invitesWS.onOpen(() => {
+            console.log("invitesWS.onOpen")
+            // this.editorWS.sendMessage(JSON.stringify({
+            //     type: "opened",
+            //     note_id: note.id,
+            //     user_id: AppUserStore.state.user_id,
+            //     username: AppUserStore.state.username,
+            //     image_path: AppUserStore.state.avatarUrl
+            // }))
+        })
+
+        this.invitesWS.onMessage((event) => {
+            console.log("invitesWS.onMessage")
+
+            let data = JSON.parse(event.data)
+
+            console.log(data)
+        })
+
+        return this.state;
+    }
+
+    exit () {
+        AppNotesStore.ClearCallbacks()
+        AppNoteStore.ClearCallbacks()
+
+        this.SetState(state => ({
+            ...state,
+            notes: [],
+            tags: [],
+            selectedTags: [],
+            selectedNote: null,
+            selectedNoteSynced: null,
+            selectedNoteCollaborators: [],
+            query: '',
+            offset: 0,
+            count: 10,
+            fetching: false,
+            noteNotFound: false,
+            fullScreen: false
+        }));
+
+        this.invitesWS.close()
+        this.invitesWS = null
     }
 
     private registerEvents(){
@@ -198,28 +251,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
             }
         });
     }
-
-    exit () {
-        AppNotesStore.ClearCallbacks()
-        AppNoteStore.ClearCallbacks()
-
-        this.SetState(state => ({
-            ...state,
-            notes: [],
-            tags: [],
-            selectedTags: [],
-            selectedNote: null,
-            selectedNoteSynced: null,
-            selectedNoteCollaborators: [],
-            query: '',
-            offset: 0,
-            count: 10,
-            fetching: false,
-            noteNotFound: false,
-            fullScreen: false
-        }));
-    }
-
     syncNotes = () => {
         const notes = this.state.notes;
         notes.forEach((note, index) => {
@@ -272,15 +303,15 @@ class NotesStore extends BaseStore<NotesStoreState> {
     }
 
     closeWS = () => {
-        if (this.ws && this.state.selectedNote) {
-            this.ws.sendMessage(JSON.stringify({
+        if (this.editorWS && this.state.selectedNote) {
+            this.editorWS.sendMessage(JSON.stringify({
                 type: "closed",
                 note_id: this.state.selectedNote.id,
                 user_id: AppUserStore.state.user_id
             }))
 
-            this.ws.close()
-            this.ws = null
+            this.editorWS.close()
+            this.editorWS = null
             this.socket_id = null
         }
     }
@@ -305,10 +336,10 @@ class NotesStore extends BaseStore<NotesStoreState> {
             blocks: note.data.content
         })
 
-        this.ws = new WebSocketConnection(`note/${note.id}/subscribe_on_updates`)
+        this.editorWS = new WebSocketConnection(`note/${note.id}/subscribe_on_updates`)
 
-        this.ws.onOpen(() => {
-            this.ws.sendMessage(JSON.stringify({
+        this.editorWS.onOpen(() => {
+            this.editorWS.sendMessage(JSON.stringify({
                 type: "opened",
                 note_id: note.id,
                 user_id: AppUserStore.state.user_id,
@@ -317,7 +348,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             }))
         })
 
-        this.ws.onMessage((event) => {
+        this.editorWS.onMessage((event) => {
             let data = JSON.parse(event.data)
 
             // Если socket_id совпадает, то ничего обновлять не надо
@@ -384,12 +415,6 @@ class NotesStore extends BaseStore<NotesStoreState> {
         const note = await AppNoteRequests.Get(id, AppUserStore.state.JWT);
         this.selectNote(note);
         history.pushState(null, null, '/notes/' + id)
-    }
-
-    async init () {
-        await this.fetchNotes(true);
-        await this.fetchTags()
-        return this.state;
     }
 
     async searchNotes ({query, selectedTags}) {
