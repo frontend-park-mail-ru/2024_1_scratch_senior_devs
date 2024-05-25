@@ -115,14 +115,12 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             if (data.type == "invite") {
                 const owner = data.owner
-                const created = data.created
-                const title = data.note_title.replace("\\", "").replace('"', "")
                 AppToasts.info(owner + " пригласил вас в свою заметку!")
 
                 const note:NoteType = {
                     "id": data.note_id,
                     "data": {
-                        "title": data.note_title,
+                        "title": data.note_title.replace('"', ""),
                         "content": []
                     },
                     "update_time": data.created,
