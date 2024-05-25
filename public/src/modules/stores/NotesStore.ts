@@ -92,7 +92,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
         await this.fetchNotes(true);
         await this.fetchTags()
 
-        this.invitesWS = new WebSocketConnection(`api/note/subscribe/on_invites`)
+        this.invitesWS = new WebSocketConnection(`note/subscribe/on_invites`)
 
         this.invitesWS.onOpen(() => {
             console.log("invitesWS.onOpen")
