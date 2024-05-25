@@ -111,6 +111,36 @@ class NotesStore extends BaseStore<NotesStoreState> {
             let data = JSON.parse(event.data)
 
             console.log(data)
+
+            if (data.type == "invite") {
+                const owner = data.owner
+                const created = data.created
+                const title = data.note_title.replace("\\", "").replace('"', "")
+                AppToasts.info(owner + " пригласил вас в свою заметку!")
+
+                const note = {
+                    "id": data.note_id,
+                    "data": null,
+                    "create_time": data.created,
+                    "update_time": data.created,
+                    "owner_id": null,
+                    "parent": "00000000-0000-0000-0000-000000000000",
+                    "children": [],
+                    "tags": [],
+                    "collaborators": [],
+                    "icon": "",
+                    "header": "",
+                    "favorite": false,
+                    "public": false
+                }
+
+                this.SetState(state => ({
+                    ...state,
+                    // offset: state.offset + 1, ?
+                    notes: [note, ...state.notes]
+                }));
+
+            }
         })
 
         return this.state;
@@ -251,6 +281,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             }
         });
     }
+
     syncNotes = () => {
         const notes = this.state.notes;
         notes.forEach((note, index) => {
@@ -650,6 +681,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
 
             if (status == 204) {
                 AppToasts.success("Приглашение успешно отправлено")
+            } else if (status == 409) {
+                AppToasts.info("Пользователь уже приглашен")
             } else {
                 AppToasts.error("Пользователь не найден")
             }
