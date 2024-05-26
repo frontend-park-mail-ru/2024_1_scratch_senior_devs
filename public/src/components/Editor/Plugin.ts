@@ -1,7 +1,7 @@
 import {AppUserStore} from "../../modules/stores/UserStore";
 import {parseNoteTitle, setCursorAtNodePosition, truncate} from "../../modules/utils";
 import {AppNotesStore, NotesActions} from "../../modules/stores/NotesStore";
-import {AppNoteRequests} from "../../modules/api";
+import {AppNoteRequests, AppSharedNoteRequests} from '../../modules/api';
 import {AppDispatcher} from "../../modules/dispatcher";
 import {AppToasts} from "../../modules/toasts";
 import {AppNoteStore, NoteStoreActions} from "../../modules/stores/NoteStore";
@@ -1108,7 +1108,9 @@ const RenderSubNote = (subNoteId:string) => {
         subNoteTitle.innerHTML = AppNoteStore.state.cache[subNoteId]
         loaded = true
     } else {
-        AppNoteRequests.Get(subNoteId, AppUserStore.state.JWT).then(result => {
+
+        const request = pluginSettings.isEditable ? AppNoteRequests.Get(subNoteId, AppUserStore.state.JWT) : AppSharedNoteRequests.Get(subNoteId)
+        request.then(result => {
             if (result.data.title == null) {
                 subNoteTitle.innerHTML = 'Подзаметка'
             }

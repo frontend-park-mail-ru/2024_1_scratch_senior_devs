@@ -10,7 +10,7 @@ import {DeleteNoteDialog} from '../DeleteNoteDialog/DeleteNoteDialog';
 import NoteMenu from "../NoteMenu/NoteMenu";
 import {Tooltip} from "../Tooltip/Tooltip";
 import {TagList} from "../TagList/TagList";
-import {EditorWrapper} from "../Editor/EditorWrapper";
+import {EditorWrapper} from "../EditorWrapper/EditorWrapper";
 import {AppUserStore} from "../../modules/stores/UserStore";
 import {Collaborators} from "../Collaborators/Collaborators";
 import {EmojiPicker} from "../EmojiPicker/EmojiPicker";
