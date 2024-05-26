@@ -1097,7 +1097,6 @@ const RenderSubNote = (subNoteId:string) => {
             }
         }
 
-
         deleteSubNoteBtnContainer.appendChild(deleteSubNoteBtn)
         subNoteContainer.appendChild(deleteSubNoteBtnContainer)
     }
