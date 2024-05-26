@@ -135,9 +135,6 @@ export class Router extends ScReact.Component<any, routerState> {
             page = this.pages['/notes'];
         }
 
-        console.log("history.pushState")
-        console.log(path)
-        console.log(raw)
         history.pushState(null, null, path);
 
         if (page === undefined) {
@@ -182,7 +179,7 @@ export class Router extends ScReact.Component<any, routerState> {
     }
 
     public openSharedNotePage (note:NoteType) {
-        history.pushState(null, null, "/notes/" + note.id);
+        // history.pushState(null, null, "/notes/" + note.id);
 
         this.setState(s => ({
             ...s,
