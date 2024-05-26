@@ -1073,7 +1073,10 @@ const RenderSubNote = (subNoteId:string) => {
 
     const isOwner= AppNotesStore.state.selectedNote?.owner_id == AppUserStore.state.user_id
 
-    if (isOwner) {
+    console.log(1)
+    console.log(isOwner)
+    if (isOwner && pluginSettings.isEditable) {
+        console.log(2)
         const deleteSubNoteBtnContainer = document.createElement("div")
         deleteSubNoteBtnContainer.className = "delete-subnote-btn-container"
 
@@ -1082,6 +1085,7 @@ const RenderSubNote = (subNoteId:string) => {
         deleteSubNoteBtn.className = "delete-subnote-btn"
 
         if (pluginSettings.isEditable) {
+            console.log(3)
             deleteSubNoteBtnContainer.onclick = (e) => {
                 e.stopPropagation()
                 subNoteWrapper.remove();
