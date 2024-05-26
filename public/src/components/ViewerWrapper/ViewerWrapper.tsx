@@ -22,7 +22,8 @@ export class ViewerWrapper extends ScReact.Component<ViewerWrapperProps, any> {
     private noteContentRef
     private viewerRef
 
-    componentDidMount() {
+    componentDidUpdate() {
+        console.log("componentDidUpdate")
         this.noteContentRef.innerHTML = ""
         new Viewer(
             this.props.note.data.content,
