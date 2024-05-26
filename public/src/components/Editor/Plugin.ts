@@ -5,6 +5,7 @@ import {AppNoteRequests, AppSharedNoteRequests} from '../../modules/api';
 import {AppDispatcher} from "../../modules/dispatcher";
 import {AppToasts} from "../../modules/toasts";
 import {AppNoteStore, NoteStoreActions} from "../../modules/stores/NoteStore";
+import {AppRouter} from '../../modules/router';
 
 interface EditorPlugin {
     pluginName: string;
@@ -1072,11 +1073,9 @@ const RenderSubNote = (subNoteId:string) => {
     subNoteContainer.appendChild(subNoteTitle)
 
     const isOwner= AppNotesStore.state.selectedNote?.owner_id == AppUserStore.state.user_id
+    const isAuth = AppUserStore.state.isAuth
 
-    console.log(1)
-    console.log(isOwner)
-    if (isOwner && pluginSettings.isEditable) {
-        console.log(2)
+    if (isAuth && isOwner && pluginSettings.isEditable) {
         const deleteSubNoteBtnContainer = document.createElement("div")
         deleteSubNoteBtnContainer.className = "delete-subnote-btn-container"
 
@@ -1085,7 +1084,6 @@ const RenderSubNote = (subNoteId:string) => {
         deleteSubNoteBtn.className = "delete-subnote-btn"
 
         if (pluginSettings.isEditable) {
-            console.log(3)
             deleteSubNoteBtnContainer.onclick = (e) => {
                 e.stopPropagation()
                 subNoteWrapper.remove();
@@ -1132,13 +1130,19 @@ const RenderSubNote = (subNoteId:string) => {
         });
     }
 
-    if (pluginSettings.isEditable) {
-        subNoteWrapper.onclick = () => {
-            if (!subNoteWrapper.dataset.deleted && loaded) {
+    subNoteWrapper.onclick = () => {
+        if (!subNoteWrapper.dataset.deleted && loaded) {
+            if (isAuth) {
                 AppDispatcher.dispatch(NotesActions.OPEN_NOTE, subNoteId)
             } else {
-                AppToasts.error("Заметка не найдена")
+                AppSharedNoteRequests.Get(subNoteId).then(result => {
+                    AppRouter.openSharedNotePage(result)
+                }).catch((e) => {
+                    AppToasts.error("Заметка не найдена")
+                });
             }
+        } else {
+            AppToasts.error("Заметка не найдена")
         }
     }
 
