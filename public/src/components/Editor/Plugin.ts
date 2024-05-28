@@ -495,8 +495,6 @@ export const defaultPlugins: EditorPlugin[] = [
             img.dataset.imgid = id;
             img.className = "img"
 
-
-
             if (id in AppNoteStore.state.cache) {
                 img.src = AppNoteStore.state.cache[id]
             } else {
@@ -1052,6 +1050,8 @@ const RenderAttach = (attach_filename:string, attach_id:string) => {
 }
 
 const RenderSubNote = (subNoteId:string) => {
+    console.log("RenderSubNote")
+
     const subNoteWrapper = document.createElement("button")
     subNoteWrapper.className = "subnote-wrapper"
 
@@ -1105,18 +1105,36 @@ const RenderSubNote = (subNoteId:string) => {
 
     let loaded = false
 
-    if (subNoteId in AppNoteStore.state.cache) {
-        subNoteTitle.innerHTML = AppNoteStore.state.cache[subNoteId]
-        loaded = true
-    } else {
+    // if (subNoteId in AppNoteStore.state.cache) {
+    //     subNoteTitle.innerHTML = AppNoteStore.state.cache[subNoteId]
+    //     loaded = true
+    // } else {
+    //
+    //     const request = pluginSettings.isEditable ? AppNoteRequests.Get(subNoteId, AppUserStore.state.JWT) : AppSharedNoteRequests.Get(subNoteId)
+    //     request.then(result => {
+    //         if (result.data.title == null) {
+    //             subNoteTitle.innerHTML = 'Подзаметка'
+    //         }
+    //
+    //         //subNoteWrapper.dataset.title = parseNoteTitle(result.data.title)
+    //         subNoteTitle.innerHTML = parseNoteTitle(result.data.title)
+    //
+    //         AppDispatcher.dispatch(NoteStoreActions.PUT_TO_CACHE, {key: subNoteId, value: parseNoteTitle(result.data.title)})
+    //
+    //         loaded = true
+    //
+    //     }).catch((e) => {
+    //         subNoteTitle.innerHTML = "Заметка не найдена"
+    //         subNoteWrapper.dataset.deleted = "true"
+    //     });
+    // }
 
-        const request = pluginSettings.isEditable ? AppNoteRequests.Get(subNoteId, AppUserStore.state.JWT) : AppSharedNoteRequests.Get(subNoteId)
+    const request = pluginSettings.isEditable ? AppNoteRequests.Get(subNoteId, AppUserStore.state.JWT) : AppSharedNoteRequests.Get(subNoteId)
         request.then(result => {
             if (result.data.title == null) {
                 subNoteTitle.innerHTML = 'Подзаметка'
             }
 
-            //subNoteWrapper.dataset.title = parseNoteTitle(result.data.title)
             subNoteTitle.innerHTML = parseNoteTitle(result.data.title)
 
             AppDispatcher.dispatch(NoteStoreActions.PUT_TO_CACHE, {key: subNoteId, value: parseNoteTitle(result.data.title)})
@@ -1127,7 +1145,6 @@ const RenderSubNote = (subNoteId:string) => {
             subNoteTitle.innerHTML = "Заметка не найдена"
             subNoteWrapper.dataset.deleted = "true"
         });
-    }
 
     subNoteWrapper.onclick = () => {
         if (!subNoteWrapper.dataset.deleted && loaded) {

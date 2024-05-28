@@ -451,14 +451,14 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
                         />
                     </div>
 
-                    {
-                        !isOwner ?
-                            <Tooltip
-                                hoverTooltip="Владелец: user91"
-                                showHoverTooltip={true}
-                                icon="info_circle.svg"
-                            /> : ""
-                    }
+                    {/*{*/}
+                    {/*    !isOwner ?*/}
+                    {/*        <Tooltip*/}
+                    {/*            hoverTooltip="Владелец: user91"*/}
+                    {/*            showHoverTooltip={true}*/}
+                    {/*            icon="info_circle.svg"*/}
+                    {/*        /> : ""*/}
+                    {/*}*/}
 
                     <NoteMenu
                         note={this.state.selectedNote}
