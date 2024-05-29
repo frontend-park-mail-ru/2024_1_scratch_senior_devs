@@ -52,8 +52,6 @@ export class Note extends ScReact.Component<NoteProps, any> {
     render() {
         const isOwner = this.props.note.owner_id == AppUserStore.state.user_id
 
-        // TODO: выводить логин овнера заметки, если юзер является коллаборатором
-
         return (
             <div className={'note-container ' + (this.props.selected ? 'selected ' : '') + (!isOwner ? " collaborator" : "")} id={this.props.note.id} style={`background: ${this.props.note.header};`}>
                 <div className="note-title__container">
