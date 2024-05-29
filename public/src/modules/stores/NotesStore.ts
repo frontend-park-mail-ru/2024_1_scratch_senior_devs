@@ -8,7 +8,6 @@ import {WebSocketConnection} from "../websocket";
 import {insertBlockPlugin} from "../../components/Editor/Plugin";
 import {AppNoteStore, NoteStoreActions} from "./NoteStore";
 import {downloadFile, parseNoteTitle} from "../utils";
-import {Note} from '../../components/Note/Note';
 
 export type NotesStoreState = {
     notes: NoteType[],

@@ -68,7 +68,7 @@ export class Note extends ScReact.Component<NoteProps, any> {
                 {!isOwner ?
                     <div className="owner-info">
                         <Img src={"user.svg"} className="owner-info__user-avatar" />
-                        <span className="owner-info__username">{"user91"}</span>
+                        <span className="owner-info__username">{this.props.note.username}</span>
                     </div> : ""
                 }
             </div>

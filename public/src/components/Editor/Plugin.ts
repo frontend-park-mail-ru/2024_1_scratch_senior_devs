@@ -1137,8 +1137,6 @@ const RenderSubNote = (subNoteId:string) => {
 
             subNoteTitle.innerHTML = parseNoteTitle(result.data.title)
 
-            AppDispatcher.dispatch(NoteStoreActions.PUT_TO_CACHE, {key: subNoteId, value: parseNoteTitle(result.data.title)})
-
             loaded = true
 
         }).catch((e) => {
