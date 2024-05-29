@@ -388,10 +388,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             } else if (data.type == "updated") {
                 const noteData = JSON.parse(data.message_info) as NoteDataType
 
-                console.log(noteData)
-                console.log(this.state.selectedNote.data)
-                console.log(JSON.stringify(noteData.content) == JSON.stringify(this.state.selectedNote.data))
-                if (JSON.stringify(noteData.content) == JSON.stringify(this.state.selectedNote.data)) {
+                if (JSON.stringify(noteData) == JSON.stringify(this.state.selectedNote.data)) {
                     return
                 }
 
