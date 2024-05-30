@@ -35,6 +35,17 @@ export class Editor {
         this.tippyCallbacks = tippy;
         this.addPlugins();
 
+        document.onpaste = (event) => {
+            event.preventDefault();
+
+            let paste = (event.clipboardData).getData("text");
+            const selection = window.getSelection();
+            if (!selection.rangeCount) return;
+            selection.deleteFromDocument();
+            selection.getRangeAt(0).insertNode(document.createTextNode(paste));
+            selection.collapseToEnd();
+        }
+
         this.editable = document.createElement('div');
         this.editable.id = "note-editor-inner"
         this.editable.contentEditable = "true";
