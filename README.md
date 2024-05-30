@@ -14,6 +14,9 @@ Frontend проекта "Notion" команды scratch senior devs
 # Реактивная библиотека
 * [ScReact](https://www.npmjs.com/package/@veglem/screact)
 
+# UI Kit
+* [ui-kit](https://www.npmjs.com/package/@veglem/ui-kit)
+
 # Авторы
 * [Михалёв Ярослав](https://github.com/YarikMix) - _frontend_
 * [Журмилов Вадим](https://github.com/veglem) - _frontend_

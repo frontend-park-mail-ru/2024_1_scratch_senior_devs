@@ -5,6 +5,7 @@ import {Button} from "../Button/Button";
 import "./RenameTagModal.sass"
 import {ValidatePassword} from "../../modules/validation";
 import {AppToasts} from "../../modules/toasts";
+import {uiKit} from '@veglem/ui-kit/dist/ui';
 
 export class RenameTagModal extends ScReact.Component<any, any> {
     state ={
@@ -82,6 +83,8 @@ export class RenameTagModal extends ScReact.Component<any, any> {
     }
 
     render() {
+        const {Button} = uiKit
+
         return (
             <form className="rename-tag-form" onsubmit={this.handleSubmit}>
                 <Img src="close.svg" className="close-modal-btn" onClick={this.props.handleClose}/>

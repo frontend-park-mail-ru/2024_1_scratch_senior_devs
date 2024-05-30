@@ -1,7 +1,7 @@
 import {ScReact} from '@veglem/screact';
-import {Button} from '../Button/Button';
 import './DeleteNoteDialog.sass';
 import {Img} from "../Image/Image";
+import {uiKit} from '@veglem/ui-kit/dist/ui';
 
 export class DeleteNoteDialog extends ScReact.Component<any, any>{
 
@@ -11,6 +11,8 @@ export class DeleteNoteDialog extends ScReact.Component<any, any>{
     };
 
     render() {
+        const {Button} = uiKit
+
         return (
             <div className="delete-note-dialog">
                 <Img src="close.svg" className="close-modal-btn" onClick={this.props.handleClose}/>
