@@ -61,7 +61,7 @@ export class EditorWrapper extends Component<EditorProps, EditorState> {
     updateState = (store:NoteStoreState) => {
         this.syncTitle(store.note.title)
 
-        if (!this.props.isOwner && this.props.note?.public) {
+        if (!this.props.isOwner && this.props.note?.public && !this.props.isEditable) {
             this.self.innerHTML = ""
             new Viewer(
                 store.note.blocks,
