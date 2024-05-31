@@ -2,6 +2,7 @@ import {ScReact} from '@veglem/screact';
 import {Img} from '../Image/Image';
 import './Toast.sass';
 import {TOAST_TYPE} from '../../modules/toasts';
+import {uiKit} from '@veglem/ui-kit/dist/ui'
 
 export type ToastProps = {
     type: string,

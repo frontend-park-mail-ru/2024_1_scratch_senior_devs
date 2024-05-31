@@ -1,6 +1,5 @@
 import {ScReact} from '@veglem/screact';
 import './Profile.sass';
-import {Button} from '../Button/Button';
 import {AppUserStore, UserActions, UserStoreState} from '../../modules/stores/UserStore';
 import {AppDispatcher} from '../../modules/dispatcher';
 import {UpdatePasswordForm} from '../UpdatePasswordModal/UpdatePasswordModal';
@@ -9,6 +8,7 @@ import {Modal} from '../Modal/Modal';
 import {ToggleButton} from '../ToggleButton/ToggleButton';
 import {ProfileAvatar} from '../ProfileAvatar/ProfileAvatar';
 import {QRModal} from '../QRModal/QRModal';
+import {uiKit} from '@veglem/ui-kit/dist/ui';
 
 
 export class Profile extends ScReact.Component<any, any> {
@@ -82,6 +82,8 @@ export class Profile extends ScReact.Component<any, any> {
     };
 
     render() {
+        const {Button} = uiKit
+
         return (
             <div className={'user-profile-wrapper ' + (this.state.open ? 'open' : '')}>
                 <div className="toggle-profile-button" onclick={this.toggleOpen}>

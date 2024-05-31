@@ -1,6 +1,5 @@
 import {ScReact} from '@veglem/screact';
 import './Header.sass';
-import {Button} from '../Button/Button';
 import {AppRouter} from '../../modules/router';
 import {Logo} from '../Logo/logo';
 import {Profile} from '../Profile/Profile';
@@ -8,6 +7,7 @@ import {AuthPage} from '../../pages/Auth';
 import {AppUserStore, UserActions, UserStoreState} from '../../modules/stores/UserStore';
 import {AppDispatcher} from '../../modules/dispatcher';
 import {AppNotesStore, NotesStoreState} from "../../modules/stores/NotesStore";
+import {uiKit} from '@veglem/ui-kit/dist/ui';
 
 export class Header extends ScReact.Component<any, any>{
     state = {
@@ -44,6 +44,8 @@ export class Header extends ScReact.Component<any, any>{
     };
 
     render() {
+        const {Button} = uiKit
+
         return (
             <header id="header" className={(location.pathname.includes("notes") && this.state.isAuth ? "notes " : "") + (this.state.fullscreen ? "fullscreen" : "")}>
                 <Logo />

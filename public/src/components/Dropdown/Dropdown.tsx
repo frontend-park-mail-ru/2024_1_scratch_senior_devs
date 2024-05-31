@@ -2,7 +2,6 @@ import {ScReact} from '@veglem/screact';
 import './Dropdown.sass';
 import {Img} from '../Image/Image';
 import {AppDispatcher} from '../../modules/dispatcher';
-import {AppNoteStore, NoteStoreActions} from '../../modules/stores/NoteStore';
 import {AppNotesStore, NotesActions} from '../../modules/stores/NotesStore';
 import {MAX_ATTACH_SIZE} from '../../utils/consts';
 import {AppToasts} from '../../modules/toasts';
@@ -47,9 +46,6 @@ export class Dropdown extends ScReact.Component<any, any> {
     };
 
     handleOnClick = (id:string) => {
-        let tag = id;
-        let attr = null;
-        let content = [];
 
         if (id === "h1") {
             insertBlockPlugin('header', 'h1')

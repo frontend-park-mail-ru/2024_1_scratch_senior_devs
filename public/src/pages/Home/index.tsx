@@ -7,6 +7,8 @@ import {ShiningButton} from '../../components/ShiningButton/ShinigButton';
 import {Img} from '../../components/Image/Image';
 
 export class HomePage extends ScReact.Component<any, any> {
+    private cardsContainerRef
+
     componentDidMount() {
         document.title = 'Главная';
         this.createObserver();
@@ -23,7 +25,7 @@ export class HomePage extends ScReact.Component<any, any> {
                 });
             });
 
-        const targetElements = document.querySelectorAll('.about .about__container .card');
+        const targetElements = this.cardsContainerRef.querySelectorAll('.card');
 
         targetElements.forEach((targetElement) => {
             observer.observe(targetElement);
@@ -46,7 +48,7 @@ export class HomePage extends ScReact.Component<any, any> {
                 </section>
                 <section className="about">
                     <h2 className="about__title">Функции и возможности</h2>
-                    <div className="about__container">
+                    <div className="about__container" ref={ref => this.cardsContainerRef = ref}>
                         <div className="card">
                             <Img src="notes.png"/>
                             <h3>Многофункциональность</h3>

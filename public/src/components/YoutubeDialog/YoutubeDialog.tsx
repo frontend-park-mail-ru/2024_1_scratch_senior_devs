@@ -6,6 +6,7 @@ import './YoutubeDialog.sass';
 import {parseYoutubeLink} from '../../modules/utils';
 import {AppToasts} from '../../modules/toasts';
 import {insertBlockPlugin} from "../Editor/Plugin";
+import {uiKit} from '@veglem/ui-kit/dist/ui';
 
 export class YoutubeDialogForm extends ScReact.Component<any, any> {
     state = {
@@ -67,6 +68,8 @@ export class YoutubeDialogForm extends ScReact.Component<any, any> {
     };
 
     render() {
+        const {Button} = uiKit
+
         return (
             <form id="youtube-dialog-form" onsubmit={this.handleSubmit}>
                 <h3>Вставить видео из YouTube</h3>

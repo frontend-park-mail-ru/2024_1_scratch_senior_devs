@@ -1,5 +1,4 @@
 import {ScReact} from "@veglem/screact";
-import {Button} from "../Button/Button";
 import "./SharePanel.sass"
 import {ToggleButton} from "../ToggleButton/ToggleButton";
 import {Img} from "../Image/Image";
@@ -8,6 +7,7 @@ import {parseNoteTitle} from "../../modules/utils";
 import {AppDispatcher} from "../../modules/dispatcher";
 import {AppToasts} from "../../modules/toasts";
 import {AppUserStore} from "../../modules/stores/UserStore";
+import {uiKit} from '@veglem/ui-kit/dist/ui';
 
 export class SharePanel extends ScReact.Component<any, any> {
 
@@ -18,7 +18,7 @@ export class SharePanel extends ScReact.Component<any, any> {
     }
 
     shareToVK = () => {
-        console.log("shareToVK")
+        
         const url = "https://vk.com/share.php?url=" + this.getNoteURL()+ "&title=" + parseNoteTitle(this.props.note.data.title)
         this.openShareWindow(url)
     }
@@ -48,7 +48,7 @@ export class SharePanel extends ScReact.Component<any, any> {
 
     sendInvite = (e) => {
         e.preventDefault()
-        console.log("sendInvite")
+        
 
         const value = this.inviteInputRef.value
 
@@ -70,6 +70,8 @@ export class SharePanel extends ScReact.Component<any, any> {
     getNoteURL = () => "https://you-note.ru/notes/" + this.props.note?.id
 
     render() {
+        const {Button} = uiKit
+
         return (
             <div className="share_panel">
                 <div className="share_panel__invite-people-container">

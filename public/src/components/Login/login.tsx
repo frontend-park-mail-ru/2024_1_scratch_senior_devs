@@ -1,12 +1,12 @@
 import {ScReact} from '@veglem/screact';
 import {VDomNode} from '@veglem/screact/dist/vdom';
 import {Input} from '../Input/Input';
-import {Button} from '../Button/Button';
 import {ValidateLogin, ValidatePassword} from '../../modules/validation';
 import {AppDispatcher} from '../../modules/dispatcher';
 import {AppUserStore, UserActions, UserStoreState} from '../../modules/stores/UserStore';
 import {Link} from '../Link/Link';
 import {OTPDialog} from '../OTPDialog/OTPDialog';
+import {uiKit} from '@veglem/ui-kit/dist/ui';
 
 const OTP_CODE_LENGTH = 6;
 
@@ -146,6 +146,8 @@ export class LoginForm extends  ScReact.Component<any, any> {
     };
 
     render(): VDomNode {
+        const {Button} = uiKit
+
         return (
             <form className="login-form">
                 <h3>Вход</h3>

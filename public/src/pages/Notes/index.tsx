@@ -4,7 +4,6 @@ import SearchBar from '../../components/SearchBar/SearchBar';
 import {NoteEditor} from '../../components/NoteEditor/NoteEditor';
 import {AppNotesStore, NotesActions, NotesStoreState} from '../../modules/stores/NotesStore';
 import {AppDispatcher} from '../../modules/dispatcher';
-import {Button} from '../../components/Button/Button';
 import {Img} from '../../components/Image/Image';
 import {AppNoteStore} from '../../modules/stores/NoteStore';
 import {Loader} from '../../components/Loader/Loader';
@@ -12,6 +11,7 @@ import {parseNoteTitle, scrollToTop, truncate, unicodeToChar} from '../../module
 import {Note} from "../../components/Note/Note";
 import {TagsFilter} from "../../components/TagsFilter/TagsFilter";
 import {AddTagMenu} from "../../components/AddTagMenu/AddTagMenu";
+import {uiKit} from '@veglem/ui-kit/dist/ui';
 
 export class NotesPage extends ScReact.Component<any, any> {
     state = {
@@ -223,6 +223,7 @@ export class NotesPage extends ScReact.Component<any, any> {
     }
 
     render() {
+        const {Button} = uiKit
         return (
             <div className={'notes-page-wrapper ' + (this.state.editorOpen ? ' active ' : '') + (this.state.fullScreen ? ' fullscreen ' : '')} >
                 <aside>

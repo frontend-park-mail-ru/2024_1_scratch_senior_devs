@@ -5,14 +5,15 @@ Frontend проекта "Notion" команды scratch senior devs
 # Деплой
 * [YouNote](https://you-note.ru)
 
-# API
-* [swagger](https://you-note.ru/api/swagger/index.html)
 
 # Figma
-* [figma](https://www.figma.com/design/34KaYrmEwdC9vuisY3BoID/YouNote?node-id=0%3A1&t=mdkq7otCB1sFFwJ2-1)
+* [Figma](https://www.figma.com/design/34KaYrmEwdC9vuisY3BoID/YouNote?node-id=0%3A1&t=mdkq7otCB1sFFwJ2-1)
 
 # Реактивная библиотека
 * [ScReact](https://www.npmjs.com/package/@veglem/screact)
+
+# UI Kit
+* [UI Kit](https://www.npmjs.com/package/@veglem/ui-kit)
 
 # Авторы
 * [Михалёв Ярослав](https://github.com/YarikMix) - _frontend_
@@ -27,3 +28,7 @@ Frontend проекта "Notion" команды scratch senior devs
 
 # Backend
 * [Backend](https://github.com/go-park-mail-ru/2024_1_scratch_senior_devs)
+
+# Как запустить
+* npm install
+* npm run serve
