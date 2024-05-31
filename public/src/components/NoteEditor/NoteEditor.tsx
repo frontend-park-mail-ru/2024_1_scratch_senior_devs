@@ -239,7 +239,7 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
             dropdownOpen: true,
             dropdownPos: {
                 left: elem.offsetLeft + 20,
-                top: elem.getBoundingClientRect().top + dropdownOffsetTop + window.screen.width < 1560 ? 20 : 0
+                top: elem.getBoundingClientRect().top + dropdownOffsetTop + (window.screen.width < 1560 ? -20 : 0)
             }
         }))
     }

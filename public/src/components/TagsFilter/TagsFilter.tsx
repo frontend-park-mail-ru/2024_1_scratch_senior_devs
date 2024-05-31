@@ -159,8 +159,8 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
     private presstimer = null;
 
     click = (tag) => {
-        console.log('click')
-        console.log(this.state.menuOpen)
+        console.log("click")
+        console.log(this.longpress)
 
         if (this.presstimer !== null) {
             clearTimeout(this.presstimer);
@@ -177,8 +177,7 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
     }
 
     start = (e, tag)=> {
-        console.log(e);
-
+        console.log("start")
         if (e.type === "click" && e.button !== 0) {
             return;
         }
@@ -191,11 +190,10 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
             this.longpress = true;
         }, 1000);
 
-        return false;
+        return true;
     };
 
-    cancel = (e) => {
-        console.log("cancel")
+    cancel = () => {
         if (this.presstimer !== null) {
             clearTimeout(this.presstimer);
             this.presstimer = null;
@@ -246,7 +244,7 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
                             ontouchend={this.cancel}
                             ontouchleave={this.cancel}
                             ontouchcancel={this.cancel}
-                            >
+                        >
                             {tag}
                         </div>
                     ))}
