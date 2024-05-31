@@ -13,7 +13,7 @@ Frontend проекта "Notion" команды scratch senior devs
 * [ScReact](https://www.npmjs.com/package/@veglem/screact)
 
 # UI Kit
-* [UI-Kit](https://www.npmjs.com/package/@veglem/ui-kit)
+* [UI Kit](https://www.npmjs.com/package/@veglem/ui-kit)
 
 # Авторы
 * [Михалёв Ярослав](https://github.com/YarikMix) - _frontend_
@@ -28,3 +28,7 @@ Frontend проекта "Notion" команды scratch senior devs
 
 # Backend
 * [Backend](https://github.com/go-park-mail-ru/2024_1_scratch_senior_devs)
+
+# Как запустить
+* npm install
+* npm run serve
