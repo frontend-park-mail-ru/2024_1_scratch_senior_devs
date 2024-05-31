@@ -155,6 +155,53 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
         }))
     }
 
+    private longpress = false;
+    private presstimer = null;
+
+    click = (tag) => {
+        console.log('click')
+        console.log(this.state.menuOpen)
+
+        if (this.presstimer !== null) {
+            clearTimeout(this.presstimer);
+            this.presstimer = null;
+        }
+
+        if (this.longpress) {
+            return false;
+        }
+
+        if (!this.state.menuOpen) {
+            this.props.selectTag(tag)
+        }
+    }
+
+    start = (e, tag)=> {
+        console.log(e);
+
+        if (e.type === "click" && e.button !== 0) {
+            return;
+        }
+
+        this.longpress = false;
+
+        this.presstimer = setTimeout(() => {
+            console.log("long click");
+            this.onTagRightClick(e, tag)
+            this.longpress = true;
+        }, 1000);
+
+        return false;
+    };
+
+    cancel = (e) => {
+        console.log("cancel")
+        if (this.presstimer !== null) {
+            clearTimeout(this.presstimer);
+            this.presstimer = null;
+        }
+    };
+
     render() {
         const tags = this.state.expanded ? this.props.tags : this.props.tags.slice(0, 10)
 
@@ -191,8 +238,15 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
                     {tags.map(tag => (
                         <div
                             className={"tag " + (this.props.selectedTags.includes(tag) || this.state.selectedTag == tag ? "selected" : "")}
-                            onclick={() => this.props.selectTag(tag)}
-                            oncontextmenu={(e) => this.onTagRightClick(e, tag)}>
+                            onclick={() =>this.click(tag)}
+                            oncontextmenu={(e) => this.onTagRightClick(e, tag)}
+                            onmousedown={(e) => this.start(e, tag)}
+                            ontouchstart={(e) => this.start(e, tag)}
+                            onmouseout={this.cancel}
+                            ontouchend={this.cancel}
+                            ontouchleave={this.cancel}
+                            ontouchcancel={this.cancel}
+                            >
                             {tag}
                         </div>
                     ))}

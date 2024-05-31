@@ -224,6 +224,7 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
 
     openDropdown = (elem: HTMLElement) => {
         console.log("openDropdown")
+        console.log(window.screen.width)
         const editor = this.editorWrapperRef
         console.log("editor.clientHeight: ", editor.clientHeight)
         console.log("elem.getBoundingClientRect().top: ", elem.getBoundingClientRect().top)
@@ -238,7 +239,7 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
             dropdownOpen: true,
             dropdownPos: {
                 left: elem.offsetLeft + 20,
-                top: elem.getBoundingClientRect().top + dropdownOffsetTop
+                top: elem.getBoundingClientRect().top + dropdownOffsetTop + window.screen.width < 1560 ? 20 : 0
             }
         }))
     }
