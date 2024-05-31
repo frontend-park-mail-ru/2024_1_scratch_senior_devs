@@ -29,7 +29,6 @@ export class Toast extends ScReact.Component<ToastProps, any> {
     }
 
     render() {
-        const But = uiKit.Button
         return (
             <div className={'toast success ' + (this.props.open ? '' : 'hide')} style={`bottom: ${this.props.offset}px`}>
                 <div className="toast-content">
@@ -41,7 +40,6 @@ export class Toast extends ScReact.Component<ToastProps, any> {
                 </div>
                 <Img src="close.svg" className="toast-close-btn" onClick={this.closeToast}/>
                 <div className="progress"></div>
-                <But label={"hello"}></But>
             </div>
         );
     }

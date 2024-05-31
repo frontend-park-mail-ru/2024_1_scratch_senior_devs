@@ -1,11 +1,11 @@
 import {ScReact} from '@veglem/screact';
 import {Input} from '../Input/Input';
-import {Button} from '../Button/Button';
 import './UpdatePasswordModal.sass';
 import {ValidatePassword} from '../../modules/validation';
 import {AppDispatcher} from '../../modules/dispatcher';
 import {UserActions} from '../../modules/stores/UserStore';
 import {Img} from "../Image/Image";
+import {uiKit} from '@veglem/ui-kit/dist/ui';
 
 export class UpdatePasswordForm extends ScReact.Component<any, any> {
     state = {
@@ -120,6 +120,8 @@ export class UpdatePasswordForm extends ScReact.Component<any, any> {
     };
 
     render() {
+        const {Button} = uiKit
+
         return (
             <div className="change-password-form">
                 <Img src="close.svg" className="close-modal-btn" onClick={this.props.handleClose}/>

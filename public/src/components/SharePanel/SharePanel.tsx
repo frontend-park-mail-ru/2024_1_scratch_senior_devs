@@ -8,6 +8,7 @@ import {parseNoteTitle} from "../../modules/utils";
 import {AppDispatcher} from "../../modules/dispatcher";
 import {AppToasts} from "../../modules/toasts";
 import {AppUserStore} from "../../modules/stores/UserStore";
+import {uiKit} from '@veglem/ui-kit/dist/ui';
 
 export class SharePanel extends ScReact.Component<any, any> {
 
@@ -70,6 +71,8 @@ export class SharePanel extends ScReact.Component<any, any> {
     getNoteURL = () => "https://you-note.ru/notes/" + this.props.note?.id
 
     render() {
+        const {Button} = uiKit
+
         return (
             <div className="share_panel">
                 <div className="share_panel__invite-people-container">
