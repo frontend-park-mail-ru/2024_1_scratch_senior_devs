@@ -1,13 +1,13 @@
 import {Component} from "@veglem/screact/dist/component";
 import {VDomNode} from "@veglem/screact/dist/vdom";
-import "./Editor.sass"
-import {Editor} from "./Editor";
+import "../Editor/Editor.sass"
+import {Editor} from "../Editor/Editor";
 import {AppNoteStore, NoteStoreState} from "../../modules/stores/NoteStore";
 import {Tippy} from "../Tippy/Tippy";
 import {isEqual} from "@veglem/screact/dist/isEqual";
-import {Viewer} from "./Viewer";
+import {Viewer} from "../Editor/Viewer";
 import {NoteType} from "../../utils/types";
-import {PluginProps} from "./Plugin";
+import {PluginProps} from "../Editor/Plugin";
 import {parseNoteTitle} from "../../modules/utils";
 
 window['mobileCheck'] = function() {
@@ -61,7 +61,7 @@ export class EditorWrapper extends Component<EditorProps, EditorState> {
     updateState = (store:NoteStoreState) => {
         this.syncTitle(store.note.title)
 
-        if (!this.props.isOwner && this.props.note?.public) {
+        if (!this.props.isOwner && this.props.note?.public && !this.props.isEditable) {
             this.self.innerHTML = ""
             new Viewer(
                 store.note.blocks,

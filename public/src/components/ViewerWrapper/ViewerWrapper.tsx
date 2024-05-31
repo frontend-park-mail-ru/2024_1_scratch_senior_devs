@@ -23,6 +23,16 @@ export class ViewerWrapper extends ScReact.Component<ViewerWrapperProps, any> {
     private viewerRef
 
     componentDidMount() {
+        
+        this.noteContentRef.innerHTML = ""
+        new Viewer(
+            this.props.note.data.content,
+            this.noteContentRef
+        );
+    }
+
+    componentDidUpdate() {
+        
         this.noteContentRef.innerHTML = ""
         new Viewer(
             this.props.note.data.content,
@@ -31,7 +41,7 @@ export class ViewerWrapper extends ScReact.Component<ViewerWrapperProps, any> {
     }
 
     closeViewer = () => {
-        console.log("closeViewer")
+        
         AppRouter.go("/")
 
         history.pushState(null, null, "/"); // TODO

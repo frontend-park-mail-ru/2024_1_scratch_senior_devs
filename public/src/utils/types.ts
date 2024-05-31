@@ -9,10 +9,13 @@ export type NoteType = {
     },
     update_time: string,
     owner_id: string,
+    collaborators: string[],
     icon: string,
     header: string,
     favorite: boolean,
-    public: boolean
+    public: boolean,
+    username: string,
+    image_path: string
 }
 
 export type CollaboratorType = {

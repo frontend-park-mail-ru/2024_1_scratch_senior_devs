@@ -37,7 +37,7 @@ export const NotesLoader = async (path:string) => {
                             // resolve({notes: store.notes});
 
                             AppSharedNoteRequests.Get(noteId).then(note => {
-                                console.log(note)
+                                
                                 resolve({notes: store.notes, note: note, tags: store.tags});
                             }).catch(() => {
                                 AppRouter.go("/404")

@@ -10,7 +10,7 @@ import {DeleteNoteDialog} from '../DeleteNoteDialog/DeleteNoteDialog';
 import NoteMenu from "../NoteMenu/NoteMenu";
 import {Tooltip} from "../Tooltip/Tooltip";
 import {TagList} from "../TagList/TagList";
-import {EditorWrapper} from "../Editor/EditorWrapper";
+import {EditorWrapper} from "../EditorWrapper/EditorWrapper";
 import {AppUserStore} from "../../modules/stores/UserStore";
 import {Collaborators} from "../Collaborators/Collaborators";
 import {EmojiPicker} from "../EmojiPicker/EmojiPicker";
@@ -133,13 +133,6 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
         }))
     }
 
-    closeInviteUserModal = () => {
-        this.setState(state => ({
-            ...state,
-            inviteUserModalOpen: false
-        }))
-    }
-
     openParentNote = () => {
         AppDispatcher.dispatch(NotesActions.OPEN_NOTE, this.state.selectedNote.parent)
     }
@@ -230,16 +223,16 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
     }
 
     openDropdown = (elem: HTMLElement) => {
-        const editor = this.editorWrapperRef
-        const offsetBottom = editor.clientHeight - elem.getBoundingClientRect().top
+        const offsetBottom = this.editorWrapperRef.clientHeight - elem.getBoundingClientRect().top
         const dropdownOffsetTop = offsetBottom < 205 ? -225 : 40
+        const scrollTop = document.querySelector(".note-editor").scrollTop
 
         this.setState(state => ({
             ...state,
             dropdownOpen: true,
             dropdownPos: {
                 left: elem.offsetLeft + 20,
-                top: elem.offsetTop + dropdownOffsetTop
+                top: elem.offsetTop + dropdownOffsetTop - scrollTop
             }
         }))
     }
@@ -272,8 +265,8 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
         const isEditable = this.state.selectedNote?.collaborators.includes(AppUserStore.state.user_id) || isOwner
 
         // TODO: скелетон для эдитора
-        // console.log("render")
-        // console.log(this.state.selectedNote)
+        // 
+        // 
         //
         // if (!this.state.selectedNote) {
         //     return (
@@ -283,7 +276,7 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
         //     )
         // }
         //
-        // console.log("123")
+        // 
 
         return (
             <div className={'note-editor-wrapper ' + (this.props.open ? ' active ' : '')  + (this.state.fullScreen ? ' fullscreen ' : '') } ref={ref => this.editorWrapperRef = ref}>
@@ -338,7 +331,7 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
                         </div>
                     </div>
 
-                    <div className={"tag-list-wrapper " + (isSubNote ? "hidden" : "")}>
+                    <div className={'tag-list-wrapper ' + (isSubNote ? 'hidden' : '')}>
                         {isOwner ?
                             <Tooltip
                                 showHoverTooltip={false}
@@ -346,41 +339,41 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
                                 label="Тэги"
                                 content={<TagList tags={this.state.selectedNote?.tags}
                                                   onChange={this.props.onChangeTags}/>}
-                            /> : ""
+                            /> : ''
                         }
                     </div>
 
-                    <div className={"emoji-picker-wrapper " + (isSubNote ? "hidden" : "")}>
+                    <div className={'emoji-picker-wrapper ' + (isSubNote ? 'hidden' : '')}>
                         {isOwner ?
                             <Tooltip
                                 showHoverTooltip={false}
-                                icon={this.state.selectedNote?.icon ? this.state.selectedNote?.icon : "emoji.svg"}
+                                icon={this.state.selectedNote?.icon ? this.state.selectedNote?.icon : 'emoji.svg'}
                                 iconFromUnicode={this.state.selectedNote?.icon}
                                 label="Иконка"
                                 content={<EmojiPicker icon={this.state.selectedNote?.icon}/>}
-                            /> : ""
+                            /> : ''
                         }
                     </div>
 
-                    <div className={"background-picker-wrapper " + (isSubNote ? "hidden" : "")}>
+                    <div className={'background-picker-wrapper ' + (isSubNote ? 'hidden' : '')}>
                         {isOwner ?
                             <Tooltip
                                 showHoverTooltip={false}
                                 icon="image.svg"
                                 label="Шапка"
                                 content={<BackgroundPicker/>}
-                            /> : ""
+                            /> : ''
                         }
                     </div>
 
-                    <div className={"share-panel-wrapper " + (isSubNote ? "hidden" : "")}>
+                    <div className={'share-panel-wrapper ' + (isSubNote ? 'hidden' : '')}>
                         {isOwner ?
                             <Tooltip
                                 showHoverTooltip={false}
                                 icon="link.svg"
                                 label="Поделиться"
-                                content={<SharePanel note={this.state.selectedNote} />}
-                            /> : ""
+                                content={<SharePanel note={this.state.selectedNote}/>}
+                            /> : ''
                         }
                     </div>
 
@@ -388,19 +381,19 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
 
                     </div>
 
-                    {this.state.noteStatus == "sync" ?
+                    {this.state.noteStatus == 'sync' ?
                         <div
-                            className={"note-save-indicator " + (this.state.noteStatus == "sync" ? "active" : "hidden")}>
-                            <Tooltip icon={"sync.svg"}
+                            className={'note-save-indicator ' + (this.state.noteStatus == 'sync' ? 'active' : 'hidden')}>
+                            <Tooltip icon={'sync.svg'}
                                      showHoverTooltip={true}
-                                     hoverTooltip={"Синхронизированно"}/>
+                                     hoverTooltip={'Синхронизированно'}/>
                         </div>
                         :
                         <div
-                            className={"note-save-indicator " + (this.state.noteStatus == "saved" ? "active" : "hidden")}>
-                            <Tooltip icon={"check.svg"}
+                            className={'note-save-indicator ' + (this.state.noteStatus == 'saved' ? 'active' : 'hidden')}>
+                            <Tooltip icon={'check.svg'}
                                      showHoverTooltip={true}
-                                     hoverTooltip={"Сохранено"}/>
+                                     hoverTooltip={'Сохранено'}/>
                         </div>
                     }
 
@@ -433,16 +426,16 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
                         <Collaborators/>
                     </div>
 
-                    <div className={!isAuth || isSubNote ? "hidden" : ""}>
+                    <div className={!isAuth || isSubNote ? 'hidden' : ''}>
                         <Tooltip
-                            hoverTooltip={this.state.selectedNote?.favorite ? "Удалить из избранного" : "В избранное"}
+                            hoverTooltip={this.state.selectedNote?.favorite ? 'Удалить из избранного' : 'В избранное'}
                             showHoverTooltip={true}
                             className="add-to-favorite-btn"
-                            icon={this.state.selectedNote?.favorite ? "star-filled.svg" : "star.svg"}
+                            icon={this.state.selectedNote?.favorite ? 'star-filled.svg' : 'star.svg'}
                             onClick={this.addToFavoriteBtn}/>
                     </div>
 
-                    <div className={!isSubNote ? "hidden" : ""}>
+                    <div className={!isSubNote ? 'hidden' : ''}>
                         <Tooltip
                             hoverTooltip="Вернуться"
                             showHoverTooltip={true}
@@ -450,6 +443,15 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
                             onClick={this.openParentNote}
                         />
                     </div>
+
+                    {
+                        !isOwner ?
+                            <Tooltip
+                                hoverTooltip={"Владелец: " + this.state.selectedNote?.username}
+                                showHoverTooltip={true}
+                                icon="info_circle.svg"
+                            /> : ""
+                    }
 
                     <NoteMenu
                         note={this.state.selectedNote}

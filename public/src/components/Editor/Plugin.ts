@@ -1,10 +1,11 @@
 import {AppUserStore} from "../../modules/stores/UserStore";
 import {parseNoteTitle, setCursorAtNodePosition, truncate} from "../../modules/utils";
 import {AppNotesStore, NotesActions} from "../../modules/stores/NotesStore";
-import {AppNoteRequests} from "../../modules/api";
+import {AppNoteRequests, AppSharedNoteRequests} from '../../modules/api';
 import {AppDispatcher} from "../../modules/dispatcher";
 import {AppToasts} from "../../modules/toasts";
 import {AppNoteStore, NoteStoreActions} from "../../modules/stores/NoteStore";
+import {AppRouter} from '../../modules/router';
 
 interface EditorPlugin {
     pluginName: string;
@@ -494,8 +495,6 @@ export const defaultPlugins: EditorPlugin[] = [
             img.dataset.imgid = id;
             img.className = "img"
 
-
-
             if (id in AppNoteStore.state.cache) {
                 img.src = AppNoteStore.state.cache[id]
             } else {
@@ -503,7 +502,7 @@ export const defaultPlugins: EditorPlugin[] = [
                     img.src = url;
                     AppDispatcher.dispatch(NoteStoreActions.PUT_TO_CACHE, {key: id, value: url})
                 }).catch(error => {
-                    console.log(error)
+                    
                 })
             }
 
@@ -525,7 +524,7 @@ export const defaultPlugins: EditorPlugin[] = [
                 img.src = url;
                 AppDispatcher.dispatch(NoteStoreActions.PUT_TO_CACHE, {key: id, value: url})
             }).catch(error => {
-                console.log(error)
+                
             })
 
             return img
@@ -912,7 +911,7 @@ export const insertBlockPlugin = (pluginName: string, ...args: any) => {
             });
         }
         const newNode = plugin.insertNode([], args);
-        console.log(newNode)
+        
         if (newNode) {
             (nodeToReplace as HTMLElement).replaceWith(newNode);
             document.getSelection().setPosition(newNode, 0);
@@ -1051,6 +1050,8 @@ const RenderAttach = (attach_filename:string, attach_id:string) => {
 }
 
 const RenderSubNote = (subNoteId:string) => {
+    
+
     const subNoteWrapper = document.createElement("button")
     subNoteWrapper.className = "subnote-wrapper"
 
@@ -1072,8 +1073,9 @@ const RenderSubNote = (subNoteId:string) => {
     subNoteContainer.appendChild(subNoteTitle)
 
     const isOwner= AppNotesStore.state.selectedNote?.owner_id == AppUserStore.state.user_id
+    const isAuth = AppUserStore.state.isAuth
 
-    if (isOwner) {
+    if (isAuth && isOwner && pluginSettings.isEditable) {
         const deleteSubNoteBtnContainer = document.createElement("div")
         deleteSubNoteBtnContainer.className = "delete-subnote-btn-container"
 
@@ -1095,7 +1097,6 @@ const RenderSubNote = (subNoteId:string) => {
             }
         }
 
-
         deleteSubNoteBtnContainer.appendChild(deleteSubNoteBtn)
         subNoteContainer.appendChild(deleteSubNoteBtnContainer)
     }
@@ -1104,19 +1105,37 @@ const RenderSubNote = (subNoteId:string) => {
 
     let loaded = false
 
-    if (subNoteId in AppNoteStore.state.cache) {
-        subNoteTitle.innerHTML = AppNoteStore.state.cache[subNoteId]
-        loaded = true
-    } else {
-        AppNoteRequests.Get(subNoteId, AppUserStore.state.JWT).then(result => {
+    // if (subNoteId in AppNoteStore.state.cache) {
+    //     subNoteTitle.innerHTML = AppNoteStore.state.cache[subNoteId]
+    //     loaded = true
+    // } else {
+    //
+    //     const request = pluginSettings.isEditable ? AppNoteRequests.Get(subNoteId, AppUserStore.state.JWT) : AppSharedNoteRequests.Get(subNoteId)
+    //     request.then(result => {
+    //         if (result.data.title == null) {
+    //             subNoteTitle.innerHTML = 'Подзаметка'
+    //         }
+    //
+    //         //subNoteWrapper.dataset.title = parseNoteTitle(result.data.title)
+    //         subNoteTitle.innerHTML = parseNoteTitle(result.data.title)
+    //
+    //         AppDispatcher.dispatch(NoteStoreActions.PUT_TO_CACHE, {key: subNoteId, value: parseNoteTitle(result.data.title)})
+    //
+    //         loaded = true
+    //
+    //     }).catch((e) => {
+    //         subNoteTitle.innerHTML = "Заметка не найдена"
+    //         subNoteWrapper.dataset.deleted = "true"
+    //     });
+    // }
+
+    const request = pluginSettings.isEditable ? AppNoteRequests.Get(subNoteId, AppUserStore.state.JWT) : AppSharedNoteRequests.Get(subNoteId)
+        request.then(result => {
             if (result.data.title == null) {
                 subNoteTitle.innerHTML = 'Подзаметка'
             }
 
-            //subNoteWrapper.dataset.title = parseNoteTitle(result.data.title)
             subNoteTitle.innerHTML = parseNoteTitle(result.data.title)
-
-            AppDispatcher.dispatch(NoteStoreActions.PUT_TO_CACHE, {key: subNoteId, value: parseNoteTitle(result.data.title)})
 
             loaded = true
 
@@ -1124,15 +1143,20 @@ const RenderSubNote = (subNoteId:string) => {
             subNoteTitle.innerHTML = "Заметка не найдена"
             subNoteWrapper.dataset.deleted = "true"
         });
-    }
 
-    if (pluginSettings.isEditable) {
-        subNoteWrapper.onclick = () => {
-            if (!subNoteWrapper.dataset.deleted && loaded) {
+    subNoteWrapper.onclick = () => {
+        if (!subNoteWrapper.dataset.deleted && loaded) {
+            if (isAuth) {
                 AppDispatcher.dispatch(NotesActions.OPEN_NOTE, subNoteId)
             } else {
-                AppToasts.error("Заметка не найдена")
+                AppSharedNoteRequests.Get(subNoteId).then(result => {
+                    AppRouter.openSharedNotePage(result)
+                }).catch((e) => {
+                    AppToasts.error("Заметка не найдена")
+                });
             }
+        } else {
+            AppToasts.error("Заметка не найдена")
         }
     }
 

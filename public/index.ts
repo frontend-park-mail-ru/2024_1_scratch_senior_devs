@@ -2,6 +2,7 @@ import {renderDOM} from '@veglem/screact/dist/render';
 import {ScReact} from '@veglem/screact';
 import {App} from './src/App';
 import './index.sass';
+import '@veglem/ui-kit/dist/main.css';
 
 renderDOM('root', ScReact.createComponent(App, {}));
 

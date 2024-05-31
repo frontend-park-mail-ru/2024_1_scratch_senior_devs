@@ -6,6 +6,7 @@ import {ValidateLogin, ValidatePassword} from '../../modules/validation';
 import {AppDispatcher} from '../../modules/dispatcher';
 import {AppUserStore, UserActions, UserStoreState} from '../../modules/stores/UserStore';
 import {Link} from '../Link/Link';
+import {uiKit} from '@veglem/ui-kit/dist/ui';
 
 export class RegisterForm extends  ScReact.Component<any, any> {
     state = {
@@ -172,6 +173,8 @@ export class RegisterForm extends  ScReact.Component<any, any> {
     };
 
     render(): VDomNode {
+        const {Button} = uiKit
+
         return (
             <form className="register-form">
                 <h3>Регистрация</h3>

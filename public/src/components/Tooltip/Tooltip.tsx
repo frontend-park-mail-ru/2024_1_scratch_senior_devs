@@ -50,7 +50,7 @@ export class Tooltip extends ScReact.Component<TooltipProps, any> {
                  onclick={() => this.props.onClick && this.props.onClick() }
             >
 
-                <div className="open-btn" onclick={this.toggleOpen} ref={ref => this.openBtnRef = ref}>
+                <div className="open-btn" onclick={this.props.content && this.toggleOpen} ref={ref => this.openBtnRef = ref}>
 
                     <div className="open-btn__icon-container">
                         {this.props.iconFromUnicode ? String.fromCodePoint(parseInt(this.props.icon, 16)) :  <Img src={this.props.icon} className="icon"/>}
@@ -61,10 +61,9 @@ export class Tooltip extends ScReact.Component<TooltipProps, any> {
                     {this.props.showHoverTooltip ?
                         <div className={"tooltip-container"}>
                             <span>{this.props.hoverTooltip}</span>
-                        </div>
-                        :
-                        ""
+                        </div> : ""
                     }
+
                 </div>
 
                 <div className="tooltip-wrapper__content" ref={ref => this.tooltipContentRef = ref}>

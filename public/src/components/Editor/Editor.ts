@@ -35,6 +35,30 @@ export class Editor {
         this.tippyCallbacks = tippy;
         this.addPlugins();
 
+        document.onpaste = (event) => {
+            const isInEditor = (node: Node) => {
+                if (node.nodeType === Node.ELEMENT_NODE && (node as HTMLElement).contentEditable === 'true' && !(node as HTMLElement).classList.contains("note-title")) {
+                    return true
+                } else if (node.parentElement == null) {
+                    return false
+                } else {
+                    return isInEditor(node.parentElement);
+                }
+            }
+
+
+
+            if (isInEditor(document.getSelection().anchorNode)) {
+                event.preventDefault();
+                let paste = (event.clipboardData).getData("text");
+                const selection = window.getSelection();
+                if (!selection.rangeCount) return;
+                selection.deleteFromDocument();
+                selection.getRangeAt(0).insertNode(document.createTextNode(paste));
+                selection.collapseToEnd();
+            }
+        }
+
         this.editable = document.createElement('div');
         this.editable.id = "note-editor-inner"
         this.editable.contentEditable = "true";
@@ -105,7 +129,7 @@ export class Editor {
                     : selection.anchorNode.parentElement;
 
                 scanTree(this.editable);
-                console.log(`cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replaceAll('-','').toLowerCase()}`)
+                
 
                 elem.dataset[`cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replaceAll('-','').toLowerCase()}`] = `${getCaretPosition(elem)}`;
                 // elem.scrollIntoView();

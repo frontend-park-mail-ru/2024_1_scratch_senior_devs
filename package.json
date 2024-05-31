@@ -8,6 +8,7 @@
     "serve": "webpack serve --node-env=development"
   },
   "devDependencies": {
+    "@veglem/ui-kit": "^1.0.8",
     "@babel/cli": "^7.23.9",
     "@babel/core": "^7.24.0",
     "@babel/plugin-proposal-decorators": "^7.24.0",
