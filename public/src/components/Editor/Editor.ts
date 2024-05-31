@@ -46,9 +46,10 @@ export class Editor {
                 }
             }
 
-            event.preventDefault();
+
 
             if (isInEditor(document.getSelection().anchorNode)) {
+                event.preventDefault();
                 let paste = (event.clipboardData).getData("text");
                 const selection = window.getSelection();
                 if (!selection.rangeCount) return;
