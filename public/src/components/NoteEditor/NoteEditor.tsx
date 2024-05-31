@@ -133,13 +133,6 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
         }))
     }
 
-    closeInviteUserModal = () => {
-        this.setState(state => ({
-            ...state,
-            inviteUserModalOpen: false
-        }))
-    }
-
     openParentNote = () => {
         AppDispatcher.dispatch(NotesActions.OPEN_NOTE, this.state.selectedNote.parent)
     }
@@ -230,16 +223,22 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
     }
 
     openDropdown = (elem: HTMLElement) => {
+        console.log("openDropdown")
         const editor = this.editorWrapperRef
+        console.log("editor.clientHeight: ", editor.clientHeight)
+        console.log("elem.getBoundingClientRect().top: ", elem.getBoundingClientRect().top)
         const offsetBottom = editor.clientHeight - elem.getBoundingClientRect().top
-        const dropdownOffsetTop = offsetBottom < 205 ? -225 : 40
+        console.log("offsetBottom: ", offsetBottom)
+        const dropdownOffsetTop = offsetBottom < 205 ? -420 : -145
+        console.log("dropdownOffsetTop: ", dropdownOffsetTop)
+        console.log("elem.offsetTop: ", elem.offsetTop)
 
         this.setState(state => ({
             ...state,
             dropdownOpen: true,
             dropdownPos: {
                 left: elem.offsetLeft + 20,
-                top: elem.offsetTop + dropdownOffsetTop
+                top: elem.getBoundingClientRect().top + dropdownOffsetTop
             }
         }))
     }
