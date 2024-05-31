@@ -36,14 +36,27 @@ export class Editor {
         this.addPlugins();
 
         document.onpaste = (event) => {
-            event.preventDefault();
+            const isInEditor = (node: Node) => {
+                if (node.nodeType === Node.ELEMENT_NODE && (node as HTMLElement).contentEditable === 'true' && !(node as HTMLElement).classList.contains("note-title")) {
+                    return true
+                } else if (node.parentElement == null) {
+                    return false
+                } else {
+                    return isInEditor(node.parentElement);
+                }
+            }
 
-            let paste = (event.clipboardData).getData("text");
-            const selection = window.getSelection();
-            if (!selection.rangeCount) return;
-            selection.deleteFromDocument();
-            selection.getRangeAt(0).insertNode(document.createTextNode(paste));
-            selection.collapseToEnd();
+
+
+            if (isInEditor(document.getSelection().anchorNode)) {
+                event.preventDefault();
+                let paste = (event.clipboardData).getData("text");
+                const selection = window.getSelection();
+                if (!selection.rangeCount) return;
+                selection.deleteFromDocument();
+                selection.getRangeAt(0).insertNode(document.createTextNode(paste));
+                selection.collapseToEnd();
+            }
         }
 
         this.editable = document.createElement('div');
