@@ -5,6 +5,7 @@ import {AppDispatcher} from '../../modules/dispatcher';
 import {UserActions} from '../../modules/stores/UserStore';
 import {Img} from "../Image/Image";
 import {uiKit} from '@veglem/ui-kit/dist/ui';
+import {Input} from '../Input/Input';
 
 export class UpdatePasswordForm extends ScReact.Component<any, any> {
     state = {
@@ -119,7 +120,7 @@ export class UpdatePasswordForm extends ScReact.Component<any, any> {
     };
 
     render() {
-        const {Button, Input} = uiKit
+        const {Button} = uiKit
 
         return (
             <div className="change-password-form">
