@@ -120,6 +120,8 @@ class NotesStore extends BaseStore<NotesStoreState> {
         AppNotesStore.ClearCallbacks()
         AppNoteStore.ClearCallbacks()
 
+        this.invitesWS?.close();
+
         this.SetState(state => ({
             ...state,
             notes: [],

@@ -1,5 +1,4 @@
 import {ScReact} from "@veglem/screact";
-import {Button} from "../Button/Button";
 import "./SharePanel.sass"
 import {ToggleButton} from "../ToggleButton/ToggleButton";
 import {Img} from "../Image/Image";
