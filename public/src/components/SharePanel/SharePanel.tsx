@@ -18,7 +18,7 @@ export class SharePanel extends ScReact.Component<any, any> {
     }
 
     shareToVK = () => {
-        console.log("shareToVK")
+        
         const url = "https://vk.com/share.php?url=" + this.getNoteURL()+ "&title=" + parseNoteTitle(this.props.note.data.title)
         this.openShareWindow(url)
     }
@@ -48,7 +48,7 @@ export class SharePanel extends ScReact.Component<any, any> {
 
     sendInvite = (e) => {
         e.preventDefault()
-        console.log("sendInvite")
+        
 
         const value = this.inviteInputRef.value
 

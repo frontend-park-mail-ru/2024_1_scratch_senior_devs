@@ -129,7 +129,7 @@ export class Editor {
                     : selection.anchorNode.parentElement;
 
                 scanTree(this.editable);
-                console.log(`cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replaceAll('-','').toLowerCase()}`)
+                
 
                 elem.dataset[`cursor${AppUserStore.state.username}${AppNotesStore.socket_id?.toString().replaceAll('-','').toLowerCase()}`] = `${getCaretPosition(elem)}`;
                 // elem.scrollIntoView();

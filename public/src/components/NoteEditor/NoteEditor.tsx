@@ -265,8 +265,8 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
         const isEditable = this.state.selectedNote?.collaborators.includes(AppUserStore.state.user_id) || isOwner
 
         // TODO: скелетон для эдитора
-        // console.log("render")
-        // console.log(this.state.selectedNote)
+        // 
+        // 
         //
         // if (!this.state.selectedNote) {
         //     return (
@@ -276,7 +276,7 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
         //     )
         // }
         //
-        // console.log("123")
+        // 
 
         return (
             <div className={'note-editor-wrapper ' + (this.props.open ? ' active ' : '')  + (this.state.fullScreen ? ' fullscreen ' : '') } ref={ref => this.editorWrapperRef = ref}>

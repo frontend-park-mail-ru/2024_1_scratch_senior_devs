@@ -300,7 +300,7 @@ class NotesStore extends BaseStore<NotesStoreState> {
             this.selectNote(note);
 
         } catch (e) {
-            console.log(e.message)
+            
             AppToasts.error('Заметка не найдена');
         }
     }
