@@ -223,23 +223,16 @@ export class NoteEditor extends ScReact.Component<NoteEditorProps, NoteEditorTyp
     }
 
     openDropdown = (elem: HTMLElement) => {
-        console.log("openDropdown")
-        console.log(window.screen.width)
-        const editor = this.editorWrapperRef
-        console.log("editor.clientHeight: ", editor.clientHeight)
-        console.log("elem.getBoundingClientRect().top: ", elem.getBoundingClientRect().top)
-        const offsetBottom = editor.clientHeight - elem.getBoundingClientRect().top
-        console.log("offsetBottom: ", offsetBottom)
-        const dropdownOffsetTop = offsetBottom < 205 ? -420 : -145
-        console.log("dropdownOffsetTop: ", dropdownOffsetTop)
-        console.log("elem.offsetTop: ", elem.offsetTop)
+        const offsetBottom = this.editorWrapperRef.clientHeight - elem.getBoundingClientRect().top
+        const dropdownOffsetTop = offsetBottom < 205 ? -225 : 40
+        const scrollTop = document.querySelector(".note-editor").scrollTop
 
         this.setState(state => ({
             ...state,
             dropdownOpen: true,
             dropdownPos: {
                 left: elem.offsetLeft + 20,
-                top: elem.getBoundingClientRect().top + dropdownOffsetTop + (window.screen.width < 1560 ? -20 : 0)
+                top: elem.offsetTop + dropdownOffsetTop - scrollTop
             }
         }))
     }
