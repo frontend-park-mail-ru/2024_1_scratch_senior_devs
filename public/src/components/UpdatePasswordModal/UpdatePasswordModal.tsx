@@ -1,5 +1,4 @@
 import {ScReact} from '@veglem/screact';
-import {Input} from '../Input/Input';
 import './UpdatePasswordModal.sass';
 import {ValidatePassword} from '../../modules/validation';
 import {AppDispatcher} from '../../modules/dispatcher';
@@ -120,7 +119,7 @@ export class UpdatePasswordForm extends ScReact.Component<any, any> {
     };
 
     render() {
-        const {Button} = uiKit
+        const {Button, Input} = uiKit
 
         return (
             <div className="change-password-form">

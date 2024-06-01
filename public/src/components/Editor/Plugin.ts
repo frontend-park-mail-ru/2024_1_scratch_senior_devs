@@ -502,7 +502,7 @@ export const defaultPlugins: EditorPlugin[] = [
                     img.src = url;
                     AppDispatcher.dispatch(NoteStoreActions.PUT_TO_CACHE, {key: id, value: url})
                 }).catch(error => {
-                    console.log(error)
+                    
                 })
             }
 
@@ -524,7 +524,7 @@ export const defaultPlugins: EditorPlugin[] = [
                 img.src = url;
                 AppDispatcher.dispatch(NoteStoreActions.PUT_TO_CACHE, {key: id, value: url})
             }).catch(error => {
-                console.log(error)
+                
             })
 
             return img
@@ -915,7 +915,7 @@ export const insertBlockPlugin = (pluginName: string, ...args: any) => {
             });
         }
         const newNode = plugin.insertNode([], args);
-        console.log(newNode)
+        
         if (newNode) {
             (nodeToReplace as HTMLElement).replaceWith(newNode);
             document.getSelection().setPosition(newNode, 0);
@@ -1054,7 +1054,7 @@ const RenderAttach = (attach_filename:string, attach_id:string) => {
 }
 
 const RenderSubNote = (subNoteId:string) => {
-    console.log("RenderSubNote")
+    
 
     const subNoteWrapper = document.createElement("button")
     subNoteWrapper.className = "subnote-wrapper"

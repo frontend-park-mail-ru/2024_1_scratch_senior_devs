@@ -159,8 +159,8 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
     private presstimer = null;
 
     click = (tag) => {
-        console.log("click")
-        console.log(this.longpress)
+        
+        
 
         if (this.presstimer !== null) {
             clearTimeout(this.presstimer);
@@ -177,7 +177,7 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
     }
 
     start = (e, tag)=> {
-        console.log("start")
+        
         if (e.type === "click" && e.button !== 0) {
             return;
         }
@@ -185,7 +185,7 @@ export class TagsFilter extends ScReact.Component<TagsFilterProps, TagsFilterSta
         this.longpress = false;
 
         this.presstimer = setTimeout(() => {
-            console.log("long click");
+            
             this.onTagRightClick(e, tag)
             this.longpress = true;
         }, 1000);

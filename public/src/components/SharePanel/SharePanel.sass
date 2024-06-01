@@ -6,6 +6,7 @@
 	border: 1px solid hsl(217.2 32.6% 25%)
 	background: #18232f
 	border-radius: 12px
+	width: min(90vw, 350px)
 
 	h3
 		color: #f4f6f9
@@ -20,6 +21,7 @@
 		&__bottom-container
 			display: flex
 			gap: 12px
+			width: 100%
 
 			.invite-input
 				outline: none
@@ -29,6 +31,7 @@
 				padding: 4px 8px
 				color: #eee
 				transition: 0.3s ease
+				width: 60%
 
 				&:focus
 					border: 1px solid rgba(13, 65, 227, 0.8)
@@ -39,11 +42,11 @@
 			.button
 				border-radius: 4px
 				padding: 6px 12px
+				flex: 1
 
 				&:hover
 					transform: scale(1)
 					background: #1744d0
-
 
 	&__share-link-container
 		display: flex
