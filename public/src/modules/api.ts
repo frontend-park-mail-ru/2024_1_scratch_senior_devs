@@ -395,7 +395,7 @@ class NoteRequests {
                     content: [
                         {
                             pluginName: "textBlock",
-                            content: "Hello You-note"
+                            content: ""
                         },
                         {
                             pluginName: "div",
