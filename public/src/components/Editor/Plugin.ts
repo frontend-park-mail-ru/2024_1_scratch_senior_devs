@@ -729,6 +729,8 @@ export const defaultPlugins: EditorPlugin[] = [
             const iframe = document.createElement('iframe');
             iframe.contentEditable = 'false';
             iframe.setAttribute('allow', 'autoplay;');
+            iframe.setAttribute('width', '560')
+            iframe.setAttribute('height', '315')
             iframe.src = props.src as string;
             iframe.id = props.src as string
             return iframe;
@@ -737,6 +739,8 @@ export const defaultPlugins: EditorPlugin[] = [
             const iframe = document.createElement('iframe');
             iframe.contentEditable = 'false';
             iframe.setAttribute('allow', 'autoplay;');
+            iframe.setAttribute('width', '560')
+            iframe.setAttribute('height', '315')
             iframe.src = args[0];
             iframe.id = args[0] as string
             return iframe;
